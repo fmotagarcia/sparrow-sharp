@@ -68,6 +68,9 @@
     <Compile Include="Sparrow\Core\RenderState.cs" />
     <Compile Include="Sparrow\Display\QuadBatch.cs" />
     <Compile Include="Sparrow\Core\Texture.cs" />
+    <Compile Include="Sparrow\Core\Context.cs" />
+    <Compile Include="Sparrow\Core\ViewController.cs" />
+    <Compile Include="Sparrow\SP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
