@@ -71,6 +71,7 @@
     <Compile Include="Sparrow\Core\Context.cs" />
     <Compile Include="Sparrow\Core\ViewController.cs" />
     <Compile Include="Sparrow\SP.cs" />
+    <Compile Include="Sparrow\Core\BaseEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

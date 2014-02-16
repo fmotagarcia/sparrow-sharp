@@ -287,6 +287,13 @@ namespace Sparrow.Display
 			}	
 		}
 
+		public uint BlendMode {
+			get { return _blendMode; }
+			set {
+				_blendMode = value;
+			}
+		}
+
 		public DisplayObject ()
 		{
 			_alpha = 1.0;
