@@ -1,0 +1,13 @@
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/MonoAndroid,Version=v2.2.AssemblyAttribute.cs
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/bin/Debug/sparrow-sharp.dll.mdb
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/bin/Debug/sparrow-sharp.dll
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/bin/Debug/sparrow_sharp.sparrow_sharp.apk
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/android/bin/sparrow_sharp.sparrow_sharp.apk
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/res/layout/main.xml
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/res/values/strings.xml
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/res/drawable/icon.png
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/R.cs.flag
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/bin/Debug/sparrow_sharp.sparrow_sharp-Signed.apk
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/uploadflags.txt
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll
+/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll.mdb
