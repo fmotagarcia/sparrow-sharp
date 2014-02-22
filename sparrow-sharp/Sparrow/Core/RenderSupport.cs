@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Display;
 using Sparrow.Utils;
@@ -160,7 +161,7 @@ namespace Sparrow.Core
 		public void FinishQuadBatch ()
 		{
 			if (_quadBatchTop.NumQuads != 0) {
-				_quadBatchTop.Render ();
+				_quadBatchTop.Render (_projectionMatrix);
 				_quadBatchTop.Reset ();
 
 				if (_quadBatches.Count == _quadBatchIndex + 1) {
@@ -195,7 +196,7 @@ namespace Sparrow.Core
 
 		public void ApplyBlendMode (bool premultipliedAlpha)
 		{
-			BlendMode.ApplyBlendFactors (_stateStackTop.BlendMode, premultipliedAlpha);
+			Sparrow.Display.BlendMode.ApplyBlendFactors (_stateStackTop.BlendMode, premultipliedAlpha);
 		}
 
 		public Rectangle pushClipRect (Rectangle clipRect)
@@ -225,7 +226,7 @@ namespace Sparrow.Core
 		{
 			FinishQuadBatch ();
 
-			Context context = Sparrow.Context;
+			Context context = SP.Context;
 			if (context == null) {
 				return;
 			}
@@ -244,8 +245,8 @@ namespace Sparrow.Core
 //				}
 //				else
 //				{
-				width = Sparrow.CurrentController.DrawableWidth;
-				height = Sparrow.CurrentController.DrawableHeight;
+				width = (int) SP.CurrentController.DrawableWidth;
+				height = (int) SP.CurrentController.DrawableHeight;
 //				}
 
 				// convert to pixel coordinates (matrix transformation ends up in range [-1, 1])

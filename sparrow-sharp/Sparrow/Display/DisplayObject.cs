@@ -303,7 +303,7 @@ namespace Sparrow.Display
 			touchable = true;
 			_transformationMatrix = new Matrix ();
 			_orientationChanged = false;
-			_blendMode = BlendMode.AUTO;
+			_blendMode = Sparrow.Display.BlendMode.AUTO;
 		}
 
 		public virtual void Render (RenderSupport support)

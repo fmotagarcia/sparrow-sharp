@@ -170,7 +170,7 @@ namespace Sparrow.Display
 			return _vertexData.BoundsAfterTransformation (matrix, 0, _numQuads * 4);
 		}
 
-		public void Render (RenderSupport support)
+		public void Render (Sparrow.Core.RenderSupport support)
 		{
 			if (_numQuads != 0) {
 				support.FinishQuadBatch ();

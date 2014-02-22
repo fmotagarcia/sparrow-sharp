@@ -8,7 +8,7 @@ namespace Sparrow.Core
 {
 	public class Context
 	{
-		private readonly Dictionary<string, uint> _framebufferCache;
+		private readonly Dictionary<uint, uint> _framebufferCache;
 
         private Rectangle Viewport 
 		{
@@ -34,7 +34,7 @@ namespace Sparrow.Core
 			}
 		}
 
-        private Rectangle ScissorBox 
+		public Rectangle ScissorBox 
 		{
 			get 
 			{
@@ -95,7 +95,7 @@ namespace Sparrow.Core
 
 		public Context ()
 		{
-			_framebufferCache = new Dictionary<string, uint>();
+			_framebufferCache = new Dictionary<uint, uint>();
 		}
 
 		private void RenderToBackBuffer()
