@@ -114,16 +114,16 @@ namespace Sparrow.Core
                     SP.CurrentController.RegisterProgram(_program, programName);
                 }
         
-                _aPosition  = _program.aPosition;
-                _aColor     = _program.aColor;
-                _aTexCoords = _program.aTexCoords;
-                _uMvpMatrix = _program.uMvpMatrix;
-                _uAlpha     = _program.uAlpha;
+                _aPosition  = _program.attributeByName("aPosition");
+                _aColor     = _program.attributeByName("aColor");
+                _aTexCoords = _program.attributeByName("aTexCoords");
+                _uMvpMatrix = _program.uniformByName("uMvpMatrix");
+                _uAlpha     = _program.uniformByName("uAlpha");
             }
-    
-            GLKMatrix4 glkMvpMatrix = _mvpMatrix.convertToGLKMatrix4();
-            GL.UseProgram(_program.name);
-            GL.UniformMatrix4(_uMvpMatrix, 1, false, glkMvpMatrix.m);
+
+            Matrix4 glkMvpMatrix = _mvpMatrix.ConvertToMatrix4();
+            GL.UseProgram(_program.Name);
+            GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix); // TODO check; was glUniformMatrix4fv(_uMvpMatrix, 1, NO, glkMvpMatrix.m);
     
             if (useTinting)
             {
@@ -148,7 +148,7 @@ namespace Sparrow.Core
         {
             if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f))
             {
-                SP_RELEASE_AND_NIL(_program);
+                SP_RELEASE_AND_NIL(_program); // what is this?
             }
             _alpha = value;
         }

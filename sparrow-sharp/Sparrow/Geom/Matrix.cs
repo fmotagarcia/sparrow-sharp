@@ -6,6 +6,7 @@ namespace Sparrow.Geom
 {
 	public class Matrix
 	{
+        // are you sure that these need to be double? BaseEffect needs a float Matrix
 		private double _a;
 		private double _b;
 		private double _c;
@@ -221,5 +222,20 @@ namespace Sparrow.Geom
 
 			return matrix;
 		}
+
+        public Matrix4 ConvertToMatrix4()
+        {
+            Matrix4 matrix = new Matrix4();
+
+            matrix.M11 = (float)_a;
+            matrix.M12 = (float)_b;
+            matrix.M21 = (float)_c;
+            matrix.M22 = (float)_d;
+            matrix.M41 = (float)_tx;
+            matrix.M42 = (float)_ty;
+
+            return matrix;
+        }
+
 	}
 }
