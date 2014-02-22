@@ -47,27 +47,27 @@ namespace Sparrow.Display
 			_baseEffect = new BaseEffect ();
 		}
 
-		public void Reset ()
+		public void Reset()
 		{
 			_numQuads = 0;
 			_syncRequired = true;
 			_texture = null;
 		}
 
-		public void AddQuad (Quad quad)
+		public void AddQuad(Quad quad)
 		{
-			AddQuad (quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
+			AddQuad(quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
 		}
 
-		public void AddQuad (Quad quad, double alpha)
+		public void AddQuad(Quad quad, double alpha)
 		{
 			// TOOD add blendMode to quad
 			AddQuad (quad, alpha, Sparrow.Display.BlendMode.AUTO, null);
 		}
 
-		public void AddQuad (Quad quad, double alpha, uint blendMode)
+		public void AddQuad(Quad quad, double alpha, uint blendMode)
 		{
-			AddQuad (quad, quad.Alpha, blendMode, null);
+			AddQuad(quad, quad.Alpha, blendMode, null);
 		}
 
 		public void AddQuad (Quad quad, double alpha, uint blendMode, Matrix matrix)
@@ -101,20 +101,20 @@ namespace Sparrow.Display
 
 		public void AddQuadBatch (QuadBatch quadBatch)
 		{
-			AddQuadBatch (quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
+			AddQuadBatch(quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
 		}
 
-		public void AddQuadBatch (QuadBatch quadBatch, double alpha)
+		public void AddQuadBatch(QuadBatch quadBatch, double alpha)
 		{
-			AddQuadBatch (quadBatch, alpha, quadBatch.BlendMode, null);
+			AddQuadBatch(quadBatch, alpha, quadBatch.BlendMode, null);
 		}
 
-		public void AddQuadBatch (QuadBatch quadBatch, double alpha, uint blendMode)
+		public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode)
 		{
-			AddQuadBatch (quadBatch, alpha, blendMode, null);
+			AddQuadBatch(quadBatch, alpha, blendMode, null);
 		}
 
-		public void AddQuadBatch (QuadBatch quadBatch, double alpha, uint blendMode, Matrix matrix)
+		public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode, Matrix matrix)
 		{
 			int vertexID = _numQuads * 4;
 			int numQuads = quadBatch.NumQuads;
@@ -147,7 +147,7 @@ namespace Sparrow.Display
 			_numQuads += numQuads;
 		}
 
-		public bool IsStateChange (bool tinted, Texture texture, double alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
+		public bool IsStateChange(bool tinted, Texture texture, double alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
 		{
 			if (_numQuads == 0) {
 				return false;
@@ -175,16 +175,16 @@ namespace Sparrow.Display
 			if (_numQuads != 0) {
 				support.FinishQuadBatch ();
 				support.AddDrawCalls (1);
-				Render (support.MvpMatrix, support.Alpha, suport.BlendMode);
+				Render(support.MvpMatrix, support.Alpha, support.BlendMode);
 			}
 		}
 
 		public void Render (Matrix matrix)
 		{
-			Render (matrix, 1.0, BlendMode);
+			Render(matrix, 1.0, BlendMode);
 		}
 
-		public void Render (Matrix matrix, double alpha, uint blendMode)
+		public void Render(Matrix matrix, double alpha, uint blendMode)
 		{
 			if (_numQuads != 0) {
 				return;
@@ -204,9 +204,9 @@ namespace Sparrow.Display
 			_baseEffect.UseTinting = _tinted || alpha != 1.0;
 			_baseEffect.Alpha = alpha;
 
-			_baseEffect.PrepareToDraw ();
+			_baseEffect.PrepareToDraw();
 
-			BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
+            Sparrow.Display.BlendMode.ApplyBlendFactors(blendMode, _premultipliedAlpha);
 
 			int attribPosition = _baseEffect.AttribPosition;
 			int attribColor = _baseEffect.AttribColor;
@@ -215,39 +215,42 @@ namespace Sparrow.Display
 			GL.EnableVertexAttribArray (attribPosition);
 			GL.EnableVertexAttribArray (attribColor);
 
-			if (_texture)
-				GL.EnableVertexAttribArray (attribTexCoords);
-
+            if (_texture != null)
+            {
+                GL.EnableVertexAttribArray(attribTexCoords);
+            }
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
+            int pointer = 0;
+            GL.VertexAttribPointer(attribPosition, 2, All.Float, true, Vector3.SizeInBytes, ref pointer);
+            GL.VertexAttribPointer(attribColor, 4, All.UnsignedByte, true, Vector3.SizeInBytes, ref pointer);
 
-			GL.VertexAttribPointer (attribPosition, 2, All.Float, true, Vector3.SizeInBytes, 0);
-			GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, Vector3.SizeInBytes, 0);
-
-			if (_texture != null) {
-				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, Vector3.SizeInBytes, 0);
+			if (_texture != null) 
+            {
+                GL.VertexAttribPointer(attribTexCoords, 2, All.Float, false, Vector3.SizeInBytes, ref pointer);
 			}
 			int numIndices = _numQuads * 6;
-			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, 0);
+            GL.DrawElements(All.Triangles, numIndices, All.UnsignedShort, ref pointer);
 		}
 
-		public List<QuadBatch> Compile (DisplayObject displayObject)
+		public List<QuadBatch> Compile(DisplayObject displayObject)
 		{
-			return Compile (displayObject, null);
+			return Compile(displayObject, null);
 		}
 
-		public List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches)
+		public List<QuadBatch> Compile(DisplayObject displayObject, List<QuadBatch> quadBatches)
 		{
 			if (quadBatches == null) {
 				quadBatches = new List<QuadBatch> ();
 			}
 
-			Compile (displayObject, quadBatches, -1, new Matrix (), 1.0, Sparrow.Display.BlendMode.AUTO);
+			Compile(displayObject, quadBatches, -1, new Matrix (), 1.0, Sparrow.Display.BlendMode.AUTO);
 
-			return Compile (quadBatches);
+			return Compile(displayObject);
 		}
 
-		public List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int atPosition, int quadBatchID, Matrix transformationMatrix, double alpha, uint blendMode)
+		public int Compile(DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
+                                       Matrix transformationMatrix, double alpha, uint blendMode)
 		{
 			bool isRootObject = false;
 			double objectAlpha = displayObject.Alpha;
@@ -274,7 +277,7 @@ namespace Sparrow.Display
 
 				int numChildren = container.NumChildren;
 				for (int i = 0; i < numChildren; i++) {
-					DisplayObject child = container.GetChildAt (i);
+					DisplayObject child = container.GetChildAt(i);
 					if (child.HasVisibleArea) {
 						uint childBlendMode = child.BlendMode;
 						if (childBlendMode == Sparrow.Display.BlendMode.AUTO) {
@@ -284,7 +287,7 @@ namespace Sparrow.Display
 						childMatrix.CopyFromMatrix (transformationMatrix);
 						childMatrix.PrependMatrix (child.TransformationMatrix);
 
-						quadBatchID = Compile (child, quadBatches, quadBatchID, childMatrix, alpha * objectAlpha, childBlendMode);
+						quadBatchID = Compile(child, quadBatches, quadBatchID, childMatrix, alpha * objectAlpha, childBlendMode);
 					}
 				}
 			} else if (quad != null) {
@@ -365,12 +368,12 @@ namespace Sparrow.Display
 		private void DestroyBuffers ()
 		{
 			if (_vertexBufferName != 0) {
-				GL.DeleteBuffers (1, out _vertexBufferName);
+				GL.DeleteBuffers(1, ref _vertexBufferName);
 				_vertexBufferName = 0;
 			}
 
 			if (_vertexBufferName != 0) {
-				GL.DeleteBuffers (1, out _vertexBufferName);
+				GL.DeleteBuffers(1, ref _vertexBufferName);
 				_indexBufferName = 0;
 			}
 		}
@@ -394,7 +397,7 @@ namespace Sparrow.Display
 					throw new Exception ("Capacity must not be zero");
 				}
 
-				int oldCapacity = Capacity;
+				uint oldCapacity = (uint)Capacity;
 				int numVertices = value * 4;
 				int numIndices = value * 6;
 
@@ -402,7 +405,7 @@ namespace Sparrow.Display
 
 				_indexData = new uint[numIndices];
 
-				for (int i = oldCapacity; i < value; ++i) {
+				for (uint i = oldCapacity; i < value; ++i) {
 					_indexData [i * 6] = i * 4;
 					_indexData [i * 6 + 1] = i * 4 + 1;
 					_indexData [i * 6 + 2] = i * 4 + 2;
