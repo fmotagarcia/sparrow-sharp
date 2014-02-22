@@ -11,3 +11,6 @@
 /Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/uploadflags.txt
 /Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll
 /Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll.mdb
+/Users/ricardo/dev/sparrow-sharp/sparrow-sharp/obj/Debug/MonoAndroid,Version=v2.2.AssemblyAttribute.cs
+/Users/ricardo/dev/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll
+/Users/ricardo/dev/sparrow-sharp/sparrow-sharp/obj/Debug/sparrow-sharp.dll.mdb
