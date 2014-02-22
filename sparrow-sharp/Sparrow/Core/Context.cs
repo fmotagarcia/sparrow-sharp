@@ -10,34 +10,36 @@ namespace Sparrow.Core
 	{
 		private readonly Dictionary<string, uint> _framebufferCache;
 
-		private Rectangle Viewport
+        private Rectangle Viewport 
 		{
 			get 
 			{
 				int[] viewport = new int[4];
-				GL.GetInteger (All.Viewport, out viewport);
+				GL.GetInteger (All.Viewport, viewport);
 				return new Rectangle (viewport [0], viewport [1], viewport [2], viewport [3]);
 			}
 
 			set
 			{
+                System.Drawing.Rectangle rect;
 				if (value != null) 
 				{
-					GL.Viewport (value.X, value.Y, value.Width, value.Height);
+                    rect = new System.Drawing.Rectangle((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);	
 				} 
 				else 
 				{
-					GL.Viewport (0, 0, SP.CurrentController.DrawableWidth, SP.CurrentController.DrawableWidth);
+                    rect = new System.Drawing.Rectangle(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableWidth);
 				}
+                GL.Viewport (rect);
 			}
 		}
 
-		private Rectangle ScissorBox
+        private Rectangle ScissorBox 
 		{
 			get 
 			{
 				int[] scissorBox = new int[4];
-				GL.GetInteger (All.ScissorBox, out scissorBox);
+				GL.GetInteger(All.ScissorBox, scissorBox);
 				return new Rectangle (scissorBox [0], scissorBox [1], scissorBox [2], scissorBox [3]);
 			}
 
@@ -45,12 +47,12 @@ namespace Sparrow.Core
 			{
 				if (value != null) 
 				{
-					GL.Enable (All.ScissorTest);
-					GL.Scissor (value.X, value.Y, value.Width, value.Height);
+					GL.Enable(All.ScissorTest);
+                    GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
 				} 
 				else 
 				{
-					GL.Disable (All.ScissorTest);
+					GL.Disable(All.ScissorTest);
 				}
 			}
 		}
@@ -59,6 +61,7 @@ namespace Sparrow.Core
 		{
 			set
 			{
+                System.Drawing.Rectangle rect;
 				if (value != null) 
 				{
 					uint framebuffer;
@@ -69,13 +72,14 @@ namespace Sparrow.Core
 					}
 
 					GL.BindFramebuffer (All.Framebuffer, framebuffer);
-					GL.Viewport (0, 0, value.NativeWidth, value.NativeHeight);
+                    rect = new System.Drawing.Rectangle(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
 				}
 				else 
 				{
 					GL.BindFramebuffer (All.Framebuffer, 1);
-					GL.Viewport (0, 0, SP.CurrentController.DrawableWidth, SP.CurrentController.DrawableHeight);
+                    rect = new System.Drawing.Rectangle(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableHeight);
 				}
+                GL.Viewport (rect);
 				RenderTarget = value;
 				// SP_RELEASE_AND_RETAIN(_renderTarget, renderTarget);
 			}
@@ -104,7 +108,7 @@ namespace Sparrow.Core
 			uint framebuffer;
 			GL.GenFramebuffers (1, out framebuffer);
 			GL.BindFramebuffer (All.Framebuffer, framebuffer);
-
+            
 			GL.FramebufferTexture2D (All.Framebuffer, All.ColorAttachment0, All.Texture2D, texture.Name, 0);
 			if (GL.CheckFramebufferStatus (All.Framebuffer) != All.FramebufferComplete) 
 			{
@@ -119,7 +123,7 @@ namespace Sparrow.Core
 			uint framebuffer;
 			if (_framebufferCache.TryGetValue (texture.Name, out framebuffer)) 
 			{
-				GL.DeleteFramebuffers(1, framebuffer);
+				GL.DeleteFramebuffers(1, ref framebuffer);
 				_framebufferCache.Remove (texture.Name);
 			}
 		}
@@ -131,6 +135,10 @@ namespace Sparrow.Core
 
 		public bool DeviceSupportsOpenGLExtension(string extensionName)
 		{
+            // TODO create hashset only once
+            string exts = GL.GetString(All.Extensions);
+            HashSet<string> extensions = new HashSet<string>(exts.Split(new char[] { ' ' }));
+            return extensions.Contains(extensionName);
 //			static dispatch_once_t once;
 //			static NSArray *extensions = nil;
 //
