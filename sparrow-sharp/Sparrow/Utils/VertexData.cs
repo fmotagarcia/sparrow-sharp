@@ -12,7 +12,7 @@ namespace Sparrow.Utils
 		private bool _premultipliedAlpha;
 
 		public int NumVertices {
-			get { return _numVertices;}
+			get { return _numVertices; }
 			set { 
 				if (value != _numVertices) {
 					if (value > 0) {
@@ -23,7 +23,7 @@ namespace Sparrow.Utils
 						}
 
 						if (value > _numVertices) {
-							for (int i=_numVertices; i<value; i++) {
+							for (int i = _numVertices; i < value; i++) {
 								_vertices [i].Color = new VertexColor (0, 1.0);
 							}
 						}
@@ -41,12 +41,12 @@ namespace Sparrow.Utils
 		}
 
 		public Vertex[] Vertices {
-			get { return _vertices;}
+			get { return _vertices; }
 		}
 
 		public bool Tinted {
 			get {
-				for (int i=0; i<_numVertices; ++i)
+				for (int i = 0; i < _numVertices; ++i)
 					if (!VertexColor.IsOpaqueWhite (_vertices [i].Color))
 						return true;
 
@@ -255,7 +255,7 @@ namespace Sparrow.Utils
 
 			int minAlpha = _premultipliedAlpha ? (int)(MIN_ALPHA * 255.0) : 0;
 
-			for (int i=index; i<index+numVertices; ++i) {
+			for (int i = index; i < index + numVertices; ++i) {
 				Vertex vertex = _vertices [i];
 				VertexColor vertexColor = vertex.Color;
 				uint newAlpha = Convert.ToUInt32 (NumberUtil.Clamp (vertexColor.A * factor, minAlpha, 255));
@@ -290,7 +290,7 @@ namespace Sparrow.Utils
 				return;
 			}
 
-			for (int i=atIndex, end=atIndex+numVertices; i<end; ++i) {
+			for (int i = atIndex, end = atIndex + numVertices; i < end; ++i) {
 				Vector2d pos = _vertices [i].Position;
 				pos.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
 				pos.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
@@ -319,7 +319,7 @@ namespace Sparrow.Utils
 			int endIndex = atIndex + numVertices;
 
 			if (matrix != null) {
-				for (int i=atIndex; i<endIndex; ++i) {
+				for (int i = atIndex; i < endIndex; ++i) {
 					Vector2d position = _vertices [i].Position;
 					Point transformedPoint = matrix.TransformPoint (position.X, position.Y);
 					double tfX = transformedPoint.X;
@@ -330,7 +330,7 @@ namespace Sparrow.Utils
 					maxY = Math.Max (maxY, tfY);
 				}
 			} else {
-				for (int i=atIndex; i<endIndex; ++i) {
+				for (int i = atIndex; i < endIndex; ++i) {
 					Vector2d position = _vertices [i].Position;
 					minX = Math.Min (minX, position.X);
 					maxX = Math.Max (maxX, position.X);
@@ -350,11 +350,11 @@ namespace Sparrow.Utils
 
 			if (updateVertices) {
 				if (value) {
-					for (int i=0; i<_numVertices; ++i) {
+					for (int i = 0; i < _numVertices; ++i) {
 						_vertices [i].Color = VertexColor.PremultiplyAlpha (_vertices [i].Color);
 					}
 				} else {
-					for (int i=0; i<_numVertices; ++i) {
+					for (int i = 0; i < _numVertices; ++i) {
 						_vertices [i].Color = VertexColor.UnmultiplyAlpha (_vertices [i].Color);
 					}
 				}
