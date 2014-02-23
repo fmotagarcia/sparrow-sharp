@@ -11,8 +11,6 @@ namespace Sparrow.Utils
         private int _numVertices;
         private bool _premultipliedAlpha;
 
-        public IntPtr RawData { get; set; }
-
         public int NumVertices
         {
             get { return _numVertices; }
@@ -35,7 +33,7 @@ namespace Sparrow.Utils
                         {
                             for (int i = _numVertices; i < value; i++)
                             {
-                                _vertices[i].Color = new VertexColor(0, 1.0);
+								_vertices[i].Color = VertexColorHelper.CreateVertexColor(0, 1.0);
                             }
                         }
                     }
@@ -64,7 +62,7 @@ namespace Sparrow.Utils
             get
             {
                 for (int i = 0; i < _numVertices; ++i)
-                    if (!VertexColor.IsOpaqueWhite(_vertices[i].Color))
+					if (!VertexColorHelper.IsOpaqueWhite(_vertices[i].Color))
                         return true;
 
                 return false;
@@ -134,7 +132,7 @@ namespace Sparrow.Utils
             _vertices[atIndex] = vertex;
 
             if (_premultipliedAlpha)
-                _vertices[atIndex].Color = VertexColor.PremultiplyAlpha(vertex.Color);
+				_vertices[atIndex].Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
         }
 
         public Point PositionAtIndex(int index)
@@ -209,8 +207,8 @@ namespace Sparrow.Utils
 
             alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0, 1); 
 
-            VertexColor vertexColor = new VertexColor(color, alpha);
-            _vertices[atIndex].Color = _premultipliedAlpha ? VertexColor.PremultiplyAlpha(vertexColor) : vertexColor;
+			VertexColor vertexColor =  VertexColorHelper.CreateVertexColor(color, alpha);
+			_vertices[atIndex].Color = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
         }
 
         public void SetColor(uint color, double alpha)
@@ -231,7 +229,7 @@ namespace Sparrow.Utils
             VertexColor vertexColor = _vertices[index].Color;
             if (_premultipliedAlpha)
             {
-                vertexColor = VertexColor.UnmultiplyAlpha(vertexColor);
+				vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
             }
 	
             return ColorUtil.GetRGB(vertexColor.R, vertexColor.G, vertexColor.B);
@@ -302,13 +300,13 @@ namespace Sparrow.Utils
 
                 if (_premultipliedAlpha)
                 {
-                    vertexColor = VertexColor.UnmultiplyAlpha(vertexColor);
+					vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
                     vertexColor.A = newAlpha;
-                    vertex.Color = VertexColor.PremultiplyAlpha(vertexColor);
+					vertex.Color = VertexColorHelper.PremultiplyAlpha(vertexColor);
                 }
                 else
                 {
-                    vertex.Color = new VertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
+					vertex.Color =  VertexColorHelper.CreateVertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
                 }
             }
         }
@@ -319,7 +317,7 @@ namespace Sparrow.Utils
 
             if (_premultipliedAlpha)
             {
-                vertex.Color = VertexColor.PremultiplyAlpha(vertex.Color);
+				vertex.Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
             }
             _vertices[_numVertices - 1] = vertex;
         }
@@ -408,14 +406,14 @@ namespace Sparrow.Utils
                 {
                     for (int i = 0; i < _numVertices; ++i)
                     {
-                        _vertices[i].Color = VertexColor.PremultiplyAlpha(_vertices[i].Color);
+						_vertices[i].Color = VertexColorHelper.PremultiplyAlpha(_vertices[i].Color);
                     }
                 }
                 else
                 {
                     for (int i = 0; i < _numVertices; ++i)
                     {
-                        _vertices[i].Color = VertexColor.UnmultiplyAlpha(_vertices[i].Color);
+						_vertices[i].Color = VertexColorHelper.UnmultiplyAlpha(_vertices[i].Color);
                     }
                 }
             }
