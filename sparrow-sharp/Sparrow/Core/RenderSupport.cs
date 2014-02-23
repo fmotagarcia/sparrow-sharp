@@ -195,7 +195,7 @@ namespace Sparrow.Core
 			Sparrow.Display.BlendMode.ApplyBlendFactors (_stateStackTop.BlendMode, premultipliedAlpha);
 		}
 
-		public Rectangle pushClipRect (Rectangle clipRect)
+		public Rectangle PushClipRect (Rectangle clipRect)
 		{
 			Rectangle rectangle = new Rectangle ();
 			rectangle.CopyFromRectangle (clipRect);
