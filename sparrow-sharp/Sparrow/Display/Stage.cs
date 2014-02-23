@@ -9,7 +9,8 @@ namespace Sparrow.Display
 	{
         private double _width;
         private double _height;
-        private readonly List<DisplayObject> _enterFrameListeners = new List<DisplayObject>();;
+		private readonly List<DisplayObject> _enterFrameListeners = new List<DisplayObject> ();
+		private uint _color;
 
         override public double Width {
 			get { return _width; }
@@ -22,7 +23,10 @@ namespace Sparrow.Display
 			set { _height = value; }
 		}
 
-        uint _color;
+		public uint Color { 
+			get { return _color;}
+			set { _color = value;}
+		}
 
         public Stage (float initWidth, float initHeight)
 		{
@@ -60,22 +64,22 @@ namespace Sparrow.Display
             return target;
         }
         
-        override public void AppendDescendantEventListenersOfObject(DisplayObject dispObject, String eventType, List<DisplayObject> listeners)
-        {
-            if (dispObject == this && eventType == EventTypeEnterFrame)
-            {
-                listeners.AddRange(_enterFrameListeners);
-            }
-            else
-            {
-                base.AppendDescendantEventListenersOfObject(dispObject, eventType, listeners);
-            }
-        }
+//        override public void AppendDescendantEventListenersOfObject(DisplayObject dispObject, String eventType, List<DisplayObject> listeners)
+//        {
+//            if (dispObject == this && eventType == EventTypeEnterFrame)
+//            {
+//                listeners.AddRange(_enterFrameListeners);
+//            }
+//            else
+//            {
+//                base.AppendDescendantEventListenersOfObject(dispObject, eventType, listeners);
+//            }
+//        }
 
         public void AdvanceTime(double passedTime)
         {
-            EnterFrameEvent enterFrameEvent = new EnterFrameEvent(EventTypeEnterFrame, passedTime);
-            BroadcastEvent(enterFrameEvent);
+//            EnterFrameEvent enterFrameEvent = new EnterFrameEvent(EventTypeEnterFrame, passedTime);
+//            BroadcastEvent(enterFrameEvent);
         }
 
         public void AddEnterFrameListener(DisplayObject listener)

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="sparrow_sharp.sparrow_sharp">
-  <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8" />
-  <application android:name="mono.android.app.Application" android:debuggable="true">
+  <uses-sdk android:minSdkVersion="8" />
+  <application android:label="sparrow-sharp" android:name="mono.android.app.Application" android:debuggable="true">
     <activity android:configChanges="keyboardHidden|orientation" android:label="sparrow-sharp" android:name="sparrowsharp.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

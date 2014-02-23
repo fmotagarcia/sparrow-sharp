@@ -74,7 +74,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double ScaleX {
+		virtual public double ScaleX {
 			get { return _scaleX; }
 			set {
 				if (value != _scaleX) {
@@ -84,7 +84,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double ScaleY {
+		virtual public double ScaleY {
 			get { return _scaleY; }
 			set {
 				if (value != _scaleY) {
@@ -94,7 +94,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double SkewX {
+		virtual public double SkewX {
 			get { return _skewX; }
 			set {
 				if (value != _skewX) {
@@ -104,7 +104,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double SkewY {
+		virtual public double SkewY {
 			get { return _skewY; }
 			set {
 				if (value != _skewY) {
@@ -114,7 +114,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double PivotX {
+		virtual public double PivotX {
 			get { return _pivotX; }
 			set {
 				if (value != _pivotX) {
@@ -124,7 +124,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double PivotY {
+		virtual public double PivotY {
 			get { return _pivotY; }
 			set {
 				if (value != _pivotY) {
@@ -134,7 +134,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double Rotation {
+		virtual public double Rotation {
 			get { return _rotation; }
 			set {
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
