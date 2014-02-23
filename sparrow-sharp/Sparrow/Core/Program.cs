@@ -13,16 +13,32 @@ namespace Sparrow.Core
         public int Name { get; private set; }
 
         private string _vertexShader, _fragmentShader;
+        private readonly Dictionary<String, int> _uniforms;
+        private readonly Dictionary<String, int> _attributes;
 
-        public Dictionary<String, int> Uniforms { get; private set; }
+        public Dictionary<String, int> Uniforms
+        {
+            get
+            {
+                return _uniforms;
+            }
+        }
 
-        public Dictionary<String, int> Attributes { get; private set; }
+        public Dictionary<String, int> Attributes
+        {
+            get
+            {
+                return _attributes;
+            }
+        }
 
         public Program(string vertexShader, string fragmentShader)
         {
             _vertexShader = vertexShader;
             _fragmentShader = fragmentShader;
-        
+            _uniforms = new Dictionary<string, int>();
+            _attributes = new Dictionary<string, int>();
+
             Compile();
             UpdateUniforms();
             UpdateAttributes();
@@ -121,7 +137,6 @@ namespace Sparrow.Core
             GL.GetProgram(Name, All.ActiveAttributes, out numAttributes);
 
             Attributes.Clear();
-    
             for (int i = 0; i < numAttributes; i++)
             {
                 StringBuilder rawName = new StringBuilder();

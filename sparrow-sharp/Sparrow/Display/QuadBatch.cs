@@ -1,11 +1,10 @@
 using System;
-using Sparrow.Utils;
 using Sparrow.Geom;
 using Sparrow.Core;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.ES20;
 using System.Collections.Generic;
+using Sparrow.Utils;
 
 namespace Sparrow.Display
 {
@@ -14,11 +13,11 @@ namespace Sparrow.Display
     {
         private int _numQuads;
         private bool _syncRequired;
-        Texture _texture;
+        private Texture _texture;
         private bool _premultipliedAlpha;
         private bool _tinted;
-        BaseEffect _baseEffect;
-        private Sparrow.Utils.VertexData _vertexData;
+        private readonly BaseEffect _baseEffect;
+        private VertexData _vertexData;
         private int _vertexBufferName;
         private uint[] _indexData;
         private int _indexBufferName;
@@ -38,7 +37,7 @@ namespace Sparrow.Display
             get { return _premultipliedAlpha; }
         }
 
-        public Sparrow.Utils.VertexData VertexData
+        public VertexData VertexData
         {
             get { return _vertexData; }
         }
@@ -47,7 +46,7 @@ namespace Sparrow.Display
         {
             _numQuads = 0;
             _syncRequired = false;
-            _vertexData = new Sparrow.Utils.VertexData();
+            _vertexData = new VertexData();
             _baseEffect = new BaseEffect();
         }
 
@@ -186,13 +185,13 @@ namespace Sparrow.Display
             }
         }
 
-        public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
         {
             Matrix matrix = targetSpace == this ? null : TransformationMatrixToSpace(targetSpace);
             return _vertexData.BoundsAfterTransformation(matrix, 0, _numQuads * 4);
         }
 
-        public void Render(Sparrow.Core.RenderSupport support)
+        override public void Render(RenderSupport support)
         {
             if (_numQuads != 0)
             {
