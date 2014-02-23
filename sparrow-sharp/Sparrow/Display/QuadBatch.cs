@@ -9,414 +9,470 @@ using System.Collections.Generic;
 
 namespace Sparrow.Display
 {
-	// TODO check if dealloc exists
-	public class QuadBatch : DisplayObject
-	{
-		private int _numQuads;
-		private bool _syncRequired;
-		Texture _texture;
-		private bool _premultipliedAlpha;
-		private bool _tinted;
-		BaseEffect _baseEffect;
-		private Sparrow.Utils.VertexData _vertexData;
-		private int _vertexBufferName;
-		private uint[] _indexData;
-		private int _indexBufferName;
+    // TODO check if dealloc exists
+    public class QuadBatch : DisplayObject
+    {
+        private int _numQuads;
+        private bool _syncRequired;
+        Texture _texture;
+        private bool _premultipliedAlpha;
+        private bool _tinted;
+        BaseEffect _baseEffect;
+        private Sparrow.Utils.VertexData _vertexData;
+        private int _vertexBufferName;
+        private uint[] _indexData;
+        private int _indexBufferName;
 
-		public int NumQuads {
-			get { return _numQuads; }
-		}
+        public int NumQuads
+        {
+            get { return _numQuads; }
+        }
 
-		public bool Tinted {
-			get { return _tinted; }
-		}
+        public bool Tinted
+        {
+            get { return _tinted; }
+        }
 
-		public bool PremultipliedAlpha {
-			get { return _premultipliedAlpha; }
-		}
+        public bool PremultipliedAlpha
+        {
+            get { return _premultipliedAlpha; }
+        }
 
-		public Sparrow.Utils.VertexData VertexData {
-			get { return _vertexData; }
-		}
+        public Sparrow.Utils.VertexData VertexData
+        {
+            get { return _vertexData; }
+        }
 
-		public QuadBatch ()
-		{
-			_numQuads = 0;
-			_syncRequired = false;
-			_vertexData = new Sparrow.Utils.VertexData ();
-			_baseEffect = new BaseEffect ();
-		}
+        public QuadBatch()
+        {
+            _numQuads = 0;
+            _syncRequired = false;
+            _vertexData = new Sparrow.Utils.VertexData();
+            _baseEffect = new BaseEffect();
+        }
 
-		public void Reset()
-		{
-			_numQuads = 0;
-			_syncRequired = true;
-			_texture = null;
-		}
+        public void Reset()
+        {
+            _numQuads = 0;
+            _syncRequired = true;
+            _texture = null;
+        }
 
-		public void AddQuad(Quad quad)
-		{
-			AddQuad(quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
-		}
+        public void AddQuad(Quad quad)
+        {
+            AddQuad(quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
+        }
 
-		public void AddQuad(Quad quad, double alpha)
-		{
-			// TOOD add blendMode to quad
-			AddQuad (quad, alpha, Sparrow.Display.BlendMode.AUTO, null);
-		}
+        public void AddQuad(Quad quad, double alpha)
+        {
+            // TOOD add blendMode to quad
+            AddQuad(quad, alpha, Sparrow.Display.BlendMode.AUTO, null);
+        }
 
-		public void AddQuad(Quad quad, double alpha, uint blendMode)
-		{
-			AddQuad(quad, quad.Alpha, blendMode, null);
-		}
+        public void AddQuad(Quad quad, double alpha, uint blendMode)
+        {
+            AddQuad(quad, quad.Alpha, blendMode, null);
+        }
 
-		public void AddQuad (Quad quad, double alpha, uint blendMode, Matrix matrix)
-		{
-			if (matrix == null) {
-				matrix = quad.TransformationMatrix;
-			}
+        public void AddQuad(Quad quad, double alpha, uint blendMode, Matrix matrix)
+        {
+            if (matrix == null)
+            {
+                matrix = quad.TransformationMatrix;
+            }
 
-			if (_numQuads == 0) {
-				_premultipliedAlpha = quad.PremultipliedAlpha;
-				BlendMode = blendMode;
-				_vertexData.PremultipliedAlpha = _premultipliedAlpha;
-			}
+            if (_numQuads == 0)
+            {
+                _premultipliedAlpha = quad.PremultipliedAlpha;
+                BlendMode = blendMode;
+                _vertexData.PremultipliedAlpha = _premultipliedAlpha;
+            }
 
-			int vertexID = _numQuads * 4;
+            int vertexID = _numQuads * 4;
 
-			quad.CopyVertexDataTo (_vertexData, vertexID);
-			_vertexData.TransformVerticesWithMatrix (matrix, vertexID, 4);
+            quad.CopyVertexDataTo(_vertexData, vertexID);
+            _vertexData.TransformVerticesWithMatrix(matrix, vertexID, 4);
 
-			if (alpha != 1.0) {
-				_vertexData.ScaleAlphaBy (alpha, vertexID, 4);
-			}
+            if (alpha != 1.0)
+            {
+                _vertexData.ScaleAlphaBy(alpha, vertexID, 4);
+            }
 
-			if (!_tinted) {
-				_tinted = alpha != 1.0d || quad.Tinted;
-			}
+            if (!_tinted)
+            {
+                _tinted = alpha != 1.0d || quad.Tinted;
+            }
 
-			_syncRequired = true;
-			_numQuads++;
-		}
+            _syncRequired = true;
+            _numQuads++;
+        }
 
-		public void AddQuadBatch (QuadBatch quadBatch)
-		{
-			AddQuadBatch(quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
-		}
+        public void AddQuadBatch(QuadBatch quadBatch)
+        {
+            AddQuadBatch(quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
+        }
 
-		public void AddQuadBatch(QuadBatch quadBatch, double alpha)
-		{
-			AddQuadBatch(quadBatch, alpha, quadBatch.BlendMode, null);
-		}
+        public void AddQuadBatch(QuadBatch quadBatch, double alpha)
+        {
+            AddQuadBatch(quadBatch, alpha, quadBatch.BlendMode, null);
+        }
 
-		public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode)
-		{
-			AddQuadBatch(quadBatch, alpha, blendMode, null);
-		}
+        public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode)
+        {
+            AddQuadBatch(quadBatch, alpha, blendMode, null);
+        }
 
-		public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode, Matrix matrix)
-		{
-			int vertexID = _numQuads * 4;
-			int numQuads = quadBatch.NumQuads;
-			int numVertices = numQuads * 4;
+        public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode, Matrix matrix)
+        {
+            int vertexID = _numQuads * 4;
+            int numQuads = quadBatch.NumQuads;
+            int numVertices = numQuads * 4;
 
-			if (matrix == null) {
-				matrix = quadBatch.TransformationMatrix;
-			}
-			if (_numQuads + numQuads > Capacity) {
-				Capacity = _numQuads + numQuads;
-			}
-			if (_numQuads == 0) {
-				_premultipliedAlpha = quadBatch.PremultipliedAlpha;
-				BlendMode = blendMode;
-				_vertexData.SetPremultipliedAlpha (_premultipliedAlpha, false);
-			}
+            if (matrix == null)
+            {
+                matrix = quadBatch.TransformationMatrix;
+            }
+            if (_numQuads + numQuads > Capacity)
+            {
+                Capacity = _numQuads + numQuads;
+            }
+            if (_numQuads == 0)
+            {
+                _premultipliedAlpha = quadBatch.PremultipliedAlpha;
+                BlendMode = blendMode;
+                _vertexData.SetPremultipliedAlpha(_premultipliedAlpha, false);
+            }
 
-			quadBatch.VertexData.CopyToVertexData (_vertexData, vertexID, numVertices);
-			_vertexData.TransformVerticesWithMatrix (matrix, vertexID, numVertices);
+            quadBatch.VertexData.CopyToVertexData(_vertexData, vertexID, numVertices);
+            _vertexData.TransformVerticesWithMatrix(matrix, vertexID, numVertices);
 
-			if (alpha != 1.0) {
-				_vertexData.ScaleAlphaBy (alpha, vertexID, numVertices);
-			}
+            if (alpha != 1.0)
+            {
+                _vertexData.ScaleAlphaBy(alpha, vertexID, numVertices);
+            }
 
-			if (!_tinted) {
-				_tinted = alpha != 1.0 || quadBatch.Tinted;
-			}
+            if (!_tinted)
+            {
+                _tinted = alpha != 1.0 || quadBatch.Tinted;
+            }
 
-			_syncRequired = true;
-			_numQuads += numQuads;
-		}
+            _syncRequired = true;
+            _numQuads += numQuads;
+        }
 
-		public bool IsStateChange(bool tinted, Texture texture, double alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
-		{
-			if (_numQuads == 0) {
-				return false;
-			} else if (_numQuads + numQuads > 8192) {
-				return true;
-			} else if (_texture == null && texture == null) {
-				return _premultipliedAlpha != premultipliedAlpha || BlendMode != blendMode;
-			} else if (_texture != null && texture != null) {
-				return _tinted != (tinted || alpha != 1.0) ||
-				_texture.Name != texture.Name ||
-				BlendMode != blendMode;
-			} else {
-				return true;
-			}
-		}
+        public bool IsStateChange(bool tinted, Texture texture, double alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
+        {
+            if (_numQuads == 0)
+            {
+                return false;
+            }
+            else if (_numQuads + numQuads > 8192)
+            {
+                return true;
+            }
+            else if (_texture == null && texture == null)
+            {
+                return _premultipliedAlpha != premultipliedAlpha || BlendMode != blendMode;
+            }
+            else if (_texture != null && texture != null)
+            {
+                return _tinted != (tinted || alpha != 1.0) ||
+                _texture.Name != texture.Name ||
+                BlendMode != blendMode;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
-		public Rectangle BoundsInSpace (DisplayObject targetSpace)
-		{
-			Matrix matrix = targetSpace == this ? null : TransformationMatrixToSpace (targetSpace);
-			return _vertexData.BoundsAfterTransformation (matrix, 0, _numQuads * 4);
-		}
+        public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        {
+            Matrix matrix = targetSpace == this ? null : TransformationMatrixToSpace(targetSpace);
+            return _vertexData.BoundsAfterTransformation(matrix, 0, _numQuads * 4);
+        }
 
-		public void Render (Sparrow.Core.RenderSupport support)
-		{
-			if (_numQuads != 0) {
-				support.FinishQuadBatch ();
-				support.AddDrawCalls (1);
-				Render(support.MvpMatrix, support.Alpha, support.BlendMode);
-			}
-		}
+        public void Render(Sparrow.Core.RenderSupport support)
+        {
+            if (_numQuads != 0)
+            {
+                support.FinishQuadBatch();
+                support.AddDrawCalls(1);
+                Render(support.MvpMatrix, support.Alpha, support.BlendMode);
+            }
+        }
 
-		public void Render (Matrix matrix)
-		{
-			Render(matrix, 1.0, BlendMode);
-		}
+        public void Render(Matrix matrix)
+        {
+            Render(matrix, 1.0f, BlendMode);
+        }
 
-		public void Render(Matrix matrix, double alpha, uint blendMode)
-		{
-			if (_numQuads != 0) {
-				return;
-			}
+        public void Render(Matrix matrix, float alpha, uint blendMode)
+        {
+            if (_numQuads != 0)
+            {
+                return;
+            }
 
-			if (_syncRequired) {
-				SyncBuffers ();
-			}
+            if (_syncRequired)
+            {
+                SyncBuffers();
+            }
 
-			if (blendMode == Sparrow.Display.BlendMode.AUTO) {
-				throw new InvalidOperationException ("Cannot render object with blend mode AUTO");
-			}
+            if (blendMode == Sparrow.Display.BlendMode.AUTO)
+            {
+                throw new InvalidOperationException("Cannot render object with blend mode AUTO");
+            }
 
-			_baseEffect.Texture = _texture;
-			_baseEffect.PremultipliedAlpha = _premultipliedAlpha;
-			_baseEffect.MvpMatrix = matrix;
-			_baseEffect.UseTinting = _tinted || alpha != 1.0;
-			_baseEffect.Alpha = alpha;
+            _baseEffect.Texture = _texture;
+            _baseEffect.PremultipliedAlpha = _premultipliedAlpha;
+            _baseEffect.MvpMatrix = matrix;
+            _baseEffect.UseTinting = _tinted || alpha != 1.0;
+            _baseEffect.Alpha = alpha;
 
-			_baseEffect.PrepareToDraw();
+            _baseEffect.PrepareToDraw();
 
             Sparrow.Display.BlendMode.ApplyBlendFactors(blendMode, _premultipliedAlpha);
 
-			int attribPosition = _baseEffect.AttribPosition;
-			int attribColor = _baseEffect.AttribColor;
-			int attribTexCoords = _baseEffect.AttribTexCoords;
+            int attribPosition = _baseEffect.AttribPosition;
+            int attribColor = _baseEffect.AttribColor;
+            int attribTexCoords = _baseEffect.AttribTexCoords;
 
-			GL.EnableVertexAttribArray (attribPosition);
-			GL.EnableVertexAttribArray (attribColor);
+            GL.EnableVertexAttribArray(attribPosition);
+            GL.EnableVertexAttribArray(attribColor);
 
             if (_texture != null)
             {
                 GL.EnableVertexAttribArray(attribTexCoords);
             }
-			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
-			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
+            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
+            GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
             int pointer = 0;
             GL.VertexAttribPointer(attribPosition, 2, All.Float, true, Vector3.SizeInBytes, ref pointer);
             GL.VertexAttribPointer(attribColor, 4, All.UnsignedByte, true, Vector3.SizeInBytes, ref pointer);
 
-			if (_texture != null) 
+            if (_texture != null)
             {
                 GL.VertexAttribPointer(attribTexCoords, 2, All.Float, false, Vector3.SizeInBytes, ref pointer);
-			}
-			int numIndices = _numQuads * 6;
+            }
+            int numIndices = _numQuads * 6;
             GL.DrawElements(All.Triangles, numIndices, All.UnsignedShort, ref pointer);
-		}
+        }
 
-		public List<QuadBatch> Compile(DisplayObject displayObject)
-		{
-			return Compile(displayObject, null);
-		}
+        public List<QuadBatch> Compile(DisplayObject displayObject)
+        {
+            return Compile(displayObject, null);
+        }
 
-		public List<QuadBatch> Compile(DisplayObject displayObject, List<QuadBatch> quadBatches)
-		{
-			if (quadBatches == null) {
-				quadBatches = new List<QuadBatch> ();
-			}
+        public List<QuadBatch> Compile(DisplayObject displayObject, List<QuadBatch> quadBatches)
+        {
+            if (quadBatches == null)
+            {
+                quadBatches = new List<QuadBatch>();
+            }
 
-			Compile(displayObject, quadBatches, -1, new Matrix (), 1.0, Sparrow.Display.BlendMode.AUTO);
+            Compile(displayObject, quadBatches, -1, new Matrix(), 1.0, Sparrow.Display.BlendMode.AUTO);
 
-			return Compile(displayObject);
-		}
+            return Compile(displayObject);
+        }
 
-		public int Compile(DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
-                                       Matrix transformationMatrix, double alpha, uint blendMode)
-		{
-			bool isRootObject = false;
-			double objectAlpha = displayObject.Alpha;
+        public int Compile(DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
+                           Matrix transformationMatrix, double alpha, uint blendMode)
+        {
+            bool isRootObject = false;
+            double objectAlpha = displayObject.Alpha;
 
-			Quad quad = displayObject is Quad ? (Quad)displayObject : null;
-			QuadBatch batch = displayObject is QuadBatch ? (QuadBatch)displayObject : null;
-			DisplayObjectContainer container = displayObject is DisplayObjectContainer ? (DisplayObjectContainer)displayObject : null;
+            Quad quad = displayObject is Quad ? (Quad)displayObject : null;
+            QuadBatch batch = displayObject is QuadBatch ? (QuadBatch)displayObject : null;
+            DisplayObjectContainer container = displayObject is DisplayObjectContainer ? (DisplayObjectContainer)displayObject : null;
 
-			if (quadBatchID == -1) {
-				isRootObject = true;
-				quadBatchID = 0;
-				objectAlpha = 1.0;
-				blendMode = displayObject.BlendMode;
+            if (quadBatchID == -1)
+            {
+                isRootObject = true;
+                quadBatchID = 0;
+                objectAlpha = 1.0;
+                blendMode = displayObject.BlendMode;
 
-				if (quadBatches.Count == 0) {
-					quadBatches.Add (new QuadBatch ());
-				} else {
-					quadBatches [0].Reset ();
-				}
-			}
+                if (quadBatches.Count == 0)
+                {
+                    quadBatches.Add(new QuadBatch());
+                }
+                else
+                {
+                    quadBatches[0].Reset();
+                }
+            }
 
-			if (container != null) {
-				Matrix childMatrix = new Matrix ();
+            if (container != null)
+            {
+                Matrix childMatrix = new Matrix();
 
-				int numChildren = container.NumChildren;
-				for (int i = 0; i < numChildren; i++) {
-					DisplayObject child = container.GetChildAt(i);
-					if (child.HasVisibleArea) {
-						uint childBlendMode = child.BlendMode;
-						if (childBlendMode == Sparrow.Display.BlendMode.AUTO) {
-							childBlendMode = blendMode;
-						}
+                int numChildren = container.NumChildren;
+                for (int i = 0; i < numChildren; i++)
+                {
+                    DisplayObject child = container.GetChildAt(i);
+                    if (child.HasVisibleArea)
+                    {
+                        uint childBlendMode = child.BlendMode;
+                        if (childBlendMode == Sparrow.Display.BlendMode.AUTO)
+                        {
+                            childBlendMode = blendMode;
+                        }
 
-						childMatrix.CopyFromMatrix (transformationMatrix);
-						childMatrix.PrependMatrix (child.TransformationMatrix);
+                        childMatrix.CopyFromMatrix(transformationMatrix);
+                        childMatrix.PrependMatrix(child.TransformationMatrix);
 
-						quadBatchID = Compile(child, quadBatches, quadBatchID, childMatrix, alpha * objectAlpha, childBlendMode);
-					}
-				}
-			} else if (quad != null) {
-				Texture texture = quad.Texture;
-				bool tinted = quad.Tinted;
-				bool pma = quad.PremultipliedAlpha;
-				int numQuads = 1;
+                        quadBatchID = Compile(child, quadBatches, quadBatchID, childMatrix, alpha * objectAlpha, childBlendMode);
+                    }
+                }
+            }
+            else if (quad != null)
+            {
+                Texture texture = quad.Texture;
+                bool tinted = quad.Tinted;
+                bool pma = quad.PremultipliedAlpha;
+                int numQuads = 1;
 
-				QuadBatch currentBatch = quadBatches [quadBatchID];
-				if (currentBatch.IsStateChange (tinted, texture, alpha * objectAlpha, pma, blendMode, numQuads)) {
-					quadBatchID++;
+                QuadBatch currentBatch = quadBatches[quadBatchID];
+                if (currentBatch.IsStateChange(tinted, texture, alpha * objectAlpha, pma, blendMode, numQuads))
+                {
+                    quadBatchID++;
 
-					if (quadBatches.Count <= quadBatchID) {
-						quadBatches.Add (new QuadBatch ());
-					}
+                    if (quadBatches.Count <= quadBatchID)
+                    {
+                        quadBatches.Add(new QuadBatch());
+                    }
 
-					currentBatch = quadBatches [quadBatchID];
-					currentBatch.Reset ();
-				}
+                    currentBatch = quadBatches[quadBatchID];
+                    currentBatch.Reset();
+                }
 
-				currentBatch.AddQuad (quad, alpha * objectAlpha, blendMode, transformationMatrix);
-			} else if (batch != null) {
-				Texture texture = quad.Texture;
-				bool tinted = quad.Tinted;
-				bool pma = quad.PremultipliedAlpha;
-				int numQuads = batch.NumQuads;
+                currentBatch.AddQuad(quad, alpha * objectAlpha, blendMode, transformationMatrix);
+            }
+            else if (batch != null)
+            {
+                Texture texture = quad.Texture;
+                bool tinted = quad.Tinted;
+                bool pma = quad.PremultipliedAlpha;
+                int numQuads = batch.NumQuads;
 
-				QuadBatch currentBatch = quadBatches [quadBatchID];
-				if (currentBatch.IsStateChange (tinted, texture, alpha * objectAlpha, pma, blendMode, numQuads)) {
-					quadBatchID++;
+                QuadBatch currentBatch = quadBatches[quadBatchID];
+                if (currentBatch.IsStateChange(tinted, texture, alpha * objectAlpha, pma, blendMode, numQuads))
+                {
+                    quadBatchID++;
 
-					if (quadBatches.Count <= quadBatchID) {
-						quadBatches.Add (new QuadBatch ());
-					}
+                    if (quadBatches.Count <= quadBatchID)
+                    {
+                        quadBatches.Add(new QuadBatch());
+                    }
 
-					currentBatch = quadBatches [quadBatchID];
-					currentBatch.Reset ();
-				}
+                    currentBatch = quadBatches[quadBatchID];
+                    currentBatch.Reset();
+                }
 
-				currentBatch.AddQuadBatch (batch, alpha * objectAlpha, blendMode, transformationMatrix);
-			} else {
-				throw new InvalidOperationException ("Unsupported display object");
-			}
+                currentBatch.AddQuadBatch(batch, alpha * objectAlpha, blendMode, transformationMatrix);
+            }
+            else
+            {
+                throw new InvalidOperationException("Unsupported display object");
+            }
 
-			if (isRootObject) {
-				// remove unused batches
-				for (int i = quadBatches.Count - 1; i > quadBatchID; --i) {
-					quadBatches.RemoveAt (quadBatches.Count - 1);
-				}
-			}
+            if (isRootObject)
+            {
+                // remove unused batches
+                for (int i = quadBatches.Count - 1; i > quadBatchID; --i)
+                {
+                    quadBatches.RemoveAt(quadBatches.Count - 1);
+                }
+            }
 
-			return quadBatchID;
-		}
+            return quadBatchID;
+        }
 
-		private void CreateBuffers ()
-		{
-			DestroyBuffers ();
+        private void CreateBuffers()
+        {
+            DestroyBuffers();
 
-			int numVertices = _vertexData.NumVertices;
-			int numIndices = numVertices / 4 * 6;
-			if (numVertices == 0) {
-				return;
-			}
+            int numVertices = _vertexData.NumVertices;
+            int numIndices = numVertices / 4 * 6;
+            if (numVertices == 0)
+            {
+                return;
+            }
 
-			GL.GenBuffers (1, out _vertexBufferName);
-			GL.GenBuffers (1, out _indexBufferName);
+            GL.GenBuffers(1, out _vertexBufferName);
+            GL.GenBuffers(1, out _indexBufferName);
 
-			if (_vertexBufferName == 0 || _indexBufferName == 0) {
-				throw new InvalidOperationException ("Could not create vertex buffers");
-			}
+            if (_vertexBufferName == 0 || _indexBufferName == 0)
+            {
+                throw new InvalidOperationException("Could not create vertex buffers");
+            }
 
-			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
-			GL.BufferData (All.ElementArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _indexData, All.StaticDraw);
+            GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
+            GL.BufferData(All.ElementArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _indexData, All.StaticDraw);
 
-			_syncRequired = true; 
-		}
+            _syncRequired = true; 
+        }
 
-		private void DestroyBuffers ()
-		{
-			if (_vertexBufferName != 0) {
-				GL.DeleteBuffers(1, ref _vertexBufferName);
-				_vertexBufferName = 0;
-			}
+        private void DestroyBuffers()
+        {
+            if (_vertexBufferName != 0)
+            {
+                GL.DeleteBuffers(1, ref _vertexBufferName);
+                _vertexBufferName = 0;
+            }
 
-			if (_vertexBufferName != 0) {
-				GL.DeleteBuffers(1, ref _vertexBufferName);
-				_indexBufferName = 0;
-			}
-		}
+            if (_vertexBufferName != 0)
+            {
+                GL.DeleteBuffers(1, ref _vertexBufferName);
+                _indexBufferName = 0;
+            }
+        }
 
-		public void SyncBuffers ()
-		{
-			if (_vertexBufferName == 0) {
-				CreateBuffers ();
-			}
+        public void SyncBuffers()
+        {
+            if (_vertexBufferName == 0)
+            {
+                CreateBuffers();
+            }
 
-			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
-			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _vertexData.RawData, All.StaticDraw);
+            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
+            GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _vertexData.RawData, All.StaticDraw);
 
-			_syncRequired = false;
-		}
+            _syncRequired = false;
+        }
 
-		private int Capacity {
-			get { return _vertexData.NumVertices / 4; }
-			set {
-				if (value > 0) {
-					throw new Exception ("Capacity must not be zero");
-				}
+        private int Capacity
+        {
+            get { return _vertexData.NumVertices / 4; }
+            set
+            {
+                if (value > 0)
+                {
+                    throw new Exception("Capacity must not be zero");
+                }
 
-				uint oldCapacity = (uint)Capacity;
-				int numVertices = value * 4;
-				int numIndices = value * 6;
+                uint oldCapacity = (uint)Capacity;
+                int numVertices = value * 4;
+                int numIndices = value * 6;
 
-				_vertexData.NumVertices = numVertices;
+                _vertexData.NumVertices = numVertices;
 
-				_indexData = new uint[numIndices];
+                _indexData = new uint[numIndices];
 
-				for (uint i = oldCapacity; i < value; ++i) {
-					_indexData [i * 6] = i * 4;
-					_indexData [i * 6 + 1] = i * 4 + 1;
-					_indexData [i * 6 + 2] = i * 4 + 2;
-					_indexData [i * 6 + 3] = i * 4 + 1;
-					_indexData [i * 6 + 4] = i * 4 + 3;
-					_indexData [i * 6 + 5] = i * 4 + 2;
-				}
+                for (uint i = oldCapacity; i < value; ++i)
+                {
+                    _indexData[i * 6] = i * 4;
+                    _indexData[i * 6 + 1] = i * 4 + 1;
+                    _indexData[i * 6 + 2] = i * 4 + 2;
+                    _indexData[i * 6 + 3] = i * 4 + 1;
+                    _indexData[i * 6 + 4] = i * 4 + 3;
+                    _indexData[i * 6 + 5] = i * 4 + 2;
+                }
 
-				DestroyBuffers ();
-				_syncRequired = true;
-			}
-		}
-	}
+                DestroyBuffers();
+                _syncRequired = true;
+            }
+        }
+    }
 }

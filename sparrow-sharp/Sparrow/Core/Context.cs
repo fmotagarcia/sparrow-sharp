@@ -1,154 +1,145 @@
-﻿using System;
-using Sparrow.Geom;
-using OpenTK.Graphics.ES20;
+﻿using OpenTK.Graphics.ES20;
 using System.Collections.Generic;
 using System.Diagnostics;
+using OpenTK.Graphics;
+using OpenTK.Platform;
+using Sparrow.Geom;
 
 namespace Sparrow.Core
 {
-	public class Context
-	{
-		private readonly Dictionary<uint, uint> _framebufferCache;
+    public class Context
+    {
+        private const string CurrentContextKey = "SPCurrentContext";
+        private static Dictionary<uint, uint> FramebufferCache = new Dictionary<uint, uint>();
+        private static HashSet<string> Extensions;
+        private IGraphicsContext _nativeContext;
+        private Texture _renderTarget;
 
-        private Rectangle Viewport 
-		{
-			get 
-			{
-				int[] viewport = new int[4];
-				GL.GetInteger (All.Viewport, viewport);
-				return new Rectangle (viewport [0], viewport [1], viewport [2], viewport [3]);
-			}
+        static Context()
+        {
+            Extensions = new HashSet<string>();
+            string extensionsString = GL.GetString(All.Extensions);
+            if (!string.IsNullOrEmpty(extensionsString))
+            {
+                string[] extensions = extensionsString.Split(' ');
+                for (int i = 0; i < extensions.Length; i++)
+                {
+                    Extensions.Add(extensions[i]);
+                }
+            }
+        }
 
-			set
-			{
-                System.Drawing.Rectangle rect;
-				if (value != null) 
-				{
-                    rect = new System.Drawing.Rectangle((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);	
-				} 
-				else 
-				{
-                    rect = new System.Drawing.Rectangle(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableWidth);
-				}
-                GL.Viewport (rect);
-			}
-		}
+        public Context()
+        {
+            // TODO: hopefully this will do it in a cross-platform way but not sure
+            // if this doesn't work we might need to deal with AndroidGraphicsContext and iPhoneOSGraphicsContext
+            _nativeContext = new GraphicsContext(GraphicsMode.Default, Utilities.CreateDummyWindowInfo(), 2, 0, GraphicsContextFlags.Embedded);
+        }
 
-		public Rectangle ScissorBox 
-		{
-			get 
-			{
-				int[] scissorBox = new int[4];
-				GL.GetInteger(All.ScissorBox, scissorBox);
-				return new Rectangle (scissorBox [0], scissorBox [1], scissorBox [2], scissorBox [3]);
-			}
+        public Rectangle Viewport
+        {
+            get
+            {
+                int[] viewport = new int[4];
+                GL.GetInteger(All.Viewport, viewport);
+                return new Rectangle(viewport[0], viewport[1], viewport[2], viewport[3]);
+            }
 
-			set
-			{
-				if (value != null) 
-				{
-					GL.Enable(All.ScissorTest);
-                    GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
-				} 
-				else 
-				{
-					GL.Disable(All.ScissorTest);
-				}
-			}
-		}
+            set
+            {
+                GL.Viewport((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
+            }
+        }
 
-		private Texture RenderTarget
-		{
-			set
-			{
-                System.Drawing.Rectangle rect;
-				if (value != null) 
-				{
-					uint framebuffer;
-					if (!_framebufferCache.TryGetValue (value.Name, out framebuffer)) 
-					{
-						framebuffer = CreateFramebufferForTexture (value);
-						_framebufferCache [value.Name] = framebuffer;
-					}
+        public void ResetViewport()
+        {
+            GL.Viewport(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableWidth);
+        }
 
-					GL.BindFramebuffer (All.Framebuffer, framebuffer);
-                    rect = new System.Drawing.Rectangle(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
-				}
-				else 
-				{
-					GL.BindFramebuffer (All.Framebuffer, 1);
-                    rect = new System.Drawing.Rectangle(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableHeight);
-				}
-                GL.Viewport (rect);
-				RenderTarget = value;
-				// SP_RELEASE_AND_RETAIN(_renderTarget, renderTarget);
-			}
-		}
+        public Rectangle ScissorBox
+        {
+            get
+            {
+                int[] scissorBox = new int[4];
+                GL.GetInteger(All.ScissorBox, scissorBox);
+                return new Rectangle(scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]);
+            }
 
-		public Context CurrentContext { get; set; }
+            set
+            {
+                GL.Enable(All.ScissorTest);
+                GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+            }
+        }
 
-//		SPContext *current = currentThreadDictionary[currentContextKey];
-//		if (!current || current->_nativeContext != [EAGLContext currentContext])
-//			return nil;
-//
-//		return current;
+        public void ResetScissorBox()
+        {
+            GL.Disable(All.ScissorTest);
+        }
 
-		public Context ()
-		{
-			_framebufferCache = new Dictionary<uint, uint>();
-		}
+        public Texture RenderTarget
+        {
+            set
+            {
+                uint framebuffer;
+                if (!FramebufferCache.TryGetValue(value.Name, out framebuffer))
+                {
+                    framebuffer = CreateFramebufferForTexture(value);
+                    FramebufferCache.Add(value.Name, framebuffer);
+                }
 
-		private void RenderToBackBuffer()
-		{
-			RenderTarget = null;
-		}
+                GL.BindFramebuffer(All.Framebuffer, framebuffer);
+                GL.Viewport(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
+                _renderTarget = value;
+            }
+        }
 
-		private uint CreateFramebufferForTexture(Texture texture)
-		{
-			uint framebuffer;
-			GL.GenFramebuffers (1, out framebuffer);
-			GL.BindFramebuffer (All.Framebuffer, framebuffer);
-            
-			GL.FramebufferTexture2D (All.Framebuffer, All.ColorAttachment0, All.Texture2D, texture.Name, 0);
-			if (GL.CheckFramebufferStatus (All.Framebuffer) != All.FramebufferComplete) 
-			{
-				Debug.WriteLine ("Failed to create framebuffer for render texture");
-			}
+        public void ResetRenderTarget()
+        {
+            GL.BindFramebuffer(All.Framebuffer, 1);
+            GL.Viewport(0, 0, SP.CurrentController.DrawableWidth, SP.CurrentController.DrawableHeight);
+            _renderTarget = null;
+        }
 
-			return framebuffer;
-		}
+        private void RenderToBackBuffer()
+        {
+            _renderTarget = null;
+        }
 
-		private void DestroyFramebufferForTexture(Texture texture)
-		{
-			uint framebuffer;
-			if (_framebufferCache.TryGetValue (texture.Name, out framebuffer)) 
-			{
-				GL.DeleteFramebuffers(1, ref framebuffer);
-				_framebufferCache.Remove (texture.Name);
-			}
-		}
+        public static bool DeviceSupportsOpenGLExtension(string extensionName)
+        {
+            return Extensions.Contains(extensionName);
+        }
 
-		private void PresentBufferForDisplay() 
-		{
-			// [_nativeContext presentRenderbuffer:GL_RENDERBUFFER];
-		}
+        private uint CreateFramebufferForTexture(Texture texture)
+        {
+            uint framebuffer;
+            GL.GenFramebuffers(1, out framebuffer);
+            GL.BindFramebuffer(All.Framebuffer, framebuffer);
 
-		public bool DeviceSupportsOpenGLExtension(string extensionName)
-		{
-            // TODO create hashset only once
-            string exts = GL.GetString(All.Extensions);
-            HashSet<string> extensions = new HashSet<string>(exts.Split(new char[] { ' ' }));
-            return extensions.Contains(extensionName);
-//			static dispatch_once_t once;
-//			static NSArray *extensions = nil;
-//
-//			dispatch_once(&once, ^{
-//				NSString *extensionsString = [NSString stringWithCString:(const char *)glGetString(GL_EXTENSIONS) encoding:NSASCIIStringEncoding];
-//				extensions = [[extensionsString componentsSeparatedByString:@" "] retain];
-//			});
-//
-//			return [extensions containsObject:extensionName];
-		}
-	}
+            GL.FramebufferTexture2D(All.Framebuffer, All.ColorAttachment0, All.Texture2D, texture.Name, 0);
+            if (GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
+            {
+                Debug.WriteLine("Failed to create framebuffer for render texture");
+            }
+
+            return framebuffer;
+        }
+
+        private void DestroyFramebufferForTexture(Texture texture)
+        {
+            uint framebuffer;
+            if (FramebufferCache.TryGetValue(texture.Name, out framebuffer))
+            {
+                GL.DeleteFramebuffers(1, ref framebuffer);
+                FramebufferCache.Remove(texture.Name);
+            }
+        }
+
+        private void PresentBufferForDisplay()
+        {
+            _nativeContext.SwapBuffers(); // TODO: not sure will need to revisit ([_nativeContext presentRenderbuffer:GL_RENDERBUFFER];)
+        }
+    }
 }
 
