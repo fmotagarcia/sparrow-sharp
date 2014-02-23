@@ -29,7 +29,7 @@ namespace Sparrow.Display
 		public bool touchable;
 		public string name;
 
-		public double Width {
+		virtual public double Width {
 			get { return BoundsInSpace (_parent).Width; }
 			set {
 				ScaleX = 1.0;
@@ -40,7 +40,8 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double Height {
+        virtual public double Height
+        {
 			get { return BoundsInSpace (_parent).Height; }
 			set {
 				ScaleY = 1.0;
@@ -51,7 +52,8 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double X {
+        virtual public double X
+        {
 			get { return _x; }
 			set {
 				if (value != _x) {
@@ -61,7 +63,8 @@ namespace Sparrow.Display
 			}
 		}
 
-		public double Y {
+        virtual public double Y
+        {
 			get { return _y; }
 			set {
 				if (value != _y) {
