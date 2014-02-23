@@ -7,7 +7,7 @@ namespace Sparrow.Display
 {
 	public class Quad : DisplayObject
 	{
-		private const double MIN_SIZE = 0.1;
+		private const float MIN_SIZE = 0.1f;
 		private bool _tinted;
 		private VertexData _vertexData;
 
@@ -25,18 +25,18 @@ namespace Sparrow.Display
 				if (value != 0xffffff) {
 					_tinted = true;
 				} else {
-					_tinted = Alpha != 1.0 || _vertexData.Tinted;
+					_tinted = Alpha != 1.0f || _vertexData.Tinted;
 				}
 			}
 		}
 
-		public override double Alpha {
+		public override float Alpha {
 			get {
 				return base.Alpha;
 			}
 			set {
 				base.Alpha = value;
-				if (Alpha != 1.0) {
+				if (Alpha != 1.0f) {
 					_tinted = true;
 				} else {
 					_tinted = _vertexData.Tinted;
@@ -64,7 +64,7 @@ namespace Sparrow.Display
 			get { return null; }
 		}
 
-		public Quad (double width = 32, double height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
+		public Quad (float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
 		{
 			if (width <= MIN_SIZE)
 				width = MIN_SIZE;
@@ -80,7 +80,7 @@ namespace Sparrow.Display
 			_vertexData.Vertices [3].Position.Y = height;
 
 			for (int i = 0; i < 4; ++i) {
-				_vertexData.Vertices [i].Color =  VertexColorHelper.CreateVertexColor (color, 1.0);
+				_vertexData.Vertices [i].Color =  VertexColorHelper.CreateVertexColor (color, 1.0f);
 			}
 
 			VertexDataDidChange ();
@@ -92,10 +92,10 @@ namespace Sparrow.Display
 
 			if (targetSpace == this) { // optimization
 				bottomRight = _vertexData.PositionAtIndex (3);
-				return new Rectangle (0.0, 0.0, bottomRight.X, bottomRight.Y);
-			} else if (targetSpace == Parent && Rotation == 0.0) { // optimization
-				double scaleX = ScaleX;
-				double scaleY = ScaleY;
+				return new Rectangle (0.0f, 0.0f, bottomRight.X, bottomRight.Y);
+			} else if (targetSpace == Parent && Rotation == 0.0f) { // optimization
+				float scaleX = ScaleX;
+				float scaleY = ScaleY;
 
 				bottomRight = _vertexData.PositionAtIndex (3);
 				Rectangle resultRect = new Rectangle (X - PivotX * scaleX, 
@@ -104,13 +104,13 @@ namespace Sparrow.Display
 					                       bottomRight.Y * ScaleY); 
 
 
-				if (scaleX < 0.0) { 
-					resultRect.Width *= -1.0; 
+				if (scaleX < 0.0f) { 
+					resultRect.Width *= -1.0f; 
 					resultRect.X -= resultRect.Width;  
 				}
 
-				if (scaleY < 0.0) { 
-					resultRect.Height *= -1.0; 
+				if (scaleY < 0.0f) { 
+					resultRect.Height *= -1.0f; 
 					resultRect.Y -= resultRect.Height; 
 				}
 
@@ -129,7 +129,7 @@ namespace Sparrow.Display
 			if (color != 0xFFFFFF) {
 				_tinted = true;	
 			} else {
-				_tinted = Alpha != 1.0 || _vertexData.Tinted;
+				_tinted = Alpha != 1.0f || _vertexData.Tinted;
 			}
 		}
 
@@ -143,19 +143,19 @@ namespace Sparrow.Display
 			support.BatchQuad (this);
 		}
 
-		public void SetAlpha (double alpha, int vertexID)
+		public void SetAlpha (float alpha, int vertexID)
 		{
 			_vertexData.SetAlpha (alpha, vertexID);
 			VertexDataDidChange ();
 
-			if (alpha != 1.0) {
+			if (alpha != 1.0f) {
 				_tinted = true;
 			} else {
-				_tinted = Alpha != 1.0 || _vertexData.Tinted;
+				_tinted = Alpha != 1.0f || _vertexData.Tinted;
 			}
 		}
 
-		public double AlphaOfVertex (int vertexID)
+		public float AlphaOfVertex (int vertexID)
 		{
 			return _vertexData.AlphaAtIndex (vertexID);
 		}

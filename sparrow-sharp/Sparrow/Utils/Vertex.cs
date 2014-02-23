@@ -6,8 +6,8 @@ namespace Sparrow.Utils
 {
 	public struct Vertex
 	{
-		public Vector2d Position;
-		public Vector2d TexCoords;
+		public Vector2 Position;
+		public Vector2 TexCoords;
 		public VertexColor Color;
 	}
 }

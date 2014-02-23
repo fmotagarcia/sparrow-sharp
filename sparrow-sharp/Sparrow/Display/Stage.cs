@@ -7,17 +7,17 @@ namespace Sparrow.Display
 {
 	public class Stage : DisplayObjectContainer
 	{
-        private double _width;
-        private double _height;
+        private float _width;
+        private float _height;
 		private readonly List<DisplayObject> _enterFrameListeners = new List<DisplayObject> ();
 		private uint _color;
 
-        override public double Width {
+        override public float Width {
 			get { return _width; }
             set { _width = value; }
 		}
 
-        override public double Height
+        override public float Height
         {
 			get { return _height; }
 			set { _height = value; }
@@ -77,7 +77,7 @@ namespace Sparrow.Display
 //            }
 //        }
 
-        public void AdvanceTime(double passedTime)
+        public void AdvanceTime(float passedTime)
         {
 //            EnterFrameEvent enterFrameEvent = new EnterFrameEvent(EventTypeEnterFrame, passedTime);
 //            BroadcastEvent(enterFrameEvent);
@@ -93,45 +93,45 @@ namespace Sparrow.Display
             _enterFrameListeners.Remove( listener );
         }
 
-        override public double X {
+        override public float X {
 			set { throw new Exception("cannot set x-coordinate of stage"); }
 		}
 
-		override public double Y {
+		override public float Y {
 			set { throw new Exception("cannot set y-coordinate of stage"); }
 		}
 
-        override public double ScaleX
+        override public float ScaleX
         {
             set { throw new Exception("cannot scale stage"); }
         }
 
-        override public double ScaleY
+        override public float ScaleY
         {
             set { throw new Exception("cannot scale stage"); }
         }
 
-        override public double SkewX
+        override public float SkewX
         {
             set { throw new Exception("cannot skew stage"); }
         }
 
-        override public double SkewY
+        override public float SkewY
         {
             set { throw new Exception("cannot skew stage"); }
         }
 
-        override public double PivotX
+        override public float PivotX
         {
             set { throw new Exception("cannot set PivotX of stage"); }
         }
 
-        override public double PivotY
+        override public float PivotY
         {
             set { throw new Exception("cannot set PivotY of stage"); }
         }
 
-        override public double Rotation
+        override public float Rotation
         {
             set { throw new Exception("cannot set rotation of stage"); }
         }

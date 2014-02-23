@@ -5,44 +5,44 @@ namespace Sparrow.Geom
 {
 	public class Point
 	{
-		private double _x;
-		private double _y;
+		private float _x;
+		private float _y;
 
-		public double X {
+		public float X {
 			get { return _x;}
 			set { _x = value;}
 		}
 
-		public double Y {
+		public float Y {
 			get { return _y;}
 			set { _y = value;}
 		}
 
-		public double Length {
+		public float Length {
 			get {
-				return Math.Sqrt (Math.Pow (_x, 2.0) +  Math.Pow (_y, 2.0));
+				return (float) Math.Sqrt (Math.Pow (_x, 2.0f) +  Math.Pow (_y, 2.0f));
 			}
 		}
 
-		public double SquaredLength {
+		public float SquaredLength {
 			get {
-				return Math.Pow (_x, 2.0) + Math.Pow (_y, 2.0);
+				return (float) (Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
 			}
 		}
 
-		public double Angle {
+		public float Angle {
 			get {
-				return Math.Atan2 (_y, _x);
+				return (float) Math.Atan2 (_y, _x);
 			}
 		}
 
 		public bool IsOrigin {
 			get {
-				return _x == 0.0 && _y == 0.0;
+				return _x == 0.0f && _y == 0.0f;
 			}
 		}
 
-		public Point (double x = 0.0, double y = 0.0)
+		public Point (float x = 0.0f, float y = 0.0f)
 		{
 			_x = x;
 			_y = y;
@@ -63,15 +63,15 @@ namespace Sparrow.Geom
 			return new Point (_x - point.X, _y - point.Y);
 		}
 
-		public Point ScaleBy (double scalar)
+		public Point ScaleBy (float scalar)
 		{
 			return new Point (_x * scalar, _y * scalar);
 		}
 
-		public Point RotateBy (double angle)
+		public Point RotateBy (float angle)
 		{
-			double sin = Math.Sin (angle);
-			double cos = Math.Cos (angle);
+			float sin = (float) Math.Sin (angle);
+			float cos = (float) Math.Cos (angle);
 
 			return new Point (_x * cos - _y * sin, _x * sin + _y * cos);
 		}
@@ -82,12 +82,12 @@ namespace Sparrow.Geom
 				// TODO: throw exception "Cannot normalize point in the origin"
 			}
 
-			double inverseLength = 1 / Length;
+			float inverseLength = 1 / Length;
 			return new Point (_x * inverseLength, _y * inverseLength);
 
 		}
 
-		public double Dot (Point other)
+		public float Dot (Point other)
 		{
 			return _x * other.X + _y * other.Y;
 		}

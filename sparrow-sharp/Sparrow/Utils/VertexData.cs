@@ -6,7 +6,7 @@ namespace Sparrow.Utils
 {
     public class VertexData
     {
-        private const double MIN_ALPHA = 5.0 / 255.0;
+		private const float MIN_ALPHA = 5.0f / 255.0f;
         private Vertex[] _vertices;
         private int _numVertices;
         private bool _premultipliedAlpha;
@@ -33,7 +33,7 @@ namespace Sparrow.Utils
                         {
                             for (int i = _numVertices; i < value; i++)
                             {
-								_vertices[i].Color = VertexColorHelper.CreateVertexColor(0, 1.0);
+								_vertices[i].Color = VertexColorHelper.CreateVertexColor(0, 1.0f);
                             }
                         }
                     }
@@ -142,7 +142,7 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            Vector2d position = _vertices[index].Position;
+            Vector2 position = _vertices[index].Position;
 
             return new Point(position.X, position.Y);
         }
@@ -154,17 +154,17 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            _vertices[atIndex].Position = new Vector2d(position.X, position.Y);
+            _vertices[atIndex].Position = new Vector2(position.X, position.Y);
         }
 
-        public void SetPosition(double x, double y, int atIndex)
+        public void SetPosition(float x, float y, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            _vertices[atIndex].Position = new Vector2d(x, y);
+            _vertices[atIndex].Position = new Vector2(x, y);
         }
 
         public Point TextCoordsAtIndex(int index)
@@ -174,7 +174,7 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            Vector2d texCoords = _vertices[index].TexCoords;
+            Vector2 texCoords = _vertices[index].TexCoords;
             return new Point(texCoords.X, texCoords.Y);
         }
 
@@ -185,33 +185,33 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            _vertices[atIndex].TexCoords = new Vector2d(texCoords.X, texCoords.Y);
+            _vertices[atIndex].TexCoords = new Vector2(texCoords.X, texCoords.Y);
         }
 
-        public void SetTextCoords(double x, double y, int atIndex)
+        public void SetTextCoords(float x, float y, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            _vertices[atIndex].TexCoords = new Vector2d(x, y);
+            _vertices[atIndex].TexCoords = new Vector2(x, y);
         }
 
-        public void SetColor(uint color, double alpha, int atIndex)
+		public void SetColor(uint color, float alpha, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0, 1); 
+			alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
 
 			VertexColor vertexColor =  VertexColorHelper.CreateVertexColor(color, alpha);
 			_vertices[atIndex].Color = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
         }
 
-        public void SetColor(uint color, double alpha)
+		public void SetColor(uint color, float alpha)
         {
             for (int i = 0; i < _numVertices; i++)
             {
@@ -219,7 +219,7 @@ namespace Sparrow.Utils
             }
         }
 
-        public uint ColorAtIndex(int index)
+		public uint ColorAtIndex(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -235,13 +235,13 @@ namespace Sparrow.Utils
             return ColorUtil.GetRGB(vertexColor.R, vertexColor.G, vertexColor.B);
         }
 
-        public void SetColor(uint color, int atIndex)
+		public void SetColor(uint color, int atIndex)
         {
-            double alpha = AlphaAtIndex(atIndex);
+            float alpha = AlphaAtIndex(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
-        public void SetColor(uint color)
+		public void SetColor(uint color)
         {
             for (int i = 0; i < _numVertices; i++)
             {
@@ -249,13 +249,13 @@ namespace Sparrow.Utils
             }
         }
 
-        public void SetAlpha(double alpha, int atIndex)
+        public void SetAlpha(float alpha, int atIndex)
         {
-            uint color = ColorAtIndex(atIndex);
+			uint color = ColorAtIndex(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
-        public void SetAlpha(double alpha)
+        public void SetAlpha(float alpha)
         {
             for (int i = 0; i < _numVertices; i++)
             {
@@ -263,29 +263,29 @@ namespace Sparrow.Utils
             }
         }
 
-        public double AlphaAtIndex(int index)
+        public float AlphaAtIndex(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            return _vertices[index].Color.A / 255.0;
+			return _vertices[index].Color.A / 255.0f;
         }
 
-        public void ScaleAlphaBy(double factor)
+        public void ScaleAlphaBy(float factor)
         {
             ScaleAlphaBy(factor, 0, _numVertices);
         }
 
-        public void ScaleAlphaBy(double factor, int index, int numVertices)
+        public void ScaleAlphaBy(float factor, int index, int numVertices)
         {
             if (index < 0 || index >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            if (factor == 1.0)
+			if (factor == 1.0f)
             {
                 return;
             }
@@ -296,7 +296,7 @@ namespace Sparrow.Utils
             {
                 Vertex vertex = _vertices[i];
                 VertexColor vertexColor = vertex.Color;
-                uint newAlpha = Convert.ToUInt32(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
+				byte newAlpha = Convert.ToByte(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
 
                 if (_premultipliedAlpha)
                 {
@@ -336,7 +336,7 @@ namespace Sparrow.Utils
 
             for (int i = atIndex, end = atIndex + numVertices; i < end; ++i)
             {
-                Vector2d pos = _vertices[i].Position;
+                Vector2 pos = _vertices[i].Position;
                 pos.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
                 pos.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
             }
@@ -357,10 +357,10 @@ namespace Sparrow.Utils
             if (numVertices == 0)
                 return null;
 
-            double minX = Double.MaxValue;
-            double maxX = Double.MinValue;
-            double minY = Double.MaxValue;
-            double maxY = Double.MinValue;
+			float minX = float.MaxValue;
+			float maxX = float.MinValue;
+			float minY = float.MaxValue;
+			float maxY = float.MinValue;
 
             int endIndex = atIndex + numVertices;
 
@@ -368,10 +368,10 @@ namespace Sparrow.Utils
             {
                 for (int i = atIndex; i < endIndex; ++i)
                 {
-                    Vector2d position = _vertices[i].Position;
+                    Vector2 position = _vertices[i].Position;
                     Point transformedPoint = matrix.TransformPoint(position.X, position.Y);
-                    double tfX = transformedPoint.X;
-                    double tfY = transformedPoint.Y;
+                    float tfX = transformedPoint.X;
+                    float tfY = transformedPoint.Y;
                     minX = Math.Min(minX, tfX);
                     maxX = Math.Max(maxX, tfX);
                     minY = Math.Min(minY, tfY);
@@ -382,7 +382,7 @@ namespace Sparrow.Utils
             {
                 for (int i = atIndex; i < endIndex; ++i)
                 {
-                    Vector2d position = _vertices[i].Position;
+                    Vector2 position = _vertices[i].Position;
                     minX = Math.Min(minX, position.X);
                     maxX = Math.Max(maxX, position.X);
                     minY = Math.Min(minY, position.Y);

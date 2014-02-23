@@ -5,47 +5,47 @@ namespace Sparrow.Geom
 {
 	public class Rectangle
 	{
-		private double _x;
-		private double _y;
-		private double _width;
-		private double _height;
+		private float _x;
+		private float _y;
+		private float _width;
+		private float _height;
 
-		public double X {
+		public float X {
 			get { return _x;}
 			set { _x = value;}
 		}
 
-		public double Y {
+		public float Y {
 			get { return _y;}
 			set { _y = value;}
 		}
 
-		public double Width {
+		public float Width {
 			get { return _width;}
 			set { _width = value;}
 		}
 
-		public double Height {
+		public float Height {
 			get { return _height;}
 			set { _height = value;}
 		}
 
-		public double Top {
+		public float Top {
 			get { return _y;}
 			set { _y = value;}
 		}
 
-		public double Bottom {
+		public float Bottom {
 			get { return _y + _height;}
 			set { _height = value - _y;}
 		}
 
-		public double Left {
+		public float Left {
 			get { return _x;}
 			set { _x = value;}
 		}
 
-		public double Right {
+		public float Right {
 			get { return _x + _width;}
 			set { _width = value - _x;}
 		}
@@ -74,7 +74,7 @@ namespace Sparrow.Geom
 			}
 		}
 
-		public Rectangle (double x = 0.0, double y = 0.0, double width = 0.0, double height = 0.0)
+		public Rectangle (float x = 0.0f, float y = 0.0f, float width = 0.0f, float height = 0.0f)
 		{ 
 			_x = x;
 			_y = y;
@@ -82,7 +82,7 @@ namespace Sparrow.Geom
 			_height = height;
 		}
 
-		public bool Contains (double x, double y)
+		public bool Contains (float x, float y)
 		{
 			return x >= _x && y >= _y && x <= _x + _width && y <= _y + _height;
 		}
@@ -98,10 +98,10 @@ namespace Sparrow.Geom
 				return false;
 			}
 
-			double rX = rectangle.X;
-			double rY = rectangle.Y;
-			double rWidth = rectangle.Width;
-			double rHeight = rectangle.Height;
+			float rX = rectangle.X;
+			float rY = rectangle.Y;
+			float rWidth = rectangle.Width;
+			float rHeight = rectangle.Height;
 
 			return rX >= _x && rX + rWidth <= _x + _width &&
 				rY >= _y && rY + rHeight <= _y + _height;
@@ -113,10 +113,10 @@ namespace Sparrow.Geom
 				return false;
 			}
 
-			double rX = rectangle.X;
-			double rY = rectangle.Y;
-			double rWidth = rectangle.Width;
-			double rHeight = rectangle.Height;
+			float rX = rectangle.X;
+			float rY = rectangle.Y;
+			float rWidth = rectangle.Width;
+			float rHeight = rectangle.Height;
 
 			bool outside = 
 				(rX <= _x && rX + rWidth <= _x) || (rX >= _x + _width && rX + rWidth >= _x + _width) ||
@@ -130,10 +130,10 @@ namespace Sparrow.Geom
 				return null;
 			}
 
-			double left = Math.Max (_x, rectangle.X);
-			double right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
-			double top = Math.Max (_y, rectangle.Y);
-			double bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
+			float left = Math.Max (_x, rectangle.X);
+			float right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
+			float top = Math.Max (_y, rectangle.Y);
+			float bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
 
 			if (left > right || top > bottom) {
 				return new Rectangle ();
@@ -148,25 +148,25 @@ namespace Sparrow.Geom
 				return null;
 			}
 
-			double left = Math.Max (_x, rectangle.X);
-			double right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
-			double top = Math.Max (_y, rectangle.Y);
-			double bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
+			float left = Math.Max (_x, rectangle.X);
+			float right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
+			float top = Math.Max (_y, rectangle.Y);
+			float bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
 
 			return new Rectangle (left, top, right - left, bottom - top);
 		}
 
-		public void Inflate (double dx, double dy)
+		public void Inflate (float dx, float dy)
 		{
 			_x -= dx;
 			_y -= dy;
-			_width += 2.0 * dx;
-			_height += 2.0 * dy;
+			_width += 2.0f * dx;
+			_height += 2.0f * dy;
 		}
 
 		public void Empty ()
 		{
-			_x = _y = _width = _height = 0.0;
+			_x = _y = _width = _height = 0.0f;
 		}
 
 		public void CopyFromRectangle (Rectangle rectangle)
@@ -179,12 +179,12 @@ namespace Sparrow.Geom
 
 		public void Normalize ()
 		{
-			if (_width < 0.0) {
+			if (_width < 0.0f) {
 				_width = -_width;
 				_x -= _width;
 			}
 
-			if (_height < 0.0) {
+			if (_height < 0.0f) {
 				_height = -_height;
 				_y -= _height;
 			}
@@ -192,7 +192,7 @@ namespace Sparrow.Geom
 
 		public bool IsEmpty ()
 		{
-			return _width == 0.0 || _height == 0.0;
+			return _width == 0.0f || _height == 0.0f;
 		}
 
 		public bool isEqual (Rectangle other)

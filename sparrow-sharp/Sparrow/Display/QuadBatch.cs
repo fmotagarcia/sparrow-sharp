@@ -62,18 +62,18 @@ namespace Sparrow.Display
             AddQuad(quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
         }
 
-        public void AddQuad(Quad quad, double alpha)
+        public void AddQuad(Quad quad, float alpha)
         {
             // TOOD add blendMode to quad
             AddQuad(quad, alpha, Sparrow.Display.BlendMode.AUTO, null);
         }
 
-        public void AddQuad(Quad quad, double alpha, uint blendMode)
+        public void AddQuad(Quad quad, float alpha, uint blendMode)
         {
             AddQuad(quad, quad.Alpha, blendMode, null);
         }
 
-        public void AddQuad(Quad quad, double alpha, uint blendMode, Matrix matrix)
+        public void AddQuad(Quad quad, float alpha, uint blendMode, Matrix matrix)
         {
             if (matrix == null)
             {
@@ -92,14 +92,14 @@ namespace Sparrow.Display
             quad.CopyVertexDataTo(_vertexData, vertexID);
             _vertexData.TransformVerticesWithMatrix(matrix, vertexID, 4);
 
-            if (alpha != 1.0)
+			if (alpha != 1.0f)
             {
                 _vertexData.ScaleAlphaBy(alpha, vertexID, 4);
             }
 
             if (!_tinted)
             {
-                _tinted = alpha != 1.0d || quad.Tinted;
+				_tinted = alpha != 1.0f || quad.Tinted;
             }
 
             _syncRequired = true;
@@ -111,17 +111,17 @@ namespace Sparrow.Display
             AddQuadBatch(quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
         }
 
-        public void AddQuadBatch(QuadBatch quadBatch, double alpha)
+        public void AddQuadBatch(QuadBatch quadBatch, float alpha)
         {
             AddQuadBatch(quadBatch, alpha, quadBatch.BlendMode, null);
         }
 
-        public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode)
+        public void AddQuadBatch(QuadBatch quadBatch, float alpha, uint blendMode)
         {
             AddQuadBatch(quadBatch, alpha, blendMode, null);
         }
 
-        public void AddQuadBatch(QuadBatch quadBatch, double alpha, uint blendMode, Matrix matrix)
+        public void AddQuadBatch(QuadBatch quadBatch, float alpha, uint blendMode, Matrix matrix)
         {
             int vertexID = _numQuads * 4;
             int numQuads = quadBatch.NumQuads;
@@ -145,21 +145,21 @@ namespace Sparrow.Display
             quadBatch.VertexData.CopyToVertexData(_vertexData, vertexID, numVertices);
             _vertexData.TransformVerticesWithMatrix(matrix, vertexID, numVertices);
 
-            if (alpha != 1.0)
+			if (alpha != 1.0f)
             {
                 _vertexData.ScaleAlphaBy(alpha, vertexID, numVertices);
             }
 
             if (!_tinted)
             {
-                _tinted = alpha != 1.0 || quadBatch.Tinted;
+				_tinted = alpha != 1.0f || quadBatch.Tinted;
             }
 
             _syncRequired = true;
             _numQuads += numQuads;
         }
 
-        public bool IsStateChange(bool tinted, Texture texture, double alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
+        public bool IsStateChange(bool tinted, Texture texture, float alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
         {
             if (_numQuads == 0)
             {
@@ -175,7 +175,7 @@ namespace Sparrow.Display
             }
             else if (_texture != null && texture != null)
             {
-                return _tinted != (tinted || alpha != 1.0) ||
+				return _tinted != (tinted || alpha != 1.0f) ||
                 _texture.Name != texture.Name ||
                 BlendMode != blendMode;
             }
@@ -226,7 +226,7 @@ namespace Sparrow.Display
             _baseEffect.Texture = _texture;
             _baseEffect.PremultipliedAlpha = _premultipliedAlpha;
             _baseEffect.MvpMatrix = matrix;
-            _baseEffect.UseTinting = _tinted || alpha != 1.0;
+			_baseEffect.UseTinting = _tinted || alpha != 1.0f;
             _baseEffect.Alpha = alpha;
 
             _baseEffect.PrepareToDraw();
@@ -270,16 +270,16 @@ namespace Sparrow.Display
                 quadBatches = new List<QuadBatch>();
             }
 
-            Compile(displayObject, quadBatches, -1, new Matrix(), 1.0, Sparrow.Display.BlendMode.AUTO);
+			Compile(displayObject, quadBatches, -1, new Matrix(), 1.0f, Sparrow.Display.BlendMode.AUTO);
 
             return Compile(displayObject);
         }
 
         public int Compile(DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
-                           Matrix transformationMatrix, double alpha, uint blendMode)
+                           Matrix transformationMatrix, float alpha, uint blendMode)
         {
             bool isRootObject = false;
-            double objectAlpha = displayObject.Alpha;
+            float objectAlpha = displayObject.Alpha;
 
             Quad quad = displayObject is Quad ? (Quad)displayObject : null;
             QuadBatch batch = displayObject is QuadBatch ? (QuadBatch)displayObject : null;
@@ -289,7 +289,7 @@ namespace Sparrow.Display
             {
                 isRootObject = true;
                 quadBatchID = 0;
-                objectAlpha = 1.0;
+				objectAlpha = 1.0f;
                 blendMode = displayObject.BlendMode;
 
                 if (quadBatches.Count == 0)

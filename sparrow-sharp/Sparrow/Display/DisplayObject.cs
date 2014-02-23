@@ -9,51 +9,49 @@ namespace Sparrow.Display
 	public class DisplayObject
 	{
 		private const int MAX_DISPLAY_TREE_DEPTH = 32;
-		private double _x;
-		private double _y;
-		private double _pivotX;
-		private double _pivotY;
-		private double _scaleX;
-		private double _scaleY;
-		private double _skewX;
-		private double _skewY;
-		private double _rotation;
-		private double _alpha;
+		private float _x;
+		private float _y;
+		private float _pivotX;
+		private float _pivotY;
+		private float _scaleX;
+		private float _scaleY;
+		private float _skewX;
+		private float _skewY;
+		private float _rotation;
+		private float _alpha;
 		private uint _blendMode;
 		private bool _orientationChanged;
 		private DisplayObjectContainer _parent;
 		private Matrix _transformationMatrix;
-		//		private double _lastTouchTimestamp;
+		//		private float _lastTouchTimestamp;
 		//		private SPFragmentFilter *_filter;
 		public bool visible;
 		public bool touchable;
 		public string name;
 
-		virtual public double Width {
+		virtual public float Width {
 			get { return BoundsInSpace (_parent).Width; }
 			set {
-				ScaleX = 1.0;
-				double actualWidth = Width;
-				if (actualWidth != 0.0) {
+				ScaleX = 1.0f;
+				float actualWidth = Width;
+				if (actualWidth != 0.0f) {
 					ScaleX = value / actualWidth;
 				}
 			}
 		}
 
-        virtual public double Height
-        {
+		virtual public float Height {
 			get { return BoundsInSpace (_parent).Height; }
 			set {
-				ScaleY = 1.0;
-				double actualHeight = Width;
-				if (actualHeight != 0.0) {
+				ScaleY = 1.0f;
+				float actualHeight = Width;
+				if (actualHeight != 0.0f) {
 					ScaleY = value / actualHeight;
 				}
 			}
 		}
 
-        virtual public double X
-        {
+		virtual public float X {
 			get { return _x; }
 			set {
 				if (value != _x) {
@@ -63,8 +61,7 @@ namespace Sparrow.Display
 			}
 		}
 
-        virtual public double Y
-        {
+		virtual public float Y {
 			get { return _y; }
 			set {
 				if (value != _y) {
@@ -74,7 +71,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double ScaleX {
+		virtual public float ScaleX {
 			get { return _scaleX; }
 			set {
 				if (value != _scaleX) {
@@ -84,7 +81,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double ScaleY {
+		virtual public float ScaleY {
 			get { return _scaleY; }
 			set {
 				if (value != _scaleY) {
@@ -94,7 +91,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double SkewX {
+		virtual public float SkewX {
 			get { return _skewX; }
 			set {
 				if (value != _skewX) {
@@ -104,7 +101,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double SkewY {
+		virtual public float SkewY {
 			get { return _skewY; }
 			set {
 				if (value != _skewY) {
@@ -114,7 +111,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double PivotX {
+		virtual public float PivotX {
 			get { return _pivotX; }
 			set {
 				if (value != _pivotX) {
@@ -124,7 +121,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double PivotY {
+		virtual public float PivotY {
 			get { return _pivotY; }
 			set {
 				if (value != _pivotY) {
@@ -134,27 +131,26 @@ namespace Sparrow.Display
 			}
 		}
 
-		virtual public double Rotation {
+		virtual public float Rotation {
 			get { return _rotation; }
 			set {
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
-				value = value % 2.0 * Math.PI;
-
+				value = value % 2.0f * (float)Math.PI;
 				// move to [-180 deg, +180 deg]
-				if (value < -Math.PI)
-					value += 2.0 * Math.PI;
+				if (value < -(float)Math.PI)
+					value += 2.0f * (float)Math.PI;
 				if (value > Math.PI)
-					value -= 2.0 * Math.PI;
+					value -= 2.0f * (float)Math.PI;
 
 				_rotation = value;
 				_orientationChanged = true;
 			}
 		}
 
-		virtual public double Alpha {
+		virtual public float Alpha {
 			get { return _alpha; }
 			set {
-				_alpha = NumberUtil.Clamp (value, 0.0, 1.0);
+				_alpha = NumberUtil.Clamp (value, 0.0f, 1.0f);
 			}
 		}
 
@@ -197,18 +193,18 @@ namespace Sparrow.Display
 				if (_orientationChanged) {
 					_orientationChanged = false;
 
-					if (_skewX == 0.0 && _skewY == 0.0) {
+					if (_skewX == 0.0f && _skewY == 0.0f) {
 						// optimization: no skewing / rotation simplifies the matrix math
-						if (_rotation == 0.0) {
+						if (_rotation == 0.0f) {
 							_transformationMatrix.A = _scaleX;
-							_transformationMatrix.B = 0.0;
-							_transformationMatrix.C = 0.0;
+							_transformationMatrix.B = 0.0f;
+							_transformationMatrix.C = 0.0f;
 							_transformationMatrix.C = _scaleY;
 							_transformationMatrix.Tx = _x - _pivotX * _scaleX;
 							_transformationMatrix.Ty = _pivotY * _scaleY;
 						} else {
-							double cos = Math.Cos (_rotation);
-							double sin = Math.Sin (_rotation);
+							float cos = (float)Math.Cos (_rotation);
+							float sin = (float)Math.Sin (_rotation);
 							_transformationMatrix.A = _scaleX * cos;
 							_transformationMatrix.B = _scaleX * sin;
 							_transformationMatrix.C = _scaleY * -sin;
@@ -223,7 +219,7 @@ namespace Sparrow.Display
 						_transformationMatrix.Rotate (_rotation);
 						_transformationMatrix.Translate (_x, _y);
 
-						if (_pivotX != 0.0 || _pivotY != 0.0) {
+						if (_pivotX != 0.0f || _pivotY != 0.0f) {
 							// prepend pivot transformation
 							_transformationMatrix.Tx = _x - _transformationMatrix.A * _pivotX
 							- _transformationMatrix.C * _pivotY;
@@ -241,30 +237,30 @@ namespace Sparrow.Display
 				_transformationMatrix.CopyFromMatrix (value);
 
 
-				_pivotX = 0.0;
-				_pivotY = 0.0;
+				_pivotX = 0.0f;
+				_pivotY = 0.0f;
 
 				_x = value.Tx;
 				_y = value.Ty;
 
-				_skewX = Math.Atan (-value.C / value.D);
-				_skewY = Math.Atan (value.B / value.A);
+				_skewX = (float)Math.Atan (-value.C / value.D);
+				_skewY = (float)Math.Atan (value.B / value.A);
 
-				_scaleX = value.A / Math.Cos (_skewY);
-				_scaleY = value.D / Math.Cos (_skewX);
+				_scaleX = value.A / (float)Math.Cos (_skewY);
+				_scaleY = value.D / (float)Math.Cos (_skewX);
 
 				if (NumberUtil.Equals (_skewX, _skewY)) {
 					_rotation = _skewX;
-					_skewX = _skewY = 0.0;
+					_skewX = _skewY = 0.0f;
 				} else {
-					_rotation = 0.0;
+					_rotation = 0.0f;
 				}
 			}
 		}
 
 		public bool HasVisibleArea {
 			get {
-				return _alpha != 0.0 && visible && _scaleX != 0.0 && _scaleY != 0.0;
+				return _alpha != 0.0f && visible && _scaleX != 0.0f && _scaleY != 0.0f;
 			}
 		}
 
@@ -299,9 +295,9 @@ namespace Sparrow.Display
 
 		public DisplayObject ()
 		{
-			_alpha = 1.0;
-			_scaleX = 1.0;
-			_scaleY = 1.0;
+			_alpha = 1.0f;
+			_scaleX = 1.0f;
+			_scaleY = 1.0f;
 			visible = true;
 			touchable = true;
 			_transformationMatrix = new Matrix ();
@@ -334,7 +330,7 @@ namespace Sparrow.Display
 				_pivotX = bounds.X;
 				break;
 			case HAlign.CENTER:
-				_pivotX = bounds.X + bounds.Width / 2.0;
+				_pivotX = bounds.X + bounds.Width / 2.0f;
 				break;
 			case HAlign.RIGHT:
 				_pivotX = bounds.X + bounds.Width; 
@@ -348,7 +344,7 @@ namespace Sparrow.Display
 				_pivotY = bounds.Y;  
 				break;
 			case VAlign.CENTER:
-				_pivotY = bounds.Y + bounds.Height / 2.0; 
+				_pivotY = bounds.Y + bounds.Height / 2.0f; 
 				break;
 			case VAlign.BOTTOM:
 				_pivotY = bounds.Y + bounds.Height; 

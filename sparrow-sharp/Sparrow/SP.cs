@@ -35,11 +35,11 @@ namespace Sparrow
             }
         }
 
-        public static double ContentScaleFactor
+        public static float ContentScaleFactor
         {
             get
             {
-                return CurrentController != null ? CurrentController.ContentScaleFactor : 1.0;
+				return CurrentController != null ? CurrentController.ContentScaleFactor : 1.0f;
             }
         }
     }
