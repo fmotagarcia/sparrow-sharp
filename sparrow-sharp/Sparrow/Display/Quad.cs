@@ -80,7 +80,7 @@ namespace Sparrow.Display
 			_vertexData.Vertices [3].Position.Y = height;
 
 			for (int i = 0; i < 4; ++i) {
-				_vertexData.Vertices [i].Color = new VertexColor (color, 1.0);
+				_vertexData.Vertices [i].Color =  VertexColorHelper.CreateVertexColor (color, 1.0);
 			}
 
 			VertexDataDidChange ();

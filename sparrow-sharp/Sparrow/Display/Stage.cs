@@ -27,6 +27,7 @@ namespace Sparrow.Display
 			get { return _color;}
 			set { _color = value;}
 		}
+        
 
         public Stage (float initWidth, float initHeight)
 		{

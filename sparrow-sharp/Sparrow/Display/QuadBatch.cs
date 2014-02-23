@@ -436,7 +436,7 @@ namespace Sparrow.Display
             }
 
             GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
-            GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _vertexData.RawData, All.StaticDraw);
+			GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 8 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
             _syncRequired = false;
         }
