@@ -1,2 +1,0 @@
-sparrowsharp.MainActivity;sparrowsharp.MainActivity
-sparrowsharp.GLView1;sparrowsharp.GLView1
