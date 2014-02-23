@@ -227,12 +227,12 @@ namespace Sparrow.Geom
         {
             Matrix4 matrix = new Matrix4();
 
-            matrix.M11 = (float)_a;
-            matrix.M12 = (float)_b;
-            matrix.M21 = (float)_c;
-            matrix.M22 = (float)_d;
-            matrix.M41 = (float)_tx;
-            matrix.M42 = (float)_ty;
+            matrix.M11 = _a;
+            matrix.M12 = _b;
+            matrix.M21 = _c;
+            matrix.M22 = _d;
+            matrix.M41 = _tx;
+            matrix.M42 = _ty;
 
             return matrix;
         }
