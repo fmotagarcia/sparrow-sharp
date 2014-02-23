@@ -12,8 +12,8 @@ class Program
     private int _name;
     private String _vertexShader;
     private String _fragmentShader;
-    private Dictionary<String, int> _uniforms;
-    private Dictionary<String, int> _attributes;
+    private readonly Dictionary<String, int> _uniforms = new Dictionary<string, int>();
+    private readonly Dictionary<String, int> _attributes = new Dictionary<string, int>();
 
     public int Name
     {
@@ -110,7 +110,7 @@ class Program
             return 0;
         }
     
-      #endif
+        #endif
     
         return shader;
     }
