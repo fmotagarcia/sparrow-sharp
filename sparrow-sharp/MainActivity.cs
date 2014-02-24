@@ -6,6 +6,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Android.Content.PM;
+using Sparrow.Core;
 
 namespace sparrowsharp
 {
@@ -24,8 +25,12 @@ namespace sparrowsharp
 			base.OnCreate (bundle);
 
 			// Create our OpenGL view, and display it
-			view = new GLView1 (this);
-			SetContentView (view);
+			//view = new GLView1 (this);
+			//SetContentView (view);
+
+            // NEW SPARROW CODE
+            ViewController SPController = new ViewController();
+            SPController.Start(typeof(SampleGame));
 		}
 
 		protected override void OnPause ()
