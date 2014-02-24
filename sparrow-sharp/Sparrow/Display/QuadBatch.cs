@@ -451,7 +451,7 @@ namespace Sparrow.Display
                     throw new Exception("Capacity must not be zero");
                 }
 
-                uint oldCapacity = (uint)value;
+				uint oldCapacity = (uint) Capacity;
                 int numVertices = value * 4;
                 int numIndices = value * 6;
 
