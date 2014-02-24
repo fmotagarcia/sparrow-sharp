@@ -54,6 +54,11 @@ namespace Sparrow.Display
             return false;
         }
 
+        public DisplayObject GetChild(uint index)
+        {
+            return _children[(int)index];
+        }
+
         public DisplayObject GetChild(int index)
         {
             return _children[index];
@@ -198,7 +203,7 @@ namespace Sparrow.Display
             }
         }
 
-        public DisplayObject HitTestPoint(Point localPoint)
+        override public DisplayObject HitTestPoint(Point localPoint)
         {
             if (!visible || !touchable)
                 return null;

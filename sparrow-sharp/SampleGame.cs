@@ -10,7 +10,7 @@ namespace sparrowsharp
     class SampleGame : DisplayObjectContainer
     {
          
-        public void SampleGame()
+        public SampleGame()
 		{
             Quad quad = new Quad(100, 100);
             quad.Color = 0xff0000;

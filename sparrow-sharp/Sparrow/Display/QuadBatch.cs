@@ -309,7 +309,7 @@ namespace Sparrow.Display
                 int numChildren = container.NumChildren;
                 for (int i = 0; i < numChildren; i++)
                 {
-                    DisplayObject child = container.GetChildAt(i);
+                    DisplayObject child = container.GetChild(i);
                     if (child.HasVisibleArea)
                     {
                         uint childBlendMode = child.BlendMode;

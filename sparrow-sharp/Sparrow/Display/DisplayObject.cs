@@ -435,11 +435,11 @@ namespace Sparrow.Display
 
 		virtual public Rectangle BoundsInSpace (DisplayObject targetSpace)
 		{
+            // TODO abstract
 			return null;
-			// TODO abstract
 		}
 
-		public DisplayObject HitTestPoint (Point localPoint)
+		virtual public DisplayObject HitTestPoint (Point localPoint)
 		{
 			// invisible or untouchable objects cause the test to fail
 			if (!visible || !touchable) {
