@@ -79,7 +79,7 @@ namespace Sparrow.Core
                 }
                 else
                 {
-                    Stage.addChild( Root );
+                    Stage.AddChild( Root );
                     /*
                     if (_onRootCreated)
                     {

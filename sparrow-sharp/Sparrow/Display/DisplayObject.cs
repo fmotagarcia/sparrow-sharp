@@ -178,7 +178,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		public Stage stage {
+		public Stage Stage {
 			get {
 				if (Base is Stage) {
 					return (Stage)Base;
