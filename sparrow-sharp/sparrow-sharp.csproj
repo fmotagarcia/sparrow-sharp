@@ -74,6 +74,7 @@
     <Compile Include="Sparrow\Core\BaseEffect.cs" />
     <Compile Include="Sparrow\Core\Program.cs" />
     <Compile Include="Sparrow\Utils\VertexColorHelper.cs" />
+    <Compile Include="SampleGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

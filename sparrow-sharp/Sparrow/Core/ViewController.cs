@@ -5,6 +5,7 @@ using OpenTK.Platform.Android;
 using Sparrow.Display;
 using System;
 using System.Collections.Generic;
+using sparrowsharp;
 
 namespace Sparrow.Core
 {
@@ -16,31 +17,30 @@ namespace Sparrow.Core
 
         public int DrawableHeight { get; set; }
 
-        public Context Context { get; set; }
+        public Context SPContext { get; set; }
 
         public DisplayObject Root { get; set; }
 
         public Stage Stage { get; set; }
-
         //public Juggler Juggler { get; set; }
-
         public float ContentScaleFactor { get; set; }
 
         public RenderSupport RenderSupport { get; set; }
 
         private Type _rootClass;
-        private float _contentScaleFactor = 1.0f; // hardcode for now
+        private float _contentScaleFactor = 1.0f;
+        // hardcode for now
         private float _viewScaleFactor = 1.0f;
 
-        public ViewController(Android.Content.Context context, IAttributeSet attrs) : base (context, attrs)
-		{
+        public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
+        {
             Setup();
-		}
+        }
 
-		public ViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base (handle, transfer)
-		{
+        public ViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
+        {
             Setup();
-		}
+        }
 
         public ViewController(Android.Content.Context context) : base(context)
         {
@@ -63,14 +63,12 @@ namespace Sparrow.Core
 
             Stage = new Stage();
             //Juggler = new Juggler();
-            Context = new Context();
-            // todo Context.setCurrentContext() ??
-    
-            RenderSupport = new RenderSupport();
-            
+            SPContext = new Context(GraphicsContext);
             SP.CurrentController = this;
+            SP.Context = SPContext;
+            // Context.setCurrentContext() ??
+            RenderSupport = new RenderSupport();
         }
-
         // This gets called when the drawing surface is ready
         protected override void OnLoad(EventArgs e)
         {
@@ -80,7 +78,6 @@ namespace Sparrow.Core
             // Run the render loop
             Run();
         }
-
         // This method is called everytime the context needs
         // to be recreated. Use it to set any egl-specific settings
         // prior to context creation
@@ -122,10 +119,11 @@ namespace Sparrow.Core
             }
             throw new Exception("Can't load egl, aborting");
         }
-
         // This gets called on each frame render
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             // same as (void)glkView:(GLKView *)view drawInRect:(CGRect)rect ??
             SP.CurrentController = this;  
             //??? neded? Context.SetCurrentContext(_context);
@@ -145,11 +143,11 @@ namespace Sparrow.Core
             
             // you only need to call this if you have delegates
             // registered that you want to have called
-            base.OnRenderFrame(e);
+
             SwapBuffers();
         }
 
-        public void Start(Type RootClass )
+        public void Start(Type RootClass)
         {
             if (_rootClass != null)
             {
@@ -162,32 +160,34 @@ namespace Sparrow.Core
         {
             if (Root == null)
             {
-                // hope iOS wont complain about such dynamic stuff
-                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
+                // FIXME: not worried about this for now let's just make it work
+//                // hope iOS wont complain about such dynamic stuff
+//                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
+//
+//                if (Root.GetType().IsInstanceOfType(Stage))
+//                {
+//                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
+//                }
+//                else
+//                {
+//                    Stage.AddChild(Root);
+//                    /*
+//                    if (_onRootCreated)
+//                    {
+//                        _onRootCreated(_root);
+//                        SP_RELEASE_AND_NIL(_onRootCreated);
+//                    }*/
+//                }
 
-                if (Root.GetType().IsInstanceOfType(Stage) )
-                {
-                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
-                }
-                else
-                {
-                    Stage.AddChild( Root );
-                    /*
-                    if (_onRootCreated)
-                    {
-                        _onRootCreated(_root);
-                        SP_RELEASE_AND_NIL(_onRootCreated);
-                    }*/
-                }
+                Stage.AddChild(new SampleGame());
             }
         }
 
         private void ReadjustStageSize()
         {
-            Stage.Width  = Width  * _viewScaleFactor / _contentScaleFactor;
+            Stage.Width = Width * _viewScaleFactor / _contentScaleFactor;
             Stage.Height = Height * _viewScaleFactor / _contentScaleFactor;
         }
-
     }
 }
 

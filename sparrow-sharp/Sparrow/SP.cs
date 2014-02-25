@@ -11,7 +11,12 @@ namespace Sparrow
         {
             get
             {
-                return CurrentController.Context;
+                return CurrentController.SPContext;
+            }
+
+            set
+            {
+                CurrentController.SPContext = value;
             }
         }
         //		public static Juggler Juggler {
@@ -39,7 +44,7 @@ namespace Sparrow
         {
             get
             {
-				return CurrentController != null ? CurrentController.ContentScaleFactor : 1.0f;
+                return CurrentController != null ? CurrentController.ContentScaleFactor : 1.0f;
             }
         }
     }

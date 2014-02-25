@@ -1,8 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/MainActivity.cs">
+    <Files>
+      <File FileName="sparrow-sharp/Sparrow/Core/ViewController.cs" Line="182" Column="14" />
+      <File FileName="sparrow-sharp/MainActivity.cs" Line="26" Column="27" />
+      <File FileName="sparrow-sharp/SampleGame.cs" Line="13" Column="26" />
+      <File FileName="sparrow-sharp/GLView1.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.sparrow-sharp />
 </Properties>

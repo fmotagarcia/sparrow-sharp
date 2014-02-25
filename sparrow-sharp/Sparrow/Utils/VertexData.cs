@@ -6,7 +6,7 @@ namespace Sparrow.Utils
 {
     public class VertexData
     {
-		private const float MIN_ALPHA = 5.0f / 255.0f;
+        private const float MIN_ALPHA = 5.0f / 255.0f;
         private Vertex[] _vertices;
         private int _numVertices;
         private bool _premultipliedAlpha;
@@ -26,14 +26,14 @@ namespace Sparrow.Utils
                         }
                         else
                         {
-                            _vertices = new Vertex[_numVertices];
+                            _vertices = new Vertex[value];
                         }
 
                         if (value > _numVertices)
                         {
                             for (int i = _numVertices; i < value; i++)
                             {
-								_vertices[i].Color = VertexColorHelper.CreateVertexColor(0, 1.0f);
+                                _vertices[i].Color = VertexColorHelper.CreateVertexColor(0, 1.0f);
                             }
                         }
                     }
@@ -62,7 +62,7 @@ namespace Sparrow.Utils
             get
             {
                 for (int i = 0; i < _numVertices; ++i)
-					if (!VertexColorHelper.IsOpaqueWhite(_vertices[i].Color))
+                    if (!VertexColorHelper.IsOpaqueWhite(_vertices[i].Color))
                         return true;
 
                 return false;
@@ -132,7 +132,7 @@ namespace Sparrow.Utils
             _vertices[atIndex] = vertex;
 
             if (_premultipliedAlpha)
-				_vertices[atIndex].Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
+                _vertices[atIndex].Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
         }
 
         public Point PositionAtIndex(int index)
@@ -198,20 +198,20 @@ namespace Sparrow.Utils
             _vertices[atIndex].TexCoords = new Vector2(x, y);
         }
 
-		public void SetColor(uint color, float alpha, int atIndex)
+        public void SetColor(uint color, float alpha, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-			alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
+            alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
 
-			VertexColor vertexColor =  VertexColorHelper.CreateVertexColor(color, alpha);
-			_vertices[atIndex].Color = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
+            VertexColor vertexColor = VertexColorHelper.CreateVertexColor(color, alpha);
+            _vertices[atIndex].Color = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
         }
 
-		public void SetColor(uint color, float alpha)
+        public void SetColor(uint color, float alpha)
         {
             for (int i = 0; i < _numVertices; i++)
             {
@@ -219,7 +219,7 @@ namespace Sparrow.Utils
             }
         }
 
-		public uint ColorAtIndex(int index)
+        public uint ColorAtIndex(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -229,19 +229,19 @@ namespace Sparrow.Utils
             VertexColor vertexColor = _vertices[index].Color;
             if (_premultipliedAlpha)
             {
-				vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
+                vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
             }
 	
             return ColorUtil.GetRGB(vertexColor.R, vertexColor.G, vertexColor.B);
         }
 
-		public void SetColor(uint color, int atIndex)
+        public void SetColor(uint color, int atIndex)
         {
             float alpha = AlphaAtIndex(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
-		public void SetColor(uint color)
+        public void SetColor(uint color)
         {
             for (int i = 0; i < _numVertices; i++)
             {
@@ -251,7 +251,7 @@ namespace Sparrow.Utils
 
         public void SetAlpha(float alpha, int atIndex)
         {
-			uint color = ColorAtIndex(atIndex);
+            uint color = ColorAtIndex(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
@@ -270,7 +270,7 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-			return _vertices[index].Color.A / 255.0f;
+            return _vertices[index].Color.A / 255.0f;
         }
 
         public void ScaleAlphaBy(float factor)
@@ -285,7 +285,7 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-			if (factor == 1.0f)
+            if (factor == 1.0f)
             {
                 return;
             }
@@ -296,17 +296,17 @@ namespace Sparrow.Utils
             {
                 Vertex vertex = _vertices[i];
                 VertexColor vertexColor = vertex.Color;
-				byte newAlpha = Convert.ToByte(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
+                byte newAlpha = Convert.ToByte(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
 
                 if (_premultipliedAlpha)
                 {
-					vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
+                    vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
                     vertexColor.A = newAlpha;
-					vertex.Color = VertexColorHelper.PremultiplyAlpha(vertexColor);
+                    vertex.Color = VertexColorHelper.PremultiplyAlpha(vertexColor);
                 }
                 else
                 {
-					vertex.Color =  VertexColorHelper.CreateVertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
+                    vertex.Color = VertexColorHelper.CreateVertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
                 }
             }
         }
@@ -317,7 +317,7 @@ namespace Sparrow.Utils
 
             if (_premultipliedAlpha)
             {
-				vertex.Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
+                vertex.Color = VertexColorHelper.PremultiplyAlpha(vertex.Color);
             }
             _vertices[_numVertices - 1] = vertex;
         }
@@ -357,10 +357,10 @@ namespace Sparrow.Utils
             if (numVertices == 0)
                 return null;
 
-			float minX = float.MaxValue;
-			float maxX = float.MinValue;
-			float minY = float.MaxValue;
-			float maxY = float.MinValue;
+            float minX = float.MaxValue;
+            float maxX = float.MinValue;
+            float minY = float.MaxValue;
+            float maxY = float.MinValue;
 
             int endIndex = atIndex + numVertices;
 
@@ -406,14 +406,14 @@ namespace Sparrow.Utils
                 {
                     for (int i = 0; i < _numVertices; ++i)
                     {
-						_vertices[i].Color = VertexColorHelper.PremultiplyAlpha(_vertices[i].Color);
+                        _vertices[i].Color = VertexColorHelper.PremultiplyAlpha(_vertices[i].Color);
                     }
                 }
                 else
                 {
                     for (int i = 0; i < _numVertices; ++i)
                     {
-						_vertices[i].Color = VertexColorHelper.UnmultiplyAlpha(_vertices[i].Color);
+                        _vertices[i].Color = VertexColorHelper.UnmultiplyAlpha(_vertices[i].Color);
                     }
                 }
             }
