@@ -1,5 +1,6 @@
 ﻿using Android.Util;
 using OpenTK;
+using OpenTK.Graphics.ES20;
 using OpenTK.Platform.Android;
 using Sparrow.Display;
 using System;
@@ -74,6 +75,7 @@ namespace Sparrow.Core
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            ReadjustStageSize(); // TODO check if Width/Height are not 0 here
             CreateRoot();
             // Run the render loop
             Run();
@@ -88,7 +90,7 @@ namespace Sparrow.Core
         // support the defaults
         protected override void CreateFrameBuffer()
         {
-            // TODO somewhere he make some draw calls? 
+            // TODO some init calls?
 
             // the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
             try
@@ -97,7 +99,7 @@ namespace Sparrow.Core
 
                 // if you don't call this, the context won't be created
                 base.CreateFrameBuffer();
-              ///??  return;
+                return;
             }
             catch (Exception ex)
             {
@@ -124,6 +126,23 @@ namespace Sparrow.Core
         // This gets called on each frame render
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            // same as (void)glkView:(GLKView *)view drawInRect:(CGRect)rect ??
+            SP.CurrentController = this;  
+            //??? neded? Context.SetCurrentContext(_context);
+            GL.Disable(All.CullFace);
+            GL.Disable(All.DepthTest);
+            GL.Disable(All.Blend);
+
+            RenderSupport.NextFrame();
+
+            Stage.Render(RenderSupport);
+
+            RenderSupport.FinishQuadBatch();
+        
+            //#if DEBUG
+            RenderSupport.CheckForOpenGLError();
+            //#endif
+            
             // you only need to call this if you have delegates
             // registered that you want to have called
             base.OnRenderFrame(e);
@@ -132,7 +151,7 @@ namespace Sparrow.Core
 
         public void Start(Type RootClass )
         {
-            if (RootClass != null)
+            if (_rootClass != null)
             {
                 throw new Exception("Sparrow has already been started");
             }
@@ -161,6 +180,12 @@ namespace Sparrow.Core
                     }*/
                 }
             }
+        }
+
+        private void ReadjustStageSize()
+        {
+            Stage.Width  = Width  * _viewScaleFactor / _contentScaleFactor;
+            Stage.Height = Height * _viewScaleFactor / _contentScaleFactor;
         }
 
     }
