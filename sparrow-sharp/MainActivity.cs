@@ -18,7 +18,8 @@ namespace sparrowsharp
 				MainLauncher = true)]
 	public class MainActivity : Activity
 	{
-		GLView1 view;
+		//GLView1 view;
+        ViewController sparrowView;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -29,22 +30,25 @@ namespace sparrowsharp
 			//SetContentView (view);
 
             // NEW SPARROW CODE
-            ViewController SPController = new ViewController();
-            SPController.Start(typeof(SampleGame));
+            sparrowView = new ViewController(this.ApplicationContext);
+            SetContentView(sparrowView);
+            sparrowView.Start(typeof(SampleGame));
 		}
 
 		protected override void OnPause ()
 		{
 			// never forget to do this!
 			base.OnPause ();
-			view.Pause ();
+			//view.Pause ();
+            sparrowView.Pause();
 		}
 
 		protected override void OnResume ()
 		{
 			// never forget to do this!
 			base.OnResume ();
-			view.Resume ();
+			//view.Resume ();
+            sparrowView.Resume();
 		}
 	}
 }

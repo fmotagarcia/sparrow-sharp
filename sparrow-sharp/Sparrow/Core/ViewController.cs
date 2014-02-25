@@ -1,10 +1,13 @@
-﻿using Sparrow.Display;
+﻿using Android.Util;
+using OpenTK;
+using OpenTK.Platform.Android;
+using Sparrow.Display;
 using System;
 using System.Collections.Generic;
 
 namespace Sparrow.Core
 {
-    public class ViewController
+    public class ViewController : AndroidGameView
     {
         public Dictionary<string, Program> Programs { get; private set; }
 
@@ -28,14 +31,24 @@ namespace Sparrow.Core
         private float _contentScaleFactor = 1.0f; // hardcode for now
         private float _viewScaleFactor = 1.0f;
 
+        public ViewController(Android.Content.Context context, IAttributeSet attrs) : base (context, attrs)
+		{
+            Setup();
+		}
+
+		public ViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base (handle, transfer)
+		{
+            Setup();
+		}
+
+        public ViewController(Android.Content.Context context) : base(context)
+        {
+            Setup();
+        }
+
         public void RegisterProgram(string name, Program program)
         {
             Programs.Add(name, program);
-        }
-
-        public ViewController()
-        {
-            Setup();
         }
 
         public void UnregisterProgram(string name)
@@ -50,11 +63,71 @@ namespace Sparrow.Core
             Stage = new Stage();
             //Juggler = new Juggler();
             Context = new Context();
-            // todo set current Context
+            // todo Context.setCurrentContext() ??
     
             RenderSupport = new RenderSupport();
             
             SP.CurrentController = this;
+        }
+
+        // This gets called when the drawing surface is ready
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            CreateRoot();
+            // Run the render loop
+            Run();
+        }
+
+        // This method is called everytime the context needs
+        // to be recreated. Use it to set any egl-specific settings
+        // prior to context creation
+        //
+        // In this particular case, we demonstrate how to set
+        // the graphics mode and fallback in case the device doesn't
+        // support the defaults
+        protected override void CreateFrameBuffer()
+        {
+            // TODO somewhere he make some draw calls? 
+
+            // the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
+            try
+            {
+                Log.Verbose("GLCube", "Loading with default settings");
+
+                // if you don't call this, the context won't be created
+                base.CreateFrameBuffer();
+              ///??  return;
+            }
+            catch (Exception ex)
+            {
+                Log.Verbose("GLCube", "{0}", ex);
+            }
+            // this is a graphics setting that sets everything to the lowest mode possible so
+            // the device returns a reliable graphics setting.
+            try
+            {
+                Log.Verbose("GLCube", "Loading with custom Android settings (low mode)");
+                GraphicsMode = new AndroidGraphicsMode(0, 0, 0, 0, 0, false); // TODO this is for GL 1.1
+
+                // if you don't call this, the context won't be created
+                base.CreateFrameBuffer();
+                return;
+            }
+            catch (Exception ex)
+            {
+                Log.Verbose("GLCube", "{0}", ex);
+            }
+            throw new Exception("Can't load egl, aborting");
+        }
+
+        // This gets called on each frame render
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
+            // you only need to call this if you have delegates
+            // registered that you want to have called
+            base.OnRenderFrame(e);
+            SwapBuffers();
         }
 
         public void Start(Type RootClass )
