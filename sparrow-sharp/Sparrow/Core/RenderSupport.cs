@@ -66,13 +66,15 @@ namespace Sparrow.Core
                 }
             }
         }
-        //		public Texture RenderTarget {
-        //			get { return Sparrow.Context.RenderTarget; }
-        //			set {
-        //				ApplyClipRect ();
-        //				Sparrow.Context.RenderTarget = valye;
-        //			}
-        //		}
+        //        public Texture RenderTarget
+        //        {
+        //            get { return SP.Context.RenderTarget; }
+        //            set
+        //            {
+        //                ApplyClipRect();
+        //                SP.Context.RenderTarget = value;
+        //            }
+        //        }
         public RenderSupport()
         {
             _projectionMatrix = new Matrix();
@@ -298,8 +300,33 @@ namespace Sparrow.Core
             }
             else
             {
-                context.ScissorBox = new Rectangle(0, 0, 600, 600); // FIXME
+                context.ScissorBox = new Rectangle(0, 0, 400, 400);
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
     }
 }

@@ -5,36 +5,37 @@ using System.Collections.Generic;
 
 namespace Sparrow.Display
 {
-	public class Stage : DisplayObjectContainer
-	{
+    public class Stage : DisplayObjectContainer
+    {
         private float _width;
         private float _height;
-		private readonly List<DisplayObject> _enterFrameListeners = new List<DisplayObject> ();
-		private uint _color;
+        private readonly List<DisplayObject> _enterFrameListeners = new List<DisplayObject>();
+        private uint _color;
 
-        override public float Width {
-			get { return _width; }
+        override public float Width
+        {
+            get { return _width; }
             set { _width = value; }
-		}
+        }
 
         override public float Height
         {
-			get { return _height; }
-			set { _height = value; }
-		}
+            get { return _height; }
+            set { _height = value; }
+        }
 
-		public uint Color { 
-			get { return _color;}
-			set { _color = value;}
-		}
-        
+        public uint Color
+        { 
+            get { return _color; }
+            set { _color = value; }
+        }
 
-        public Stage (float initWidth, float initHeight)
-		{
+        public Stage(float initWidth, float initHeight)
+        {
             Initialize(initWidth, initHeight);
-		}
+        }
 
-        public Stage ()
+        public Stage()
         {
             Initialize(400f, 400f); // TODO get screen size
         }
@@ -61,22 +62,21 @@ namespace Sparrow.Display
             }
             // if nothing else is hit, the stage returns itself as target
             DisplayObject target = base.HitTestPoint(localPoint);
-            if (target == null) target = this;
+            if (target == null)
+                target = this;
             return target;
         }
-        
-//        override public void AppendDescendantEventListenersOfObject(DisplayObject dispObject, String eventType, List<DisplayObject> listeners)
-//        {
-//            if (dispObject == this && eventType == EventTypeEnterFrame)
-//            {
-//                listeners.AddRange(_enterFrameListeners);
-//            }
-//            else
-//            {
-//                base.AppendDescendantEventListenersOfObject(dispObject, eventType, listeners);
-//            }
-//        }
-
+        //        override public void AppendDescendantEventListenersOfObject(DisplayObject dispObject, String eventType, List<DisplayObject> listeners)
+        //        {
+        //            if (dispObject == this && eventType == EventTypeEnterFrame)
+        //            {
+        //                listeners.AddRange(_enterFrameListeners);
+        //            }
+        //            else
+        //            {
+        //                base.AppendDescendantEventListenersOfObject(dispObject, eventType, listeners);
+        //            }
+        //        }
         public void AdvanceTime(float passedTime)
         {
 //            EnterFrameEvent enterFrameEvent = new EnterFrameEvent(EventTypeEnterFrame, passedTime);
@@ -90,16 +90,18 @@ namespace Sparrow.Display
 
         public void RemoveEnterFrameListener(DisplayObject listener)
         {
-            _enterFrameListeners.Remove( listener );
+            _enterFrameListeners.Remove(listener);
         }
 
-        override public float X {
-			set { throw new Exception("cannot set x-coordinate of stage"); }
-		}
+        override public float X
+        {
+            set { throw new Exception("cannot set x-coordinate of stage"); }
+        }
 
-		override public float Y {
-			set { throw new Exception("cannot set y-coordinate of stage"); }
-		}
+        override public float Y
+        {
+            set { throw new Exception("cannot set y-coordinate of stage"); }
+        }
 
         override public float ScaleX
         {
@@ -135,6 +137,5 @@ namespace Sparrow.Display
         {
             set { throw new Exception("cannot set rotation of stage"); }
         }
-
-	}
+    }
 }

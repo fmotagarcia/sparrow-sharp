@@ -99,13 +99,14 @@ namespace Sparrow.Core
             bool hasTexture = _texture != null;
             bool useTinting = _useTinting || _texture == null || _alpha != 1.0f;
 
-			if (_program == null)
+            if (_program == null)
             {
                 string programName = GetProgramName(hasTexture, useTinting);
 
-				if (SP.CurrentController.Programs.ContainsKey (programName)) {
-					_program = SP.CurrentController.Programs[programName];
-				}
+                if (SP.CurrentController.Programs.ContainsKey(programName))
+                {
+                    _program = SP.CurrentController.Programs[programName];
+                }
         
                 if (_program == null)
                 {
@@ -117,7 +118,12 @@ namespace Sparrow.Core
         
                 _aPosition = _program.Attributes["aPosition"];
                 _aColor = _program.Attributes["aColor"];
-                _aTexCoords = _program.Attributes["aTexCoords"];
+
+                if (_program.Attributes.ContainsKey("aTexCoords"))
+                {
+                    _aTexCoords = _program.Attributes["aTexCoords"];
+                }
+
                 _uMvpMatrix = _program.Uniforms["uMvpMatrix"];
                 _uAlpha = _program.Uniforms["uAlpha"];
             }

@@ -40,8 +40,8 @@ namespace Sparrow.Core
             _attributes = new Dictionary<string, int>();
 
             Compile();
-            UpdateUniforms();
-            UpdateAttributes();
+//            UpdateUniforms();
+//            UpdateAttributes();
         }
 
         public string Description()
@@ -61,12 +61,12 @@ namespace Sparrow.Core
             GL.LinkProgram(program);
     
             #if DEBUG
-            int linked = 0;
+            int linked;
             GL.GetProgram(program, All.LinkStatus, out linked);
     
             if (linked != 0)
             {
-                int logLength = 0;
+                int logLength;
                 GL.GetProgram(program, All.InfoLogLength, out logLength);
                 if (logLength != 0)
                 {
@@ -76,14 +76,17 @@ namespace Sparrow.Core
                 }
             }
             #endif
+
+            Name = program;
+
+            UpdateUniforms();
+            UpdateAttributes();
     
             GL.DetachShader(program, vertexShader);
             GL.DetachShader(program, fragmentShader);
     
             GL.DeleteShader(vertexShader);
             GL.DeleteShader(fragmentShader);
-    
-            Name = program;
         }
 
         private int CompileShader(string source, All type)
@@ -125,9 +128,10 @@ namespace Sparrow.Core
             Uniforms.Clear();
             for (int i = 0; i < numUniforms; i++)
             {
-                StringBuilder rawName = new StringBuilder();
-                GL.GetActiveUniform(Name, i, MaxNameLength, new int[0], new int[0], new All[0], rawName);
-                Uniforms[rawName.ToString()] = GL.GetUniformLocation(Name, rawName);
+                int size;
+                All type;
+                string rawName = GL.GetActiveUniform(Name, i, out size, out type);
+                Uniforms.Add(rawName, GL.GetUniformLocation(Name, new StringBuilder(rawName)));
             }
         }
 
@@ -139,9 +143,10 @@ namespace Sparrow.Core
             Attributes.Clear();
             for (int i = 0; i < numAttributes; i++)
             {
-                StringBuilder rawName = new StringBuilder();
-                GL.GetActiveAttrib(Name, i, MaxNameLength, new int[0], new int[0], new All[0], rawName);
-                Uniforms[rawName.ToString()] = GL.GetAttribLocation(Name, rawName);
+                int size;
+                All type;
+                string rawName = GL.GetActiveAttrib(Name, i, out size, out type);
+                Attributes.Add(rawName, GL.GetAttribLocation(Name, new StringBuilder(rawName)));
             }
         }
     }
