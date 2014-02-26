@@ -1,6 +1,5 @@
 using System;
 using OpenTK.Graphics.ES20;
-using Javax.Xml.Validation;
 
 namespace Sparrow.Display
 {

@@ -99,10 +99,13 @@ namespace Sparrow.Core
             bool hasTexture = _texture != null;
             bool useTinting = _useTinting || _texture == null || _alpha != 1.0f;
 
-            if (_program != null)
+			if (_program == null)
             {
                 string programName = GetProgramName(hasTexture, useTinting);
-                _program = SP.CurrentController.Programs[programName];
+
+				if (SP.CurrentController.Programs.ContainsKey (programName)) {
+					_program = SP.CurrentController.Programs[programName];
+				}
         
                 if (_program == null)
                 {

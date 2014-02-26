@@ -6,6 +6,8 @@ using Sparrow.Display;
 using System;
 using System.Collections.Generic;
 using sparrowsharp;
+using Sparrow.Geom;
+using OpenTK.Graphics;
 
 namespace Sparrow.Core
 {
@@ -59,15 +61,7 @@ namespace Sparrow.Core
 
         public void Setup()
         {
-            Programs = new Dictionary<string, Program>();
 
-            Stage = new Stage();
-            //Juggler = new Juggler();
-            SPContext = new Context(GraphicsContext);
-            SP.CurrentController = this;
-            SP.Context = SPContext;
-            // Context.setCurrentContext() ??
-            RenderSupport = new RenderSupport();
         }
         // This gets called when the drawing surface is ready
         protected override void OnLoad(EventArgs e)
@@ -88,6 +82,7 @@ namespace Sparrow.Core
         protected override void CreateFrameBuffer()
         {
             // TODO some init calls?
+			ContextRenderingApi = GLVersion.ES2;
 
             // the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
             try
@@ -96,6 +91,17 @@ namespace Sparrow.Core
 
                 // if you don't call this, the context won't be created
                 base.CreateFrameBuffer();
+
+				Programs = new Dictionary<string, Program>();
+
+				Stage = new Stage();
+				//Juggler = new Juggler();
+				SPContext = new Context(GraphicsContext);
+				SP.CurrentController = this;
+				SP.Context = SPContext;
+				// Context.setCurrentContext() ??
+				RenderSupport = new RenderSupport();
+
                 return;
             }
             catch (Exception ex)
@@ -144,7 +150,7 @@ namespace Sparrow.Core
             // you only need to call this if you have delegates
             // registered that you want to have called
 
-            SwapBuffers();
+//            SwapBuffers();
         }
 
         public void Start(Type RootClass)
