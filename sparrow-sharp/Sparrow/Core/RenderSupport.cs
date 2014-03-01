@@ -300,7 +300,7 @@ namespace Sparrow.Core
             }
             else
             {
-                context.ScissorBox = new Rectangle(0, 0, 400, 400);
+				context.ResetScissorBox();
             }
 
 

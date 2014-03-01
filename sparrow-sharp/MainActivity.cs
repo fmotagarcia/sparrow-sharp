@@ -31,6 +31,7 @@ namespace sparrowsharp
 
             // NEW SPARROW CODE
             sparrowView = new ViewController(this.ApplicationContext);
+
             SetContentView(sparrowView);
             sparrowView.Start(typeof(SampleGame));
 		}

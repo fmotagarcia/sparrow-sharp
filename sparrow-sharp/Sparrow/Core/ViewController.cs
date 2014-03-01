@@ -95,6 +95,7 @@ namespace Sparrow.Core
 				Programs = new Dictionary<string, Program>();
 
 				Stage = new Stage();
+
 				//Juggler = new Juggler();
 				SPContext = new Context(GraphicsContext);
 				SP.CurrentController = this;
@@ -130,27 +131,21 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-            // same as (void)glkView:(GLKView *)view drawInRect:(CGRect)rect ??
-            SP.CurrentController = this;  
-            //??? neded? Context.SetCurrentContext(_context);
+            SP.CurrentController = this;  		 
+
             GL.Disable(All.CullFace);
             GL.Disable(All.DepthTest);
             GL.Disable(All.Blend);
 
             RenderSupport.NextFrame();
-
             Stage.Render(RenderSupport);
-
             RenderSupport.FinishQuadBatch();
         
+			SwapBuffers();
+
             //#if DEBUG
             RenderSupport.CheckForOpenGLError();
             //#endif
-            
-            // you only need to call this if you have delegates
-            // registered that you want to have called
-
-//            SwapBuffers();
         }
 
         public void Start(Type RootClass)
@@ -191,8 +186,8 @@ namespace Sparrow.Core
 
         private void ReadjustStageSize()
         {
-            Stage.Width = Width * _viewScaleFactor / _contentScaleFactor;
-            Stage.Height = Height * _viewScaleFactor / _contentScaleFactor;
+			Stage.Width = Size.Width * _viewScaleFactor / _contentScaleFactor;
+			Stage.Height = Size.Height * _viewScaleFactor / _contentScaleFactor;
         }
     }
 }
