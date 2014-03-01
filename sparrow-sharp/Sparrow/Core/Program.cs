@@ -40,8 +40,8 @@ namespace Sparrow.Core
             _attributes = new Dictionary<string, int>();
 
             Compile();
-//            UpdateUniforms();
-//            UpdateAttributes();
+            UpdateUniforms();
+            UpdateAttributes();
         }
 
         public string Description()
@@ -60,7 +60,7 @@ namespace Sparrow.Core
     
             GL.LinkProgram(program);
     
-            #if DEBUG
+			#if DEBUG
             int linked;
             GL.GetProgram(program, All.LinkStatus, out linked);
     
@@ -72,10 +72,10 @@ namespace Sparrow.Core
                 {
                     String log = "";
                     GL.GetProgramInfoLog(program, out log);
-                    Debug.WriteLine("Error linking program: " + log);
+					Debug.WriteLine("Sparrow: Error linking program: " + log);
                 }
             }
-            #endif
+			#endif
 
             Name = program;
 
@@ -98,7 +98,7 @@ namespace Sparrow.Core
             GL.ShaderSource(shader, source); // TODO: this looked like glShaderSource(shader, 1, &utfSource, NULL); check if this is OK 
             GL.CompileShader(shader);
     
-            #if DEBUG
+		    #if DEBUG
             int compiled;
             GL.GetShader(shader, All.CompileStatus, out compiled);
             if (compiled == 0)
@@ -110,12 +110,12 @@ namespace Sparrow.Core
                 {
                     string log;
                     GL.GetShaderInfoLog(shader, out log);
-                    Debug.WriteLine(string.Format("Error compiling {0} shader: {1}", (type == All.VertexShader ? "vertex" : "fragment"), log));
+					Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == All.VertexShader ? "vertex" : "fragment"), log));
                 }
                 GL.DeleteShader(shader);
                 return 0;
             }
-            #endif
+			#endif
     
             return shader;
         }

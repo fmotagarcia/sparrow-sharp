@@ -162,7 +162,7 @@ namespace Sparrow.Display
 
 		public void VertexDataDidChange ()
 		{
-
+			// override in subclass
 		}
 
 		public void CopyVertexDataTo (VertexData targetData, int atIndex)

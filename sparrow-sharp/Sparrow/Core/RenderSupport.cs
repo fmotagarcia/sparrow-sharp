@@ -10,16 +10,16 @@ namespace Sparrow.Core
 {
     public class RenderSupport
     {
-        Matrix _projectionMatrix;
-        Matrix _mvpMatrix;
-        int _numDrawCalls;
-        List<RenderState> _stateStack;
-        RenderState _stateStackTop;
-        int _stateStackIndex;
-        List<QuadBatch> _quadBatches;
-        QuadBatch _quadBatchTop;
-        int _quadBatchIndex;
-        List<Rectangle> _clipRectStack;
+		private Matrix _projectionMatrix;
+		private Matrix _mvpMatrix;
+		private int _numDrawCalls;
+		private List<RenderState> _stateStack;
+		private RenderState _stateStackTop;
+		private int _stateStackIndex;
+		private List<QuadBatch> _quadBatches;
+		private QuadBatch _quadBatchTop;
+		private int _quadBatchIndex;
+		private List<Rectangle> _clipRectStack;
 
         public Matrix ProjectionMatrix
         {
@@ -30,6 +30,14 @@ namespace Sparrow.Core
                 ApplyClipRect();
             }
         }
+
+		public int NumDrawCalls
+		{
+			get
+			{
+				return _numDrawCalls;
+			}
+		}
 
         public Matrix MvpMatrix
         {
@@ -111,7 +119,7 @@ namespace Sparrow.Core
             ClearWithColor(0, 0);
         }
 
-        public void ClearWithColor(uint color = 0, float alpha = 1)
+		public void ClearWithColor(uint color = 0, float alpha = 1.0f)
         {
             float red = ((float)ColorUtil.GetR(color)) / 255.0f;
             float green = ((float)ColorUtil.GetG(color)) / 255.0f;
@@ -122,8 +130,13 @@ namespace Sparrow.Core
         }
 
         public void CheckForOpenGLError()
-        {
-            // TODO implement
+		{/*
+			ErrorCode err = (ErrorCode)GL.GetError ();
+			while (err != ErrorCode.NoError)
+			{
+				Console.WriteLine(@"There was an OpenGL error: " +  err.ToString());
+				err = (ErrorCode)GL.GetError ();
+			}*/
         }
 
         public void AddDrawCalls(int count)
