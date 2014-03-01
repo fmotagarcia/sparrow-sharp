@@ -95,7 +95,7 @@ namespace Sparrow.Core
 				Programs = new Dictionary<string, Program>();
 
 				Stage = new Stage();
-				Stage.Color = 0x23FF23;
+
 				//Juggler = new Juggler();
 				SPContext = new Context(GraphicsContext);
 				SP.CurrentController = this;
@@ -132,22 +132,21 @@ namespace Sparrow.Core
             base.OnRenderFrame(e);
 			//MakeCurrent();
             // same as (void)glkView:(GLKView *)view drawInRect:(CGRect)rect ??
-            SP.CurrentController = this;  
+            SP.CurrentController = this;  		 
             //??? neded? Context.SetCurrentContext(_context);
+
             GL.Disable(All.CullFace);
             GL.Disable(All.DepthTest);
             GL.Disable(All.Blend);
 
 			RenderSupport.NextFrame();
-			//RenderSupport.ClearWithColor(0xff02d3, 1.0f);
-
 			Stage.Render(RenderSupport);
-
-			RenderSupport.FinishQuadBatch();
+            RenderSupport.FinishQuadBatch();
 
             #if DEBUG
             RenderSupport.CheckForOpenGLError();
             #endif
+            
 			//Console.WriteLine("Number of draw calls: " + RenderSupport.NumDrawCalls);
             // you only need to call this if you have delegates
             // registered that you want to have called
@@ -193,8 +192,8 @@ namespace Sparrow.Core
 
         private void ReadjustStageSize()
         {
-            Stage.Width = Width * _viewScaleFactor / _contentScaleFactor;
-            Stage.Height = Height * _viewScaleFactor / _contentScaleFactor;
+			Stage.Width = Size.Width * _viewScaleFactor / _contentScaleFactor;
+			Stage.Height = Size.Height * _viewScaleFactor / _contentScaleFactor;
         }
 
 		// this is called whenever android raises the SurfaceChanged event

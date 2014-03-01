@@ -68,8 +68,10 @@ namespace Sparrow.Core
 
             set
             {
-                GL.Enable(All.ScissorTest);
-                GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+				if (value != null) {
+					GL.Enable (All.ScissorTest);
+					GL.Scissor ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+				}
             }
         }
 
@@ -135,11 +137,6 @@ namespace Sparrow.Core
                 GL.DeleteFramebuffers(1, ref framebuffer);
                 FramebufferCache.Remove(texture.Name);
             }
-        }
-
-        private void PresentBufferForDisplay()
-        {
-            _nativeContext.SwapBuffers(); // TODO: not sure will need to revisit ([_nativeContext presentRenderbuffer:GL_RENDERBUFFER];)
         }
     }
 }
