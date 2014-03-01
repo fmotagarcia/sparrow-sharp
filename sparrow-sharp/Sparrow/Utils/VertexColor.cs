@@ -1,8 +1,10 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace Sparrow.Utils
 {
-	public class VertexColor
+	[StructLayout(LayoutKind.Sequential)]
+	public struct VertexColor
 	{
 		public byte R;
 		public byte G;
