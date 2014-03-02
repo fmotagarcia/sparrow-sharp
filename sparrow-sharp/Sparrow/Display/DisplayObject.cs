@@ -199,7 +199,7 @@ namespace Sparrow.Display
 							_transformationMatrix.A = _scaleX;
 							_transformationMatrix.B = 0.0f;
 							_transformationMatrix.C = 0.0f;
-							_transformationMatrix.C = _scaleY;
+							_transformationMatrix.D = _scaleY;
 							_transformationMatrix.Tx = _x - _pivotX * _scaleX;
 							_transformationMatrix.Ty = _y - _pivotY * _scaleY;
 						} else {
