@@ -59,7 +59,13 @@ namespace Sparrow.Core
         public Texture Texture
         {
             get { return _texture; }
-            set { _texture = value; }
+            set {
+				if ((_texture != null && value == null) || (_texture == null && value != null))
+				{
+					_program = null;
+				}
+				_texture = value;
+			}
         }
 
         public bool PremultipliedAlpha
@@ -71,19 +77,30 @@ namespace Sparrow.Core
         public Matrix MvpMatrix
         {
             get { return _mvpMatrix; }
-            set { _mvpMatrix = value; }
+			set { _mvpMatrix.CopyFromMatrix(value); }
         }
 
         public bool UseTinting
         {
             get { return _useTinting; }
-            set { _useTinting = value; }
+            set {
+				if (value != _useTinting)
+				{
+					_useTinting = value;
+					_program = null;
+				}
+			}
         }
 
         public float Alpha
         {
             get { return _alpha; }
-            set { _alpha = value; }
+			set { 
+				if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f)) {
+					_program = null;
+				}
+				_alpha = value; 
+			}
         }
 
         public BaseEffect()
@@ -146,38 +163,6 @@ namespace Sparrow.Core
                 GL.ActiveTexture(All.Texture0);
                 GL.BindTexture(All.Texture2D, _texture.Name);
             }
-        }
-
-        public void SetMvpMatrix(Matrix value)
-        {
-            _mvpMatrix.CopyFromMatrix(value);
-        }
-
-        public void SetAlpha(float value)
-        {
-            if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f))
-            {
-                _program = null;
-            }
-            _alpha = value;
-        }
-
-        public void SetUseTinting(bool value)
-        {
-            if (value != _useTinting)
-            {
-                _useTinting = value;
-                _program = null;
-            }
-        }
-
-        public void SetTexture(Texture value)
-        {
-            if ((_texture != null && value == null) || (_texture == null && value != null))
-            {
-                _program = null;
-            }
-            _texture = value;
         }
 
         private String VertexShaderForTexture(Texture texture, bool useTinting)
