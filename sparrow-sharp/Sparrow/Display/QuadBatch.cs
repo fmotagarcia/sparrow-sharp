@@ -83,7 +83,7 @@ namespace Sparrow.Display
 			if (_numQuads == 0) {
 				_premultipliedAlpha = quad.PremultipliedAlpha;
 				BlendMode = blendMode;
-				_vertexData.PremultipliedAlpha = _premultipliedAlpha;
+				_vertexData.SetPremultipliedAlpha(_premultipliedAlpha, false);
 			}
 
 			int vertexID = _numQuads * 4;
@@ -203,6 +203,7 @@ namespace Sparrow.Display
 			}
 
 			_baseEffect.Texture = _texture;
+			_baseEffect.PremultipliedAlpha = _premultipliedAlpha;
 			_baseEffect.MvpMatrix = matrix;
 			_baseEffect.UseTinting = _tinted || alpha != 1.0f;
 			_baseEffect.Alpha = alpha;
@@ -228,7 +229,7 @@ namespace Sparrow.Display
 			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
 			IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
 			IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
-
+		
 			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
 			GL.VertexAttribPointer (attribColor, 4, All.Byte, true, sizeOfVertex, colorOffset);
 			if (_texture != null) {
