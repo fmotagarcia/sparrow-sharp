@@ -111,6 +111,17 @@ namespace componenttest
 			int numVertices = _vertexData.NumVertices;
 			int numIndices = numVertices / 4 * 6;
 
+			_indexData = new ushort[numIndices];
+
+			for (uint i = 0; i < numIndices / 6; ++i) {
+				_indexData [i * 6] = (ushort)(i * 4);
+				_indexData [i * 6 + 1] = (ushort)(i * 4 + 1);
+				_indexData [i * 6 + 2] = (ushort)(i * 4 + 2);
+				_indexData [i * 6 + 3] = (ushort)(i * 4 + 1);
+				_indexData [i * 6 + 4] = (ushort)(i * 4 + 3);
+				_indexData [i * 6 + 5] = (ushort)(i * 4 + 2);
+			}
+
 			GL.GenBuffers (1, out _indexBufferName);
 			GL.GenBuffers (1, out _vertexBufferName);
 
