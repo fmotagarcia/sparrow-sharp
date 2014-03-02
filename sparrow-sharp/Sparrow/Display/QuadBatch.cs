@@ -397,9 +397,7 @@ namespace Sparrow.Display
 			}
 
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
-			//glBufferData(GL_ARRAY_BUFFER, sizeof(SPVertex) * _vertexData.numVertices, _vertexData.vertices, GL_STATIC_DRAW);
-			IntPtr size = (IntPtr)Marshal.SizeOf(typeof(Vertex));//(IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)); // FIXME I think this is wrong, we need here the Vertex object size  
-			GL.BufferData (All.ArrayBuffer, size, _vertexData.Vertices, All.StaticDraw);
+			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
 			_syncRequired = false;
 		}
