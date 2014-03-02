@@ -84,8 +84,8 @@ namespace Sparrow.Geom
 			_b = matrix.B * _a + matrix.D * _b;
 			_c = matrix.A * _c + matrix.C * _d;
 			_d = matrix.B * _c + matrix.D * _d;
-			_tx = matrix.A * _tx + matrix.Tx * _tx;
-			_ty = matrix.B * _ty + matrix.Ty * _ty;
+			_tx = matrix.A * _tx + matrix.C * matrix.Ty + matrix.Tx;
+			_ty = matrix.B * _tx + matrix.D * matrix.Ty + matrix.Ty;
 		}
 
 		public void PrependMatrix (Matrix matrix)
@@ -94,8 +94,8 @@ namespace Sparrow.Geom
 			_b = _b * matrix.A + _d * matrix.B;
 			_c = _a * matrix.C + _c * matrix.D;
 			_d = _b * matrix.C + _d * matrix.D;
-			_tx = _tx * matrix.Tx + _c * matrix.Tx;
-			_ty = _ty * matrix.Ty + _d * matrix.Ty;
+			_tx = _tx  + _a * matrix.Tx + _c * matrix.Ty;
+			_ty = _ty  + _b * matrix.Tx + _d * matrix.Ty;
 		}
 
 		public void Translate (float dx, float dy)
