@@ -231,7 +231,7 @@ namespace Sparrow.Display
 			IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
 		
 			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
-			GL.VertexAttribPointer (attribColor, 4, All.Byte, true, sizeOfVertex, colorOffset);
+			GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
 			if (_texture != null) {
 				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
 			}
