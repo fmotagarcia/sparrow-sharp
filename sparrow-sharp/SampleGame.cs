@@ -7,16 +7,14 @@ using Sparrow;
 
 namespace sparrowsharp
 {
-    class SampleGame : DisplayObjectContainer
+	public class SampleGame : DisplayObjectContainer
     {
         public SampleGame()
         {
 			SP.Stage.Color = 0xFF0000;
 
-            Quad quad = new Quad(100, 100);
+			Quad quad = new Quad(640, 384);
 			quad.Color = 0x00FF00;
-            quad.X = 50;
-            quad.Y = 50;
             AddChild(quad);
         }
     }
