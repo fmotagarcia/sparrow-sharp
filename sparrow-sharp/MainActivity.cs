@@ -7,6 +7,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Content.PM;
 using Sparrow.Core;
+using componenttest;
 
 namespace sparrowsharp
 {
@@ -14,42 +15,49 @@ namespace sparrowsharp
 	// from being destroyed whenever the device is rotated or the
 	// keyboard is shown (highly recommended for all GL apps)
 	[Activity (Label = "sparrow-sharp",
-				ConfigurationChanges=ConfigChanges.Orientation | ConfigChanges.KeyboardHidden,
-				MainLauncher = true)]
+		ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden,
+		MainLauncher = true)]
 	public class MainActivity : Activity
 	{
-		//GLView1 view;
-        ViewController sparrowView;
+		const bool TEST = true;
+		GLView view;
+		ViewController sparrowView;
 
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
 
-			// Create our OpenGL view, and display it
-			//view = new GLView1 (this);
-			//SetContentView (view);
+			if (TEST) {
+				view = new GLView (this);
+				SetContentView (view);
+			} else {
+				sparrowView = new ViewController (this.ApplicationContext);
 
-            // NEW SPARROW CODE
-            sparrowView = new ViewController(this.ApplicationContext);
-
-            SetContentView(sparrowView);
-            sparrowView.Start(typeof(SampleGame));
+				SetContentView (sparrowView);
+				sparrowView.Start (typeof(SampleGame));
+			}
 		}
 
 		protected override void OnPause ()
 		{
-			// never forget to do this!
 			base.OnPause ();
-			//view.Pause ();
-            sparrowView.Pause();
+
+			if (TEST) {
+				view.Pause ();
+			} else {
+				sparrowView.Pause ();
+			}
 		}
 
 		protected override void OnResume ()
 		{
-			// never forget to do this!
 			base.OnResume ();
-			//view.Resume ();
-            sparrowView.Resume();
+
+			if (TEST) {
+				view.Resume ();
+			} else {
+				sparrowView.Resume ();
+			}
 		}
 	}
 }
