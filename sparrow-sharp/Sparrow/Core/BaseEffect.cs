@@ -151,11 +151,10 @@ namespace Sparrow.Core
     
             if (useTinting)
             {
-                float alphaF = (float)_alpha; // TODO this is not nice
                 if (_premultipliedAlpha)
-                    GL.Uniform4(_uAlpha, alphaF, alphaF, alphaF, alphaF);
+					GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
                 else
-                    GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, alphaF);
+					GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, _alpha);
             }
     
             if (hasTexture)
