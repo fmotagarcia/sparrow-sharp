@@ -210,7 +210,7 @@ namespace Sparrow.Display
 
 			_baseEffect.PrepareToDraw ();
 
-			Sparrow.Display.BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
+//			Sparrow.Display.BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
 
 			int attribPosition = _baseEffect.AttribPosition;
 			int attribColor = _baseEffect.AttribColor;
@@ -225,7 +225,7 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 
-			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));//5 * sizeof(float);
+			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));
 			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
 			IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
 			IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
@@ -250,7 +250,10 @@ namespace Sparrow.Display
 				quadBatches = new List<QuadBatch> ();
 			}
 
-			Compile (displayObject, quadBatches, -1, new Matrix (), 1.0f, Sparrow.Display.BlendMode.AUTO);
+			Matrix identity = new Matrix ();
+			identity.Identity();
+
+			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
 
 			return Compile (displayObject);
 		}

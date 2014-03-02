@@ -361,7 +361,10 @@ namespace Sparrow.Display
 			Matrix targetMatrix;
 
 			if (targetSpace == this) {
-				return new Matrix ();
+				Matrix identity = new Matrix ();
+				identity.Identity ();
+
+				return identity;
 			} else if (targetSpace == _parent || (targetSpace == null && _parent == null)) {
 				Matrix transformationMatrix = new Matrix ();
 				transformationMatrix.CopyFromMatrix (TransformationMatrix);
@@ -370,6 +373,7 @@ namespace Sparrow.Display
 				// targetSpace 'null' represents the target coordinate of the base object.
 				// -> move up from this to base
 				selfMatrix = new Matrix ();
+				selfMatrix.Identity ();
 				currentObject = this;
 				while (currentObject != targetSpace) {
 					selfMatrix.AppendMatrix (currentObject.TransformationMatrix);
@@ -412,6 +416,7 @@ namespace Sparrow.Display
 
 			// 2.: Move up from this to common parent
 			selfMatrix = new Matrix ();
+			selfMatrix.Identity ();
 			currentObject = this;    
 			while (currentObject != commonParent) {
 				selfMatrix.AppendMatrix (currentObject.TransformationMatrix);
@@ -420,6 +425,7 @@ namespace Sparrow.Display
 
 			// 3.: Now move up from target until we reach the common parent
 			targetMatrix = new Matrix ();
+			targetMatrix.Identity ();
 			currentObject = targetSpace;
 			while (currentObject != null && currentObject != commonParent) {
 				targetMatrix.AppendMatrix (currentObject.TransformationMatrix);

@@ -11,6 +11,9 @@ using Sparrow.Core;
 namespace sparrowsharp
 {
 	[Activity (Label = "sparrow-sharp",
+		#if __ANDROID_11__
+		HardwareAccelerated=false,
+		#endif
 		ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden,
 		MainLauncher = true)]
 	public class MainActivity : Activity

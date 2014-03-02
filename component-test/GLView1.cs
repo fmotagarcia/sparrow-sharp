@@ -74,23 +74,24 @@ namespace componenttest
 		{
 			base.OnRenderFrame (e);
 
-			if (baseEffect == null) {
-				baseEffect = new BaseEffect ();
-				baseEffect.Alpha = 1.0f;
-
-				Matrix mvMatrix = new Matrix();
-				baseEffect.MvpMatrix = mvMatrix;
-			}
-			Random rnd = new Random ();
-			baseEffect.Alpha = rnd.Next(1, 100)/100.0f;
-			baseEffect.PrepareToDraw ();
+//			if (baseEffect == null) {
+//				baseEffect = new BaseEffect ();
+//				baseEffect.Alpha = 1.0f;
+//
+//				Matrix mvMatrix = new Matrix();
+//				baseEffect.MvpMatrix = mvMatrix;
+//			}
+//			Random rnd = new Random ();
+//			baseEffect.Alpha = rnd.Next(1, 100)/100.0f;
+//			baseEffect.PrepareToDraw ();
 
 			GL.ClearColor (0.7f, 0.7f, 0.7f, 1.0f);
 			GL.Clear (ClearBufferMask.ColorBufferBit);
 
 			GL.Viewport (0, 0, Width, Height);
 
-			RenderVBO ();
+			RenderQuadBatch ();
+//			RenderVBO ();
 //			RenderArray ();
 
 			SwapBuffers ();
@@ -100,6 +101,19 @@ namespace componenttest
 		private int _vertexBufferName;
 		private ushort[] _indexData;
 		private int _indexBufferName;
+
+		private QuadBatch _quadBatch;
+
+		private void RenderQuadBatch() {
+			if (_quadBatch == null) {
+				Quad quad = new Quad (0.5f, 0.5f, 0x00FF00);
+
+				_quadBatch = new QuadBatch ();
+				_quadBatch.AddQuad (quad);
+			}
+
+			_quadBatch.Render (new Matrix(), 1.0f, BlendMode.NORMAL);
+		}
 
 		private void CreateVBO ()
 		{
