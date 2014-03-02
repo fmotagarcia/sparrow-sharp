@@ -75,15 +75,14 @@ namespace componenttest
 			base.OnRenderFrame (e);
 
 			if (baseEffect == null) {
-
 				baseEffect = new BaseEffect ();
 				baseEffect.Alpha = 1.0f;
 
-				Matrix mvMatrix = new Matrix ();
-			
+				Matrix mvMatrix = new Matrix();
 				baseEffect.MvpMatrix = mvMatrix;
 			}
-
+			Random rnd = new Random ();
+			baseEffect.Alpha = rnd.Next(1, 100)/100.0f;
 			baseEffect.PrepareToDraw ();
 
 			GL.ClearColor (0.7f, 0.7f, 0.7f, 1.0f);

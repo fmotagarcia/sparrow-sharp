@@ -13,7 +13,6 @@ namespace Sparrow.Core
 {
     public class ViewController : AndroidGameView
     {
-        public Dictionary<string, Program> Programs { get; private set; }
 
         public int DrawableWidth { get; set; }
 
@@ -49,16 +48,6 @@ namespace Sparrow.Core
             Setup();
         }
 
-        public void RegisterProgram(string name, Program program)
-        {
-            Programs.Add(name, program);
-        }
-
-        public void UnregisterProgram(string name)
-        {
-            Programs.Remove(name);
-        }
-
         public void Setup()
         {
 
@@ -84,6 +73,7 @@ namespace Sparrow.Core
             // TODO some init calls?
 			ContextRenderingApi = GLVersion.ES2;
 
+			SP.Programs = new Dictionary<string, Program>();
             // the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
             try
             {
@@ -91,8 +81,6 @@ namespace Sparrow.Core
 
                 // if you don't call this, the context won't be created
                 base.CreateFrameBuffer();
-
-				Programs = new Dictionary<string, Program>();
 
 				Stage = new Stage();
 

@@ -120,17 +120,17 @@ namespace Sparrow.Core
             {
                 string programName = GetProgramName(hasTexture, useTinting);
 
-				//if (SP.CurrentController.Programs.ContainsKey(programName))
-				//{
-				//    _program = SP.CurrentController.Programs[programName];
-				//}
+				if (SP.Programs.ContainsKey(programName))
+				{
+				    _program = SP.Programs[programName];
+				}
         
                 if (_program == null)
                 {
                     string vertexShader = VertexShaderForTexture(_texture, useTinting);
                     string fragmentShader = FragmentShaderForTexture(_texture, useTinting);
                     _program = new Program(vertexShader, fragmentShader);
-					//SP.CurrentController.RegisterProgram(programName, _program);
+					SP.RegisterProgram(programName, _program);
                 }
         
                 _aPosition = _program.Attributes["aPosition"];
