@@ -1,19 +1,25 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Core/RenderSupport.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Display/QuadBatch.cs">
     <Files>
-      <File FileName="sparrow-sharp/Sparrow/Core/Context.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/ViewController.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/SampleGame.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/RenderSupport.cs" Line="170" Column="9" />
+      <File FileName="sparrow-sharp/Sparrow/Core/RenderSupport.cs" Line="303" Column="67" />
+      <File FileName="sparrow-sharp/SampleGame.cs" Line="16" Column="25" />
+      <File FileName="sparrow-sharp/Sparrow/Core/ViewController.cs" Line="145" Column="1" />
+      <File FileName="sparrow-sharp/Sparrow/Core/BaseEffect.cs" Line="237" Column="29" />
+      <File FileName="sparrow-sharp/Sparrow/Core/Program.cs" Line="78" Column="19" />
+      <File FileName="sparrow-sharp/Sparrow/Display/Stage.cs" Line="40" Column="28" />
+      <File FileName="sparrow-sharp/Sparrow/Display/QuadBatch.cs" Line="252" Column="69" />
+      <File FileName="sparrow-sharp/MainActivity.cs" Line="27" Column="1" />
+      <File FileName="sparrow-sharp/Sparrow/Display/Quad.cs" Line="138" Column="47" />
+      <File FileName="sparrow-sharp/Sparrow/SP.cs" Line="1" Column="1" />
+      <File FileName="sparrow-sharp/Sparrow/Core/Context.cs" Line="33" Column="10" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/ricardo/dev/sparrow-sharp/sparrow-sharp/GLView1.cs" line="74" column="1" />
-      <Breakpoint file="/Users/fmotagarcia/Projects/sparrow-sharp/sparrow-sharp/Sparrow/Core/RenderSupport.cs" line="172" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.sparrow-sharp AndroidDeviceId-Release="015d483bf0141c09" />
+  <MonoDevelop.Ide.ItemProperties.sparrow-sharp AndroidDeviceId-Debug="015d2a501a48140e" />
 </Properties>
