@@ -283,7 +283,7 @@ namespace Sparrow.Display
 
 			if (container != null) {
 				Matrix childMatrix = new Matrix ();
-
+				childMatrix.Identity();
 				int numChildren = container.NumChildren;
 				for (int i = 0; i < numChildren; i++) {
 					DisplayObject child = container.GetChild (i);
