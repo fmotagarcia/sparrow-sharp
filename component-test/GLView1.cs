@@ -74,25 +74,14 @@ namespace componenttest
 		{
 			base.OnRenderFrame (e);
 
-//			if (baseEffect == null) {
-//				baseEffect = new BaseEffect ();
-//				baseEffect.Alpha = 1.0f;
-//
-//				Matrix mvMatrix = new Matrix();
-//				baseEffect.MvpMatrix = mvMatrix;
-//			}
-//			Random rnd = new Random ();
-//			baseEffect.Alpha = rnd.Next(1, 100)/100.0f;
-//			baseEffect.PrepareToDraw ();
-
 			GL.ClearColor (0.7f, 0.7f, 0.7f, 1.0f);
 			GL.Clear (ClearBufferMask.ColorBufferBit);
 
 			GL.Viewport (0, 0, Width, Height);
 
-			RenderQuadBatch ();
-//			RenderVBO ();
-//			RenderArray ();
+			//RenderQuadBatch ();
+			RenderVBO ();
+			//RenderArray ();
 
 			SwapBuffers ();
 		}
@@ -107,7 +96,8 @@ namespace componenttest
 		private void RenderQuadBatch() {
 			if (_quadBatch == null) {
 				Quad quad = new Quad (0.5f, 0.5f, 0x00FF00);
-
+				quad.X = 130;
+				quad.Y = 280;
 				_quadBatch = new QuadBatch ();
 				_quadBatch.AddQuad (quad);
 			}
@@ -117,8 +107,16 @@ namespace componenttest
 
 		private void CreateVBO ()
 		{
-			Quad quad = new Quad (0.5f, 0.5f, 0xFF0000);
+			baseEffect = new BaseEffect ();
+			baseEffect.Alpha = 1.0f;
 
+			Matrix mvMatrix = new Matrix();
+			mvMatrix.Identity ();
+			baseEffect.MvpMatrix = mvMatrix;
+
+			Quad quad = new Quad (0.5f, 0.5f, 0xFF0000);
+			//quad.X = 15;
+			//quad.Y = 30;
 			_vertexData = new VertexData (4);
 			quad.CopyVertexDataTo (_vertexData, 0);
 
@@ -141,9 +139,9 @@ namespace componenttest
 
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 			GL.BufferData (All.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), _indexData, All.StaticDraw);
-
+			int sizeOfVertex = Marshal.SizeOf (typeof(Vertex));
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
-			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeOfVertex), _vertexData.Vertices, All.StaticDraw);
 		}
 
 		private void RenderVBO ()
@@ -151,6 +149,7 @@ namespace componenttest
 			if (_vertexData == null) {
 				CreateVBO ();
 			}
+			baseEffect.PrepareToDraw ();
 
 			int attribPosition = baseEffect.AttribPosition;
 			int attribColor = baseEffect.AttribColor;
@@ -165,7 +164,7 @@ namespace componenttest
 			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
 			GL.EnableVertexAttribArray (attribPosition);
 
-			GL.VertexAttribPointer (attribColor, 4, All.Byte, true, sizeOfVertex, colorOffset);
+			GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
 			GL.EnableVertexAttribArray (attribColor);
 
 			int numIndices = 6;
@@ -174,6 +173,17 @@ namespace componenttest
 
 		private void RenderArray ()
 		{
+			if (baseEffect == null) {
+				baseEffect = new BaseEffect ();
+				baseEffect.Alpha = 1.0f;
+
+				Matrix mvMatrix = new Matrix();
+				baseEffect.MvpMatrix = mvMatrix;
+			}
+			Random rnd = new Random ();
+			baseEffect.Alpha = rnd.Next(1, 100)/100.0f;
+			baseEffect.PrepareToDraw ();
+
 			float[] vertices = new float [] {
 				0.0f, 0.5f, 0.0f,
 				-0.5f, -0.5f, 0.0f,
