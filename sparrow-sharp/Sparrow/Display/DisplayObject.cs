@@ -201,7 +201,7 @@ namespace Sparrow.Display
 							_transformationMatrix.C = 0.0f;
 							_transformationMatrix.C = _scaleY;
 							_transformationMatrix.Tx = _x - _pivotX * _scaleX;
-							_transformationMatrix.Ty = _pivotY * _scaleY;
+							_transformationMatrix.Ty = _y - _pivotY * _scaleY;
 						} else {
 							float cos = (float)Math.Cos (_rotation);
 							float sin = (float)Math.Sin (_rotation);
@@ -441,7 +441,7 @@ namespace Sparrow.Display
 
 		virtual public Rectangle BoundsInSpace (DisplayObject targetSpace)
 		{
-            // TODO abstract
+			// TODO abstract
 			return null;
 		}
 
