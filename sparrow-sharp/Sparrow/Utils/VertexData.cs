@@ -7,6 +7,7 @@ namespace Sparrow.Utils
     public class VertexData
     {
         private const float MIN_ALPHA = 5.0f / 255.0f;
+
         private Vertex[] _vertices;
         private int _numVertices;
         private bool _premultipliedAlpha;
@@ -339,6 +340,8 @@ namespace Sparrow.Utils
                 Vector2 pos = _vertices[i].Position;
                 pos.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
                 pos.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
+
+				_vertices [i].Position = pos;
             }
         }
 
