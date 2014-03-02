@@ -225,7 +225,13 @@ namespace Sparrow.Geom
 
         public Matrix4 ConvertToMatrix4()
         {
-            Matrix4 matrix = new Matrix4();
+			Matrix4 matrix = new Matrix4()
+			{
+				Row0 = new OpenTK.Vector4(1, 0, 0, 0),
+				Row1 = new OpenTK.Vector4(0, 1, 0, 0),
+				Row2 = new OpenTK.Vector4(0, 0, 1, 0),
+				Row3 = new OpenTK.Vector4(0, 0, 0, 1),
+			};
 
             matrix.M11 = _a;
             matrix.M12 = _b;
