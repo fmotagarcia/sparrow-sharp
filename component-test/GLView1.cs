@@ -12,6 +12,8 @@ using System.Text;
 using System.Runtime.InteropServices;
 using Sparrow.Geom;
 using Sparrow;
+using Sparrow.Display;
+using Sparrow.Utils;
 
 namespace componenttest
 {
@@ -47,6 +49,7 @@ namespace componenttest
 
 				// if you don't call this, the context won't be created
 				base.CreateFrameBuffer ();
+
 				return;
 			} catch (Exception ex) {
 				Log.Verbose ("GLCube", "{0}", ex);
@@ -66,7 +69,6 @@ namespace componenttest
 			}
 			throw new Exception ("Can't load egl, aborting");
 		}
-			
 		// This gets called on each frame render
 		protected override void OnRenderFrame (FrameEventArgs e)
 		{
@@ -74,7 +76,7 @@ namespace componenttest
 
 			if (baseEffect == null) {
 
-				baseEffect = new BaseEffect();
+				baseEffect = new BaseEffect ();
 				baseEffect.Alpha = 1.0f;
 
 				Matrix mvMatrix = new Matrix ();
@@ -83,34 +85,90 @@ namespace componenttest
 			}
 
 			baseEffect.PrepareToDraw ();
-			float[] vertices = new float [] {
-				0.0f, 0.5f, 0.0f,
-				-0.5f, -0.5f, 0.0f,
-				0.5f, -0.5f, 0.0f
-			};
-			float[] triangleColors = new float[]
-			{
-				1.0f, 0.0f, 0.0f, 1.0f,
-				0.0f, 1.0f, 0.0f, 1.0f,
-				0.0f, 1.0f, 0.0f, 1.0f,
-			};
 
 			GL.ClearColor (0.7f, 0.7f, 0.7f, 1.0f);
 			GL.Clear (ClearBufferMask.ColorBufferBit);
 
 			GL.Viewport (0, 0, Width, Height);
 
-			GL.VertexAttribPointer(baseEffect.AttribPosition, 3, All.Float, false, 0, vertices);
-			GL.EnableVertexAttribArray (baseEffect.AttribPosition);
-
-			GL.VertexAttribPointer(baseEffect.AttribColor, 4, All.Float, false, 0, triangleColors);
-			GL.EnableVertexAttribArray(baseEffect.AttribColor);
-
-			GL.DrawArrays (All.Triangles, 0, 3);
+			RenderVBO ();
+//			RenderArray ();
 
 			SwapBuffers ();
 		}
 
+		private VertexData _vertexData;
+		private int _vertexBufferName;
+		private ushort[] _indexData;
+		private int _indexBufferName;
+
+		private void CreateVBO ()
+		{
+			Quad quad = new Quad (0.5f, 0.5f, 0xFF0000);
+
+			_vertexData = new VertexData (4);
+			quad.CopyVertexDataTo (_vertexData, 0);
+
+			int numVertices = _vertexData.NumVertices;
+			int numIndices = numVertices / 4 * 6;
+
+			GL.GenBuffers (1, out _indexBufferName);
+			GL.GenBuffers (1, out _vertexBufferName);
+
+			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
+			GL.BufferData (All.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), _indexData, All.StaticDraw);
+
+			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
+			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+		}
+
+		private void RenderVBO ()
+		{
+			if (_vertexData == null) {
+				CreateVBO ();
+			}
+
+			int attribPosition = baseEffect.AttribPosition;
+			int attribColor = baseEffect.AttribColor;
+
+			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
+			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
+
+			int sizeOfVertex = Marshal.SizeOf (typeof(Vertex));
+			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
+			IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
+
+			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
+			GL.EnableVertexAttribArray (attribPosition);
+
+			GL.VertexAttribPointer (attribColor, 4, All.Byte, true, sizeOfVertex, colorOffset);
+			GL.EnableVertexAttribArray (attribColor);
+
+			int numIndices = 6;
+			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
+		}
+
+		private void RenderArray ()
+		{
+			float[] vertices = new float [] {
+				0.0f, 0.5f, 0.0f,
+				-0.5f, -0.5f, 0.0f,
+				0.5f, -0.5f, 0.0f
+			};
+			float[] triangleColors = new float[] {
+				1.0f, 0.0f, 0.0f, 1.0f,
+				0.0f, 1.0f, 0.0f, 1.0f,
+				0.0f, 1.0f, 0.0f, 1.0f,
+			};
+
+			GL.VertexAttribPointer (baseEffect.AttribPosition, 3, All.Float, false, 0, vertices);
+			GL.EnableVertexAttribArray (baseEffect.AttribPosition);
+			
+			GL.VertexAttribPointer (baseEffect.AttribColor, 4, All.Float, false, 0, triangleColors);
+			GL.EnableVertexAttribArray (baseEffect.AttribColor);
+			
+			GL.DrawArrays (All.Triangles, 0, 3);
+		}
 	}
 }
 
