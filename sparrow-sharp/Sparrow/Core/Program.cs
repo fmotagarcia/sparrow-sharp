@@ -58,7 +58,7 @@ namespace Sparrow.Core
 			int linked;
 			GL.GetProgram (program, All.LinkStatus, out linked);
     
-			if (linked != 0) {
+			if (linked == 0) {
 				int logLength;
 				GL.GetProgram (program, All.InfoLogLength, out logLength);
 				if (logLength != 0) {
@@ -87,7 +87,8 @@ namespace Sparrow.Core
 			if (shader == 0)
 				return shader;
         
-			GL.ShaderSource (shader, source); // TODO: this looked like glShaderSource(shader, 1, &utfSource, NULL); check if this is OK 
+			//GL.ShaderSource (shader, source); // TODO: this looked like glShaderSource(shader, 1, &utfSource, NULL); check if this is OK 
+			GL.ShaderSource (shader, 1, new string [] {source}, (int[])null); // sohuld be same as above just faster
 			GL.CompileShader (shader);
     
 			#if DEBUG
