@@ -101,8 +101,7 @@ namespace Sparrow.Core
 
             _clipRectStack = new List<Rectangle>();
 
-
-            SetupOrthographicProjection(0, 320, 0, 480); // FIXME
+            SetupOrthographicProjection(0, 320, 0, 480);
         }
 
         public void PurgeBuffers()

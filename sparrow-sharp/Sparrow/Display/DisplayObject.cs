@@ -312,7 +312,8 @@ namespace Sparrow.Display
 
 		public void RemoveFromParent ()
 		{
-			// TODO implement
+			// TODO this causes an RTE when a child without parent is added, no idea why it works in obj C sparrow
+			//Parent.RemoveChild (this);
 		}
 
 		public void AlignPivotToCenter ()
