@@ -9,18 +9,21 @@ namespace sparrowsharp
 {
 	public class SampleGame : DisplayObjectContainer
     {
+
+		public Quad childQuad;
+
         public SampleGame()
         {
 			SP.Stage.Color = 0xFF0000;
 
-			Quad quad = new Quad(640, 384);
-			quad.Color = 0x00FF00;
-			quad.X = 100;
-			quad.Y = 100;
-			//quad.SkewX = 0.3f;
-			//quad.SkewY = 0.4f;
-			quad.Rotation = 0.75f;
-            AddChild(quad);
+			childQuad = new Quad(640, 384);
+			childQuad.Color = 0x00FF00;
+			childQuad.X = 100;
+			childQuad.Y = 100;
+			//childQuad.SkewX = 0.3f;
+			//childQuad.SkewY = 0.4f;
+			childQuad.Rotation = 0.75f;
+			AddChild(childQuad);
         }
     }
 }

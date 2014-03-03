@@ -338,7 +338,7 @@ namespace Sparrow.Utils
 
             for (int i = atIndex, end = atIndex + numVertices; i < end; ++i)
             {
-                Vector2 pos = _vertices[i].Position;
+				Vector2 pos = _vertices[i].Position; // note: this makes a copy of the Vector2
 				_vertices[i].Position.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
 				_vertices[i].Position.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
             }

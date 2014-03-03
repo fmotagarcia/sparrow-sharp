@@ -33,6 +33,7 @@ namespace Sparrow.Core
         private float _contentScaleFactor = 1.0f;
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
+		private SampleGame testGame;
 
         public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
         {
@@ -146,7 +147,7 @@ namespace Sparrow.Core
             #if DEBUG
             RenderSupport.CheckForOpenGLError();
             #endif
-            
+			testGame.childQuad.Rotation = testGame.childQuad.Rotation + 0.01f;
 			//Console.WriteLine("Number of draw calls: " + RenderSupport.NumDrawCalls);
             // you only need to call this if you have delegates
             // registered that you want to have called
@@ -185,8 +186,8 @@ namespace Sparrow.Core
 //                        SP_RELEASE_AND_NIL(_onRootCreated);
 //                    }*/
 //                }
-
-                Stage.AddChild(new SampleGame());
+				testGame = new SampleGame();
+				Stage.AddChild( testGame );
             }
         }
 
