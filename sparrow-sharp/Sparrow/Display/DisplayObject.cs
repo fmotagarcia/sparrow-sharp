@@ -205,12 +205,20 @@ namespace Sparrow.Display
 						} else {
 							float cos = (float)Math.Cos (_rotation);
 							float sin = (float)Math.Sin (_rotation);
-							_transformationMatrix.A = _scaleX * cos;
-							_transformationMatrix.B = _scaleX * sin;
-							_transformationMatrix.C = _scaleY * -sin;
-							_transformationMatrix.D = _scaleY * cos;
-							_transformationMatrix.Tx = _x - _pivotX * _transformationMatrix.A - _pivotY * _transformationMatrix.C;
-							_transformationMatrix.Ty = _y - _pivotX * _transformationMatrix.B - _pivotY * _transformationMatrix.D;
+
+							float a = _scaleX *  cos;
+							float b = _scaleX *  sin;
+							float c = _scaleY * -sin;
+							float d = _scaleY *  cos;
+							float tx = _x - _pivotX * a - _pivotY * c;
+							float ty = _y - _pivotX * b - _pivotY * d;
+
+							_transformationMatrix.A = a;
+							_transformationMatrix.B = b;
+							_transformationMatrix.C = c;
+							_transformationMatrix.D = d;
+							_transformationMatrix.Tx = tx;
+							_transformationMatrix.Ty = ty;
 						}
 					} else {
 						_transformationMatrix.Identity ();

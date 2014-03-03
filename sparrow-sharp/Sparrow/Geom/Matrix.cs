@@ -67,7 +67,7 @@ namespace Sparrow.Geom
 		public float SkewY {
 			get { return (float) Math.Atan (_b / _a); }
 		}
-
+			
 		public Matrix (float a = 1.0f, float b = 0.0f, float c = 0.0f, float d = 1.0f, float tx = 0.0f, float ty = 0.0f)
 		{
 			_a = a;
@@ -80,22 +80,36 @@ namespace Sparrow.Geom
 
 		public void AppendMatrix (Matrix matrix)
 		{
-			_a = matrix.A * _a + matrix.C * _b;
-			_b = matrix.B * _a + matrix.D * _b;
-			_c = matrix.A * _c + matrix.C * _d;
-			_d = matrix.B * _c + matrix.D * _d;
-			_tx = matrix.A * _tx + matrix.C * matrix.Ty + matrix.Tx;
-			_ty = matrix.B * _tx + matrix.D * matrix.Ty + matrix.Ty;
+			float a = matrix.A * _a + matrix.C * _b;
+			float b = matrix.B * _a + matrix.D * _b;
+			float c = matrix.A * _c + matrix.C * _d;
+			float d = matrix.B * _c + matrix.D * _d;
+			float tx = matrix.A * _tx + matrix.C * matrix.Ty + matrix.Tx;
+			float ty = matrix.B * _tx + matrix.D * matrix.Ty + matrix.Ty;
+
+			_a = a;
+			_b = b;
+			_c = c;
+			_d = d;
+			_tx = tx;
+			_ty = ty;
 		}
 
 		public void PrependMatrix (Matrix matrix)
 		{
-			_a = _a * matrix.A + _c * matrix.B;
-			_b = _b * matrix.A + _d * matrix.B;
-			_c = _a * matrix.C + _c * matrix.D;
-			_d = _b * matrix.C + _d * matrix.D;
-			_tx = _tx  + _a * matrix.Tx + _c * matrix.Ty;
-			_ty = _ty  + _b * matrix.Tx + _d * matrix.Ty;
+			float a = _a * matrix.A + _c * matrix.B;
+			float b = _b * matrix.A + _d * matrix.B;
+			float c = _a * matrix.C + _c * matrix.D;
+			float d = _b * matrix.C + _d * matrix.D;
+			float tx = _tx  + _a * matrix.Tx + _c * matrix.Ty;
+			float ty = _ty  + _b * matrix.Tx + _d * matrix.Ty;
+
+			_a = a;
+			_b = b;
+			_c = c;
+			_d = d;
+			_tx = tx;
+			_ty = ty;
 		}
 
 		public void Translate (float dx, float dy)

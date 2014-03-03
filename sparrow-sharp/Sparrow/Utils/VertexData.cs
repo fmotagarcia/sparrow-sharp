@@ -338,10 +338,11 @@ namespace Sparrow.Utils
             for (int i = atIndex, end = atIndex + numVertices; i < end; ++i)
             {
                 Vector2 pos = _vertices[i].Position;
-                pos.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
-                pos.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
+				float x = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
+				float y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
 
-				_vertices [i].Position = pos;
+				_vertices [i].Position.X = x;
+				_vertices [i].Position.Y = y;
             }
         }
 
