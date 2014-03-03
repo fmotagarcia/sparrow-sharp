@@ -1,6 +1,7 @@
 using System;
 using Sparrow.Geom;
 using OpenTK;
+using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Utils
 {
@@ -325,7 +326,7 @@ namespace Sparrow.Utils
 
         public void TransformVerticesWithMatrix(Matrix matrix, int atIndex, int numVertices)
         {
-            if (atIndex < 0 || atIndex >= _numVertices)
+			if (atIndex < 0 || atIndex + numVertices > _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
@@ -338,10 +339,8 @@ namespace Sparrow.Utils
             for (int i = atIndex, end = atIndex + numVertices; i < end; ++i)
             {
                 Vector2 pos = _vertices[i].Position;
-                pos.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
-                pos.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
-
-				_vertices [i].Position = pos;
+				_vertices[i].Position.X = matrix.A * pos.X + matrix.C * pos.Y + matrix.Tx;
+				_vertices[i].Position.Y = matrix.D * pos.Y + matrix.B * pos.X + matrix.Ty;
             }
         }
 
