@@ -29,6 +29,7 @@ namespace sparrowsharp
 			quad2.Color = 0x1400FF;
 			quad2.X = 100;
 			quad2.Y = 100;
+			quad2.Alpha = 0.5f;
 			quad2.Rotation = 0;
 			AddChild(quad2);
         }
