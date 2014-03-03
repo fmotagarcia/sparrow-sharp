@@ -135,7 +135,7 @@ namespace Sparrow.Display
 			get { return _rotation; }
 			set {
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
-				value = value % 2.0f * (float)Math.PI;
+				value = value % (2.0f * (float)Math.PI);
 				// move to [-180 deg, +180 deg]
 				if (value < -(float)Math.PI)
 					value += 2.0f * (float)Math.PI;
