@@ -110,9 +110,8 @@ namespace Sparrow.Utils
             {
                 throw new ArgumentException("Target too small");
             }
-				
-            Array.Copy(_vertices, atIndex, target.Vertices, 0, numVertices);
-        }
+			Array.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
+		}
 
         public Vertex VertexAtIndex(int index)
         {

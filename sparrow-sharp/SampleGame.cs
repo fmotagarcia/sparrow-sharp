@@ -24,6 +24,13 @@ namespace sparrowsharp
 			//childQuad.SkewY = 0.4f;
 			childQuad.Rotation = 0.75f;
 			AddChild(childQuad);
+
+			Quad quad2 = new Quad(123, 234);
+			quad2.Color = 0x1400FF;
+			quad2.X = 100;
+			quad2.Y = 100;
+			quad2.Rotation = 0;
+			AddChild(quad2);
         }
     }
 }
