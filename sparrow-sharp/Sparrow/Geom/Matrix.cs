@@ -6,7 +6,15 @@ namespace Sparrow.Geom
 {
 	public class Matrix
 	{
-        // are you sure that these need to be float? BaseEffect needs a float Matrix
+		private static void SetValues(Matrix matrix, float a, float b, float c, float d, float tx, float ty) {
+			matrix._a = a;
+			matrix._b = b;
+			matrix._c = c;
+			matrix._d = d;
+			matrix._tx = tx;
+			matrix._ty = ty;  	
+		}
+
 		private float _a;
 		private float _b;
 		private float _c;
@@ -67,7 +75,7 @@ namespace Sparrow.Geom
 		public float SkewY {
 			get { return (float) Math.Atan (_b / _a); }
 		}
-			
+
 		public Matrix (float a = 1.0f, float b = 0.0f, float c = 0.0f, float d = 1.0f, float tx = 0.0f, float ty = 0.0f)
 		{
 			_a = a;
@@ -80,36 +88,24 @@ namespace Sparrow.Geom
 
 		public void AppendMatrix (Matrix matrix)
 		{
-			float a = matrix.A * _a + matrix.C * _b;
-			float b = matrix.B * _a + matrix.D * _b;
-			float c = matrix.A * _c + matrix.C * _d;
-			float d = matrix.B * _c + matrix.D * _d;
-			float tx = matrix.A * _tx + matrix.C * matrix.Ty + matrix.Tx;
-			float ty = matrix.B * _tx + matrix.D * matrix.Ty + matrix.Ty;
-
-			_a = a;
-			_b = b;
-			_c = c;
-			_d = d;
-			_tx = tx;
-			_ty = ty;
+			SetValues(this, 
+				matrix.A * _a + matrix.C * _b,
+				matrix.B * _a + matrix.D * _b,
+				matrix.A * _c + matrix.C * _d,
+				matrix.B * _c + matrix.D * _d,
+				matrix.A * _tx + matrix.C * matrix.Ty + matrix.Tx,
+				matrix.B * _tx + matrix.D * matrix.Ty + matrix.Ty);
 		}
 
 		public void PrependMatrix (Matrix matrix)
 		{
-			float a = _a * matrix.A + _c * matrix.B;
-			float b = _b * matrix.A + _d * matrix.B;
-			float c = _a * matrix.C + _c * matrix.D;
-			float d = _b * matrix.C + _d * matrix.D;
-			float tx = _tx  + _a * matrix.Tx + _c * matrix.Ty;
-			float ty = _ty  + _b * matrix.Tx + _d * matrix.Ty;
-
-			_a = a;
-			_b = b;
-			_c = c;
-			_d = d;
-			_tx = tx;
-			_ty = ty;
+			SetValues (this, 
+				_a * matrix.A + _c * matrix.B,
+				_b * matrix.A + _d * matrix.B,
+				_a * matrix.C + _c * matrix.D,
+				_b * matrix.C + _d * matrix.D,
+				_tx + _a * matrix.Tx + _c * matrix.Ty,
+				_ty + _b * matrix.Tx + _d * matrix.Ty);
 		}
 
 		public void Translate (float dx, float dy)
@@ -142,12 +138,13 @@ namespace Sparrow.Geom
 			float cos = (float) Math.Cos (angle);
 			float sin = (float) Math.Sin (angle);
 
-			_a = _a * cos - _b * sin;  
-			_b = _a * sin + _b * cos;
-			_c = _c * cos - _d * sin; 
-			_d = _c * sin + _d * cos;
-			_tx = _tx * cos - _ty * sin; 
-			_ty = _tx * sin + _ty * cos;
+			SetValues(this,
+				_a * cos - _b * sin,
+				_a * sin + _b * cos,
+				_c * cos - _d * sin,
+				_c * sin + _d * cos,
+				_tx * cos - _ty * sin,
+				_tx * sin + _ty * cos);
 		}
 
 		public void Skew (float sx, float sy)
@@ -157,12 +154,13 @@ namespace Sparrow.Geom
 			float sinY = (float) Math.Sin (sy);
 			float cosY = (float) Math.Cos (sy);
 
-			_a = _a * cosY - _b * sinX;
-			_b = _a * sinY + _b * cosX;
-			_c = _c * cosY - _d * sinX;
-			_d = _c * sinY + _d * cosX;
-			_tx = _tx * cosY - _ty * sinX;
-			_ty = _tx * sinY + _ty * cosX;
+			SetValues (this,
+				_a * cosY - _b * sinX,
+				_a * sinY + _b * cosX,
+				_c * cosY - _d * sinX,
+				_c * sinY + _d * cosX,
+				_tx * cosY - _ty * sinX,
+				_tx * sinY + _ty * cosX);
 		}
 
 		public void Identity ()
@@ -189,12 +187,13 @@ namespace Sparrow.Geom
 		{
 			float det = Determinant;
 
-			_a = _d / det;
-			_b = -_b / det;
-			_c = -_c / det;
-			_d = _a / det; 
-			_tx = (_c * _ty - _d * _tx) / det;
-			_ty = (_b * _tx - _a * _ty) / det;
+			SetValues(this,
+				_a = _d / det,
+				_b = -_b / det,
+				_c = -_c / det,
+				_d = _a / det,
+				_tx = (_c * _ty - _d * _tx) / det,
+				_ty = (_b * _tx - _a * _ty) / det);
 		}
 
 		public void CopyFromMatrix (Matrix matrix)

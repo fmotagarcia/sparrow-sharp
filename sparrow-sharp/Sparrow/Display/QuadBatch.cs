@@ -239,12 +239,12 @@ namespace Sparrow.Display
 			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
 		}
 
-		public List<QuadBatch> Compile (DisplayObject displayObject)
+		public static List<QuadBatch> Compile (DisplayObject displayObject)
 		{
 			return Compile (displayObject, null);
 		}
 
-		public List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches)
+		public static List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches)
 		{
 			if (quadBatches == null) {
 				quadBatches = new List<QuadBatch> ();
@@ -258,7 +258,7 @@ namespace Sparrow.Display
 			return Compile (displayObject);
 		}
 
-		public int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
+		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
 		                    Matrix transformationMatrix, float alpha, uint blendMode)
 		{
 			bool isRootObject = false;

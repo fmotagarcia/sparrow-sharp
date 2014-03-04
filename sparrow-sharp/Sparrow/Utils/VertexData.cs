@@ -109,9 +109,8 @@ namespace Sparrow.Utils
             {
                 throw new ArgumentException("Target too small");
             }
-				
-            Array.Copy(_vertices, atIndex, target.Vertices, 0, numVertices);
-        }
+			Array.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
+		}
 
         public Vertex VertexAtIndex(int index)
         {
@@ -295,19 +294,18 @@ namespace Sparrow.Utils
 
             for (int i = index; i < index + numVertices; ++i)
             {
-                Vertex vertex = _vertices[i];
-                VertexColor vertexColor = vertex.Color;
+				VertexColor vertexColor = _vertices[i].Color;
                 byte newAlpha = Convert.ToByte(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
 
                 if (_premultipliedAlpha)
                 {
                     vertexColor = VertexColorHelper.UnmultiplyAlpha(vertexColor);
                     vertexColor.A = newAlpha;
-                    vertex.Color = VertexColorHelper.PremultiplyAlpha(vertexColor);
+					_vertices[i].Color = VertexColorHelper.PremultiplyAlpha(vertexColor);
                 }
                 else
                 {
-                    vertex.Color = VertexColorHelper.CreateVertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
+					_vertices[i].Color = VertexColorHelper.CreateVertexColor(vertexColor.R, vertexColor.G, vertexColor.B, newAlpha);
                 }
             }
         }

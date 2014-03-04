@@ -5,9 +5,9 @@ namespace Sparrow.Display
 {
 	public class BlendMode
 	{
-		public const uint AUTO = 0;
-		public const uint NORMAL = 1;
-		public const uint NONE = 2;
+		readonly public static uint AUTO = 0;
+		readonly public static uint NORMAL = 1;
+		readonly public static uint NONE = 2;
 
 		public static void ApplyBlendFactors (uint blendMode, bool premultipliedAlpha)
 		{
