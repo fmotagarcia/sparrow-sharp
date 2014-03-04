@@ -148,7 +148,14 @@ namespace Sparrow.Core
             #if DEBUG
             RenderSupport.CheckForOpenGLError();
             #endif
-			testGame.childQuad.Rotation = testGame.childQuad.Rotation + 0.01f;
+			for (int i = 0; i < testGame.childQuads.Length; i++) {
+				if (testGame.childQuads [i] != null) {
+					testGame.childQuads[i].X = testGame.childQuads[i].X + 1.0f;
+					if (testGame.childQuads [i].X > 700)
+						testGame.childQuads [i].X = 0;
+
+				}
+			}
 			//Console.WriteLine("Number of draw calls: " + RenderSupport.NumDrawCalls);
 
             SwapBuffers();

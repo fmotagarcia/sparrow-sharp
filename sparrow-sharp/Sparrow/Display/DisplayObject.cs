@@ -312,8 +312,10 @@ namespace Sparrow.Display
 
 		public void RemoveFromParent ()
 		{
-			// TODO this causes an RTE when a child without parent is added, no idea why it works in obj C sparrow
-			//Parent.RemoveChild (this);
+			// TODO this null check was not there in obj C, no idea why it works in obj C sparrow
+			if (Parent != null) {
+				Parent.RemoveChild (this);
+			}
 		}
 
 		public void AlignPivotToCenter ()
