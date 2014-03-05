@@ -210,7 +210,7 @@ namespace Sparrow.Display
 
 			_baseEffect.PrepareToDraw ();
 
-//			Sparrow.Display.BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
+			Sparrow.Display.BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
 
 			int attribPosition = _baseEffect.AttribPosition;
 			int attribColor = _baseEffect.AttribColor;

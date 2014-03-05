@@ -5,9 +5,13 @@ namespace Sparrow.Display
 {
 	public class BlendMode
 	{
-		readonly public static uint AUTO = 0;
-		readonly public static uint NORMAL = 1;
-		readonly public static uint NONE = 2;
+		public const uint AUTO = 0;
+		public const uint NONE = 2;
+		public const uint NORMAL = 3;
+		public const uint ADD = 4;
+		public const uint MULTIPLY = 5;
+		public const uint SCREEN = 6;
+		public const uint ERASE = 7;
 
 		public static void ApplyBlendFactors (uint blendMode, bool premultipliedAlpha)
 		{
@@ -20,32 +24,61 @@ namespace Sparrow.Display
 				return;
 			}
 
-			DecodeBlendMode (blendMode, premultipliedAlpha, out srcFactor, out dstFactor);
+			if (premultipliedAlpha) {
+				switch (blendMode) {
+				case NORMAL:
+					srcFactor = All.One;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				case ADD:
+					srcFactor = All.SrcAlpha;
+					dstFactor = All.One;
+					break;
+				case MULTIPLY:
+					srcFactor = All.DstColor;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				case SCREEN:
+					srcFactor = All.One;
+					dstFactor = All.OneMinusSrcColor;
+					break;
+				case ERASE:
+					srcFactor = All.Zero;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				default:
+					break;
+				}
+			} else {
+				switch (blendMode) {
+				case NORMAL:
+					srcFactor = All.SrcAlpha;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				case ADD:
+					srcFactor = All.SrcAlpha;
+					dstFactor = All.DstAlpha;
+					break;
+				case MULTIPLY:
+					srcFactor = All.DstColor;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				case SCREEN:
+					srcFactor = All.SrcAlpha;
+					dstFactor = All.One;
+					break;
+				case ERASE:
+					srcFactor = All.Zero;
+					dstFactor = All.OneMinusSrcAlpha;
+					break;
+				default:
+					break;
+				}
+			}
 
 			GL.Enable (All.Blend);
 			GL.BlendFunc (srcFactor, dstFactor);
 		}
-
-		public static void DecodeBlendMode (uint blendMode, bool premultipliedAlpha, out All sFactor, out All dFactor)
-		{
-//			if (premultipliedAlpha) {
-//				sFactor = DecodeFactor ((blendMode & 0x00f0) >> 4);
-//				dFactor = DecodeFactor (blendMode & 0x000f);
-//			} else {
-//				sFactor = DecodeFactor ((blendMode & 0xf000) >> 12);
-//				dFactor = DecodeFactor ((blendMode & 0x0f00) >> 8);
-//			}
-			sFactor = All.Zero;
-			dFactor = All.One;
-		}
-		//		public static All DecodeFactor (All factor)
-		//		{
-		//			if (factor == All.Zero || factor == All.One) {
-		//				return factor;
-		//			} else {
-		//				return factor + 0x0300 - 2;
-		//			}
-		//		}
 	}
 }
 

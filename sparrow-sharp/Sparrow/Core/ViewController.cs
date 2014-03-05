@@ -139,7 +139,6 @@ namespace Sparrow.Core
             GL.Disable(All.CullFace);
             GL.Disable(All.DepthTest);
 			GL.Enable(All.Blend);
-			GL.BlendFunc(All.SrcAlpha, All.OneMinusSrcAlpha);
 
 			RenderSupport.NextFrame();
 			Stage.Render(RenderSupport);

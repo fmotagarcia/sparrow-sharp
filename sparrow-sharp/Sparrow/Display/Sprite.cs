@@ -4,7 +4,7 @@ using Sparrow.Geom;
 using Sparrow.Display;
 using Sparrow.Core;
 
-namespace sparrowsharp
+namespace Sparrow.Display
 {
 	 
 	public class Sprite : DisplayObjectContainer
