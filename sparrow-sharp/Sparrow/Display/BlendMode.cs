@@ -20,7 +20,6 @@ namespace Sparrow.Display
 
 			if (blendMode == NONE) {
 				GL.Disable (All.Blend);
-
 				return;
 			}
 
@@ -47,7 +46,7 @@ namespace Sparrow.Display
 					dstFactor = All.OneMinusSrcAlpha;
 					break;
 				default:
-					break;
+					throw new ArgumentException ("Invalid blend mode " + blendMode);
 				}
 			} else {
 				switch (blendMode) {
@@ -72,7 +71,7 @@ namespace Sparrow.Display
 					dstFactor = All.OneMinusSrcAlpha;
 					break;
 				default:
-					break;
+					throw new ArgumentException ("Invalid blend mode " + blendMode);
 				}
 			}
 

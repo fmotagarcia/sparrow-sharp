@@ -13,7 +13,6 @@ namespace Sparrow.Core
 {
     public class ViewController : AndroidGameView
     {
-        public Dictionary<string, Program> Programs { get; private set; }
 
         public int DrawableWidth { get; set; }
 
@@ -50,16 +49,6 @@ namespace Sparrow.Core
             Setup();
         }
 
-        public void RegisterProgram(string name, Program program)
-        {
-            Programs.Add(name, program);
-        }
-
-        public void UnregisterProgram(string name)
-        {
-            Programs.Remove(name);
-        }
-
         public void Setup()
         {
 
@@ -92,8 +81,6 @@ namespace Sparrow.Core
 
                 // if you don't call this, the context won't be created
                 base.CreateFrameBuffer();
-
-				Programs = new Dictionary<string, Program>();
 
 				Stage = new Stage();
 
