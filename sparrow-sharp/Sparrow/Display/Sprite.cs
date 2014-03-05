@@ -79,13 +79,13 @@ namespace Sparrow.Display
 				}
 			}
 
-			if (_flattenRequested)
+			if (_flattenRequested == true)
 			{
 				_flattenedContents = QuadBatch.Compile(this, _flattenedContents);
 				_flattenRequested = false;
 			}
 
-			if (_flattenedContents != null)
+			if (_flattenedContents.Count > 0)
 			{
 				support.FinishQuadBatch();
 				support.AddDrawCalls( _flattenedContents.Count );

@@ -255,7 +255,7 @@ namespace Sparrow.Display
 
 			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
 
-			return Compile (displayObject);
+			return quadBatches;
 		}
 
 		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
