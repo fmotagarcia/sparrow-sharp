@@ -417,8 +417,7 @@ namespace Sparrow.Display
 				int numIndices = value * 6;
 
 				_vertexData.NumVertices = numVertices;
-
-				_indexData = new ushort[numIndices];
+				Array.Resize<ushort> (ref _indexData, numIndices);
 
 				for (uint i = oldCapacity; i < value; ++i) {
 					_indexData [i * 6] = (ushort)(i * 4);
