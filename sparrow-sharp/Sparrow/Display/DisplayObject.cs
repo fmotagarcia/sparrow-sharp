@@ -8,6 +8,23 @@ namespace Sparrow.Display
 {
 	public class DisplayObject
 	{
+		#region Events
+
+		public delegate void EventHandler (DisplayObject target, DisplayObject currentTarget);
+
+		public delegate void EnterFrameEventHandler (DisplayObject target, DisplayObject currentTarget, float passedTime);
+
+		public event EventHandler Added;
+		public event EventHandler AddedToStage;
+		public event EventHandler Removed;
+		public event EventHandler RemovedFromStage;
+		public event EnterFrameEventHandler EnterFrame;
+		public event EventHandler Touch;
+		public event EventHandler KeyUp;
+		public event EventHandler KeyDown;
+
+		#endregion
+
 		private const int MAX_DISPLAY_TREE_DEPTH = 32;
 		private float _x;
 		private float _y;
@@ -206,10 +223,10 @@ namespace Sparrow.Display
 							float cos = (float)Math.Cos (_rotation);
 							float sin = (float)Math.Sin (_rotation);
 
-							float a = _scaleX *  cos;
-							float b = _scaleX *  sin;
+							float a = _scaleX * cos;
+							float b = _scaleX * sin;
 							float c = _scaleY * -sin;
-							float d = _scaleY *  cos;
+							float d = _scaleY * cos;
 							float tx = _x - _pivotX * a - _pivotY * c;
 							float ty = _y - _pivotX * b - _pivotY * d;
 
@@ -482,6 +499,62 @@ namespace Sparrow.Display
 		{
 			Matrix matrix = TransformationMatrixToSpace (Base);
 			return matrix.TransformPoint (globalPoint);
+		}
+
+		internal virtual void InvokeAdded (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (Added != null) {
+				Added (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeAddedToStage (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (AddedToStage != null) {
+				AddedToStage (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeRemoved (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (Removed != null) {
+				Removed (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeRemovedFromStage (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (RemovedFromStage != null) {
+				RemovedFromStage (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeEnterFrame (DisplayObject target, DisplayObject currentTarget, float passedTime)
+		{
+			if (EnterFrame != null) {
+				EnterFrame (target, currentTarget, passedTime);
+			}
+		}
+
+		internal virtual void InvokeTouch (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (Touch != null) {
+				Touch (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeKeyUp (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (KeyUp != null) {
+				KeyUp (target, currentTarget);
+			}
+		}
+
+		internal virtual void InvokeKeyDown (DisplayObject target, DisplayObject currentTarget)
+		{
+			if (KeyDown != null) {
+				KeyDown (target, currentTarget);
+			}
 		}
 	}
 }

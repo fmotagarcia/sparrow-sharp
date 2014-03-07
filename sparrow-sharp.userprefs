@@ -9,8 +9,8 @@
       <File FileName="sparrow-sharp/SampleGame.cs" Line="1" Column="1" />
       <File FileName="sparrow-sharp/Sparrow/Display/QuadBatch.cs" Line="1" Column="1" />
       <File FileName="sparrow-sharp/MainActivity.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/BaseEffect.cs" Line="133" Column="5" />
-      <File FileName="component-test/MainActivity.cs" Line="9" Column="1" />
+      <File FileName="sparrow-sharp/Sparrow/Core/BaseEffect.cs" Line="1" Column="1" />
+      <File FileName="component-test/MainActivity.cs" Line="1" Column="1" />
       <File FileName="component-test/GLView1.cs" Line="10" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
