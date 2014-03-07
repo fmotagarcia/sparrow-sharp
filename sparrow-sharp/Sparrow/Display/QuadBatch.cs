@@ -255,7 +255,7 @@ namespace Sparrow.Display
 
 			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
 
-			return quadBatches;
+			return Compile (displayObject);
 		}
 
 		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
@@ -418,7 +418,7 @@ namespace Sparrow.Display
 
 				_vertexData.NumVertices = numVertices;
 
-				_indexData = new ushort[numIndices];
+				Array.Resize<ushort> (ref _indexData, numIndices);
 
 				for (uint i = oldCapacity; i < value; ++i) {
 					_indexData [i * 6] = (ushort)(i * 4);
