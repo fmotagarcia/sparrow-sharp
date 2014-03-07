@@ -79,6 +79,7 @@
     <Compile Include="SampleGame.cs" />
     <Compile Include="Sparrow\Display\Sprite.cs" />
     <Compile Include="GLView.cs" />
+    <Compile Include="Sparrow\Display\Image.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

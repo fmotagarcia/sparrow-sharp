@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using sparrowsharp;
 using Sparrow.Geom;
 using OpenTK.Graphics;
+using Android.Content.Res;
 
 namespace Sparrow.Core
 {
@@ -32,6 +33,7 @@ namespace Sparrow.Core
 		// hardcode for now
 		private float _viewScaleFactor = 1.0f;
 		private SampleGame testGame;
+		public static Resources ResourcesRef;
 
 		public ViewController (Android.Content.Context context, IAttributeSet attrs) : base (context, attrs)
 		{
@@ -50,7 +52,7 @@ namespace Sparrow.Core
 
 		public void Setup ()
 		{
-
+			ResourcesRef = Resources;
 		}
 		// This gets called when the drawing surface is ready
 		protected override void OnLoad (EventArgs e)

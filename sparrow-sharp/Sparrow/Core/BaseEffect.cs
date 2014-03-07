@@ -134,15 +134,22 @@ namespace Sparrow.Core
                 }
         
                 _aPosition = _program.Attributes["aPosition"];
-                _aColor = _program.Attributes["aColor"];
-
+                
+				if (_program.Attributes.ContainsKey("aColor"))
+				{
+					_aColor = _program.Attributes["aColor"];
+				}
                 if (_program.Attributes.ContainsKey("aTexCoords"))
                 {
                     _aTexCoords = _program.Attributes["aTexCoords"];
                 }
 
                 _uMvpMatrix = _program.Uniforms["uMvpMatrix"];
-                _uAlpha = _program.Uniforms["uAlpha"];
+
+				if (_program.Uniforms.ContainsKey("uAlpha"))
+				{
+					_uAlpha = _program.Uniforms["uAlpha"];
+				}
             }
 
             Matrix4 glkMvpMatrix = _mvpMatrix.ConvertToMatrix4();

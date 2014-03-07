@@ -9,7 +9,12 @@ namespace Sparrow.Display
 	{
 		private const float MIN_SIZE = 0.1f;
 		private bool _tinted;
-		private VertexData _vertexData;
+		protected VertexData _vertexData;
+
+		virtual public Texture Texture {
+			get { return null; }
+			set { }
+		}
 
 		public uint Color {
 			get {
@@ -60,11 +65,12 @@ namespace Sparrow.Display
 			}
 		}
 
-		public Sparrow.Core.Texture Texture {
-			get { return null; }
+		public Quad (float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
+		{
+			Init (width, height, color, premultipliedAlpha);
 		}
 
-		public Quad (float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
+		protected void Init(float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
 		{
 			if (width <= MIN_SIZE)
 				width = MIN_SIZE;
@@ -160,12 +166,12 @@ namespace Sparrow.Display
 			return _vertexData.AlphaAtIndex (vertexID);
 		}
 
-		public void VertexDataDidChange ()
+		virtual public void VertexDataDidChange ()
 		{
 			// override in subclass
 		}
 
-		public void CopyVertexDataTo (VertexData targetData, int atIndex)
+		virtual public void CopyVertexDataTo (VertexData targetData, int atIndex)
 		{
 			_vertexData.CopyToVertexData (targetData, atIndex);
 		}

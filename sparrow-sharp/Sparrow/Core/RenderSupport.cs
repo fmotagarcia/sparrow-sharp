@@ -171,7 +171,7 @@ namespace Sparrow.Core
             uint blendMode = _stateStackTop.BlendMode;
             Matrix modelViewMatrix = _stateStackTop.ModelViewMatrix;
 
-            if (_quadBatchTop.IsStateChange(quad.Tinted, null, alpha, quad.PremultipliedAlpha, blendMode, 1))
+			if (_quadBatchTop.IsStateChange(quad.Tinted, quad.Texture, alpha, quad.PremultipliedAlpha, blendMode, 1))
             {
                 FinishQuadBatch();
             }
