@@ -62,19 +62,11 @@ namespace Sparrow.Display
 				target = this;
 			return target;
 		}
-		//        override public void AppendDescendantEventListenersOfObject(DisplayObject dispObject, String eventType, List<DisplayObject> listeners)
-		//        {
-		//            if (dispObject == this && eventType == EventTypeEnterFrame)
-		//            {
-		//                listeners.AddRange(_enterFrameListeners);
-		//            }
-		//            else
-		//            {
-		//                base.AppendDescendantEventListenersOfObject(dispObject, eventType, listeners);
-		//            }
-		//        }
+
 		public void AdvanceTime (float passedTime)
 		{
+			// juggler.advanceTime(seconds)
+
 			BroadcastEnterFrameEvent (passedTime);
 		}
 
