@@ -34,7 +34,7 @@ namespace sparrowsharp
 			}
 
 			Quad bigQuad = new Quad (36, 36, 0x23FF00);
-				
+
 			Sprite sp = new Sprite ();
 			sp.X = 10;
 			sp.Y = 100;
@@ -42,6 +42,17 @@ namespace sparrowsharp
 			//sp.Rotation = 0.001f;
 			sp.AddChild (bigQuad); // TODO not working
 			AddChild (sp);
+
+			Added += (DisplayObject target, DisplayObject currentTarget) => {
+				target.Alpha = 0.5f;
+			};
+
+			AddedToStage += (DisplayObject target, DisplayObject currentTarget) => {
+				Stage stage = target as Stage;
+				if (stage != null) {	
+					stage.Color = 0x00FFCC;
+				}
+			};	
 
 			EnterFrame += EnterFrameHandler;
 		}

@@ -66,7 +66,6 @@ namespace Sparrow.Display
 		public void AdvanceTime (float passedTime)
 		{
 			// juggler.advanceTime(seconds)
-
 			BroadcastEnterFrameEvent (passedTime);
 		}
 
