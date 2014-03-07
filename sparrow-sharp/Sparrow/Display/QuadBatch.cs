@@ -23,6 +23,9 @@ namespace Sparrow.Display
 		private ushort[] _indexData;
 		private int _indexBufferName;
 
+		public Texture QuadTexture {
+			get {return _texture;}
+		}
 		public int NumQuads {
 			get { return _numQuads; }
 		}
@@ -81,6 +84,7 @@ namespace Sparrow.Display
 			}
 
 			if (_numQuads == 0) {
+				_texture = quad.Texture;
 				_premultipliedAlpha = quad.PremultipliedAlpha;
 				BlendMode = blendMode;
 				_vertexData.SetPremultipliedAlpha(_premultipliedAlpha, false);
@@ -131,6 +135,7 @@ namespace Sparrow.Display
 				Capacity = _numQuads + numQuads;
 			}
 			if (_numQuads == 0) {
+				_texture = quadBatch.QuadTexture;
 				_premultipliedAlpha = quadBatch.PremultipliedAlpha;
 				BlendMode = blendMode;
 				_vertexData.SetPremultipliedAlpha (_premultipliedAlpha, false);
@@ -255,7 +260,7 @@ namespace Sparrow.Display
 
 			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
 
-			return Compile (displayObject);
+			return quadBatches;
 		}
 
 		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
@@ -417,7 +422,6 @@ namespace Sparrow.Display
 				int numIndices = value * 6;
 
 				_vertexData.NumVertices = numVertices;
-
 				Array.Resize<ushort> (ref _indexData, numIndices);
 
 				for (uint i = oldCapacity; i < value; ++i) {
