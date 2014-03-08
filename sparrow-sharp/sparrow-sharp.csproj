@@ -80,10 +80,11 @@
     <Compile Include="Sparrow\Utils\VertexColorHelper.cs" />
     <Compile Include="SampleGame.cs" />
     <Compile Include="Sparrow\Display\Sprite.cs" />
-    <Compile Include="GLView.cs" />
     <Compile Include="Sparrow\Display\Image.cs" />
     <Compile Include="Sparrow\Fonts\BitmapFont.cs" />
     <Compile Include="Sparrow\Fonts\BitmapChar.cs" />
+    <Compile Include="Sparrow\Core\SubTexture.cs" />
+    <Compile Include="Sparrow\Display\GLTexture.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

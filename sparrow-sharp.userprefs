@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs">
     <Files>
-      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs" Line="34" Column="8" />
+      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs" Line="57" Column="49" />
       <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapChar.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
@@ -12,5 +12,4 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.sparrow-sharp AndroidDeviceId-Debug="015d2a501a48140e" AndroidDeviceId-Release="015d2a501a48140e" />
 </Properties>

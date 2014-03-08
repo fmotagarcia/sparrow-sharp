@@ -64,8 +64,7 @@ namespace Sparrow.Display
 
 		public void AddQuad (Quad quad, float alpha)
 		{
-			// TOOD add blendMode to quad
-			AddQuad (quad, alpha, Sparrow.Display.BlendMode.AUTO, null);
+			AddQuad (quad, alpha, quad.BlendMode, null);
 		}
 
 		public void AddQuad (Quad quad, float alpha, uint blendMode)
