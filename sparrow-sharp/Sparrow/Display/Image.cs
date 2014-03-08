@@ -7,9 +7,9 @@ namespace Sparrow.Display
 {
 	public class Image : Quad
 	{
-		VertexData _vertexDataCache;
-		bool _vertexDataCacheInvalid;
-		public Texture _texture;
+		private VertexData _vertexDataCache;
+		private bool _vertexDataCacheInvalid;
+		private Texture _texture;
 
 		public Image (Texture texture)
 		{
@@ -31,8 +31,30 @@ namespace Sparrow.Display
 			_vertexDataCache = new VertexData(4, pma);
 			_vertexDataCacheInvalid = true;
 		}
+			
+		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		public void setTexCoords(Point coords, int vertexID)
+		{
+			_vertexData.SetTexCoords(coords, vertexID);
+			VertexDataDidChange();
+		}
 
-		private void ReadjustSize()
+		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		public void SetTexCoords(float x, float y, int vertexID)
+		{
+			_vertexData.SetTexCoords(x, y, vertexID);
+			VertexDataDidChange ();
+		}
+
+		/// Gets the texture coordinates of a vertex.
+		public Point TexCoordsOfVertex(int vertexID)
+		{
+			return _vertexData.TexCoordsAtIndex(vertexID);
+		}
+
+		/// Readjusts the dimensions of the image according to its current texture. Call this method 
+		/// to synchronize image and texture size after assigning a texture with a different size.
+		public void ReadjustSize()
 		{
 			Rectangle frame = _texture.Frame;    
 			float width  = (frame != null) ? frame.Width  : Texture.Width;
@@ -66,7 +88,7 @@ namespace Sparrow.Display
 			set {
 				if (value == null)
 				{
-					throw new Exception(@"texture cannot be nil!");
+					throw new Exception(@"texture cannot be null!");
 				}
 				else if (value != _texture)
 				{

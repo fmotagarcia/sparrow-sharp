@@ -32,7 +32,6 @@ namespace Sparrow.Core
 		private float _contentScaleFactor = 1.0f;
 		// hardcode for now
 		private float _viewScaleFactor = 1.0f;
-		private SampleGame testGame;
 		public static Resources ResourcesRef;
 
 		public ViewController (Android.Content.Context context, IAttributeSet attrs) : base (context, attrs)
@@ -72,12 +71,11 @@ namespace Sparrow.Core
 		// support the defaults
 		protected override void CreateFrameBuffer ()
 		{
-			// TODO some init calls?
 			ContextRenderingApi = GLVersion.ES2;
 
 			// the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
 			try {
-				Log.Verbose ("GLCube", "Loading with default settings");
+				Log.Verbose ("Sparrow", "Loading with default settings");
 
 				// if you don't call this, the context won't be created
 				base.CreateFrameBuffer ();
@@ -93,19 +91,19 @@ namespace Sparrow.Core
 
 				return;
 			} catch (Exception ex) {
-				Log.Verbose ("GLCube", "{0}", ex);
+				Log.Verbose ("Sparrow", "{0}", ex);
 			}
 			// this is a graphics setting that sets everything to the lowest mode possible so
 			// the device returns a reliable graphics setting.
 			try {
-				Log.Verbose ("GLCube", "Loading with custom Android settings (low mode)");
+				Log.Verbose ("Sparrow", "Loading with custom Android settings (low mode)");
 				GraphicsMode = new AndroidGraphicsMode (0, 0, 0, 0, 0, false); // TODO this is for GL 1.1
 
 				// if you don't call this, the context won't be created
 				base.CreateFrameBuffer ();
 				return;
 			} catch (Exception ex) {
-				Log.Verbose ("GLCube", "{0}", ex);
+				Log.Verbose ("Sparrow", "{0}", ex);
 			}
 			throw new Exception ("Can't load egl, aborting");
 		}
@@ -149,26 +147,16 @@ namespace Sparrow.Core
 		public void CreateRoot ()
 		{
 			if (Root == null) {
-				// FIXME: not worried about this for now let's just make it work
-//                // hope iOS wont complain about such dynamic stuff
-//                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
-//
-//                if (Root.GetType().IsInstanceOfType(Stage))
-//                {
-//                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
-//                }
-//                else
-//                {
-//                    Stage.AddChild(Root);
-//                    /*
-//                    if (_onRootCreated)
-//                    {
-//                        _onRootCreated(_root);
-//                        SP_RELEASE_AND_NIL(_onRootCreated);
-//                    }*/
-//                }
-				testGame = new SampleGame ();
-				Stage.AddChild (testGame);
+                // hope iOS wont complain about such dynamic stuff
+                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
+                if (Root.GetType().IsInstanceOfType(Stage))
+                {
+                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
+                }
+                else
+                {
+                    Stage.AddChild(Root);
+                }
 			}
 		}
 
@@ -177,6 +165,7 @@ namespace Sparrow.Core
 			Stage.Width = Size.Width * _viewScaleFactor / _contentScaleFactor;
 			Stage.Height = Size.Height * _viewScaleFactor / _contentScaleFactor;
 		}
+
 		// this is called whenever android raises the SurfaceChanged event
 		protected override void OnResize (EventArgs e)
 		{

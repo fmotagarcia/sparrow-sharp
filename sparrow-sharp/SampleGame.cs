@@ -33,16 +33,13 @@ namespace sparrowsharp
 				}
 			}
 
-			Quad bigQuad = new Quad (36, 36, 0x23FF00);
-
-			Sprite sp = new Sprite ();
-			sp.X = 10;
-			sp.Y = 100;
-			//sp.Alpha = 0.9f;
-			//sp.Rotation = 0.001f;
-			sp.AddChild (bigQuad); // TODO not working
-			AddChild (sp);
-
+			Image img = new Image( new Sparrow.Core.Texture() );
+			AddChild(img);
+			//img.Color = 0xFFFFFE;
+			//img.Alpha = 0.98f;
+			img.X = 123;
+			img.Y = 123;
+			/*
 			Added += (DisplayObject target, DisplayObject currentTarget) => {
 				target.Alpha = 0.5f;
 			};
@@ -53,20 +50,20 @@ namespace sparrowsharp
 					stage.Color = 0x00FFCC;
 				}
 			};	
-
+			*/
 			EnterFrame += EnterFrameHandler;
 		}
 
 		void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)
 		{
-			for (int i = 0; i < _childQuads.Length; i++) {
+			/*for (int i = 0; i < _childQuads.Length; i++) {
 				if (_childQuads [i] != null) {
 					_childQuads [i].X = _childQuads [i].X + 1.0f;
 					if (_childQuads [i].X > 700)
 						_childQuads [i].X = 0;
 
 				}
-			}
+			}*/
 		}
 	}
 }

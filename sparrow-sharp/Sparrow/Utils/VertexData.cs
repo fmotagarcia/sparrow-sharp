@@ -167,7 +167,7 @@ namespace Sparrow.Utils
             _vertices[atIndex].Position = new Vector2(x, y);
         }
 
-        public Point TextCoordsAtIndex(int index)
+        public Point TexCoordsAtIndex(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -178,7 +178,7 @@ namespace Sparrow.Utils
             return new Point(texCoords.X, texCoords.Y);
         }
 
-        public void SetTextCoords(Point texCoords, int atIndex)
+        public void SetTexCoords(Point texCoords, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
@@ -188,7 +188,7 @@ namespace Sparrow.Utils
             _vertices[atIndex].TexCoords = new Vector2(texCoords.X, texCoords.Y);
         }
 
-        public void SetTextCoords(float x, float y, int atIndex)
+        public void SetTexCoords(float x, float y, int atIndex)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {

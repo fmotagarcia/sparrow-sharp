@@ -27,7 +27,7 @@ namespace Sparrow.Display
 				
 				VertexDataDidChange ();
 
-				if (value != 0xffffff) {
+				if (value != 0xffffff) { // TODO this is not so good. How to display white quads?
 					_tinted = true;
 				} else {
 					_tinted = Alpha != 1.0f || _vertexData.Tinted;
@@ -77,7 +77,7 @@ namespace Sparrow.Display
 			if (height <= MIN_SIZE)
 				height = MIN_SIZE;
 
-			_tinted = color != 0xffffff;
+			_tinted = color != 0xffffff; // TODO this is not so good
 
 			_vertexData = new VertexData (4, premultipliedAlpha);
 			_vertexData.Vertices [1].Position.X = width;
