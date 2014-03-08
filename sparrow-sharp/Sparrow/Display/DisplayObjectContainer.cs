@@ -193,7 +193,7 @@ namespace Sparrow.Display
 
 			if (numChildren == 0) {
 				Matrix transformationMatrix = TransformationMatrixToSpace (targetSpace);
-				Point transformedPoint = TransformationMatrix.TransformPoint (X, Y);
+				Point transformedPoint = transformationMatrix.TransformPoint (X, Y);
 				return new Rectangle (transformedPoint.X, transformedPoint.Y, 0.0f, 0.0f);
 			} else if (numChildren == 1) {
 				return _children [0].BoundsInSpace (targetSpace);
