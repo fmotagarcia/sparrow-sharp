@@ -149,7 +149,6 @@ namespace Sparrow.Core
 			if (Root == null) {
                 // hope iOS wont complain about such dynamic stuff
                 Root = (DisplayObject)Activator.CreateInstance(_rootClass);
-				_rootClass = null;
                 if (Root.GetType().IsInstanceOfType(Stage))
                 {
                     throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");

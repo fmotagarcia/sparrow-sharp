@@ -129,13 +129,13 @@ namespace Sparrow.Core
         }
 
         public void CheckForOpenGLError()
-		{/*
+		{
 			ErrorCode err = (ErrorCode)GL.GetError ();
 			while (err != ErrorCode.NoError)
 			{
 				Console.WriteLine(@"There was an OpenGL error: " +  err.ToString());
 				err = (ErrorCode)GL.GetError ();
-			}*/
+			}
         }
 
         public void AddDrawCalls(int count)

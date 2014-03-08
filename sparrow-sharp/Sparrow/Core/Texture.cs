@@ -27,12 +27,12 @@ namespace Sparrow.Core
 			GL.TexParameter (All.Texture2D, All.TextureMinFilter, (int)All.Linear);
 			GL.TexParameter (All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
 			GL.TexParameter (All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
+			
+			Bitmap b = BitmapFactory.DecodeResource (ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.exampleImageJPG);
 
-			Bitmap b = BitmapFactory.DecodeResource (ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.Icon);
-			 
 			Height = b.Height;
-			Width = b.Height;
-			Android.Opengl.GLUtils.TexImage2D ((int)All.Texture2D, 0, b, 0);     
+			Width = b.Width;
+			Android.Opengl.GLUtils.TexImage2D ((int)All.Texture2D, 0, b, 0);
 		}
 
 		public void AdjustVertexData(VertexData vertexData, int index, int numVertices)

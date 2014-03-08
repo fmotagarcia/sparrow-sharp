@@ -206,11 +206,11 @@ namespace Sparrow.Display
 			if (blendMode == Sparrow.Display.BlendMode.AUTO) {
 				throw new InvalidOperationException ("Cannot render object with blend mode AUTO");
 			}
-
+			bool useTinting = _tinted || alpha != 1.0f;
 			_baseEffect.Texture = _texture;
 			_baseEffect.PremultipliedAlpha = _premultipliedAlpha;
 			_baseEffect.MvpMatrix = matrix;
-			_baseEffect.UseTinting = _tinted || alpha != 1.0f;
+			_baseEffect.UseTinting = useTinting;
 			_baseEffect.Alpha = alpha;
 
 			_baseEffect.PrepareToDraw ();
@@ -218,26 +218,31 @@ namespace Sparrow.Display
 			Sparrow.Display.BlendMode.ApplyBlendFactors (blendMode, _premultipliedAlpha);
 
 			int attribPosition = _baseEffect.AttribPosition;
-			int attribColor = _baseEffect.AttribColor;
-			int attribTexCoords = _baseEffect.AttribTexCoords;
-
 			GL.EnableVertexAttribArray (attribPosition);
-			GL.EnableVertexAttribArray (attribColor);
 
+			int attribColor = _baseEffect.AttribColor;
+			if (useTinting) {
+				GL.EnableVertexAttribArray (attribColor);
+			}
+
+			int attribTexCoords = _baseEffect.AttribTexCoords;
 			if (_texture != null) {
 				GL.EnableVertexAttribArray (attribTexCoords);
 			}
+
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 
 			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));
 			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
-			IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
-			IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
-		
 			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
-			GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
+
+			if (useTinting) {
+				IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
+				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
+			}
 			if (_texture != null) {
+				IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
 				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
 			}
 			int numIndices = _numQuads * 6;
