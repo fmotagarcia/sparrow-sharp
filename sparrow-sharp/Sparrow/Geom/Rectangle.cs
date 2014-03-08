@@ -208,7 +208,11 @@ namespace Sparrow.Geom
 				NumberUtil.Equals (_y, other.Y) &&
 				NumberUtil.Equals (_width, other.Width) &&
 				NumberUtil.Equals (_height, other.Height);
+		}
 
+		public Rectangle Copy() 
+		{
+			return new Rectangle (_x, _y, _width, _height);
 		}
 	}
 }
