@@ -27,7 +27,7 @@ namespace Sparrow.Fonts
             _texture = texture;
             _xOffset = xOffset;
             _yOffset = yOffset;
-            _xAdvance - xAdvance;
+            _xAdvance = xAdvance;
         }
 
         public void AddKerning(float amount, int charId)

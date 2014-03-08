@@ -41,33 +41,38 @@ namespace Sparrow.Fonts
             XmlDocument xml = new XmlDocument();
             xml.Load(data);
 
-            Texture texture;
+            Texture texture = null;
 
             XmlNodeList pageNodes = xml.GetElementsByTagName("page");
-            for (int i = 0; i < pageNodes.Count; i ++) {
+            for (int i = 0; i < pageNodes.Count; i++)
+            {
                 XmlAttributeCollection attributes = pageNodes[i].Attributes;
                 int id = Convert.ToInt32(attributes["id"]);
-                if (id != 0) {
+                if (id != 0)
+                {
                     // TODO: add support for multiple pages?
                     throw new InvalidOperationException("Bitmap fonts with multiple pages are not supported");
                 }
 
-                string filename = attributes["file"];
+                string filename = attributes["file"].Value;
                 string absolutePath = Path.Combine(folder, filename);
 
                 texture = new Texture(absolutePath);
             }
 
-            if (texture == null) {
+            if (texture == null)
+            {
                 throw new InvalidDataException("Font XML did not contain path to texture");
             }
+
+            return texture;
         }
 
         private bool ParseFontData(Stream data)
         {
             if (_fontTexture == null)
             {
-                throw InvalidOperationException("Font parsing requires texture to be set");
+                throw new InvalidOperationException("Font parsing requires texture to be set");
             }
 
             XmlDocument xml = new XmlDocument();
@@ -125,9 +130,9 @@ namespace Sparrow.Fonts
         private void ParseAndLoadInfo(XmlDocument xml)
         {
             XmlNodeList infoNodes = xml.GetElementsByTagName("info");
-            if (infoNodes.Count > 0) {
+            if (infoNodes.Count > 0)
             {
-                    XmlAttributeCollection attributes = infoNodes[0].Attributes;
+                XmlAttributeCollection attributes = infoNodes[0].Attributes;
 
                 _name = attributes["face"].Value;
                 _size = Convert.ToSingle(attributes["size"].Value);
@@ -142,7 +147,8 @@ namespace Sparrow.Fonts
         private void ParseAndLoadCommon(XmlDocument xml)
         {
             XmlNodeList commonNode = xml.GetElementsByTagName("common");
-            if (commonNode.Count > 0) {
+            if (commonNode.Count > 0)
+            {
                 XmlAttributeCollection attributes = commonNode[0].Attributes;
                 _lineHeight = Convert.ToSingle(attributes["lineHeight"]);
                 _baseline = Convert.ToSingle(attributes["base"]);

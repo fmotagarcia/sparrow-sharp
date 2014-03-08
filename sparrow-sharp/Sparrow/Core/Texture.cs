@@ -82,17 +82,74 @@ namespace Sparrow.Core
             // for how MonoGame does it
         }
 
-        virtual public void AdjustVertexData(VertexData vertexData, int index, int numVertices)
+        public Texture(string path) : this(path, false)
+        {
+
+        }
+
+        public Texture(string path, bool generateMipmaps)
+        {
+            // TODO
+//            if (cachingEnabled)
+//            {
+//                SPTexture *cachedTexture = [textureCache textureForKey:path];
+//                if (cachedTexture)
+//                {
+//                    [self release]; // return the cached texture
+//                    return [cachedTexture retain];
+//                }
+//            }
+//
+//            NSString *fullPath = [SPUtils absolutePathToFile:path];
+//            if (!fullPath)
+//                [NSException raise:SPExceptionFileNotFound format:@"File '%@' not found", path];
+//
+//            if ([SPTexture isPVRFile:fullPath])
+//            {
+//                BOOL isCompressed = [SPTexture isCompressedFile:fullPath];
+//                float scale = [fullPath contentScaleFactor];
+//
+//                NSData *rawData = [[NSData alloc] initWithContentsOfFile:fullPath];
+//                SPPVRData *pvrData = [[SPPVRData alloc] initWithData:rawData compressed:isCompressed];
+//
+//                [self release]; // we'll return a subclass!
+//                self = [[SPGLTexture alloc] initWithPVRData:pvrData scale:scale];
+//
+//                [rawData release];
+//                [pvrData release];
+//            }
+//            else
+//            {
+//                // load image via this crazy workaround to be sure that path is not extended with scale
+//                NSData *data = [[NSData alloc] initWithContentsOfFile:fullPath];
+//                UIImage *image1 = [[UIImage alloc] initWithData:data];
+//                UIImage *image2 = [[UIImage alloc] initWithCGImage:image1.CGImage
+//                    scale:[fullPath contentScaleFactor] orientation:UIImageOrientationUp];
+//
+//                self = [self initWithContentsOfImage:image2 generateMipmaps:mipmaps];
+//
+//                [image2 release];
+//                [image1 release];
+//                [data release];
+//            }
+//
+//            if (cachingEnabled)
+//                [textureCache setTexture:self forKey:path];
+//
+//            return self;
+        }
+
+        virtual public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
         {
             // override in subclasses
         }
 
-        virtual public void AdjustTexCoords(Object data, int count, int stride)
+        virtual public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
         {
             // override in subclasses
         }
 
-        virtual public void AdjustPositions(Object data, int count, int stride)
+        virtual public void AdjustPositions(VertexData vertexData, uint startIndex, uint count)
         {
             // override in subclasses
         }
