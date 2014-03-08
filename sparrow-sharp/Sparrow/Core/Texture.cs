@@ -50,17 +50,17 @@ namespace Sparrow.Core
 			// for how MonoGame does it
 		}
 
-		virtual public void AdjustVertexData(VertexData vertexData, int index, int numVertices)
+		virtual public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
 		{
 			// override in subclasses
 		}
 
-		virtual public void AdjustTexCoords(Object data, int count, int stride)
+		virtual public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
 		{
 			// override in subclasses
 		}
 
-		virtual public void AdjustPositions(Object data, int count, int stride)
+		virtual public void AdjustPositions(VertexData vertexData, uint startIndex, uint count)
 		{
 			// override in subclasses
 		}
