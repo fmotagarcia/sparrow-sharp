@@ -1,17 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="component-test/GLView1.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs">
     <Files>
-      <File FileName="sparrow-sharp/GLView.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Geom/Matrix.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/Program.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/RenderSupport.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/SampleGame.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Display/QuadBatch.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/MainActivity.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/BaseEffect.cs" Line="1" Column="1" />
-      <File FileName="component-test/MainActivity.cs" Line="1" Column="1" />
-      <File FileName="component-test/GLView1.cs" Line="10" Column="7" />
+      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs" Line="34" Column="8" />
+      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapChar.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -20,5 +12,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.component-test AndroidDeviceId-Debug="015d483bf0141c09" />
+  <MonoDevelop.Ide.ItemProperties.sparrow-sharp AndroidDeviceId-Debug="015d2a501a48140e" AndroidDeviceId-Release="015d2a501a48140e" />
 </Properties>
