@@ -66,7 +66,7 @@ namespace Sparrow.Display
 			set {
 				if (value == null)
 				{
-					throw new Exception(@"texture cannot be nil!");
+					throw new Exception(@"texture cannot be null!");
 				}
 				else if (value != _texture)
 				{
