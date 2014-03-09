@@ -61,10 +61,13 @@ namespace Sparrow.Core
             get { return _parent.Repeat; }
             set { _parent.Repeat = value; }
         }
-        // TODO override public TextureSmoothing Smoothing {
-        //	get {_parent.Smoothing;}
-        //	set {_parent.Smoothing = value;}
-        //}
+
+        override public TextureSmoothing Smoothing
+        {
+            get { return _parent.Smoothing; }
+            set { _parent.Smoothing = value; }
+        }
+
         /// Initializes a subtexture with a region (in points) of another texture.
         public SubTexture(Rectangle region, Texture texture) 
 			: this(region, null, texture)

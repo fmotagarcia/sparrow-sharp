@@ -35,8 +35,6 @@ namespace Sparrow.Core
             set { throw new Exception("Override 'Repeat' in subclasses."); }
         }
 
-        public Texture.TextureSmoothing Smoothing { get; set; }
-
         public enum TextureSmoothing
         {
             None,
@@ -59,10 +57,13 @@ namespace Sparrow.Core
             AI88,
             I8
         }
-        //TODO virtual public TextureSmoothing Smoothing {
-        //	get {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-        //	set {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-        //}
+
+        virtual public TextureSmoothing Smoothing
+        {
+            get { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
+            set { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
+        }
+
         public Texture()
         {
             int name = GL.GenTexture();
