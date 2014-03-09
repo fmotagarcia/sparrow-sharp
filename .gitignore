@@ -1,7 +1,9 @@
 bin/
 obj/
 packages/
-*.userprefs
+**.userprefs
+*.suo
+
 
 # OS generated files #
 ######################
