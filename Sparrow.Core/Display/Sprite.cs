@@ -44,8 +44,8 @@ namespace Sparrow.Display
 
 			Matrix transform = TransformationMatrixToSpace(targetSpace);
 
-			float x;
-			float y;
+			float x = 0;
+			float y = 0;
 
 			for (int i=0; i<4; ++i)
 			{

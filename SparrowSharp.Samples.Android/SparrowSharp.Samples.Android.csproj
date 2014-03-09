@@ -16,7 +16,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>SparrowSharp.Samples.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -60,9 +60,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SparrowSharp\SparrowSharp.csproj">
-      <Project>{CCAD44F9-D9A7-4295-825C-605D421CBBAD}</Project>
-      <Name>SparrowSharp</Name>
+    <ProjectReference Include="..\SparrowSharpAndroid\SparrowSharpAndroid.csproj">
+      <Project>{9FE46F12-348A-40FB-BE97-2D132F256C7A}</Project>
+      <Name>SparrowSharpAndroid</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
