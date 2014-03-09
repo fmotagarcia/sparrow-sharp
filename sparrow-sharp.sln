@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sparrow-sharp", "sparrow-sharp\sparrow-sharp.csproj", "{344DC3F9-5957-4CCA-AACD-D4789AE675E1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FD40CC79-A857-4613-B9E0-D68FB4D37BF2}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
@@ -10,7 +8,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FD40CC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "component-test", "component-test\component-test.csproj", "{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sparrow.Android", "Sparrow.Android\Sparrow.Android.csproj", "{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Android", "SparrowSharp.Android\SparrowSharp.Android.csproj", "{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Android", "SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj", "{B68B75BA-A18C-4513-8BFF-53346D4840B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp", "SparrowSharp\SparrowSharp.csproj", "{CCAD44F9-D9A7-4295-825C-605D421CBBAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,20 +24,23 @@ Global
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{344DC3F9-5957-4CCA-AACD-D4789AE675E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{344DC3F9-5957-4CCA-AACD-D4789AE675E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{344DC3F9-5957-4CCA-AACD-D4789AE675E1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{344DC3F9-5957-4CCA-AACD-D4789AE675E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{344DC3F9-5957-4CCA-AACD-D4789AE675E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A809CCC8-A0B6-430E-BB55-4D8F4E8C6D41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCAD44F9-D9A7-4295-825C-605D421CBBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCAD44F9-D9A7-4295-825C-605D421CBBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCAD44F9-D9A7-4295-825C-605D421CBBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCAD44F9-D9A7-4295-825C-605D421CBBAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = sparrow-sharp\sparrow-sharp.csproj
+		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

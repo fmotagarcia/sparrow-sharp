@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Sparrow.Display;
 using Sparrow;
 using OpenTK.Graphics.ES20;
 using Android.Graphics;
 using Sparrow.Core;
+using Android.Opengl;
 
-namespace sparrowsharp
+namespace Sparrow.Samples.Android
 {
     public class SampleGame : DisplayObjectContainer
     {
@@ -42,9 +41,9 @@ namespace sparrowsharp
 
             uint name = (uint)GL.GenTexture();
             GL.BindTexture(All.Texture2D, name);
-            Bitmap b = BitmapFactory.DecodeResource(ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.exampleImageJPG);
+            Bitmap b = BitmapFactory.DecodeResource(ViewController.ResourcesRef, SparrowSharp.Resource.Drawable.exampleImageJPG);
             // this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
-            Android.Opengl.GLUtils.TexImage2D(Android.Opengl.GLES20.GlTexture2d, 0, b, 0);
+            GLUtils.TexImage2D(GLES20.GlTexture2d, 0, b, 0);
             // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
             // for how MonoGame does it
             GLTexture tex = new GLTexture(name, b.Width, b.Height, false, 1.0f, false);

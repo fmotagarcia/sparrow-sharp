@@ -1,19 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Display/GLTexture.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="component-test/GLView1.cs">
     <Files>
-      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs" Line="59" Column="17" />
-      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapChar.cs" Line="30" Column="24" />
-      <File FileName="sparrow-sharp/Sparrow/Core/ViewController.cs" Line="87" Column="6" />
-      <File FileName="sparrow-sharp/Sparrow/Display/Image.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/SampleGame.cs" Line="44" Column="26" />
-      <File FileName="sparrow-sharp/Sparrow/Core/Texture.cs" Line="22" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Display/GLTexture.cs" Line="6" Column="2" />
-      <File FileName="sparrow-sharp/Sparrow/Display/DisplayObjectContainer.cs" Line="219" Column="74" />
-      <File FileName="sparrow-sharp/Sparrow/Display/QuadBatch.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Utils/Vertex.cs" Line="10" Column="6" />
-      <File FileName="sparrow-sharp/Sparrow/Core/RenderSupport.cs" Line="1" Column="1" />
-      <File FileName="sparrow-sharp/Sparrow/Core/SubTexture.cs" Line="12" Column="6" />
+      <File FileName="Sparrow.Android/Resources/AndroidAssetManager.cs" Line="1" Column="1" />
+      <File FileName="SparrowSharp/Core/BaseEffect.cs" Line="1" Column="14" />
+      <File FileName="Sparrow.Samples.Android/Resources/Resource.designer.cs" Line="14" Column="25" />
+      <File FileName="Sparrow.Samples.Android/SampleGame.cs" Line="46" Column="32" />
+      <File FileName="component-test/GLView1.cs" Line="10" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -22,5 +15,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.sparrow-sharp AndroidDeviceId-Debug="015d2a501a48140e" />
+  <MonoDevelop.Ide.ItemProperties.Sparrow.Samples.Android AndroidDeviceId-Debug="015d2a501a48140e" />
 </Properties>
