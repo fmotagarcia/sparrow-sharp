@@ -1,9 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="sparrow-sharp\Sparrow\Core\Texture.cs">
     <Files>
-      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapFont.cs" Line="57" Column="49" />
-      <File FileName="sparrow-sharp/Sparrow/Fonts/BitmapChar.cs" Line="1" Column="1" />
+      <File FileName="sparrow-sharp\Sparrow\Display\GLTexture.cs" Line="68" Column="87" />
+      <File FileName="sparrow-sharp\Sparrow\Core\Texture.cs" Line="9" Column="1" />
+      <File FileName="sparrow-sharp\Sparrow\Display\Image.cs" Line="22" Column="4" />
+      <File FileName="sparrow-sharp\Sparrow\Core\TextureSmoothing.cs" Line="5" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -12,4 +14,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.component-test AndroidDeviceId-Debug="015d483bf0141c09" />
 </Properties>
