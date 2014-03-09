@@ -57,7 +57,7 @@ namespace Sparrow.Display
 					case 3: x = clipRight; y = clipBottom; break;
 				}
 
-				Point transformedPoint = transform.TransformPoint(X, Y);
+				Point transformedPoint = transform.TransformPoint(x, y);
 				if (minX > transformedPoint.X) minX = transformedPoint.X;
 				if (maxX < transformedPoint.X) maxX = transformedPoint.X;
 				if (minY > transformedPoint.Y) minY = transformedPoint.Y;
