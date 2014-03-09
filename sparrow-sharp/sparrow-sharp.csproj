@@ -85,7 +85,8 @@
     <Compile Include="Sparrow\Fonts\BitmapChar.cs" />
     <Compile Include="Sparrow\Core\SubTexture.cs" />
     <Compile Include="Sparrow\Display\GLTexture.cs" />
-	<Compile Include="Sparrow\Core\TextureSmoothing.cs" />
+    <Compile Include="Sparrow\Core\TextureSmoothing.cs" />
+    <Compile Include="Sparrow\Utils\AssetManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -37,21 +37,21 @@ namespace sparrowsharp
                     cnt++;
                 }
             }
-			Random r = new Random ();
+            Random r = new Random();
             List<Image> images = new List<Image>();
 
-			uint name = (uint)GL.GenTexture();
-			GL.BindTexture(All.Texture2D, name);
-			Bitmap b = BitmapFactory.DecodeResource(ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.exampleImageJPG);
-			// this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
-			Android.Opengl.GLUtils.TexImage2D(Android.Opengl.GLES20.GlTexture2d, 0, b, 0);
-			// see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
-			// for how MonoGame does it
-			GLTexture tex = new GLTexture (name, b.Width, b.Height, false, 1.0f, false);
+            uint name = (uint)GL.GenTexture();
+            GL.BindTexture(All.Texture2D, name);
+            Bitmap b = BitmapFactory.DecodeResource(ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.exampleImageJPG);
+            // this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
+            Android.Opengl.GLUtils.TexImage2D(Android.Opengl.GLES20.GlTexture2d, 0, b, 0);
+            // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
+            // for how MonoGame does it
+            GLTexture tex = new GLTexture(name, b.Width, b.Height, false, 1.0f, false);
 
             for (int i = 0; i < 100; i++)
             {
-				Image img = new Image( tex );
+                Image img = new Image(tex);
                 AddChild(img);
                 //img.Color = 0xFFFFFE;
                 //img.Alpha = 0.98f;
