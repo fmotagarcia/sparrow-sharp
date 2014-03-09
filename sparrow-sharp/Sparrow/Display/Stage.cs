@@ -55,7 +55,7 @@ namespace Sparrow.Display
 
         public DisplayObject hitTestPoint(Point localPoint)
         {
-            if (!visible || !touchable)
+            if (!Visible || !Touchable)
             {
                 return null;
             }
