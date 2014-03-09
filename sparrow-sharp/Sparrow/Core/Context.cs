@@ -32,9 +32,6 @@ namespace Sparrow.Core
         public Context(IGraphicsContext graphicsContext)
         {
             _nativeContext = graphicsContext;
-            // TODO: hopefully this will do it in a cross-platform way but not sure
-            // if this doesn't work we might need to deal with AndroidGraphicsContext and iPhoneOSGraphicsContext
-//            _nativeContext = new GraphicsContext(GraphicsMode.Default, Utilities.CreateDummyWindowInfo(), 2, 0, GraphicsContextFlags.Embedded);
         }
 
         public Rectangle Viewport

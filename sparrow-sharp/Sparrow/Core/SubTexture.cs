@@ -35,7 +35,6 @@ namespace Sparrow.Core
         /// CAUTION: Use with care! Each call returns the same instance.
         public Matrix TransformationMatrix { get { return _transformationMatrix; } }
 
-        private float _scale;
         private float _height;
         private float _width;
         private Rectangle _frame;
@@ -44,9 +43,9 @@ namespace Sparrow.Core
 
         override public float Height { get { return _height; } }
 
-        override public float NativeWidth { get { return _width * _scale; } }
+		override public float NativeWidth { get { return _width * Scale; } }
 
-        override public float NativeHeight { get { return _height * _scale; } }
+		override public float NativeHeight { get { return _height * Scale; } }
         //TODO override public GLTexture Root { get {return _parent.Root;} }
         override public uint Name { get { return _parent.Name; } }
 

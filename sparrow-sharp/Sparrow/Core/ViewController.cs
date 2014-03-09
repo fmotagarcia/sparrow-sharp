@@ -27,7 +27,7 @@ namespace Sparrow.Core
         public float ContentScaleFactor { get; set; }
 
         public RenderSupport RenderSupport { get; set; }
-
+		private bool _contextWasLost = false;
         private Type _rootClass;
         private float _contentScaleFactor = 1.0f;
         // hardcode for now
@@ -52,80 +52,90 @@ namespace Sparrow.Core
         public void Setup()
         {
             ResourcesRef = Resources;
+			RequestFocus();
+			FocusableInTouchMode = true;
         }
-        // This gets called when the drawing surface is ready
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            ReadjustStageSize(); // TODO check if Width/Height are not 0 here
-            CreateRoot();
-            // Run the render loop
-            Run();
-        }
-        // This method is called everytime the context needs
-        // to be recreated. Use it to set any egl-specific settings
-        // prior to context creation
-        //
-        // In this particular case, we demonstrate how to set
-        // the graphics mode and fallback in case the device doesn't
-        // support the defaults
+
+        // This method is called everytime the context needs to be recreated.
         protected override void CreateFrameBuffer()
         {
-            ContextRenderingApi = GLVersion.ES2;
+			Log.Verbose("Sparrow", "AndroidGameWindow.CreateFrameBuffer");
+			try
+			{
+				ContextRenderingApi = GLVersion.ES2;
+				try
+				{
+					GraphicsMode = new AndroidGraphicsMode(new ColorFormat(8,8,8,8), 24, 0, 0, 0, false);
+					base.CreateFrameBuffer();
+				}
+				catch(Exception)
+				{
+					Log.Verbose("Sparrow", "Failed to create desired format, falling back to defaults");
+					// try again using a more basic mode with a 16 bit depth buffer which hopefully the device will support 
+					GraphicsMode = new AndroidGraphicsMode(new ColorFormat(0, 0, 0, 0), 16, 0, 0, 0, false);
+					try {
+						base.CreateFrameBuffer();
+					} catch (Exception) {
+						// ok we are right back to getting the default
+						GraphicsMode = new AndroidGraphicsMode(0, 0, 0, 0, 0, false);
+						base.CreateFrameBuffer();
+					}
+				}
+				Log.Verbose("Sparrow", "Created format {0}", this.GraphicsContext.GraphicsMode);
+				All status = GL.CheckFramebufferStatus(All.Framebuffer);
+				Log.Verbose("Sparrow", "Framebuffer Status: " + status.ToString());
+			} 
+			catch (Exception) 
+			{
+				throw new NotSupportedException("Could not create OpenGLES 2.0 frame buffer");
+			}
+			GL.Disable(All.CullFace);
+			GL.Disable(All.DepthTest);
+			GL.Enable(All.Blend);
 
-            // the default GraphicsMode that is set consists of (16, 16, 0, 0, 2, false)
-            try
-            {
-                Log.Verbose("Sparrow", "Loading with default settings");
+			if (_contextWasLost)
+			{
+				// todo reload context
+				ReadjustStageSize();
+			}
 
-                // if you don't call this, the context won't be created
-                base.CreateFrameBuffer();
-
-                Stage = new Stage();
-
-                //Juggler = new Juggler();
-                SPContext = new Context(GraphicsContext);
-                SP.CurrentController = this;
-                SP.Context = SPContext;
-                // Context.setCurrentContext() ??
-                RenderSupport = new RenderSupport();
-
-                return;
-            }
-            catch (Exception ex)
-            {
-                Log.Verbose("Sparrow", "{0}", ex);
-            }
-            // this is a graphics setting that sets everything to the lowest mode possible so
-            // the device returns a reliable graphics setting.
-            try
-            {
-                Log.Verbose("Sparrow", "Loading with custom Android settings (low mode)");
-                GraphicsMode = new AndroidGraphicsMode(0, 0, 0, 0, 0, false); // TODO this is for GL 1.1
-
-                // if you don't call this, the context won't be created
-                base.CreateFrameBuffer();
-                return;
-            }
-            catch (Exception ex)
-            {
-                Log.Verbose("Sparrow", "{0}", ex);
-            }
-            throw new Exception("Can't load egl, aborting");
+			MakeCurrent();
         }
+
+		// This gets called when the drawing surface is ready
+		protected override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
+			MakeCurrent();
+
+			if (Root == null)
+			{
+				Stage = new Stage();
+				ReadjustStageSize(); 
+				//Juggler = new Juggler();
+				SPContext = new Context(GraphicsContext);
+				SP.CurrentController = this;
+				SP.Context = SPContext;
+				RenderSupport = new RenderSupport();
+
+				Root = (DisplayObject)Activator.CreateInstance(_rootClass);
+				if (Root.GetType().IsInstanceOfType(Stage))
+				{
+					throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
+				}
+				else
+				{
+					Stage.AddChild(Root);
+				}
+			}
+			// Run the render loop
+			Run();
+		}
+
         // This gets called on each frame render
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
-            //MakeCurrent();
-            // same as (void)glkView:(GLKView *)view drawInRect:(CGRect)rect ??
-            SP.CurrentController = this;  		 
-            //??? neded? Context.SetCurrentContext(_context);
-
-            GL.Disable(All.CullFace);
-            GL.Disable(All.DepthTest);
-            GL.Enable(All.Blend);
 
             RenderSupport.NextFrame();
             Stage.Render(RenderSupport);
@@ -151,36 +161,20 @@ namespace Sparrow.Core
             _rootClass = RootClass;
         }
 
-        public void CreateRoot()
-        {
-            if (Root == null)
-            {
-                // hope iOS wont complain about such dynamic stuff
-                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
-                if (Root.GetType().IsInstanceOfType(Stage))
-                {
-                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
-                }
-                else
-                {
-                    Stage.AddChild(Root);
-                }
-            }
-        }
-
         private void ReadjustStageSize()
         {
+			// TODO check if Width/Height are not 0 here
             Stage.Width = Size.Width * _viewScaleFactor / _contentScaleFactor;
             Stage.Height = Size.Height * _viewScaleFactor / _contentScaleFactor;
         }
-        // this is called whenever android raises the SurfaceChanged event
-        protected override void OnResize(EventArgs e)
-        {
-            // the surface change event makes your context
-            // not be current, so be sure to make it current again
-            MakeCurrent();
-            ReadjustStageSize();
-        }
+
+		protected override void DestroyFrameBuffer()
+		{
+			base.DestroyFrameBuffer();
+
+			_contextWasLost = GraphicsContext == null || GraphicsContext.IsDisposed;
+		}
+
     }
 }
 

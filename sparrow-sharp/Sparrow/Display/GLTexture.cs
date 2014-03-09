@@ -23,7 +23,7 @@ namespace Sparrow.Display
 		override public float Width { get {return _width / _scale;} }
 		override public GLTexture Root { get {return this;} }
 		override public bool MipMaps { get { return _mipmaps; } }
-		virtual public bool PremultipliedAlpha { get { return _premultipliedAlpha; } }
+		override public bool PremultipliedAlpha { get { return _premultipliedAlpha; } }
 		override public bool Repeat { 
 			get {return _repeat; }
 			set {
