@@ -20,23 +20,22 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1728BC70-4F7D-44D5-B9D8-15A4BEDFC78C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
+		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FE46F12-348A-40FB-BE97-2D132F256C7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
 	EndGlobalSection
 EndGlobal
