@@ -24,14 +24,14 @@ namespace Sparrow.Fonts
         private float _lineHeight;
         private float _baseline;
         private float _helperImage;
-        private Texture.TextureSmoothing _smoothing;
+        private TextureSmoothing _smoothing;
 
         public BitmapFont()
         {
 
         }
 
-        private Texture.TextureSmoothing Smoothing()
+        private TextureSmoothing Smoothing()
         {
             return _fontTexture.Smoothing;
         }
@@ -139,7 +139,7 @@ namespace Sparrow.Fonts
 
                 if (attributes["smooth"].Value == "0")
                 {
-                    _smoothing = Texture.TextureSmoothing.None;
+                    _smoothing = TextureSmoothing.None;
                 }
             }
         }

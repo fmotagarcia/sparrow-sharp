@@ -22,11 +22,11 @@ namespace Sparrow.Core
         virtual public float Width { get { throw new Exception("Override 'Width' in subclasses."); } }
 
         virtual public float Scale { get { return 1.0f; } }
-        // TODO virtual public GLTexture Root { get {null;} }
+		virtual public GLTexture Root { get {return null;} }
         virtual public Rectangle Frame { get { return null; } }
 
         virtual public bool PremultipliedAlpha { get { return false; } }
-        // TODO virtual public bool Format { get { return TextureFormat.RGBA; } }
+
         virtual public bool MipMaps { get { return false; } }
 
         virtual public bool Repeat
@@ -35,14 +35,10 @@ namespace Sparrow.Core
             set { throw new Exception("Override 'Repeat' in subclasses."); }
         }
 
-        public Texture.TextureSmoothing Smoothing { get; set; }
-
-        public enum TextureSmoothing
-        {
-            None,
-            Bilinear,
-            Trilinear
-        }
+		virtual public TextureSmoothing Smoothing {
+			get {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
+			set {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
+		}
 
         public enum TextureFormat
         {
@@ -59,32 +55,13 @@ namespace Sparrow.Core
             AI88,
             I8
         }
-        //TODO virtual public TextureSmoothing Smoothing {
-        //	get {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-        //	set {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-        //}
+        
         public Texture()
         {
-            int name = GL.GenTexture();
-            GL.BindTexture(All.Texture2D, name);
-
-            // setup texture parameters
-            GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-            GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.Linear);
-            GL.TexParameter(All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
-			
-            Bitmap b = BitmapFactory.DecodeResource(ViewController.ResourcesRef, sparrowsharp.Resource.Drawable.exampleImageJPG);
-
-            // this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
-            Android.Opengl.GLUtils.TexImage2D(Android.Opengl.GLES20.GlTexture2d, 0, b, 0);
-            // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
-            // for how MonoGame does it
         }
 
         public Texture(string path) : this(path, false)
         {
-
         }
 
         public Texture(string path, bool generateMipmaps)
