@@ -70,6 +70,7 @@
     <AndroidResource Include="Resources\drawable-nodpi\exampleImage.png" />
     <AndroidResource Include="Resources\drawable-nodpi\exampleImageJPG.jpg" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\benchmark_object.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
