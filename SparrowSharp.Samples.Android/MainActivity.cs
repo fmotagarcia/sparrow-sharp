@@ -22,7 +22,7 @@ namespace Sparrow.Samples.Android
             sparrowView = new ViewController(this.ApplicationContext);
 
             SetContentView(sparrowView);
-            sparrowView.Start(typeof(SampleGame));
+			sparrowView.Start(typeof(Benchmark));
         }
 
         protected override void OnPause()

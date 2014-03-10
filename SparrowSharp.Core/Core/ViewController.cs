@@ -7,6 +7,7 @@ using OpenTK.Platform.Android;
 using Android.Content.Res;
 using Android.Util;
 using SparrowSharp.Core;
+using Android.OS;
 
 namespace Sparrow.Core
 {
@@ -29,6 +30,8 @@ namespace Sparrow.Core
         private bool _contextWasLost = false;
         private Type _rootClass;
         private float _contentScaleFactor = 1.0f;
+		private long _previousFrameStartTime;
+
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
         public static Resources ResourcesRef;
@@ -128,6 +131,9 @@ namespace Sparrow.Core
                     Stage.AddChild(Root);
                 }
             }
+
+			_previousFrameStartTime = SystemClock.ElapsedRealtime();
+
             // Run the render loop
             Run();
         }
@@ -135,6 +141,10 @@ namespace Sparrow.Core
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
+
+			long currentTime = SystemClock.ElapsedRealtime();
+			long elapsedTime = currentTime - _previousFrameStartTime;
+			_previousFrameStartTime = currentTime;
 
             RenderSupport.NextFrame();
             Stage.Render(RenderSupport);
@@ -144,10 +154,8 @@ namespace Sparrow.Core
             RenderSupport.CheckForOpenGLError();
             #endif
 
-            Stage.AdvanceTime((float)e.Time);
-
-//			Console.WriteLine ("Number of draw calls: " + RenderSupport.NumDrawCalls);
-
+			Stage.AdvanceTime(elapsedTime);
+			
             SwapBuffers();
         }
 
