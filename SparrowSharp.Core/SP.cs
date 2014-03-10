@@ -1,24 +1,25 @@
 ﻿using Sparrow.Core;
 using Sparrow.Display;
 using System.Collections.Generic;
+using SparrowSharp.Core;
 
 namespace Sparrow
 {
     public static class SP
     {
-        public static ViewController CurrentController { get; set; }
+        public static IViewController CurrentController { get; set; }
 
-		public static Dictionary<string, Program> Programs = new Dictionary<string, Program>();
+        public static Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
-		public static void RegisterProgram(string name, Program program)
-		{
-			Programs.Add(name, program);
-		}
+        public static void RegisterProgram(string name, Program program)
+        {
+            Programs.Add(name, program);
+        }
 
-		public static void UnregisterProgram(string name)
-		{
-			Programs.Remove(name);
-		}
+        public static void UnregisterProgram(string name)
+        {
+            Programs.Remove(name);
+        }
 
         public static Context Context
         {

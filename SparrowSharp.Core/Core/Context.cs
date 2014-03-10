@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using OpenTK.Graphics;
-using OpenTK.Platform;
 using Sparrow.Geom;
 
 namespace Sparrow.Core
@@ -65,10 +64,11 @@ namespace Sparrow.Core
 
             set
             {
-				if (value != null) {
-					GL.Enable (All.ScissorTest);
-					GL.Scissor ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
-				}
+                if (value != null)
+                {
+                    GL.Enable(All.ScissorTest);
+                    GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+                }
             }
         }
 

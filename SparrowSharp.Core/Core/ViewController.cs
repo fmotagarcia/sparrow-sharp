@@ -1,15 +1,16 @@
-﻿using Android.Util;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics.ES20;
-using OpenTK.Platform.Android;
 using Sparrow.Display;
 using System;
 using OpenTK.Graphics;
+using OpenTK.Platform.Android;
 using Android.Content.Res;
+using Android.Util;
+using SparrowSharp.Core;
 
 namespace Sparrow.Core
 {
-    public class ViewController : AndroidGameView
+    public class ViewController : AndroidGameView, IViewController
     {
         public int DrawableWidth { get; set; }
 

@@ -20,7 +20,7 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <Description>test project for some low level openTK stuff. 
 should be part of a future OpenTK unit test.</Description>
-    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,11 +66,11 @@ should be part of a future OpenTK unit test.</Description>
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SparrowSharpAndroid\SparrowSharpAndroid.csproj">
-      <Project>{9FE46F12-348A-40FB-BE97-2D132F256C7A}</Project>
-      <Name>SparrowSharpAndroid</Name>
+    <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
+      <Project>{175877F9-051C-4E18-8479-4E15335D683B}</Project>
+      <Name>SparrowSharp.Core.Android</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
 </Project>

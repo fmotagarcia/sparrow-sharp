@@ -59,13 +59,14 @@ namespace Sparrow.Core
         public Texture Texture
         {
             get { return _texture; }
-            set {
-				if ((_texture != null && value == null) || (_texture == null && value != null))
-				{
-					_program = null;
-				}
-				_texture = value;
-			}
+            set
+            {
+                if ((_texture != null && value == null) || (_texture == null && value != null))
+                {
+                    _program = null;
+                }
+                _texture = value;
+            }
         }
 
         public bool PremultipliedAlpha
@@ -77,30 +78,33 @@ namespace Sparrow.Core
         public Matrix MvpMatrix
         {
             get { return _mvpMatrix; }
-			set { _mvpMatrix.CopyFromMatrix(value); }
+            set { _mvpMatrix.CopyFromMatrix(value); }
         }
 
         public bool UseTinting
         {
             get { return _useTinting; }
-            set {
-				if (value != _useTinting)
-				{
-					_useTinting = value;
-					_program = null;
-				}
-			}
+            set
+            {
+                if (value != _useTinting)
+                {
+                    _useTinting = value;
+                    _program = null;
+                }
+            }
         }
 
         public float Alpha
         {
             get { return _alpha; }
-			set { 
-				if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f)) {
-					_program = null;
-				}
-				_alpha = value; 
-			}
+            set
+            { 
+                if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f))
+                {
+                    _program = null;
+                }
+                _alpha = value; 
+            }
         }
 
         public BaseEffect()
@@ -120,25 +124,25 @@ namespace Sparrow.Core
             {
                 string programName = GetProgramName(hasTexture, useTinting);
 
-				if (SP.Programs.ContainsKey(programName))
-				{
-				    _program = SP.Programs[programName];
-				}
+                if (SP.Programs.ContainsKey(programName))
+                {
+                    _program = SP.Programs[programName];
+                }
         
                 if (_program == null)
                 {
                     string vertexShader = VertexShaderForTexture(_texture, useTinting);
                     string fragmentShader = FragmentShaderForTexture(_texture, useTinting);
                     _program = new Program(vertexShader, fragmentShader);
-					SP.RegisterProgram(programName, _program);
+                    SP.RegisterProgram(programName, _program);
                 }
         
                 _aPosition = _program.Attributes["aPosition"];
                 
-				if (_program.Attributes.ContainsKey("aColor"))
-				{
-					_aColor = _program.Attributes["aColor"];
-				}
+                if (_program.Attributes.ContainsKey("aColor"))
+                {
+                    _aColor = _program.Attributes["aColor"];
+                }
                 if (_program.Attributes.ContainsKey("aTexCoords"))
                 {
                     _aTexCoords = _program.Attributes["aTexCoords"];
@@ -146,10 +150,10 @@ namespace Sparrow.Core
 
                 _uMvpMatrix = _program.Uniforms["uMvpMatrix"];
 
-				if (_program.Uniforms.ContainsKey("uAlpha"))
-				{
-					_uAlpha = _program.Uniforms["uAlpha"];
-				}
+                if (_program.Uniforms.ContainsKey("uAlpha"))
+                {
+                    _uAlpha = _program.Uniforms["uAlpha"];
+                }
             }
 
             Matrix4 glkMvpMatrix = _mvpMatrix.ConvertToMatrix4();
@@ -159,9 +163,9 @@ namespace Sparrow.Core
             if (useTinting)
             {
                 if (_premultipliedAlpha)
-					GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
+                    GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
                 else
-					GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, _alpha);
+                    GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, _alpha);
             }
     
             if (hasTexture)

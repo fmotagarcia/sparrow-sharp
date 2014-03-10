@@ -1,10 +1,6 @@
 using System;
-using OpenTK.Graphics.ES20;
-using Android.Graphics;
 using Sparrow.Geom;
 using Sparrow.Utils;
-using Android.Content.Res;
-using System.Net;
 using Sparrow.Display;
 
 namespace Sparrow.Core
@@ -22,7 +18,9 @@ namespace Sparrow.Core
         virtual public float Width { get { throw new Exception("Override 'Width' in subclasses."); } }
 
         virtual public float Scale { get { return 1.0f; } }
-		virtual public GLTexture Root { get {return null;} }
+
+        virtual public GLTexture Root { get { return null; } }
+
         virtual public Rectangle Frame { get { return null; } }
 
         virtual public bool PremultipliedAlpha { get { return false; } }
@@ -35,10 +33,11 @@ namespace Sparrow.Core
             set { throw new Exception("Override 'Repeat' in subclasses."); }
         }
 
-		virtual public TextureSmoothing Smoothing {
-			get {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-			set {throw new Exception ("Override 'TextureSmoothing' in subclasses.");}
-		}
+        virtual public TextureSmoothing Smoothing
+        {
+            get { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
+            set { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
+        }
 
         public enum TextureFormat
         {
@@ -55,7 +54,7 @@ namespace Sparrow.Core
             AI88,
             I8
         }
-        
+
         public Texture()
         {
         }
