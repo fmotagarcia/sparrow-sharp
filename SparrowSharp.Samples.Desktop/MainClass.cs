@@ -14,7 +14,7 @@ namespace SparrowSharp.Samples.Desktop
 		[STAThread]
 		public static void Main()
 		{
-			ViewController game = new ViewController ();
+			SampleGameWindow game = new SampleGameWindow ();
 			game.Start (typeof(SampleGame));
 		}
 	}

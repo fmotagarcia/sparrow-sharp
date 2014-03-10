@@ -11,7 +11,7 @@ using Sparrow;
 
 namespace SparrowSharp.Samples.Desktop.Core
 {
-	public class ViewController : GameWindow, IViewController
+	public class SampleGameWindow : GameWindow, IViewController
     {
         public int DrawableWidth { get; set; }
 
@@ -32,7 +32,7 @@ namespace SparrowSharp.Samples.Desktop.Core
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
 
-        public ViewController() : base()
+        public SampleGameWindow() : base()
         {
 			Load += HandleLoad;
 
@@ -85,8 +85,6 @@ namespace SparrowSharp.Samples.Desktop.Core
 			GL.Enable(EnableCap.Blend);
 
 			FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-			//ContextRenderingApi = GLVersion.ES2;
-			//MakeCurrent();
         }
 
         public void Start(Type RootClass)
@@ -114,7 +112,6 @@ namespace SparrowSharp.Samples.Desktop.Core
 			{
 				Stage.AddChild(Root);
 			}
-
 
 			// Run the game at 60 updates per second
 			Run(60.0);
