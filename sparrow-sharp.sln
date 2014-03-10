@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Core.iOS", "Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Core.Desktop", "SparrowSharp.Core\SparrowSharp.Core.Desktop.csproj", "{2223B789-0378-4BCE-82F0-F1B059DC4B01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Desktop", "SparrowSharp.Samples.Desktop\SparrowSharp.Samples.Desktop.csproj", "{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,22 @@ Global
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|iPhone.Build.0 = Release|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{B68B75BA-A18C-4513-8BFF-53346D4840B2}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|iPhone.Build.0 = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{ECECB8BC-394C-4646-B165-135718EFBFF1}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
 		{ECECB8BC-394C-4646-B165-135718EFBFF1}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
 		{ECECB8BC-394C-4646-B165-135718EFBFF1}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
@@ -113,7 +131,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
+		StartupItem = SparrowSharp.Samples.Desktop\SparrowSharp.Samples.Desktop.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

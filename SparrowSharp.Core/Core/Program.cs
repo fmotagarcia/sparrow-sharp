@@ -61,18 +61,17 @@ namespace Sparrow.Core
             #if DEBUG
 
 			int linked = 0;
-            #if __ANDROID__
+			#if __ANDROID__
             GL.GetProgram(program, All.LinkStatus, out linked);
-            #elif __IOS__
+			#elif __IOS__ || __WINDOWS__
             GL.GetProgram(program, ProgramParameter.LinkStatus, out linked);
             #endif
-
             if (linked == 0)
             {
 				int logLength = 0;
-                #if __ANDROID__
+				#if __ANDROID__
                 GL.GetProgram(program, All.InfoLogLength, out logLength);
-                #elif __IOS__
+				#elif __IOS__ || __WINDOWS__
                 GL.GetProgram(program, ProgramParameter.InfoLogLength, out logLength);
                 #endif
 
@@ -109,18 +108,18 @@ namespace Sparrow.Core
     
             #if DEBUG
 			int compiled = 0;
-            #if __ANDROID__
+			#if __ANDROID__
             GL.GetShader(shader, All.CompileStatus, out compiled);
-            #elif __IOS__
+			#elif __IOS__ || __WINDOWS__
             GL.GetShader(shader, ShaderParameter.CompileStatus, out compiled);
             #endif
 
             if (compiled == 0)
             {
 				int logLength = 0;
-                #if __ANDROID__
+				#if __ANDROID__
                 GL.GetShader(shader, All.InfoLogLength, out logLength);
-                #elif __IOS__
+				#elif __IOS__ || __WINDOWS__
                 GL.GetShader(shader, ShaderParameter.InfoLogLength, out logLength);
                 #endif
         
@@ -141,10 +140,9 @@ namespace Sparrow.Core
         private void UpdateUniforms()
         {
 			int numUniforms = 0;
-            int logLength;
-            #if __ANDROID__
+			#if __ANDROID__
             GL.GetProgram(Name, All.ActiveUniforms, out numUniforms);
-            #elif __IOS__
+			#elif __IOS__ || __WINDOWS__
             GL.GetProgram(Name, ProgramParameter.ActiveUniforms, out numUniforms);
             #endif
 
@@ -152,11 +150,11 @@ namespace Sparrow.Core
             for (int i = 0; i < numUniforms; i++)
             {
                 int size;
-                #if __ANDROID__
+				#if __ANDROID__
                 All type;
                 string rawName = GL.GetActiveUniform(Name, i, out size, out type);
                 Uniforms.Add(rawName, GL.GetUniformLocation(Name, new StringBuilder(rawName)));
-                #elif __IOS__
+				#elif __IOS__ || __WINDOWS__
                 ActiveUniformType type;
                 string rawName = GL.GetActiveUniform(Name, i, out size, out type);
                 Uniforms.Add(rawName, GL.GetUniformLocation(Name, rawName));
@@ -167,9 +165,9 @@ namespace Sparrow.Core
         private void UpdateAttributes()
         {
 			int numAttributes = 0;
-            #if __ANDROID__
+			#if __ANDROID__ 
             GL.GetProgram(Name, All.ActiveAttributes, out numAttributes);
-            #elif __IOS__
+			#elif __IOS__ || __WINDOWS__
             GL.GetProgram(Name, ProgramParameter.ActiveAttributes, out numAttributes);
             #endif
 
@@ -177,15 +175,14 @@ namespace Sparrow.Core
             for (int i = 0; i < numAttributes; i++)
             {
                 int size;
-                #if __ANDROID__
+				#if __ANDROID__
                 All type;
                 string rawName = GL.GetActiveAttrib(Name, i, out size, out type);
                 Attributes.Add(rawName, GL.GetAttribLocation(Name, new StringBuilder(rawName)));
-                #elif __IOS__
+				#elif __IOS__ || __WINDOWS__
                 ActiveAttribType type;
                 string rawName = GL.GetActiveAttrib(Name, i, out size, out type);
                 Attributes.Add(rawName, GL.GetAttribLocation(Name, rawName));
-                #elif __IOS__
                 #endif
             }
         }
