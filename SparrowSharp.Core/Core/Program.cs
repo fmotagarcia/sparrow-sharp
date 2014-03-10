@@ -60,7 +60,7 @@ namespace Sparrow.Core
     
             #if DEBUG
 
-            int linked;
+			int linked = 0;
             #if __ANDROID__
             GL.GetProgram(program, All.LinkStatus, out linked);
             #elif __IOS__
@@ -69,7 +69,7 @@ namespace Sparrow.Core
 
             if (linked == 0)
             {
-                int logLength;
+				int logLength = 0;
                 #if __ANDROID__
                 GL.GetProgram(program, All.InfoLogLength, out logLength);
                 #elif __IOS__
@@ -108,8 +108,7 @@ namespace Sparrow.Core
             GL.CompileShader(shader);
     
             #if DEBUG
-            int compiled;
-
+			int compiled = 0;
             #if __ANDROID__
             GL.GetShader(shader, All.CompileStatus, out compiled);
             #elif __IOS__
@@ -118,7 +117,7 @@ namespace Sparrow.Core
 
             if (compiled == 0)
             {
-                int logLength;
+				int logLength = 0;
                 #if __ANDROID__
                 GL.GetShader(shader, All.InfoLogLength, out logLength);
                 #elif __IOS__
@@ -141,7 +140,7 @@ namespace Sparrow.Core
 
         private void UpdateUniforms()
         {
-            int numUniforms;
+			int numUniforms = 0;
             int logLength;
             #if __ANDROID__
             GL.GetProgram(Name, All.ActiveUniforms, out numUniforms);
@@ -167,7 +166,7 @@ namespace Sparrow.Core
 
         private void UpdateAttributes()
         {
-            int numAttributes;
+			int numAttributes = 0;
             #if __ANDROID__
             GL.GetProgram(Name, All.ActiveAttributes, out numAttributes);
             #elif __IOS__

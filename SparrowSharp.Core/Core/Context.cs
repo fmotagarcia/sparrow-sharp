@@ -118,10 +118,15 @@ namespace Sparrow.Core
             GL.BindFramebuffer(All.Framebuffer, framebuffer);
 
             GL.FramebufferTexture2D(All.Framebuffer, All.ColorAttachment0, All.Texture2D, texture.Name, 0);
-            if (GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
-            {
+			#if __WINDOWS__
+			if (GL.CheckFramebufferStatus(All.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+			#else
+			if (GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
+			#endif
+			{
                 Debug.WriteLine("Failed to create framebuffer for render texture");
             }
+
 
             return framebuffer;
         }

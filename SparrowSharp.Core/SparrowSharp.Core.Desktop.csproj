@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2223B789-0378-4BCE-82F0-F1B059DC4B01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SparrowSharp.Core.Desktop</RootNamespace>
+    <AssemblyName>SparrowSharp.Core.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;__WINDOWS__;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="OpenTK">
+      <HintPath>..\..\..\Users\idiota\Documents\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Display\" />
+    <Folder Include="Fonts\" />
+    <Folder Include="Geom\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\BaseEffect.cs" />
+    <Compile Include="Core\Context.cs" />
+    <Compile Include="Core\IViewController.cs" />
+    <Compile Include="Core\Program.cs" />
+    <Compile Include="Core\RenderState.cs" />
+    <Compile Include="Core\RenderSupport.cs" />
+    <Compile Include="Core\SubTexture.cs" />
+    <Compile Include="Core\Texture.cs" />
+    <Compile Include="Core\TextureSmoothing.cs" />
+    <Compile Include="Display\BlendMode.cs" />
+    <Compile Include="Display\DisplayObject.cs" />
+    <Compile Include="Display\DisplayObjectContainer.cs" />
+    <Compile Include="Display\GLTexture.cs" />
+    <Compile Include="Display\Image.cs" />
+    <Compile Include="Display\Quad.cs" />
+    <Compile Include="Display\QuadBatch.cs" />
+    <Compile Include="Display\Sprite.cs" />
+    <Compile Include="Display\Stage.cs" />
+    <Compile Include="Fonts\BitmapChar.cs" />
+    <Compile Include="Fonts\BitmapFont.cs" />
+    <Compile Include="Geom\Matrix.cs" />
+    <Compile Include="Geom\Point.cs" />
+    <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Utils\AssetManager.cs" />
+    <Compile Include="Utils\ColorUtil.cs" />
+    <Compile Include="Utils\HAlign.cs" />
+    <Compile Include="Utils\NumberUtil.cs" />
+    <Compile Include="Utils\VAlign.cs" />
+    <Compile Include="Utils\Vertex.cs" />
+    <Compile Include="Utils\VertexColor.cs" />
+    <Compile Include="Utils\VertexColorHelper.cs" />
+    <Compile Include="Utils\VertexData.cs" />
+    <Compile Include="SP.cs" />
+  </ItemGroup>
+</Project>
