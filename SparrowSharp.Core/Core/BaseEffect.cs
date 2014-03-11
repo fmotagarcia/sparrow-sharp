@@ -181,19 +181,19 @@ namespace Sparrow.Core
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
             
             // variables
-			source.AppendLine("attribute mediump vec4 aPosition;");
-			if (useTinting)
-				source.AppendLine("attribute mediump vec4 aColor;");
-			if (hasTexture)
-				source.AppendLine("attribute mediump vec2 aTexCoords;");
+            source.AppendLine("attribute vec4 aPosition;");
+            if (useTinting)
+                source.AppendLine("attribute vec4 aColor;");
+            if (hasTexture)
+                source.AppendLine("attribute vec2 aTexCoords;");
 
-			source.AppendLine("uniform mediump mat4 uMvpMatrix;");
-			if (useTinting)
-				source.AppendLine("uniform mediump vec4 uAlpha;");
-			if (useTinting)
-				source.AppendLine("varying lowp vec4 vColor;");
-			if (hasTexture)
-				source.AppendLine("varying lowp vec2 vTexCoords;");
+            source.AppendLine("uniform mat4 uMvpMatrix;");
+            if (useTinting)
+                source.AppendLine("uniform vec4 uAlpha;");
+            if (useTinting)
+                source.AppendLine("varying lowp vec4 vColor;");
+            if (hasTexture)
+                source.AppendLine("varying lowp vec2 vTexCoords;");
     
             // main
             source.AppendLine("void main() {");
