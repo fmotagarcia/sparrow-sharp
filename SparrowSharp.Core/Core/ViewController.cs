@@ -15,7 +15,6 @@ namespace Sparrow.Core
     {
 
         private bool _contextWasLost = false;
-		public static Android.Content.Context ContextRef;
 
         public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
         {
@@ -34,7 +33,6 @@ namespace Sparrow.Core
 
         public void Setup()
 		{
-			ContextRef = Context;
             RequestFocus();
             FocusableInTouchMode = true;
         }
