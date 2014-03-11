@@ -34,7 +34,7 @@ namespace Sparrow.Core
 
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
-        public static Resources ResourcesRef;
+		public static Android.Content.Context ContextRef;
 
         public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
         {
@@ -52,8 +52,8 @@ namespace Sparrow.Core
         }
 
         public void Setup()
-        {
-            ResourcesRef = Resources;
+		{
+			ContextRef = Context;
             RequestFocus();
             FocusableInTouchMode = true;
         }
