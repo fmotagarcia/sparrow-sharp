@@ -11,7 +11,6 @@ namespace Sparrow.Core
         private const string CurrentContextKey = "SPCurrentContext";
         private static Dictionary<uint, uint> FramebufferCache = new Dictionary<uint, uint>();
         private static HashSet<string> Extensions;
-        private IGraphicsContext _nativeContext;
         private Texture _renderTarget;
 
         static Context()
@@ -26,11 +25,6 @@ namespace Sparrow.Core
                     Extensions.Add(extensions[i]);
                 }
             }
-        }
-
-        public Context(IGraphicsContext graphicsContext)
-        {
-            _nativeContext = graphicsContext;
         }
 
         public Rectangle Viewport
@@ -50,7 +44,7 @@ namespace Sparrow.Core
 
         public void ResetViewport()
         {
-            GL.Viewport(0, 0, (int)SP.CurrentController.DrawableWidth, (int)SP.CurrentController.DrawableWidth);
+			GL.Viewport(0, 0, SP.DrawableWidth, SP.DrawableHeight);
         }
 
         public Rectangle ScissorBox
@@ -97,7 +91,7 @@ namespace Sparrow.Core
         public void ResetRenderTarget()
         {
             GL.BindFramebuffer(All.Framebuffer, 1);
-            GL.Viewport(0, 0, SP.CurrentController.DrawableWidth, SP.CurrentController.DrawableHeight);
+            GL.Viewport(0, 0, SP.DrawableWidth, SP.DrawableHeight);
             _renderTarget = null;
         }
 

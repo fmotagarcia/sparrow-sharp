@@ -5,7 +5,7 @@ using Sparrow.Core;
 
 namespace Sparrow.Samples.Android
 {
-    [Activity(Label = "sparrow-sharp",
+	[Activity(Label = "sparrow-sharp",Name="awesome.demo.activity",
 		#if __ANDROID_11__
 		HardwareAccelerated=false,
 		#endif
@@ -20,9 +20,8 @@ namespace Sparrow.Samples.Android
             base.OnCreate(bundle);
 
             sparrowView = new ViewController(this.ApplicationContext);
-
             SetContentView(sparrowView);
-			sparrowView.Start(typeof(Benchmark));
+			SP.Start(typeof(Benchmark));
         }
 
         protected override void OnPause()

@@ -274,8 +274,8 @@ namespace Sparrow.Core
 //				}
 //				else
 //				{
-                width = (int)SP.CurrentController.DrawableWidth;
-                height = (int)SP.CurrentController.DrawableHeight;
+                width = (int)SP.DrawableWidth;
+                height = (int)SP.DrawableHeight;
 //				}
 
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])

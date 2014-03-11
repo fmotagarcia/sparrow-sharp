@@ -13,27 +13,9 @@ namespace Sparrow.Core
 {
     public class ViewController : AndroidGameView, IViewController
     {
-        public int DrawableWidth { get; set; }
-
-        public int DrawableHeight { get; set; }
-
-        public Context SPContext { get; set; }
-
-        public DisplayObject Root { get; set; }
-
-		public Stage Stage { get; set; }
-        //public Juggler Juggler { get; set; }
-        public float ContentScaleFactor { get; set; }
-
-        public RenderSupport RenderSupport { get; set; }
 
         private bool _contextWasLost = false;
-        private Type _rootClass;
-        private float _contentScaleFactor = 1.0f;
-		//private long _previousFrameStartTime;
-		private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        // hardcode for now
-        private float _viewScaleFactor = 1.0f;
+		private long _elapsedTime = 0;
 		public static Android.Content.Context ContextRef;
 
         public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
@@ -99,8 +81,7 @@ namespace Sparrow.Core
 
             if (_contextWasLost)
             {
-                // todo reload context
-                ReadjustStageSize();
+				// todo reload context, ReadjustStageSize, ...
             }
 
             MakeCurrent();
@@ -111,28 +92,7 @@ namespace Sparrow.Core
             base.OnLoad(e);
             MakeCurrent();
 
-            if (Root == null)
-            {
-                Stage = new Stage();
-                ReadjustStageSize(); 
-                //Juggler = new Juggler();
-                SPContext = new Context(GraphicsContext);
-                SP.CurrentController = this;
-                SP.Context = SPContext;
-                RenderSupport = new RenderSupport();
-
-                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
-                if (Root.GetType().IsInstanceOfType(Stage))
-                {
-                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
-                }
-                else
-                {
-                    Stage.AddChild(Root);
-                }
-            }
-
-			//_previousFrameStartTime = SystemClock.ElapsedRealtime();
+			SP.InitApp (Size.Width, Size.Height);
 
             // Run the render loop
             Run();
@@ -142,40 +102,12 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-			//long currentTime = SystemClock.ElapsedRealtime();
-			//long elapsedTime = currentTime - _previousFrameStartTime;
-			//_previousFrameStartTime = currentTime;
-
-            RenderSupport.NextFrame();
-            Stage.Render(RenderSupport);
-            RenderSupport.FinishQuadBatch();
-
-            #if DEBUG
-            RenderSupport.CheckForOpenGLError();
-			#endif
-
-			Stage.AdvanceTime((float)stopwatch.ElapsedMilliseconds);
-			//Stage.AdvanceTime(elapsedTime);
-
-			stopwatch.Restart ();
+			long elapsd = SystemClock.ElapsedRealtime () - _elapsedTime;
+			Console.WriteLine ("elapsed: " + elapsd );
+			SP.Step( elapsd );
+			_elapsedTime = SystemClock.ElapsedRealtime();
 
             SwapBuffers();
-        }
-
-        public void Start(Type RootClass)
-        {
-            if (_rootClass != null)
-            {
-                throw new Exception("Sparrow has already been started");
-            }
-            _rootClass = RootClass;
-        }
-
-        private void ReadjustStageSize()
-        {
-            // TODO check if Width/Height are not 0 here
-            Stage.Width = Size.Width * _viewScaleFactor / _contentScaleFactor;
-            Stage.Height = Size.Height * _viewScaleFactor / _contentScaleFactor;
         }
 
         protected override void DestroyFrameBuffer()
