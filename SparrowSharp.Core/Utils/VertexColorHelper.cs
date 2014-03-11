@@ -2,65 +2,71 @@
 
 namespace Sparrow.Utils
 {
-	public class VertexColorHelper
-	{
-		public static VertexColor CreateVertexColor (byte r, byte g, byte b, byte a)
-		{
-			VertexColor vertexColor = new VertexColor ();
+    public class VertexColorHelper
+    {
+        public static VertexColor CreateVertexColor(byte r, byte g, byte b, byte a)
+        {
+            VertexColor vertexColor = new VertexColor();
 
-			vertexColor.R = r;
-			vertexColor.G = g;
-			vertexColor.B = b;
-			vertexColor.A = a;
+            vertexColor.R = r;
+            vertexColor.G = g;
+            vertexColor.B = b;
+            vertexColor.A = a;
 
-			return vertexColor;
-		}
+            return vertexColor;
+        }
 
-		public static VertexColor CreateVertexColor (uint color, float alpha)
-		{
-			VertexColor vertexColor = new VertexColor ();
+        public static VertexColor CreateVertexColor(uint color, float alpha)
+        {
+            VertexColor vertexColor = new VertexColor();
 
-			vertexColor.R = ColorUtil.GetR (color);
-			vertexColor.G = ColorUtil.GetG (color);
-			vertexColor.B = ColorUtil.GetB (color);
-			vertexColor.A = Convert.ToByte (alpha * 255.0f);
+            vertexColor.R = ColorUtil.GetR(color);
+            vertexColor.G = ColorUtil.GetG(color);
+            vertexColor.B = ColorUtil.GetB(color);
+            vertexColor.A = (byte)(alpha * 255.0f);
 
-			return vertexColor;
-		}
+            return vertexColor;
+        }
 
-		public static VertexColor PremultiplyAlpha (VertexColor color)
-		{
-			float alpha = color.A / 255.0f;
+        public static VertexColor PremultiplyAlpha(VertexColor color)
+        {
+            float alpha = color.A / 255.0f;
 
-			if (alpha == 1.0f) {
-				return color;
-			} else {
-				return VertexColorHelper.CreateVertexColor (
-					Convert.ToByte (color.R * alpha),
-					Convert.ToByte (color.G * alpha),
-					Convert.ToByte (color.B * alpha),
-					Convert.ToByte (color.A));
-			}
-		}
+            if (alpha == 1.0f)
+            {
+                return color;
+            }
+            else
+            {
+                return VertexColorHelper.CreateVertexColor(
+                    (byte)(color.R * alpha),
+                    (byte)(color.G * alpha),
+                    (byte)(color.B * alpha),
+                    (byte)(color.A));
+            }
+        }
 
-		public static VertexColor UnmultiplyAlpha (VertexColor color)
-		{
-			float alpha = color.A / 255.0f;
+        public static VertexColor UnmultiplyAlpha(VertexColor color)
+        {
+            float alpha = color.A / 255.0f;
 
-			if (alpha == 0.0f || alpha == 1.0f) {
-				return color;
-			} else {
-				return VertexColorHelper.CreateVertexColor (
-					Convert.ToByte (color.R / alpha),
-					Convert.ToByte (color.G / alpha),
-					Convert.ToByte (color.B / alpha),
-					Convert.ToByte (color.A));
-			}
-		}
+            if (alpha == 0.0f || alpha == 1.0f)
+            {
+                return color;
+            }
+            else
+            {
+                return VertexColorHelper.CreateVertexColor(
+                    (byte)(color.R / alpha),
+                    (byte)(color.G / alpha),
+                    (byte)(color.B / alpha),
+                    (byte)(color.A));
+            }
+        }
 
-		public static bool IsOpaqueWhite (VertexColor color)
-		{
-			return color.A == 255 && color.R == 255 && color.G == 255 && color.B == 255;
-		}
-	}
+        public static bool IsOpaqueWhite(VertexColor color)
+        {
+            return color.A == 255 && color.R == 255 && color.G == 255 && color.B == 255;
+        }
+    }
 }
