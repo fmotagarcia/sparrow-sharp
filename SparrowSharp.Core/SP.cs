@@ -3,6 +3,7 @@ using Sparrow.Display;
 using System.Collections.Generic;
 using SparrowSharp.Core;
 using System;
+using System.Diagnostics;
 
 namespace Sparrow
 {
@@ -25,8 +26,12 @@ namespace Sparrow
 
 		private static Type _rootClass;
 
-		public static void Step( float elapsedMs )
+		private static Stopwatch watch = new Stopwatch ();
+
+		public static void Step()
 		{
+			long elapsed = watch.ElapsedMilliseconds;
+			watch.Restart ();
 
 			RenderSupport.NextFrame();
 			Stage.Render(RenderSupport);
@@ -36,7 +41,7 @@ namespace Sparrow
 			RenderSupport.CheckForOpenGLError();
 			#endif
 
-			Stage.AdvanceTime(elapsedMs);
+			Stage.AdvanceTime(elapsed);
 		}
 
 

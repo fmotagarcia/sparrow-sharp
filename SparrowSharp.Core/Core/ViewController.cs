@@ -15,7 +15,6 @@ namespace Sparrow.Core
     {
 
         private bool _contextWasLost = false;
-		private long _elapsedTime = 0;
 		public static Android.Content.Context ContextRef;
 
         public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
@@ -102,10 +101,7 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-			long elapsd = SystemClock.ElapsedRealtime () - _elapsedTime;
-			Console.WriteLine ("elapsed: " + elapsd );
-			SP.Step( elapsd );
-			_elapsedTime = SystemClock.ElapsedRealtime();
+			SP.Step();
 
             SwapBuffers();
         }
