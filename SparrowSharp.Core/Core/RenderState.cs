@@ -22,7 +22,6 @@ namespace Sparrow.Core
             Alpha = alpha * state.Alpha;
             BlendMode = blendMode == Sparrow.Display.BlendMode.AUTO ? state.BlendMode : blendMode;
 
-            ModelViewMatrix = new Matrix();
             ModelViewMatrix.CopyFromMatrix(state.ModelViewMatrix);
             ModelViewMatrix.PrependMatrix(modelViewMatrix);
         }
