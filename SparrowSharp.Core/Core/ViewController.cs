@@ -21,7 +21,7 @@ namespace Sparrow.Core
 
         public DisplayObject Root { get; set; }
 
-        public Stage Stage { get; set; }
+		public Stage Stage { get; set; }
         //public Juggler Juggler { get; set; }
         public float ContentScaleFactor { get; set; }
 
@@ -30,8 +30,8 @@ namespace Sparrow.Core
         private bool _contextWasLost = false;
         private Type _rootClass;
         private float _contentScaleFactor = 1.0f;
-		private long _previousFrameStartTime;
-
+		//private long _previousFrameStartTime;
+		private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
 		public static Android.Content.Context ContextRef;
@@ -132,7 +132,7 @@ namespace Sparrow.Core
                 }
             }
 
-			_previousFrameStartTime = SystemClock.ElapsedRealtime();
+			//_previousFrameStartTime = SystemClock.ElapsedRealtime();
 
             // Run the render loop
             Run();
@@ -142,9 +142,9 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-			long currentTime = SystemClock.ElapsedRealtime();
-			long elapsedTime = currentTime - _previousFrameStartTime;
-			_previousFrameStartTime = currentTime;
+			//long currentTime = SystemClock.ElapsedRealtime();
+			//long elapsedTime = currentTime - _previousFrameStartTime;
+			//_previousFrameStartTime = currentTime;
 
             RenderSupport.NextFrame();
             Stage.Render(RenderSupport);
@@ -152,10 +152,13 @@ namespace Sparrow.Core
 
             #if DEBUG
             RenderSupport.CheckForOpenGLError();
-            #endif
+			#endif
 
-			Stage.AdvanceTime(elapsedTime);
-			
+			Stage.AdvanceTime((float)stopwatch.ElapsedMilliseconds);
+			//Stage.AdvanceTime(elapsedTime);
+
+			stopwatch.Restart ();
+
             SwapBuffers();
         }
 

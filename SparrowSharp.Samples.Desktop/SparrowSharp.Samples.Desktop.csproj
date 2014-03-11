@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="ActiproSoftware.Shared.Net20, Version=1.0.102.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,5 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="benchmark_object.png" />
   </ItemGroup>
 </Project>

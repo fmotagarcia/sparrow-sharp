@@ -220,7 +220,11 @@ namespace Sparrow.Core
             if (hasTexture)
             {
                 source.AppendLine("varying lowp vec2 vTexCoords;");
+#if __WINDOWS__
+                source.AppendLine("uniform sampler2D uTexture;");
+#else
                 source.AppendLine("uniform lowp sampler2D uTexture;");
+#endif
             }
     
             // main

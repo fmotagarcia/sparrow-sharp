@@ -8,6 +8,7 @@ using Sparrow.Core;
 using ActiproSoftware.Products;
 using OpenTK.Input;
 using Sparrow;
+using System.Diagnostics;
 
 namespace SparrowSharp.Samples.Desktop.Core
 {
@@ -31,6 +32,7 @@ namespace SparrowSharp.Samples.Desktop.Core
         private float _contentScaleFactor = 1.0f;
         // hardcode for now
         private float _viewScaleFactor = 1.0f;
+		Stopwatch stopwatch = new Stopwatch();
 
         public SampleGameWindow() : base()
         {
@@ -43,6 +45,7 @@ namespace SparrowSharp.Samples.Desktop.Core
 			RenderFrame += HandleRenderFrame;
         }
 
+
         void HandleRenderFrame (object sender, FrameEventArgs e)
         {
 			// render graphics
@@ -54,11 +57,12 @@ namespace SparrowSharp.Samples.Desktop.Core
 			RenderSupport.CheckForOpenGLError();
 			#endif
 
-			Stage.AdvanceTime((float)e.Time);
+			Stage.AdvanceTime((float)stopwatch.ElapsedMilliseconds);
 
 			//Console.WriteLine ("Number of draw calls: " + RenderSupport.NumDrawCalls);
+			stopwatch.Restart ();
 
-			SwapBuffers();	
+			SwapBuffers();
         }
 
 		private void HandleUpdateFrame (object sender, FrameEventArgs e)
