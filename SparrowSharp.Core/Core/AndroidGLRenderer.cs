@@ -9,7 +9,7 @@ using Android.OS;
 using Java.Lang;
 using Sparrow;
 
-namespace GLNativeES20
+namespace Sparrow.Core
 {
 	public class AndroidGLRenderer : Java.Lang.Object, GLSurfaceView.IRenderer
 	{

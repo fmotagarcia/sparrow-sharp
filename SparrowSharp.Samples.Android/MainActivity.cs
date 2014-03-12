@@ -2,7 +2,6 @@ using Android.App;
 using Android.OS;
 using Android.Content.PM;
 using Sparrow.Core;
-using GLNativeES20;
 using System;
 
 namespace Sparrow.Samples.Android

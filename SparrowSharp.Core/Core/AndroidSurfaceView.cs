@@ -5,13 +5,13 @@ using Android.Content;
 using Android.Util;
 using Android.Opengl;
 
-namespace GLNativeES20
+namespace Sparrow.Core
 {
 	public class AndroidSurfaceView : GLSurfaceView
 	{
 		private AndroidGLRenderer mRenderer;
 
-		public AndroidSurfaceView (Context context) : base (context)
+		public AndroidSurfaceView (Android.Content.Context context) : base (context)
 		{
 			// Create an OpenGL ES 2.0 context.
 			SetEGLContextClientVersion (2);
