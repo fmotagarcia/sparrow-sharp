@@ -28,14 +28,17 @@ namespace Sparrow
 
 		private static Stopwatch watch = new Stopwatch ();
 
+		public static int cnt = 0;
+
 		public static void Step()
 		{
 			long elapsed = watch.ElapsedMilliseconds;
 			watch.Restart ();
+			cnt++;
 
-			RenderSupport.NextFrame();
-			Stage.Render(RenderSupport);
-			RenderSupport.FinishQuadBatch();
+			//RenderSupport.NextFrame ();
+			Stage.Render (RenderSupport);
+			//RenderSupport.FinishQuadBatch ();
 
 			#if DEBUG
 			RenderSupport.CheckForOpenGLError();

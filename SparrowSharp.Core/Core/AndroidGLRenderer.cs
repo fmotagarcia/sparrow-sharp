@@ -17,9 +17,14 @@ namespace Sparrow.Core
 		#region IRenderer implementation
 		public void OnSurfaceCreated (Javax.Microedition.Khronos.Opengles.IGL10 gl, Javax.Microedition.Khronos.Egl.EGLConfig config)
 		{
-			GLES20.GlDisable(GLES20.GlCullFaceMode);
-			GLES20.GlDisable(GLES20.GlDepthTest);
 			GLES20.GlDisable(GLES20.GlBlend);
+			//GLES20.GlDisable(GLES20.GlCullFaceMode);
+			GLES20.GlDisable(GLES20.GlDepthTest);
+			GLES20.GlDisable(GLES20.GlDither);
+			GLES20.GlDisable(GLES20.GlPolygonOffsetFill);
+			GLES20.GlDisable(GLES20.GlSampleAlphaToCoverage);
+			GLES20.GlDisable(GLES20.GlScissorTest);
+			GLES20.GlDisable(GLES20.GlStencilTest);
 		}
 
 		public void OnDrawFrame (Javax.Microedition.Khronos.Opengles.IGL10 gl)
