@@ -494,6 +494,7 @@ namespace Sparrow.Display
 			while (currentObject != null && count < MAX_DISPLAY_TREE_DEPTH) {
 				ancestors.Add (currentObject);
 				currentObject = currentObject.Parent;
+			    count++;
 			}
 
 			currentObject = targetSpace;    
