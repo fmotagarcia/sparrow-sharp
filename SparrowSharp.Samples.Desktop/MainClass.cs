@@ -10,7 +10,7 @@ namespace SparrowSharp.Samples.Desktop
 		public static void Main()
 		{
 			SampleGameWindow game = new SampleGameWindow ();
-			game.Start(typeof (Sparrow.Samples.Desktop.SampleGame));
+			game.Start ();
 		}
 	}
 }

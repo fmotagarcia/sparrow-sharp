@@ -36,9 +36,9 @@ namespace Sparrow
 			watch.Restart ();
 			cnt++;
 
-			//RenderSupport.NextFrame ();
+			RenderSupport.NextFrame ();
 			Stage.Render (RenderSupport);
-			//RenderSupport.FinishQuadBatch ();
+			RenderSupport.FinishQuadBatch ();
 
 			#if DEBUG
 			RenderSupport.CheckForOpenGLError();

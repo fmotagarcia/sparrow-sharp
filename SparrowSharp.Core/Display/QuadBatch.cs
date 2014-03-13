@@ -194,7 +194,7 @@ namespace Sparrow.Display
 
 		public void Render (Matrix matrix, float alpha, uint blendMode)
 		{
-			/*if (_numQuads == 0) {
+			if (_numQuads == 0) {
 				return;
 			}
 
@@ -245,7 +245,7 @@ namespace Sparrow.Display
 				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
 			}
 			int numIndices = _numQuads * 6;
-			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);*/
+			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
 		}
 
 		public static List<QuadBatch> Compile (DisplayObject displayObject)
@@ -262,11 +262,11 @@ namespace Sparrow.Display
 			Matrix identity = new Matrix ();
 			identity.Identity();
 
-			//Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
+			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
 
 			return quadBatches;
 		}
-		/*
+
 		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
 		                    Matrix transformationMatrix, float alpha, uint blendMode)
 		{
@@ -358,7 +358,7 @@ namespace Sparrow.Display
 			}
 
 			return quadBatchID;
-		}*/
+		}
 
 		private void Expand ()
 		{
@@ -368,7 +368,7 @@ namespace Sparrow.Display
 
 		private void CreateBuffers ()
 		{
-			/*DestroyBuffers ();
+			DestroyBuffers ();
 
 			int numVertices = _vertexData.NumVertices;
 			int numIndices = numVertices / 4 * 6;
@@ -386,12 +386,12 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 			GL.BufferData (All.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), _indexData, All.StaticDraw);
 
-			_syncRequired = true; */
+			_syncRequired = true; 
 		}
 
 		private void DestroyBuffers ()
 		{
-			/*if (_vertexBufferName != 0) {
+			if (_vertexBufferName != 0) {
 				GL.DeleteBuffers (1, ref _vertexBufferName);
 				_vertexBufferName = 0;
 			}
@@ -399,7 +399,7 @@ namespace Sparrow.Display
 			if (_vertexBufferName != 0) {
 				GL.DeleteBuffers (1, ref _vertexBufferName);
 				_indexBufferName = 0;
-			}*/
+			}
 		}
 
 		public void SyncBuffers ()

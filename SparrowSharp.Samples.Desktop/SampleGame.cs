@@ -76,7 +76,7 @@ namespace Sparrow.Samples.Desktop
 		{
 			_started = true;
 			_waitFrames = 3;
-			AddTestObjects (500);
+			AddTestObjects (10000);
 		}
 
 		void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)
@@ -90,8 +90,8 @@ namespace Sparrow.Samples.Desktop
 			if (_frameCount % _waitFrames == 0) {
 				float targetFPS = 60;
 				float realFPS = _waitFrames / _elapsed;
-
-				if (realFPS >= targetFPS) {
+                Console.WriteLine("FPS:" + realFPS);
+				/*if (realFPS >= targetFPS) {
 					int numObjects = _failCount != 0 ? 5 : 25;
 					AddTestObjects (numObjects);
 					_failCount = 0;
@@ -104,7 +104,7 @@ namespace Sparrow.Samples.Desktop
 						_waitFrames = 10;
 					if (_failCount == 25)
 						BenchmarkComplete (); // target fps not reached for a while
-				}
+				}*/
 
 				_elapsed = _frameCount = 0;
 			}

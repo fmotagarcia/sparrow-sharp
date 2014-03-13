@@ -47,8 +47,8 @@ namespace Sparrow.Display
 
         override public void Render(RenderSupport support)
         {
-			//support.ClearWithColor(_color, 1.0f);
-			//support.SetupOrthographicProjection(0, _width, 0, _height);
+			support.ClearWithColor(_color, 1.0f);
+			support.SetupOrthographicProjection(0, _width, 0, _height);
 
             base.Render(support);
         }
