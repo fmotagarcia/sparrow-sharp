@@ -75,8 +75,8 @@ namespace Sparrow.Samples.Desktop
 		void AddedToStageHandler (DisplayObject target, DisplayObject currentTarget)
 		{
 			_started = true;
-			_waitFrames = 3;
-			AddTestObjects (10000);
+			_waitFrames = 30;
+			AddTestObjects (15000);
 		}
 
 		void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)

@@ -78,7 +78,7 @@ namespace Sparrow.Display
 				matrix = quad.TransformationMatrix;
 			}
 
-			if (_numQuads + 1 > Capacity) {
+			if (_numQuads + 1 > _capacity) {
 				Expand ();
 			}
 
@@ -130,7 +130,7 @@ namespace Sparrow.Display
 			if (matrix == null) {
 				matrix = quadBatch.TransformationMatrix;
 			}
-			if (_numQuads + numQuads > Capacity) {
+			if (_numQuads + numQuads > _capacity) {
 				Capacity = _numQuads + numQuads;
 			}
 			if (_numQuads == 0) {
@@ -362,8 +362,7 @@ namespace Sparrow.Display
 
 		private void Expand ()
 		{
-			int oldCapacity = Capacity;
-			Capacity = oldCapacity < 8 ? 16 : oldCapacity * 2;
+            Capacity = _capacity < 8 ? 16 : _capacity * 2;
 		}
 
 		private void CreateBuffers ()
@@ -414,14 +413,15 @@ namespace Sparrow.Display
 			_syncRequired = false;
 		}
 
+	    private int _capacity;
 		private int Capacity {
-			get { return _vertexData.NumVertices / 4; }
+            get { return _capacity; }
 			set {
 				if (value == 0) {
 					throw new Exception ("Capacity must not be zero");
 				}
-
-				uint oldCapacity = (uint)Capacity;
+                uint oldCapacity = (uint)_capacity;
+                _capacity = value;
 				int numVertices = value * 4;
 				int numIndices = value * 6;
 

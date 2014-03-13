@@ -220,9 +220,9 @@ namespace Sparrow.Display
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
 				value = value % (2.0f * (float)Math.PI);
 				// move to [-180 deg, +180 deg]
-				if (value < -(float)Math.PI)
+				if (value < -Math.PI)
 					value += 2.0f * (float)Math.PI;
-				if (value > Math.PI)
+				else if (value > Math.PI)
 					value -= 2.0f * (float)Math.PI;
 
 				_rotation = value;
