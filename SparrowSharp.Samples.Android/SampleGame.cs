@@ -41,7 +41,8 @@ namespace Sparrow.Samples.Android
 
             uint name = (uint)GL.GenTexture();
             GL.BindTexture(All.Texture2D, name);
-			Bitmap b = BitmapFactory.DecodeResource(MainActivity.ContextRef.Resources, SparrowSharp.Samples.Android.Resource.Drawable.exampleImageJPG);
+			Bitmap b = BitmapFactory.DecodeResource(MainActivity.ContextRef.Resources, 
+				SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
             // this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
             GLUtils.TexImage2D(GLES20.GlTexture2d, 0, b, 0);
             // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs

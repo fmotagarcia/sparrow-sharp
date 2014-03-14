@@ -37,7 +37,8 @@ namespace Sparrow.Samples.Android
 		{
 			uint name = (uint)GL.GenTexture ();
 			GL.BindTexture (All.Texture2D, name);
-			Bitmap b = BitmapFactory.DecodeResource (MainActivity.ContextRef.Resources, SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
+			Bitmap b = BitmapFactory.DecodeResource (MainActivity.ContextRef.Resources,
+				SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
 			// this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
 			GLUtils.TexImage2D (GLES20.GlTexture2d, 0, b, 0);
 			// see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
@@ -68,15 +69,15 @@ namespace Sparrow.Samples.Android
 			Console.WriteLine ("benchmark complete!");
 			Console.WriteLine ("number of objects: " + _container.NumChildren);
 
-			Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren, 
-				ToastLength.Long).Show();
+		    Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
+		        ToastLength.Long).Show();
 		}
 
 		void AddedToStageHandler (DisplayObject target, DisplayObject currentTarget)
 		{
 			_started = true;
 			_waitFrames = 3;
-			AddTestObjects (4000);
+			AddTestObjects (100);
 		}
 
 		void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)
@@ -90,8 +91,8 @@ namespace Sparrow.Samples.Android
 			if (_frameCount % _waitFrames == 0) {
 				float targetFPS = 60;
 				float realFPS = _waitFrames / _elapsed;
-				Console.WriteLine ("FPS: " + realFPS);
-				/*if (realFPS >= targetFPS) {
+				//Console.WriteLine ("FPS: " + realFPS);
+				if (realFPS >= targetFPS) {
 					int numObjects = _failCount != 0 ? 5 : 25;
 					AddTestObjects (numObjects);
 					_failCount = 0;
@@ -104,7 +105,7 @@ namespace Sparrow.Samples.Android
 						_waitFrames = 10;
 					if (_failCount == 25)
 						BenchmarkComplete (); // target fps not reached for a while
-				}*/
+				}
 
 				_elapsed = _frameCount = 0;
 			}
