@@ -14,35 +14,35 @@ namespace Sparrow.Samples.Android
         MainLauncher = true)]
     public class MainActivity : Activity
     {
-		//ViewController sparrowView;
-		AndroidSurfaceView sparrowView;
+		ViewController sparrowView;
+		//AndroidSurfaceView sparrowView;
 		public static global::Android.Content.Context ContextRef;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 			ContextRef = this.BaseContext;
-			//sparrowView = new ViewController(this.ApplicationContext);
-			//SetContentView(sparrowView);
-			//SP.Start(typeof(Benchmark));
-
-			sparrowView = new AndroidSurfaceView (this);
-			SetContentView (sparrowView);
+			sparrowView = new ViewController(this.ApplicationContext);
+			SetContentView(sparrowView);
 			SP.Start(typeof(Benchmark));
+
+			//sparrowView = new AndroidSurfaceView (this);
+			//SetContentView (sparrowView);
+			//SP.Start(typeof(Benchmark));
         }
 
         protected override void OnPause()
         {
             base.OnPause();
 
-			sparrowView.OnPause ();
+			//sparrowView.OnPause ();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
 
-			sparrowView.OnResume();
+			//sparrowView.OnResume();
         }
     }
 }

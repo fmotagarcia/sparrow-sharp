@@ -33,12 +33,12 @@ namespace Sparrow.Display
         {
             Initialize(initWidth, initHeight);
         }
-
+		/*
         public Stage()
         {
             Initialize(400f, 400f); // TODO get screen size
         }
-
+		*/
         private void Initialize(float initWidth, float initHeight)
         {
             _width = initWidth;

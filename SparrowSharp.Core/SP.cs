@@ -61,7 +61,7 @@ namespace Sparrow
 		{
 			if (SP.Root == null)
 			{
-				_stage = new Stage();
+				_stage = new Stage(width, height);
 				ReadjustStageSize(width, height); 
 				//Juggler = new Juggler();
 				Context = new Context();
