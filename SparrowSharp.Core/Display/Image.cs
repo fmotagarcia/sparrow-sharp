@@ -31,7 +31,7 @@ namespace Sparrow.Display
 			_vertexDataCache = new VertexData(4, pma);
 			_vertexDataCacheInvalid = true;
 		}
-			
+
 		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
 		public void setTexCoords(Point coords, int vertexID)
 		{
@@ -72,15 +72,17 @@ namespace Sparrow.Display
 			_vertexDataCacheInvalid = true;
 		}
 
-		override public void CopyVertexDataTo(VertexData targetData, int atIndex)
+		override public void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
 		{
+			copyColor = copyColor || Tinted || Alpha != 1.0f;
+
 			if (_vertexDataCacheInvalid)
 			{
 				_vertexDataCacheInvalid = false;
-				_vertexData.CopyToVertexData(_vertexDataCache);
+				_vertexData.CopyToVertexData(_vertexDataCache, copyColor);
 				_texture.AdjustVertexData(_vertexDataCache, 0, 4);
 			}
-			_vertexDataCache.CopyToVertexData(targetData, atIndex, 4);
+			_vertexDataCache.CopyToVertexData(targetData, atIndex, 4, copyColor);
 		}
 
 		override public Texture Texture 
@@ -103,4 +105,3 @@ namespace Sparrow.Display
 
 	}
 }
-
