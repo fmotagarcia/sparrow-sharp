@@ -23,7 +23,7 @@ namespace Sparrow.Samples.Android
 
 		public Benchmark ()
 		{
-			_texture = createTexture ();
+			_texture = TextureFactory.CreateTexture((uint) BenchmarkResources.Star);
 
 			// the container will hold all test objects
 			_container = new Sprite ();
@@ -31,21 +31,6 @@ namespace Sparrow.Samples.Android
 
 			EnterFrame += EnterFrameHandler;
 			AddedToStage += AddedToStageHandler;
-		}
-
-		Texture createTexture ()
-		{
-			uint name = (uint)GL.GenTexture ();
-			GL.BindTexture (All.Texture2D, name);
-			Bitmap b = BitmapFactory.DecodeResource (MainActivity.ContextRef.Resources,
-				SparrowSharp.Samples.Android.Resource.Drawable.star);
-			// this uses Android to set up things, it might not be safe to use Android calls mixed with OpenTK calls
-			GLUtils.TexImage2D (GLES20.GlTexture2d, 0, b, 0);
-			// see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
-			// for how MonoGame does it
-			GLTexture tex = new GLTexture (name, b.Width, b.Height, false, 1.0f, false);
-
-			return tex;
 		}
 
 		void AddTestObjects (int numObjects)

@@ -8,6 +8,7 @@ using Android.Content.Res;
 using Android.Util;
 using SparrowSharp.Core;
 using Android.OS;
+using Sparrow.Textures;
 
 namespace Sparrow.Core
 {

@@ -74,6 +74,9 @@
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
+    <Compile Include="Textures\ITextureProvider.cs" />
+    <Compile Include="Textures\TextureFactory.cs" />
+    <Compile Include="Textures\DesktopTextureProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Textures\" />

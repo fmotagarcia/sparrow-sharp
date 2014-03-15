@@ -59,6 +59,7 @@
     <Compile Include="SampleGame.cs" />
     <Compile Include="MainClass.cs" />
     <Compile Include="Core\SampleGameWindow.cs" />
+    <Compile Include="DesktopResources.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -6,6 +6,7 @@ using OpenTK.Graphics.ES20;
 using Sparrow.Core;
 using System.Drawing;
 using System.Drawing.Imaging;
+using SparrowSharp.Samples.Desktop;
 
 namespace Sparrow.Samples.Desktop
 {
@@ -21,7 +22,7 @@ namespace Sparrow.Samples.Desktop
 
 		public SampleGame ()
 		{
-			_texture = createTexture ();
+			_texture = TextureFactory.CreateTexture (DesktopResources.Sparrow);
 
 			// the container will hold all test objects
 			_container = new Sprite ();
@@ -29,25 +30,6 @@ namespace Sparrow.Samples.Desktop
 
 			EnterFrame += EnterFrameHandler;
 			AddedToStage += AddedToStageHandler;
-		}
-
-		Texture createTexture ()
-		{
-			uint name = (uint)GL.GenTexture ();
-			GL.BindTexture (All.Texture2D, name);
-
-			Bitmap bmp = new Bitmap("benchmark_object.png");
-			BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), 
-						ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-			GL.TexImage2D(TextureTarget2d.Texture2D, 0,TextureComponentCount.Rgba, bmp_data.Width, bmp_data.Height, 0,
-				OpenTK.Graphics.ES20.PixelFormat.Rgba, PixelType.UnsignedByte, bmp_data.Scan0);
-			// was brga
-			bmp.UnlockBits(bmp_data);
-
-			GLTexture tex = new GLTexture (name, bmp.Width, bmp.Height, false, 1.0f, false);
-
-			return tex;
 		}
 
 		void AddTestObjects (int numObjects)
