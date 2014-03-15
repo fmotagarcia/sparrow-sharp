@@ -8,6 +8,7 @@ namespace Sparrow.Utils
     {
         private const float MIN_ALPHA = 5.0f / 255.0f;
 
+		private float[] _rawData;
         private Vertex[] _vertices;
         private int _numVertices;
         private bool _premultipliedAlpha;
@@ -28,6 +29,7 @@ namespace Sparrow.Utils
                         else
                         {
                             _vertices = new Vertex[value];
+							_rawData = new float[value * 8];
                         }
 
                         if (value > _numVertices)
@@ -41,6 +43,7 @@ namespace Sparrow.Utils
                     else
                     {
                         _vertices = null;
+						_rawData = null;
                     }
 
                     _numVertices = value;
@@ -57,6 +60,24 @@ namespace Sparrow.Utils
         {
             get { return _vertices; }
         }
+
+		public float[] RawData
+		{
+			get {
+				for(int i=0; i<_numVertices;i++) {
+					_rawData [i] = _vertices [i].Position.X;
+					_rawData [i+1] = _vertices [i].Position.Y;
+					_rawData [i+2] = _vertices [i].TexCoords.X;
+					_rawData [i+3] = _vertices [i].TexCoords.Y;
+					_rawData [i+4] = (float)_vertices [i].Color.R / 255.0f;
+					_rawData [i+5] = (float)_vertices [i].Color.G / 255.0f;
+					_rawData [i+6] = (float)_vertices [i].Color.B / 255.0f;
+					_rawData [i+7] = (float)_vertices [i].Color.A / 255.0f;
+				}
+
+				return _rawData; 
+			}
+		}
 
         public bool Tinted
         {

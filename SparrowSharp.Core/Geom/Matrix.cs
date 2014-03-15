@@ -15,6 +15,14 @@ namespace Sparrow.Geom
 			matrix.Ty = ty;  	
 		}
 
+		private Matrix4 _matrix4 = new Matrix4()
+		{
+			Row0 = new OpenTK.Vector4(1, 0, 0, 0),
+			Row1 = new OpenTK.Vector4(0, 1, 0, 0),
+			Row2 = new OpenTK.Vector4(0, 0, 1, 0),
+			Row3 = new OpenTK.Vector4(0, 0, 0, 1),
+		};
+
 	    public float A;
 	    public float B;
 	    public float C;
@@ -106,8 +114,31 @@ namespace Sparrow.Geom
 				return;
 			}
 
-			float cos = (float) Math.Cos (angle);
-			float sin = (float) Math.Sin (angle);
+			float sin;
+			float cos;
+
+			//always wrap input angle to -PI..PI
+			if (angle < -3.14159265f)
+				angle += 6.28318531f;
+			else
+				if (angle >  3.14159265f)
+					angle -= 6.28318531f;
+
+			//compute sine
+			if (angle < 0.0f)
+				sin = 1.27323954f * angle + .405284735f * angle * angle;
+			else
+				sin = 1.27323954f * angle - 0.405284735f * angle * angle;
+
+			//compute cosine: sin(x + PI/2) = cos(x)
+			angle += 1.57079632f;
+			if (angle>  3.14159265f)
+				angle -= 6.28318531f;
+
+			if (angle < 0.0f)
+				cos = 1.27323954f * angle + 0.405284735f * angle * angle;
+			else
+				cos = 1.27323954f * angle - 0.405284735f * angle * angle;
 
 			SetValues(this,
 				A * cos - B * sin,
@@ -209,22 +240,14 @@ namespace Sparrow.Geom
 
         public Matrix4 ConvertToMatrix4()
         {
-			Matrix4 matrix = new Matrix4()
-			{
-				Row0 = new OpenTK.Vector4(1, 0, 0, 0),
-				Row1 = new OpenTK.Vector4(0, 1, 0, 0),
-				Row2 = new OpenTK.Vector4(0, 0, 1, 0),
-				Row3 = new OpenTK.Vector4(0, 0, 0, 1),
-			};
+			_matrix4.M11 = A;
+			_matrix4.M12 = B;
+			_matrix4.M21 = C;
+			_matrix4.M22 = D;
+			_matrix4.M41 = Tx;
+			_matrix4.M42 = Ty;
 
-            matrix.M11 = A;
-            matrix.M12 = B;
-            matrix.M21 = C;
-            matrix.M22 = D;
-            matrix.M41 = Tx;
-            matrix.M42 = Ty;
-
-            return matrix;
+			return _matrix4;
         }
 
 	}
