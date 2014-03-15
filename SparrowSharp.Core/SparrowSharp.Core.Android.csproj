@@ -90,4 +90,7 @@
     <Compile Include="Textures\AndroidTextureProvider.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Textures\" />
+  </ItemGroup>
 </Project>

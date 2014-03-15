@@ -24,7 +24,7 @@ namespace Sparrow
 
 		private static DisplayObject Root { get; set; }
 
-        public static Juggler DefaultJuggler { get; set; }
+		public static Juggler DefaultJuggler { get; set; }
 
 		private static Type _rootClass;
 
