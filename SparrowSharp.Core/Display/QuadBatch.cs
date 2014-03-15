@@ -232,17 +232,20 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 
-			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));
-			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
-			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
+//			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));
+//			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
+//			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
+			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, Vertex.SIZE, (IntPtr) Vertex.POSITION_OFFSET);
 
 			if (useTinting) {
-				IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
-				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
+//				IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
+//				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
+				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, Vertex.SIZE, (IntPtr) Vertex.COLOR_OFFSET);
 			}
 			if (_texture != null) {
-				IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
-				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
+//				IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
+//				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
+				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, Vertex.SIZE, (IntPtr) Vertex.TEXTURE_OFFSET);
 			}
 			int numIndices = _numQuads * 6;
 			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
