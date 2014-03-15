@@ -56,10 +56,6 @@ namespace Sparrow.Display
 
 		private readonly List<DisplayObject> _children = new List<DisplayObject>();
 
-        public DisplayObjectContainer() : base()
-        {
-        }
-
 		/// Adds a child to the container. It will be at the topmost position.
         public void AddChild(DisplayObject child)
         {
@@ -120,10 +116,9 @@ namespace Sparrow.Display
             {
                 if (child == this)
                     return true;
-                else
-                    child = child.Parent;
+                child = child.Parent;
             }
-            return false;
+		    return false;
         }
 
 		/// Returns a child object at a certain index.
@@ -164,11 +159,8 @@ namespace Sparrow.Display
             {
                 throw new ArgumentException("child not found");
             }
-            else
-            {
-                _children.RemoveAt(oldIndex);
-                _children.Insert(index, child);
-            }
+		    _children.RemoveAt(oldIndex);
+		    _children.Insert(index, child);
         }
 
 		/// Removes a child from the container. If the object is not a child, nothing happens.
@@ -225,7 +217,7 @@ namespace Sparrow.Display
 		/// Removes all children from the container.
         public void RemoveAllChildren()
         {
-            for (int i = (int)_children.Count - 1; i >= 0; --i)
+            for (int i = _children.Count - 1; i >= 0; --i)
             {
 				RemoveChildAt(0);
             }

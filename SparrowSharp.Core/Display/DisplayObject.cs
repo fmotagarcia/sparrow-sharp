@@ -91,7 +91,7 @@ namespace Sparrow.Display
 		/// The filter that is attached to the display object. Beware that you should NOT use the same
 		/// filter on more than one object (for performance reasons).
 		//		private SPFragmentFilter *_filter;
-		private Matrix _transformationMatrix;
+		private readonly Matrix _transformationMatrix;
         /// The blend mode determines how the object is blended with the objects underneath. Default: AUTO
         public uint BlendMode;
         /// The visibility of the object. An invisible object will be untouchable.
@@ -255,25 +255,25 @@ namespace Sparrow.Display
 		public DisplayObject Root {
 			get {
 				DisplayObject currentObject = this;
-				while (currentObject.Parent != null) {
-					if (currentObject.Parent is Stage) {
+				while (currentObject.Parent != null)
+				{
+				    if (currentObject.Parent is Stage) {
 						return currentObject;
-					} else {
-						currentObject = currentObject.Parent;
 					}
+				    currentObject = currentObject.Parent;
 				}
-				return null;
+			    return null;
 			}
 		}
 
         /// The Stage the display object is connected to, or null if it is not connected to a Stage.
 		public Stage Stage {
-			get {
-				if (Base is Stage) {
+			get
+			{
+			    if (Base is Stage) {
 					return (Stage)Base;
-				} else {
-					return null;
 				}
+			    return null;
 			}
 		}
 
@@ -368,7 +368,7 @@ namespace Sparrow.Display
 
         /// The bounds of the object relative to the local coordinates of the parent.
 		public Rectangle Bounds {
-			get { return this.BoundsInSpace (Parent); }
+			get { return BoundsInSpace (Parent); }
 		}
 
         /// The DisplayObjectContainer that contains this display object.
@@ -381,9 +381,8 @@ namespace Sparrow.Display
 				}
 				if (ancestor == this) {
 					throw new InvalidOperationException ("An object cannot be added as a child to itself or one of its children");
-				} else {
-					_parent = value;
 				}
+			    _parent = value;
 			}	
 		}
 
