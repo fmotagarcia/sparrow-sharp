@@ -89,13 +89,10 @@ namespace SparrowSharp.Utils
        
         public void AdvanceTime(float seconds)
         {
-            if (seconds < 0.0)
-                throw new Exception("time must be positive");
-
-            seconds *= _speed;
-
             if (seconds > 0.0)
             {
+				seconds *= _speed;
+
                 _elapsedTime += seconds;
 
                 // we need work with a copy, since user-code could modify the collection while enumerating
@@ -107,6 +104,9 @@ namespace SparrowSharp.Utils
                     animatable.AdvanceTime(seconds);
                 }
             }
+			else if (seconds < 0.0) {
+				throw new Exception("time must be positive");
+			}
         }
 
 

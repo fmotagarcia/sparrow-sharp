@@ -8,23 +8,25 @@ using Sparrow.Textures;
 using Android.Opengl;
 using Android.App;
 using Android.Widget;
+using SparrowSharp.Display;
 
 namespace Sparrow.Samples.Android
 {
 	public class Benchmark : DisplayObjectContainer
 	{
-		Texture _texture;
-		Sprite _container;
-		int _frameCount = 0;
-		float _elapsed = 0;
-		bool _started = false;
-		int _failCount = 0;
-		int _waitFrames = 0;
+		private Sprite _container;
+		private int _frameCount = 0;
+		private float _elapsed = 0;
+		private bool _started = false;
+		private int _failCount = 0;
+		private int _waitFrames = 0;
+		private Texture[] textures;
 
 		public Benchmark ()
 		{
-			_texture = TextureFactory.CreateTexture((uint) BenchmarkResources.Star);
-
+			Texture _star = TextureFactory.CreateTexture((uint) BenchmarkResources.Star);
+			Texture _sparrow = TextureFactory.CreateTexture((uint) BenchmarkResources.Sparrow);
+			textures = new Texture[] {_star, _sparrow};
 			// the container will hold all test objects
 			_container = new Sprite ();
 			AddChild (_container);
@@ -33,13 +35,15 @@ namespace Sparrow.Samples.Android
 			AddedToStage += AddedToStageHandler;
 		}
 
-		void AddTestObjects (int numObjects)
+		private void AddTestObjects (int numObjects)
 		{
 			int border = 15;
 
 			Random r = new Random ();
 			for (int i = 0; i < numObjects; ++i) {   
-				Image egg = new Image (_texture);
+				Image egg = new Image (textures[1]);
+				//MovieClip egg = new MovieClip (textures, 3);
+				//SP.DefaultJuggler.Add (egg);
 				egg.X = r.Next (border, (int)Stage.Width - border);
 				egg.Y = r.Next (border, (int)Stage.Height - border);
 				egg.Rotation = (float)(r.Next (0, 100) / 100 * Math.PI);
@@ -47,25 +51,26 @@ namespace Sparrow.Samples.Android
 			}
 		}
 
-		void BenchmarkComplete ()
+		private void BenchmarkComplete ()
 		{
-			_started = false;
-
 			Console.WriteLine ("benchmark complete!");
 			Console.WriteLine ("number of objects: " + _container.NumChildren);
 
 		    Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
 		        ToastLength.Long).Show();
+
+			_started = false;
+			_container.RemoveAllChildren ();
 		}
 
-		void AddedToStageHandler (DisplayObject target, DisplayObject currentTarget)
+		private void AddedToStageHandler (DisplayObject target, DisplayObject currentTarget)
 		{
 			_started = true;
 			_waitFrames = 3;
 			AddTestObjects (100);
 		}
 
-		void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)
+		private void EnterFrameHandler (DisplayObject target, DisplayObject currentTarget, float passedTime)
 		{
 			if (!_started)
 				return;

@@ -47,7 +47,7 @@ namespace Sparrow
 			#endif
 
 			Stage.AdvanceTime(elapsed);
-            DefaultJuggler.AdvanceTime((float)time);
+			DefaultJuggler.AdvanceTime(elapsed/1000.0f);
 		}
 
 

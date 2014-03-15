@@ -258,6 +258,7 @@ namespace SparrowSharp.Display
         private void UpdateCurrentFrame()
         {
             Texture = _textures[_currentFrame];
+			//ReadjustSize (); If we add this here, it will keep the size of the textures
         }
 
         private void PlayCurrentSound()
