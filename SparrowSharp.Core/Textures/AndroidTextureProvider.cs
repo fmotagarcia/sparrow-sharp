@@ -24,6 +24,10 @@ namespace Sparrow.Textures
 			if (_resources.TryGetValue (id, out resourceID)) {
 				uint name = (uint)GL.GenTexture ();
 				GL.BindTexture (All.Texture2D, name);
+				GL.TexParameter (All.Texture2D, All.TextureMaxAnisotropyExt, 1);
+				GL.TexParameter (All.Texture2D, All.TextureMinFilter, (int) All.NearestMipmapNearest);
+				GL.TexParameter (All.Texture2D, All.TextureMagFilter, (int) All.Linear);
+				GL.TexParameter (All.Texture2D, All.GenerateMipmapHint, (int) All.False);
 
 				Bitmap bitmap = BitmapFactory.DecodeResource (_context.Resources, resourceID);
 				GLUtils.TexImage2D (GLES20.GlTexture2d, 0, bitmap, 0);
