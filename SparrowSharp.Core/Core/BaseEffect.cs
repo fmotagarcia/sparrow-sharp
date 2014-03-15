@@ -26,7 +26,7 @@ namespace Sparrow.Core
             }
         }
 
-        private Matrix _mvpMatrix;
+        private readonly Matrix _mvpMatrix;
         private Texture _texture;
         private float _alpha;
         private bool _useTinting;
