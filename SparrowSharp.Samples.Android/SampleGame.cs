@@ -4,7 +4,7 @@ using Sparrow.Display;
 using Sparrow;
 using OpenTK.Graphics.ES20;
 using Android.Graphics;
-using Sparrow.Core;
+using Sparrow.Textures;
 using Android.Opengl;
 
 namespace Sparrow.Samples.Android

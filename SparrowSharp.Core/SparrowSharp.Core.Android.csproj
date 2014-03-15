@@ -51,15 +51,11 @@
     <Compile Include="Core\Program.cs" />
     <Compile Include="Core\RenderState.cs" />
     <Compile Include="Core\RenderSupport.cs" />
-    <Compile Include="Core\SubTexture.cs" />
-    <Compile Include="Core\Texture.cs" />
-    <Compile Include="Core\TextureSmoothing.cs" />
     <Compile Include="Core\ViewController.cs" />
     <Compile Include="Display\IAnimatable.cs" />
     <Compile Include="Display\BlendMode.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
-    <Compile Include="Display\GLTexture.cs" />
     <Compile Include="Display\Image.cs" />
     <Compile Include="Display\MovieClip.cs" />
     <Compile Include="Display\Quad.cs" />
@@ -84,5 +80,12 @@
     <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\AndroidSurfaceView.cs" />
     <Compile Include="Core\AndroidGLRenderer.cs" />
+    <Compile Include="Textures\GLTexture.cs" />
+    <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Textures\SubTexture.cs" />
+    <Compile Include="Textures\TextureSmoothing.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Textures\" />
   </ItemGroup>
 </Project>

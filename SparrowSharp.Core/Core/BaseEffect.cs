@@ -1,6 +1,7 @@
 using System;
 using Sparrow.Geom;
 using Sparrow.Core;
+using Sparrow.Textures;
 using OpenTK;
 using OpenTK.Graphics.ES20;
 

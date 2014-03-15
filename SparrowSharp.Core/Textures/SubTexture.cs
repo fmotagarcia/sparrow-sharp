@@ -6,7 +6,7 @@ using OpenTK;
 using System.Runtime.InteropServices;
 using Sparrow.Display;
 
-namespace Sparrow.Core
+namespace Sparrow.Textures
 {
     public class SubTexture : Texture
     {

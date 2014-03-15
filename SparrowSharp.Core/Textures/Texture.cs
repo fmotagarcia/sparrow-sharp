@@ -3,7 +3,7 @@ using Sparrow.Geom;
 using Sparrow.Utils;
 using Sparrow.Display;
 
-namespace Sparrow.Core
+namespace Sparrow.Textures
 {
     public class Texture
     {

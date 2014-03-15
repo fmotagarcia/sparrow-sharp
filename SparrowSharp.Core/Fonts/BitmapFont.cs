@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sparrow.Core;
+using Sparrow.Textures;
 using System.Xml;
 using System.IO;
 using Sparrow.Geom;

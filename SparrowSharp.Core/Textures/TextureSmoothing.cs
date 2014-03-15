@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sparrow.Core
+namespace Sparrow.Textures
 {
 	public enum TextureSmoothing : uint
 	{

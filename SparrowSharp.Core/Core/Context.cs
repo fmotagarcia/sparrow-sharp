@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using OpenTK.Graphics;
 using Sparrow.Geom;
+using Sparrow.Textures;
 
 namespace Sparrow.Core
 {

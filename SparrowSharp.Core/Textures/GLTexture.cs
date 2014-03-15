@@ -2,7 +2,7 @@
 using Sparrow.Core;
 using OpenTK.Graphics.ES20;
 
-namespace Sparrow.Display
+namespace Sparrow.Textures
 {
 	public class GLTexture : Texture
 	{
