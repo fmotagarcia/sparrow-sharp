@@ -46,7 +46,7 @@ namespace Sparrow.Samples.Android
 				//SP.DefaultJuggler.Add (egg);
 				egg.X = r.Next (border, (int)Stage.Width - border);
 				egg.Y = r.Next (border, (int)Stage.Height - border);
-				egg.Rotation = (float)(r.Next (0, 100) / 100 * Math.PI);
+				egg.Rotation = (float)(r.Next (0, 100) / 100.0f * Math.PI);
 				_container.AddChild (egg);
 			}
 		}
