@@ -100,7 +100,7 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-			SP.Step();
+			SP.Step(e.Time);
 
             SwapBuffers();
         }

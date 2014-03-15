@@ -29,7 +29,7 @@ namespace Sparrow.Core
 
 		public void OnDrawFrame (Javax.Microedition.Khronos.Opengles.IGL10 gl)
 		{
-			SP.Step();
+			SP.Step(1/60.0f); //todo  fix if we need this class
 			// calls SwapBuffers automatically
 		}
 
