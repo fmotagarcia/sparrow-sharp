@@ -15,17 +15,17 @@ namespace SparrowSharp.Display
      At initialization, you can specify the desired framerate. You can, however, manually give each
      frame a custom duration. You can also play a sound whenever a certain frame appears.
  
-     The methods `play` and `pause` control playback of the movie. You will receive an event of type
-     `EventTypeCompleted` when the movie finished playback. When the movie is looping,
+     The methods 'Play' and 'Pause' control playback of the movie. You will receive an event of type
+     'EventTypeCompleted' when the movie finished playback. When the movie is looping,
      the event is dispatched once per loop.
  
-     As any animated object, a movie clip has to be added to a juggler (or have its `advanceTime:` 
+     As any animated object, a movie clip has to be added to a Juggler (or have its 'AdvanceTime' 
      method called regularly) to run.
      */
-    public class MovieClip : Image
+    public class MovieClip : Image, IAnimatable
     {
         readonly List<Texture> _textures;
-        //NSMutableArray _sounds;
+        //List _sounds;
         readonly List<float> _durations;
 
         private float _defaultFrameDuration;
@@ -35,7 +35,7 @@ namespace SparrowSharp.Display
         private int _currentFrame;
         
         /// Initializes a movie with the first frame and the default number of frames per second.
-        public MovieClip( Texture texture, float fps) : base(texture)
+        public MovieClip(Texture texture, float fps) : base(texture)
         {
             _defaultFrameDuration = 1.0f / fps;
             Loop = true;
@@ -50,7 +50,7 @@ namespace SparrowSharp.Display
         }
 
         /// Initializes a MovieClip with an array of textures and the default number of frames per second.
-        public MovieClip(Texture[] textures, float fps) : this(textures[0], fps)
+        public MovieClip(IList<Texture> textures, float fps) : this(textures[0], fps)
         {
             if (textures.Count() > 1)
             {
@@ -58,12 +58,6 @@ namespace SparrowSharp.Display
                     AddFrame(textures[i], i);
             }
         }
-
-        /// Factory method.
-        //+ (instancetype)movieWithFrame:(SPTexture *)texture fps:(float)fps;
-
-        /// Factory method.
-        //+ (instancetype)movieWithFrames:(NSArray *)textures fps:(float)fps;
 
         /// Adds a frame to the end of the animation with a certain texture, using the default duration (1/fps).
         public void AddFrame(Texture texture)
@@ -120,7 +114,10 @@ namespace SparrowSharp.Display
         }
 
         /// Sets the sound that will be played back when a certain frame is active.
-        //- (void)setSound:(SPSoundChannel *)sound atIndex:(int)frameID;
+        public void SetSoundAt(object sound, int position)
+        {
+            //_sounds[frameID] = sound ? sound : [NSNull null];
+        }
 
         /// Sets the duration of a certain frame in seconds.
         public void SetDuration(float duration, int position)
@@ -196,7 +193,7 @@ namespace SparrowSharp.Display
             }
         }
 
-        /// Indicates if the movie is currently playing. Returns `false` when the end has been reached.
+        /// Indicates if the movie is currently playing. Returns 'false' when the end has been reached.
         public bool Playing {
             get { 
                 if (_playing)
@@ -227,7 +224,7 @@ namespace SparrowSharp.Display
         public void AdvanceTime(float seconds)
         {    
             if (Loop && _currentTime == _totalTime) _currentTime = 0.0f;    
-            if (!_playing || seconds == 0.0 || _currentTime == _totalTime) return;    
+            if (!_playing || seconds == 0.0f || _currentTime == _totalTime) return;    
     
             int i = 0;
             float durationSum = 0.0f;
