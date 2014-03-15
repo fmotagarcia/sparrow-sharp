@@ -6,6 +6,7 @@ using OpenTK.Graphics.ES20;
 using Sparrow.Core;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Sparrow.Textures;
 using SparrowSharp.Samples.Desktop;
 
 namespace Sparrow.Samples.Desktop
@@ -22,7 +23,7 @@ namespace Sparrow.Samples.Desktop
 
 		public SampleGame ()
 		{
-			_texture = TextureFactory.CreateTexture (DesktopResources.Sparrow);
+			_texture = TextureFactory.CreateTexture ((uint)DesktopResources.Sparrow);
 
 			// the container will hold all test objects
 			_container = new Sprite ();

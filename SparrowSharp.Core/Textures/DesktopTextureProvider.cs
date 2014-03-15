@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Textures
 {
@@ -11,13 +14,13 @@ namespace Sparrow.Textures
 		{
 			string resourceID;
 
-			if (_resources.TryGetValue (id, out resourceID)) {
+			//if (_resources.TryGetValue (id, out resourceID)) {
 				uint name = (uint)GL.GenTexture ();
 				GL.BindTexture (All.Texture2D, name);
 
 				Bitmap bitmap = new Bitmap("benchmark_object.png");
 				BitmapData bitmapData = bitmap.LockBits(
-					new Rectangle(0, 0, bmp.Width, bmp.Height), 
+                    new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
 					ImageLockMode.ReadOnly, 
 					System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
@@ -36,14 +39,14 @@ namespace Sparrow.Textures
 
 				GLTexture texture = new GLTexture (name, bitmap.Width, bitmap.Height, false, 1.0f, false);
 				return texture;
-			}
+			//}
 
 			return null;
 		}
 
 		public void RegisterResource (uint id, int resource)
 		{
-			_resources [id] = resource;
+			//_resources [id] = resource;
 		}
 	}
 }

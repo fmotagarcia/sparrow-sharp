@@ -1,7 +1,4 @@
-﻿using System;
-using Sparrow.Textures;
-
-namespace Sparrow.Textures
+﻿namespace Sparrow.Textures
 {
 	public class TextureFactory
 	{
