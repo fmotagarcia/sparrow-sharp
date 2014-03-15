@@ -1,6 +1,6 @@
 namespace SparrowSharp.Display
 {
-    interface IAnimatable
+    public interface IAnimatable
     {
         void AdvanceTime(float seconds);
     }

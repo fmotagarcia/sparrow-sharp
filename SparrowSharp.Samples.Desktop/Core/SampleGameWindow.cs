@@ -41,7 +41,7 @@ namespace SparrowSharp.Samples.Desktop.Core
 
 		private void HandleUpdateFrame (object sender, FrameEventArgs e)
         {
-			SP.Step();
+			SP.Step(e.Time);
 			// add game logic, input handling
 			if (Keyboard[Key.Escape])
 			{

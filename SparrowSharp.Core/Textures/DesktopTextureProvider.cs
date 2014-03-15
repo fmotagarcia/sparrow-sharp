@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Textures
 {
 	public class DesktopTextureProvider : ITextureProvider
 	{
-		private Dictionary<uint, string> _resources = new Dictionary<uint, string> ();
+		private readonly Dictionary<uint, string> _resources = new Dictionary<uint, string> ();
 
 		public Texture CreateTexture (uint id)
 		{
@@ -15,9 +18,9 @@ namespace Sparrow.Textures
 				uint name = (uint)GL.GenTexture ();
 				GL.BindTexture (All.Texture2D, name);
 
-				Bitmap bitmap = new Bitmap("benchmark_object.png");
+                Bitmap bitmap = new Bitmap(resourceID);
 				BitmapData bitmapData = bitmap.LockBits(
-					new Rectangle(0, 0, bmp.Width, bmp.Height), 
+                    new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
 					ImageLockMode.ReadOnly, 
 					System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
@@ -41,7 +44,7 @@ namespace Sparrow.Textures
 			return null;
 		}
 
-		public void RegisterResource (uint id, int resource)
+		public void RegisterResource (uint id, string resource)
 		{
 			_resources [id] = resource;
 		}

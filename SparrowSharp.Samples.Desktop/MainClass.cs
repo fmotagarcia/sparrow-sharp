@@ -1,6 +1,5 @@
 ﻿using System;
 using SparrowSharp.Samples.Desktop.Core;
-using Sparrow.Samples.Desktop;
 using Sparrow.Textures;
 
 namespace SparrowSharp.Samples.Desktop
@@ -16,7 +15,7 @@ namespace SparrowSharp.Samples.Desktop
 			game.Start ();
 		}
 
-		private void RegisterResources() {
+		private static void RegisterResources() {
 			DesktopTextureProvider provider = new DesktopTextureProvider ();
 			provider.RegisterResource((uint) DesktopResources.Sparrow, "benchmark_object.png");
 

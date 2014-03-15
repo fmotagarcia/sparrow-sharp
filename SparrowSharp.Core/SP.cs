@@ -1,9 +1,9 @@
 ﻿using Sparrow.Core;
 using Sparrow.Display;
 using System.Collections.Generic;
-using SparrowSharp.Core;
 using System;
 using System.Diagnostics;
+using SparrowSharp.Utils;
 
 namespace Sparrow
 {
@@ -24,13 +24,15 @@ namespace Sparrow
 
 		private static DisplayObject Root { get; set; }
 
+        public static Juggler DefaultJuggler { get; set; }
+
 		private static Type _rootClass;
 
 		private static Stopwatch watch = new Stopwatch ();
 
 		public static int cnt = 0;
 
-		public static void Step()
+		public static void Step(double time)
 		{
 			long elapsed = watch.ElapsedMilliseconds;
 			watch.Restart ();
@@ -45,6 +47,7 @@ namespace Sparrow
 			#endif
 
 			Stage.AdvanceTime(elapsed);
+            DefaultJuggler.AdvanceTime((float)time);
 		}
 
 
@@ -59,11 +62,11 @@ namespace Sparrow
 
 		public static void InitApp(float width, float height)
 		{
-			if (SP.Root == null)
+			if (Root == null)
 			{
 				_stage = new Stage(width, height);
 				ReadjustStageSize(width, height); 
-				//Juggler = new Juggler();
+				DefaultJuggler = new Juggler();
 				Context = new Context();
 				RenderSupport = new RenderSupport();
 

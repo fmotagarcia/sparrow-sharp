@@ -34,6 +34,7 @@
     <Reference Include="OpenTK">
       <HintPath>..\..\..\Users\idiota\Documents\OpenTK\1.1\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -63,6 +64,7 @@
     <Compile Include="Utils\AssetManager.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\HAlign.cs" />
+    <Compile Include="Utils\Juggler.cs" />
     <Compile Include="Utils\NumberUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />
     <Compile Include="Utils\Vertex.cs" />
@@ -78,7 +80,5 @@
     <Compile Include="Textures\TextureFactory.cs" />
     <Compile Include="Textures\DesktopTextureProvider.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Textures\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

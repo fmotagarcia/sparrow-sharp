@@ -1,8 +1,5 @@
-using System;
-using Sparrow.Geom;
 using OpenTK;
 using System.Runtime.InteropServices;
-using Android.Hardware;
 
 namespace Sparrow.Utils
 {
