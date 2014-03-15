@@ -1,11 +1,5 @@
 using System;
-using System.Collections.Generic;
 using Sparrow.Display;
-using Sparrow;
-using OpenTK.Graphics.ES20;
-using Sparrow.Core;
-using System.Drawing;
-using System.Drawing.Imaging;
 using Sparrow.Textures;
 using SparrowSharp.Samples.Desktop;
 
@@ -13,8 +7,8 @@ namespace Sparrow.Samples.Desktop
 {
 	public class SampleGame : DisplayObjectContainer
 	{
-		Texture _texture;
-		Sprite _container;
+	    readonly Texture _texture;
+	    readonly Sprite _container;
 		int _frameCount = 0;
 		float _elapsed = 0;
 		bool _started = false;

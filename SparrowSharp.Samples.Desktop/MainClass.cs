@@ -17,7 +17,7 @@ namespace SparrowSharp.Samples.Desktop
 
 		private static void RegisterResources() {
 			DesktopTextureProvider provider = new DesktopTextureProvider ();
-			provider.RegisterResource((uint) DesktopResources.Sparrow, 0);
+			provider.RegisterResource((uint) DesktopResources.Sparrow, "benchmark_object.png");
 
 			TextureFactory.Provider = provider;
 		}
