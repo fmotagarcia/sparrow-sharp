@@ -19,13 +19,13 @@ namespace Sparrow.Display
 
 		public uint Color {
 			get {
-				return ColorOfVertex (0);
+ return ColorOfVertex (0);
 			}
 			set {
 				for (int i = 0; i < 4; ++i) {
 					_vertexData.SetColor (value, i);
 				}
-				
+
 				VertexDataDidChange ();
 
 				if (value != 0xffffff) { // TODO this is not so good. How to display white quads?
@@ -71,7 +71,7 @@ namespace Sparrow.Display
 			Init (width, height, color, premultipliedAlpha);
 		}
 
-		protected void Init(float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
+		protected void Init (float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
 		{
 			if (width <= MIN_SIZE)
 				width = MIN_SIZE;
@@ -87,7 +87,7 @@ namespace Sparrow.Display
 			_vertexData.Vertices [3].Position.Y = height;
 
 			for (int i = 0; i < 4; ++i) {
-				_vertexData.Vertices [i].Color =  VertexColorHelper.CreateVertexColor (color, 1.0f);
+				_vertexData.VertexColors [i] = VertexColorHelper.CreateVertexColor (color, 1.0f);
 			}
 
 			VertexDataDidChange ();
@@ -172,9 +172,11 @@ namespace Sparrow.Display
 			// override in subclass
 		}
 
-		virtual public void CopyVertexDataTo (VertexData targetData, int atIndex)
+		virtual public void CopyVertexDataTo (VertexData targetData, int atIndex, bool copyColor)
 		{
-			_vertexData.CopyToVertexData (targetData, atIndex);
+			copyColor = copyColor || Tinted || Alpha != 0.0f;
+
+			_vertexData.CopyToVertexData (targetData, atIndex, copyColor);
 		}
 	}
 }

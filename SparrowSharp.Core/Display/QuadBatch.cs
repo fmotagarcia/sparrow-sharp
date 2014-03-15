@@ -21,6 +21,7 @@ namespace Sparrow.Display
 		private readonly BaseEffect _baseEffect;
 		private VertexData _vertexData;
 		private int _vertexBufferName;
+		private int _vertexColorsBufferName;
 		private ushort[] _indexData;
 		private int _indexBufferName;
 
@@ -92,15 +93,15 @@ namespace Sparrow.Display
 
 			int vertexID = _numQuads * 4;
 
-			quad.CopyVertexDataTo (_vertexData, vertexID);
+			if (!_tinted) {
+				_tinted = alpha != 1.0f || quad.Tinted;
+			}
+
+			quad.CopyVertexDataTo (_vertexData, vertexID, _tinted);
 			_vertexData.TransformVerticesWithMatrix (matrix, vertexID, 4);
 
 			if (alpha != 1.0f) {
 				_vertexData.ScaleAlphaBy (alpha, vertexID, 4);
-			}
-
-			if (!_tinted) {
-				_tinted = alpha != 1.0f || quad.Tinted;
 			}
 
 			_syncRequired = true;
@@ -141,15 +142,15 @@ namespace Sparrow.Display
 				_vertexData.SetPremultipliedAlpha (_premultipliedAlpha, false);
 			}
 
-			quadBatch.VertexData.CopyToVertexData (_vertexData, vertexID, numVertices);
+			if (!_tinted) {
+				_tinted = alpha != 1.0f || quadBatch.Tinted;
+			}
+
+			quadBatch.VertexData.CopyToVertexData (_vertexData, vertexID, numVertices, _tinted);
 			_vertexData.TransformVerticesWithMatrix (matrix, vertexID, numVertices);
 
 			if (alpha != 1.0f) {
 				_vertexData.ScaleAlphaBy (alpha, vertexID, numVertices);
-			}
-
-			if (!_tinted) {
-				_tinted = alpha != 1.0f || quadBatch.Tinted;
 			}
 
 			_syncRequired = true;
@@ -166,8 +167,8 @@ namespace Sparrow.Display
 				return _premultipliedAlpha != premultipliedAlpha || BlendMode != blendMode;
 			} else if (_texture != null && texture != null) {
 				return _tinted != (tinted || alpha != 1.0f) ||
-				_texture.Name != texture.Name ||
-				BlendMode != blendMode;
+					_texture.Name != texture.Name ||
+					BlendMode != blendMode;
 			} else {
 				return true;
 			}
@@ -200,7 +201,7 @@ namespace Sparrow.Display
 			}
 
 			if (_syncRequired) {
-				SyncBuffers ();
+				SyncBuffers (alpha);
 			}
 
 			if (blendMode == Sparrow.Display.BlendMode.AUTO) {
@@ -233,21 +234,17 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 
-//			int sizeOfVertex = Marshal.SizeOf(typeof(Vertex));
-//			IntPtr positionOffset = Marshal.OffsetOf (typeof(Vertex), "Position");
-//			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, sizeOfVertex, positionOffset);
 			GL.VertexAttribPointer (attribPosition, 2, All.Float, false, Vertex.SIZE, (IntPtr) Vertex.POSITION_OFFSET);
 
-			if (useTinting) {
-//				IntPtr colorOffset = Marshal.OffsetOf (typeof(Vertex), "Color");
-//				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeOfVertex, colorOffset);
-				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, Vertex.SIZE, (IntPtr) Vertex.COLOR_OFFSET);
-			}
 			if (_texture != null) {
-//				IntPtr textureOffset = Marshal.OffsetOf (typeof(Vertex), "TexCoords");
-//				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, sizeOfVertex, textureOffset);
 				GL.VertexAttribPointer (attribTexCoords, 2, All.Float, false, Vertex.SIZE, (IntPtr) Vertex.TEXTURE_OFFSET);
 			}
+
+			if (useTinting) {
+				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
+				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeof(float), (IntPtr)  Vertex.POSITION_OFFSET);
+			}
+
 			int numIndices = _numQuads * 6;
 			GL.DrawElements (All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
 		}
@@ -272,7 +269,7 @@ namespace Sparrow.Display
 		}
 
 		public static int Compile (DisplayObject displayObject, List<QuadBatch> quadBatches, int quadBatchID, 
-		                    Matrix transformationMatrix, float alpha, uint blendMode)
+			Matrix transformationMatrix, float alpha, uint blendMode)
 		{
 			bool isRootObject = false;
 			float objectAlpha = displayObject.Alpha;
@@ -366,7 +363,7 @@ namespace Sparrow.Display
 
 		private void Expand ()
 		{
-            Capacity = _capacity < 8 ? 16 : _capacity * 2;
+			Capacity = _capacity < 8 ? 16 : _capacity * 2;
 		}
 
 		private void CreateBuffers ()
@@ -380,9 +377,10 @@ namespace Sparrow.Display
 			}
 
 			GL.GenBuffers (1, out _vertexBufferName);
+			GL.GenBuffers (1, out _vertexColorsBufferName);
 			GL.GenBuffers (1, out _indexBufferName);
 
-			if (_vertexBufferName == 0 || _indexBufferName == 0) {
+			if (_vertexBufferName == 0 || _vertexColorsBufferName == 0 || _indexBufferName == 0) {
 				throw new InvalidOperationException ("Could not create vertex buffers");
 			}
 
@@ -399,13 +397,18 @@ namespace Sparrow.Display
 				_vertexBufferName = 0;
 			}
 
-			if (_vertexBufferName != 0) {
-				GL.DeleteBuffers (1, ref _vertexBufferName);
+			if (_vertexColorsBufferName != 0) {
+				GL.DeleteBuffers (1, ref _vertexColorsBufferName);
+				_vertexColorsBufferName = 0;
+			}
+
+			if (_indexBufferName != 0) {
+				GL.DeleteBuffers (1, ref _indexBufferName);
 				_indexBufferName = 0;
 			}
 		}
 
-		public void SyncBuffers ()
+		void SyncBuffers (float alpha)
 		{
 			if (_vertexBufferName == 0) {
 				CreateBuffers ();
@@ -414,18 +417,23 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
+			if (_tinted || alpha != 0.0) {
+				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
+			}
+
 			_syncRequired = false;
 		}
 
-	    private int _capacity;
+		private int _capacity;
 		private int Capacity {
-            get { return _capacity; }
+			get { return _capacity; }
 			set {
 				if (value == 0) {
 					throw new Exception ("Capacity must not be zero");
 				}
-                uint oldCapacity = (uint)_capacity;
-                _capacity = value;
+				uint oldCapacity = (uint)_capacity;
+				_capacity = value;
 				int numVertices = value * 4;
 				int numIndices = value * 6;
 
