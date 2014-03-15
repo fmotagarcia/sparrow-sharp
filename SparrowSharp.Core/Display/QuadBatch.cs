@@ -242,7 +242,7 @@ namespace Sparrow.Display
 
 			if (useTinting) {
 				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
-				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeof(float), (IntPtr)  Vertex.POSITION_OFFSET);
+				GL.VertexAttribPointer (attribColor, 4, All.UnsignedByte, true, sizeof(float), (IntPtr)  Vertex.COLOR_OFFSET);
 			}
 
 			int numIndices = _numQuads * 6;
@@ -417,7 +417,7 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
-			if (_tinted || alpha != 0.0) {
+			if (_tinted || alpha != 0.0f) {
 				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
 				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
 			}

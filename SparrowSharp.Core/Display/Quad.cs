@@ -174,7 +174,7 @@ namespace Sparrow.Display
 
 		virtual public void CopyVertexDataTo (VertexData targetData, int atIndex, bool copyColor)
 		{
-			copyColor = copyColor || Tinted || Alpha != 0.0f;
+			copyColor = copyColor || Tinted || Alpha != 1.0f;
 
 			_vertexData.CopyToVertexData (targetData, atIndex, copyColor);
 		}
