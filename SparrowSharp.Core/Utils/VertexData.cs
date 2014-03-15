@@ -121,15 +121,6 @@ namespace Sparrow.Utils
 
         public void CopyToVertexData(VertexData target, int atIndex, int numVertices)
         {
-            if (numVertices < 0 || numVertices > _numVertices)
-            {
-                throw new ArgumentException("Invalid vertex count");
-            }
-
-            if (atIndex + numVertices > target.NumVertices)
-            {
-                throw new ArgumentException("Target too small");
-            }
 			Array.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
 		}
 
