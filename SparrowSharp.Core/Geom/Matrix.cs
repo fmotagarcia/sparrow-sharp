@@ -114,31 +114,8 @@ namespace Sparrow.Geom
 			if (angle == 0.0f) {
 				return;
 			}
-
-			float sin;
-			float cos;
-
-			//always wrap input angle to -PI..PI
-			if (angle < -3.14159265f)
-				angle += 6.28318531f;
-			else if (angle > 3.14159265f)
-				angle -= 6.28318531f;
-
-			//compute sine
-			if (angle < 0.0f)
-				sin = 1.27323954f * angle + .405284735f * angle * angle;
-			else
-				sin = 1.27323954f * angle - 0.405284735f * angle * angle;
-
-			//compute cosine: sin(x + PI/2) = cos(x)
-			angle += 1.57079632f;
-			if (angle > 3.14159265f)
-				angle -= 6.28318531f;
-
-			if (angle < 0.0f)
-				cos = 1.27323954f * angle + 0.405284735f * angle * angle;
-			else
-				cos = 1.27323954f * angle - 0.405284735f * angle * angle;
+			float sin = NumberUtil.FastSin(angle);
+			float cos = NumberUtil.FastCos(angle);
 
 			float a = A * cos - B * sin;
 			float b = A * sin + B * cos;

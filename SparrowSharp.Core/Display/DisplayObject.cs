@@ -294,33 +294,9 @@ namespace Sparrow.Display
 							_transformationMatrix.Tx = _x - _pivotX * _scaleX;
 							_transformationMatrix.Ty = _y - _pivotY * _scaleY;
 						} else {
-							float sin;
-							float cos;
 
-							float angle = _rotation;
-
-							//always wrap input angle to -PI..PI
-							if (angle < -3.14159265f)
-								angle += 6.28318531f;
-							else
-								if (angle >  3.14159265f)
-									angle -= 6.28318531f;
-
-							//compute sine
-							if (angle < 0.0f)
-								sin = 1.27323954f * angle + .405284735f * angle * angle;
-							else
-								sin = 1.27323954f * angle - 0.405284735f * angle * angle;
-
-							//compute cosine: sin(x + PI/2) = cos(x)
-							angle += 1.57079632f;
-							if (angle>  3.14159265f)
-								angle -= 6.28318531f;
-
-							if (angle < 0.0f)
-								cos = 1.27323954f * angle + 0.405284735f * angle * angle;
-							else
-								cos = 1.27323954f * angle - 0.405284735f * angle * angle;
+							float sin = NumberUtil.sinLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
+							float cos = NumberUtil.cosLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
 
 							float a = _scaleX * cos;
 							float b = _scaleX * sin;
