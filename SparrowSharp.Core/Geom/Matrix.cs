@@ -1,7 +1,6 @@
 using System;
 using Sparrow.Utils;
 using OpenTK;
-using Android.Graphics;
 
 namespace Sparrow.Geom
 {

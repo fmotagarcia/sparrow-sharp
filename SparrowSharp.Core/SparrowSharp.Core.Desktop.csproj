@@ -52,7 +52,9 @@
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
     <Compile Include="Display\GLTexture.cs" />
+    <Compile Include="Display\IAnimatable.cs" />
     <Compile Include="Display\Image.cs" />
+    <Compile Include="Display\MovieClip.cs" />
     <Compile Include="Display\Quad.cs" />
     <Compile Include="Display\QuadBatch.cs" />
     <Compile Include="Display\Sprite.cs" />
