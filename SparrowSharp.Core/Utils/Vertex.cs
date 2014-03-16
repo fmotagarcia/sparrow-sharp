@@ -14,6 +14,7 @@ namespace Sparrow.Utils
 
 		public static unsafe void Copy (Vertex[] source, int sourceOffset, Vertex[] target, int targetOffset, int count)
 		{
+			/*
 			// If either array is not instantiated, you cannot complete the copy. 
 			if ((source == null) || (target == null)) {
 				throw new System.ArgumentException ();
@@ -32,7 +33,7 @@ namespace Sparrow.Utils
 			    (target.Length - targetOffset < count)) {
 				throw new System.ArgumentException ();
 			}
-
+			*/
 			// The following fixed statement pins the location of the source and 
 			// target objects in memory so that they will not be moved by garbage 
 			// collection. 
