@@ -289,10 +289,6 @@ namespace Sparrow.Utils
 
 		public void TransformVerticesWithMatrix (Matrix matrix, int atIndex, int numVertices)
 		{
-			if (atIndex < 0 || atIndex >= _numVertices) {
-				throw new IndexOutOfRangeException ("Invalid vertex index");
-			}
-
 			if (matrix == null) {
 				return;
 			}
