@@ -38,6 +38,7 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -63,6 +64,8 @@
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Textures\TextureAtlas.cs" />
+    <Compile Include="Textures\TextureInfo.cs" />
     <Compile Include="Utils\AssetManager.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\HAlign.cs" />
