@@ -417,7 +417,7 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 5 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
-			if (_tinted || alpha != 0.0f) {
+			if (_tinted || alpha != 1.0f) {
 				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
 				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
 			}
