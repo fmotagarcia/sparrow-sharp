@@ -88,34 +88,11 @@ namespace Sparrow.Utils
 
 		public void CopyToVertexData (VertexData target, int atIndex, int numVertices, bool copyColor)
 		{
-			Array.Copy (_vertices, 0, target.Vertices, atIndex, numVertices);
+			Vertex.Copy (_vertices, 0, target.Vertices, atIndex, numVertices);
 
 			if (copyColor) {
 				Array.Copy (_vertexColors, 0, target.VertexColors, atIndex, numVertices);
 			}
-		}
-
-		public Vertex VertexAtIndex (int index)
-		{
-			if (index < 0 || index >= _numVertices) {
-				throw new IndexOutOfRangeException ("Invalid vertex index");
-			}
-
-			return _vertices [index];
-		}
-
-		public void SetVertex (Vertex vertex, int atIndex)
-		{
-			// TODO: implement
-			//            if (atIndex < 0 || atIndex >= _numVertices)
-			//            {
-			//                throw new IndexOutOfRangeException("Invalid vertex index");
-			//            }
-			//
-			//            _vertices[atIndex] = vertex;
-			//
-			//            if (_premultipliedAlpha)
-			//                _vertices[atIndex] = VertexColorHelper.PremultiplyAlpha(vertex.Color);
 		}
 
 		public Point PositionAtIndex (int index)
