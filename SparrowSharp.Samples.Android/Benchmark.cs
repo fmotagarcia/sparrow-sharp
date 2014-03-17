@@ -9,6 +9,7 @@ using Android.Opengl;
 using Android.App;
 using Android.Widget;
 using SparrowSharp.Display;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Android
 {
@@ -24,6 +25,13 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
+			/*
+			AndroidResource starRes = new AndroidResource ();
+			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star, ResourceType.IMAGE);
+			AndroidResource birdRes = new AndroidResource ();
+			birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object, ResourceType.IMAGE);
+			textures = new Texture[] { (Texture)starRes.GetResource(), (Texture)birdRes.GetResource() };
+			*/
             Texture _star = TextureFactory.CreateTexture((uint)BenchmarkResources.Star);
             Texture _sparrow = TextureFactory.CreateTexture((uint)BenchmarkResources.Sparrow);
             textures = new Texture[] { _star, _sparrow };

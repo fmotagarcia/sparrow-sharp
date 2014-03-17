@@ -8,6 +8,7 @@ using System;
 using Sparrow.Utils;
 using SparrowSharp.Samples.Android;
 using Sparrow.Textures;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Android
 {
@@ -27,7 +28,7 @@ namespace Sparrow.Samples.Android
         {
             base.OnCreate(bundle);
             ContextRef = this.BaseContext;
-
+			AndroidResource._context = BaseContext;
             RegisterResources();
 
             sparrowView = new AndroidViewController(this.ApplicationContext);
