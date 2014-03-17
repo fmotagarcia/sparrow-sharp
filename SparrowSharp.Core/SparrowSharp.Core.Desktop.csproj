@@ -84,6 +84,7 @@
     <Compile Include="Textures\ITextureProvider.cs" />
     <Compile Include="Textures\TextureFactory.cs" />
     <Compile Include="Textures\DesktopTextureProvider.cs" />
+    <Compile Include="ResourceLoading\LoaderBase.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

@@ -15,7 +15,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>SparrowSharp.Core.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,15 +88,11 @@
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
-    <Compile Include="Textures\TextureFactory.cs" />
-    <Compile Include="Textures\ITextureProvider.cs" />
-    <Compile Include="Textures\AndroidTextureProvider.cs" />
     <Compile Include="Core\AndroidViewController.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
-    <Compile Include="ResourceLoading\ResourceType.cs" />
-    <Compile Include="ResourceLoading\Resource.cs" />
-    <Compile Include="ResourceLoading\AndroidResource.cs" />
+    <Compile Include="ResourceLoading\LoaderBase.cs" />
+    <Compile Include="ResourceLoading\AndroidTextureLoader.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

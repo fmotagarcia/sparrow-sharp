@@ -10,6 +10,7 @@ using Android.App;
 using Android.Widget;
 using SparrowSharp.Display;
 using Sparrow.ResourceLoading;
+using Sparrow.Core;
 
 namespace Sparrow.Samples.Android
 {
@@ -25,16 +26,11 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-			/*
-			AndroidResource starRes = new AndroidResource ();
-			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star, ResourceType.IMAGE);
-			AndroidResource birdRes = new AndroidResource ();
-			birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object, ResourceType.IMAGE);
-			textures = new Texture[] { (Texture)starRes.GetResource(), (Texture)birdRes.GetResource() };
-			*/
-            Texture _star = TextureFactory.CreateTexture((uint)BenchmarkResources.Star);
-            Texture _sparrow = TextureFactory.CreateTexture((uint)BenchmarkResources.Sparrow);
-            textures = new Texture[] { _star, _sparrow };
+			TextureLoader starRes = new TextureLoader ();
+			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
+			TextureLoader birdRes = new TextureLoader ();
+			birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
+			textures = new Texture[] { birdRes.GetResource(), starRes.GetResource() };
             // the container will hold all test objects
             _container = new Sprite();
             AddChild(_container);
@@ -50,7 +46,7 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-                Image egg = new Image(textures[1]);
+				Image egg = new Image(textures[0]);
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -65,8 +61,7 @@ namespace Sparrow.Samples.Android
             Console.WriteLine("benchmark complete!");
             Console.WriteLine("number of objects: " + _container.NumChildren);
 
-            Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
-                ToastLength.Long).Show();
+			Toast.MakeText(AndroidViewController.AndroidContext, "number of objects: " + _container.NumChildren, ToastLength.Long).Show();
 
             _started = false;
             _container.RemoveAllChildren();

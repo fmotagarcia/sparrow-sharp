@@ -16,7 +16,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>SparrowSharp.Samples.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -56,7 +56,6 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="TrigonometryTest.cs" />
-    <Compile Include="BenchmarkResources.cs" />
     <Compile Include="SampleGame.cs" />
   </ItemGroup>
   <ItemGroup>
