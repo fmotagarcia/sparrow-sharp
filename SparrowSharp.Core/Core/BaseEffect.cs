@@ -125,9 +125,9 @@ namespace Sparrow.Core
             {
                 string programName = GetProgramName(hasTexture, useTinting);
 
-                if (SP.Programs.ContainsKey(programName))
+                if (SparrowSharpApp.Programs.ContainsKey(programName))
                 {
-                    _program = SP.Programs[programName];
+                    _program = SparrowSharpApp.Programs[programName];
                 }
         
                 if (_program == null)
@@ -135,7 +135,7 @@ namespace Sparrow.Core
                     string vertexShader = VertexShaderForTexture(_texture, useTinting);
                     string fragmentShader = FragmentShaderForTexture(_texture, useTinting);
                     _program = new Program(vertexShader, fragmentShader);
-                    SP.RegisterProgram(programName, _program);
+                    SparrowSharpApp.RegisterProgram(programName, _program);
                 }
         
                 _aPosition = _program.Attributes["aPosition"];

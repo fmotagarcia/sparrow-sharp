@@ -8,7 +8,6 @@ using MonoTouch.Foundation;
 using MonoTouch.CoreAnimation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
-using Sparrow;
 using MonoTouch.UIKit;
 
 namespace SparrowSharp.Core.iOS
@@ -16,6 +15,10 @@ namespace SparrowSharp.Core.iOS
     [Register("EAGLView")]
     public class EAGLView : iPhoneOSGameView
     {
+        public delegate void OnLoadedAction(int viewWidth,int viewHeight);
+
+        private OnLoadedAction _onLoadedAction;
+
         [Export("initWithCoder:")]
         public EAGLView(NSCoder coder) : base(coder)
         {
@@ -51,8 +54,6 @@ namespace SparrowSharp.Core.iOS
             GL.Disable(All.Alpha);
             GL.Disable(All.Dither);
             GL.Enable(All.Blend);
-
-            SP.InitApp(Size.Width, Size.Height);
         }
 
         #region DisplayLink support
@@ -92,6 +93,8 @@ namespace SparrowSharp.Core.iOS
             displayLink.AddToRunLoop(NSRunLoop.Current, NSRunLoop.NSDefaultRunLoopMode);
 
             IsAnimating = true;
+
+            _onLoadedAction(Size.Width, Size.Height);
         }
 
         public void StopAnimating()

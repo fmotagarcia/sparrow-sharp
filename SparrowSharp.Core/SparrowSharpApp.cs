@@ -7,7 +7,7 @@ using SparrowSharp.Utils;
 
 namespace Sparrow
 {
-    public static class SP
+    public static class SparrowSharpApp
     {
         private static Stage _stage;
 
@@ -27,7 +27,6 @@ namespace Sparrow
 
         public static Juggler DefaultJuggler { get; set; }
 
-        private static Type _rootClass;
         private static Stopwatch watch = new Stopwatch();
         public static int cnt = 0;
 
@@ -49,35 +48,28 @@ namespace Sparrow
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
         }
 
-        public static void Start(Type RootClass)
-        {
-            if (_rootClass != null)
-            {
-                throw new Exception("Sparrow has already been started");
-            }
-            _rootClass = RootClass;
-        }
+        public delegate Sprite RootCreator();
 
-        public static void InitApp(float width, float height)
+        public static void Start(float width, float height, Sprite root)
         {
-            if (Root == null)
+            if (root == null)
             {
-                _stage = new Stage(width, height);
-                ReadjustStageSize(width, height); 
-                DefaultJuggler = new Juggler();
-                Context = new Context();
-                RenderSupport = new RenderSupport();
-
-                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
-                if (Root.GetType().IsInstanceOfType(_stage))
-                {
-                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
-                }
-                else
-                {
-                    _stage.AddChild(Root);
-                }
+                throw new InvalidOperationException("Root cannot be null!");
             }
+
+            if (Root != null)
+            {
+                throw new InvalidOperationException("App already initialized!");
+            }
+
+            _stage = new Stage(width, height);
+            ReadjustStageSize(width, height); 
+            DefaultJuggler = new Juggler();
+            Context = new Context();
+            RenderSupport = new RenderSupport();
+
+            Root = root;
+            _stage.AddChild(Root);
         }
 
         public static void ReadjustStageSize(float width, float height)

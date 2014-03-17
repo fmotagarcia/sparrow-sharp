@@ -13,7 +13,7 @@ using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Android
 {
-    public class Benchmark : DisplayObjectContainer
+    public class Benchmark : Sprite
     {
         private Sprite _container;
         private int _frameCount = 0;
@@ -25,7 +25,7 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-			/*
+            /*
 			AndroidResource starRes = new AndroidResource ();
 			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star, ResourceType.IMAGE);
 			AndroidResource birdRes = new AndroidResource ();

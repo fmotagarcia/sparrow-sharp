@@ -253,7 +253,7 @@ namespace Sparrow.Core
         {
             FinishQuadBatch();
 
-            Context context = SP.Context;
+            Context context = SparrowSharpApp.Context;
             if (context == null)
             {
                 return;
@@ -274,8 +274,8 @@ namespace Sparrow.Core
 //				}
 //				else
 //				{
-                width = (int)SP.DrawableWidth;
-                height = (int)SP.DrawableHeight;
+                width = (int)SparrowSharpApp.DrawableWidth;
+                height = (int)SparrowSharpApp.DrawableHeight;
 //				}
 
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])

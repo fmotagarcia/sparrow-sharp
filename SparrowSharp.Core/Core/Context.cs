@@ -45,7 +45,7 @@ namespace Sparrow.Core
 
         public void ResetViewport()
         {
-			GL.Viewport(0, 0, SP.DrawableWidth, SP.DrawableHeight);
+			GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
         }
 
         public Rectangle ScissorBox
@@ -92,7 +92,7 @@ namespace Sparrow.Core
         public void ResetRenderTarget()
         {
             GL.BindFramebuffer(All.Framebuffer, 1);
-            GL.Viewport(0, 0, SP.DrawableWidth, SP.DrawableHeight);
+            GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
             _renderTarget = null;
         }
 

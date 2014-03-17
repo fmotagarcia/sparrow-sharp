@@ -1,19 +1,18 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.ES20;
-using Sparrow.Display;
 using System;
 using OpenTK.Graphics;
 using OpenTK.Platform.Android;
-using Android.Content.Res;
 using Android.Util;
 using SparrowSharp.Core;
-using Android.OS;
-using Sparrow.Textures;
 
 namespace Sparrow.Core
 {
     public class AndroidViewController : AndroidGameView, IViewController
     {
+        public delegate void OnLoadedAction(int viewWidth,int viewHeight);
+
+        private OnLoadedAction _onLoadedAction;
         private bool _contextWasLost = false;
 
         public AndroidViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
@@ -26,8 +25,9 @@ namespace Sparrow.Core
             Setup();
         }
 
-        public AndroidViewController(Android.Content.Context context) : base(context)
+        public AndroidViewController(Android.Content.Context context, OnLoadedAction onLoadedAction) : base(context)
         {
+            this._onLoadedAction = onLoadedAction;
             Setup();
         }
 
@@ -92,7 +92,7 @@ namespace Sparrow.Core
             base.OnLoad(e);
             MakeCurrent();
 
-            SP.InitApp(Size.Width, Size.Height);
+            _onLoadedAction(Size.Width, Size.Height);
 
             // Run the render loop
             Run();
@@ -102,7 +102,7 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-            SP.Step(e.Time);
+            SparrowSharpApp.Step(e.Time);
 
             SwapBuffers();
         }

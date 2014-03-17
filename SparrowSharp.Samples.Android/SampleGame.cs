@@ -15,7 +15,7 @@ namespace Sparrow.Samples.Android
 
         public SampleGame()
         {
-            SP.Stage.Color = 0xFF0000;
+            SparrowSharpApp.Stage.Color = 0xFF0000;
 
             int cnt = 0;
             for (int i = 0; i < NUMCOLS; i++)

@@ -31,10 +31,9 @@ namespace Sparrow.Samples.Android
             AndroidResource._context = BaseContext;
             RegisterResources();
 
-            sparrowView = new AndroidViewController(this.ApplicationContext);
-            //sparrowView = new AndroidSurfaceView (this);
+            sparrowView = new AndroidViewController(this.ApplicationContext, (width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
             SetContentView(sparrowView);
-            SP.Start(typeof(Benchmark));
+            ;
 
             //TrigonometryTest test = new TrigonometryTest ();
             //string result = test.TestLUTAccuracy ();
