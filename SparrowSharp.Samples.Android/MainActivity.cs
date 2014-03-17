@@ -28,13 +28,13 @@ namespace Sparrow.Samples.Android
         {
             base.OnCreate(bundle);
             ContextRef = this.BaseContext;
-			AndroidResource._context = BaseContext;
+            AndroidResource._context = BaseContext;
             RegisterResources();
 
             sparrowView = new AndroidViewController(this.ApplicationContext);
             //sparrowView = new AndroidSurfaceView (this);
             SetContentView(sparrowView);
-            SP.Start(new Benchmark());
+            SP.Start(typeof(Benchmark));
 
             //TrigonometryTest test = new TrigonometryTest ();
             //string result = test.TestLUTAccuracy ();

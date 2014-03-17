@@ -27,7 +27,7 @@ namespace Sparrow
 
         public static Juggler DefaultJuggler { get; set; }
 
-        private static DisplayObjectContainer _root;
+        private static Type _rootClass;
         private static Stopwatch watch = new Stopwatch();
         public static int cnt = 0;
 
@@ -49,18 +49,18 @@ namespace Sparrow
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
         }
 
-        public static void Start(DisplayObjectContainer root)
+        public static void Start(Type RootClass)
         {
-            if (_root != null)
+            if (_rootClass != null)
             {
                 throw new Exception("Sparrow has already been started");
             }
-            _root = root;
+            _rootClass = RootClass;
         }
 
         public static void InitApp(float width, float height)
         {
-            if (_stage == null)
+            if (Root == null)
             {
                 _stage = new Stage(width, height);
                 ReadjustStageSize(width, height); 
@@ -68,7 +68,15 @@ namespace Sparrow
                 Context = new Context();
                 RenderSupport = new RenderSupport();
 
-                _stage.AddChild(_root);
+                Root = (DisplayObject)Activator.CreateInstance(_rootClass);
+                if (Root.GetType().IsInstanceOfType(_stage))
+                {
+                    throw new Exception("Root extends 'Stage' but is expected to extend 'Sprite' instead");
+                }
+                else
+                {
+                    _stage.AddChild(Root);
+                }
             }
         }
 
@@ -88,11 +96,11 @@ namespace Sparrow
         {
             Programs.Remove(name);
         }
-        //		public static Juggler Juggler {
-        //			get {
-        //				return CurrentController.Juggler;
-        //			}
-        //		}
+        //      public static Juggler Juggler {
+        //          get {
+        //              return CurrentController.Juggler;
+        //          }
+        //      }
         private static float ContentScaleFactor
         {
             get { return 1.0f; }
