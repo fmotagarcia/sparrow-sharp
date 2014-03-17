@@ -221,7 +221,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SparrowSharp.Sample.iOS\SparrowSharp.Sample.iOS.csproj
+		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

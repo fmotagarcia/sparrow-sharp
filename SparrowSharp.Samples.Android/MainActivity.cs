@@ -33,7 +33,7 @@ namespace Sparrow.Samples.Android
             sparrowView = new AndroidViewController(this.ApplicationContext);
             //sparrowView = new AndroidSurfaceView (this);
             SetContentView(sparrowView);
-            SP.Start(typeof(Benchmark));
+            SP.Start(new Benchmark());
 
             //TrigonometryTest test = new TrigonometryTest ();
             //string result = test.TestLUTAccuracy ();
