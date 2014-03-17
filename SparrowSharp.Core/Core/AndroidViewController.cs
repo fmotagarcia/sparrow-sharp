@@ -12,28 +12,27 @@ using Sparrow.Textures;
 
 namespace Sparrow.Core
 {
-    public class ViewController : AndroidGameView, IViewController
+    public class AndroidViewController : AndroidGameView, IViewController
     {
-
         private bool _contextWasLost = false;
 
-        public ViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
+        public AndroidViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
         {
             Setup();
         }
 
-        public ViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
+        public AndroidViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
         {
             Setup();
         }
 
-        public ViewController(Android.Content.Context context) : base(context)
+        public AndroidViewController(Android.Content.Context context) : base(context)
         {
             Setup();
         }
 
         public void Setup()
-		{
+        {
             RequestFocus();
             FocusableInTouchMode = true;
         }
@@ -75,14 +74,14 @@ namespace Sparrow.Core
             }
             GL.Disable(All.CullFace);
             GL.Disable(All.DepthTest);
-			GL.Disable(All.Alpha);
-			GL.Disable(All.Dither);
+            GL.Disable(All.Alpha);
+            GL.Disable(All.Dither);
             GL.Enable(All.Blend);
 
 
             if (_contextWasLost)
             {
-				// todo reload context, ReadjustStageSize, ...
+                // todo reload context, ReadjustStageSize, ...
             }
 
             MakeCurrent();
@@ -93,7 +92,7 @@ namespace Sparrow.Core
             base.OnLoad(e);
             MakeCurrent();
 
-			SP.InitApp (Size.Width, Size.Height);
+            SP.InitApp(Size.Width, Size.Height);
 
             // Run the render loop
             Run();
@@ -103,7 +102,7 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-			SP.Step(e.Time);
+            SP.Step(e.Time);
 
             SwapBuffers();
         }

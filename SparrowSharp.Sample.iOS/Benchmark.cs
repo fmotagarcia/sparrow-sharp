@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
 using Sparrow.Display;
-using Sparrow;
-using OpenTK.Graphics.ES20;
-using Android.Graphics;
 using Sparrow.Textures;
-using Android.Opengl;
-using Android.App;
-using Android.Widget;
-using SparrowSharp.Display;
+using SparrowSharp.Samples.iOS;
+using System.Drawing;
 
-namespace Sparrow.Samples.Android
+namespace Sparrow.Samples.iOS
 {
     public class Benchmark : DisplayObjectContainer
     {
@@ -42,7 +36,10 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-                Image egg = new Image(textures[1]);
+                Quad egg = new Quad();
+                egg.Color = (uint)Color.FromArgb(r.Next(255), r.Next(255), r.Next(255)).ToArgb();
+
+//                Image egg = new Image(textures[1]);
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -57,8 +54,8 @@ namespace Sparrow.Samples.Android
             Console.WriteLine("benchmark complete!");
             Console.WriteLine("number of objects: " + _container.NumChildren);
 
-            Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
-                ToastLength.Long).Show();
+//            Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
+//                ToastLength.Long).Show();
 
             _started = false;
             _container.RemoveAllChildren();

@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -29,6 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,13 +46,9 @@
     <Compile Include="Core\Program.cs" />
     <Compile Include="Core\RenderState.cs" />
     <Compile Include="Core\RenderSupport.cs" />
-    <Compile Include="Core\SubTexture.cs" />
-    <Compile Include="Core\Texture.cs" />
-    <Compile Include="Core\TextureSmoothing.cs" />
     <Compile Include="Display\BlendMode.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
-    <Compile Include="Display\GLTexture.cs" />
     <Compile Include="Display\Image.cs" />
     <Compile Include="Display\Quad.cs" />
     <Compile Include="Display\QuadBatch.cs" />
@@ -72,5 +70,16 @@
     <Compile Include="Utils\VertexData.cs" />
     <Compile Include="SP.cs" />
     <Compile Include="Core\IViewController.cs" />
+    <Compile Include="Textures\GLTexture.cs" />
+    <Compile Include="Textures\ITextureProvider.cs" />
+    <Compile Include="Textures\SubTexture.cs" />
+    <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Textures\TextureFactory.cs" />
+    <Compile Include="Textures\TextureSmoothing.cs" />
+    <Compile Include="Utils\Juggler.cs" />
+    <Compile Include="Display\IAnimatable.cs" />
+    <Compile Include="Display\MovieClip.cs" />
+    <Compile Include="Textures\iOSTextureProvider.cs" />
+    <Compile Include="Core\EAGLView.cs" />
   </ItemGroup>
 </Project>
