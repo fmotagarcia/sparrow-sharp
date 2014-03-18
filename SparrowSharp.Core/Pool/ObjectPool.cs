@@ -7,7 +7,7 @@ namespace SparrowSharp.Pool
 	public delegate void ReturnObject<PooledObject> (PooledObject pooledObject);
 	public class ObjectPool
 	{
-		private ConcurrentBag<PooledObject> _objects;
+		private ConcurrentQueue<PooledObject> _objects;
 		private CreateObject<PooledObject> _createObject;
 		private int _initialSize;
 		private int _maxBuffer;
@@ -21,21 +21,21 @@ namespace SparrowSharp.Pool
 			_initialSize = initalSize;
 			_maxBuffer = maxBuffer;
 
-			_objects = new ConcurrentBag<PooledObject> ();
+			_objects = new ConcurrentQueue<PooledObject> ();
 			_createObject = createObject;
 
 			for (int i = 0; i < _initialSize; i++) {
 				PooledObject item = _createObject ();
 				item.Init (new ReturnObject<PooledObject> (PutObject));
 
-				_objects.Add (item);
+				_objects.Enqueue (item);
 			}
 		}
 
 		public PooledObject GetObject ()
 		{
 			PooledObject item;
-			if (!_objects.TryTake (out item)) {
+			if (!_objects.TryDequeue (out item)) {
 				item = _createObject ();
 			}
 			item.Init (new ReturnObject<PooledObject> (PutObject));
@@ -45,7 +45,7 @@ namespace SparrowSharp.Pool
 		void PutObject (PooledObject item)
 		{
 			if (_maxBuffer == 0 || _maxBuffer > 0 && _objects.Count < _maxBuffer) {
-				_objects.Add(item);
+				_objects.Enqueue(item);
 			}
 		}
 	}

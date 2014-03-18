@@ -3,7 +3,7 @@ using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Utils
 {
-	public class GLExtensions
+	public static class GLExtensions
 	{
 		public readonly static bool MapBufferSupported = false;
 
@@ -15,4 +15,3 @@ namespace Sparrow.Utils
 		}
 	}
 }
-
