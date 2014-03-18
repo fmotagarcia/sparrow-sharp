@@ -43,8 +43,8 @@ namespace Sparrow.ResourceLoading
 
 			// see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
 			// for how MonoGame does it
-			GLTexture texture = new GLTexture (name, bitmap.Width, bitmap.Height, false, 1.0f, false);
-			_resource = texture;
+			_resource = new GLTexture (name, bitmap.Width, bitmap.Height, false, 1.0f, false);
+
 			_isLoaded = true;
 			// Make a temporary copy of the event to avoid possibility of 
 			// a race condition if the last subscriber unsubscribes 

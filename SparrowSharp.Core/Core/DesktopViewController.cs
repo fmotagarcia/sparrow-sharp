@@ -5,20 +5,21 @@ using System;
 using OpenTK.Graphics;
 using SparrowSharp.Core;
 using Sparrow.Core;
-using ActiproSoftware.Products;
 using OpenTK.Input;
 using Sparrow;
 using System.Diagnostics;
 
-namespace SparrowSharp.Samples.Desktop.Core
+namespace Sparrow.Core
 {
-	public class SampleGameWindow : GameWindow, IViewController
+	public class DesktopViewController : GameWindow, IViewController
     {
+		public delegate void OnLoadedAction(int viewWidth,int viewHeight);
+		private OnLoadedAction _onLoadedAction;
 
-		Stopwatch stopwatch = new Stopwatch();
-
-        public SampleGameWindow() : base()
+		public DesktopViewController(OnLoadedAction onLoadedAction) : base()
         {
+			this._onLoadedAction = onLoadedAction;
+
 			Load += HandleLoad;
 
 			Resize += HandleResize;
@@ -26,22 +27,21 @@ namespace SparrowSharp.Samples.Desktop.Core
 			UpdateFrame += HandleUpdateFrame;
 
 			RenderFrame += HandleRenderFrame;
+
+			// Run the game at 60 updates per second
+			Run(60.0);
         }
 
 
-        void HandleRenderFrame (object sender, FrameEventArgs e)
+		private void HandleRenderFrame (object sender, FrameEventArgs e)
         {
-
-
 			//Console.WriteLine ("Number of draw calls: " + RenderSupport.NumDrawCalls);
-			stopwatch.Restart ();
-
 			SwapBuffers();
         }
 
 		private void HandleUpdateFrame (object sender, FrameEventArgs e)
         {
-			SP.Step(e.Time);
+			SparrowSharpApp.Step(e.Time);
 			// add game logic, input handling
 			if (Keyboard[Key.Escape])
 			{
@@ -52,7 +52,6 @@ namespace SparrowSharp.Samples.Desktop.Core
 		private void HandleResize (object sender, EventArgs e)
         {
 			GL.Viewport(0, 0, Width, Height);
-
         }
 
 		private void HandleLoad (object sender, EventArgs e)
@@ -64,16 +63,7 @@ namespace SparrowSharp.Samples.Desktop.Core
 			GL.Enable(EnableCap.Blend);
 
 			FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-
-			SP.Start(typeof (Sparrow.Samples.Desktop.SampleGame));
-			SP.InitApp (Size.Width, Size.Height);
-
-        }
-
-        public void Start()
-        {
-			// Run the game at 60 updates per second
-			Run(60.0);
+			_onLoadedAction(Size.Width, Size.Height);
         }
 
     }

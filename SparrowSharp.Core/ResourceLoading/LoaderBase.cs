@@ -18,7 +18,7 @@ namespace Sparrow.ResourceLoading
 			return this;
 		}
 
-		public LoaderBase LoadRemoteResource(Uri remoteURL) 
+		virtual public LoaderBase LoadRemoteResource(Uri remoteURL) 
 		{
 			_isLoaded = false;
 			WebClient webClient = new WebClient(); // TODO make sure that this does not block the UI thread
@@ -27,7 +27,7 @@ namespace Sparrow.ResourceLoading
 			return this;
 		}
 
-		public LoaderBase LoadLocalResource (string pathToFile) {
+		virtual public LoaderBase LoadLocalResource (string pathToFile) {
 			_isLoaded = false;
 			if (!File.Exists (pathToFile)) {
 				throw new Exception ("File does not exist:" + pathToFile);
