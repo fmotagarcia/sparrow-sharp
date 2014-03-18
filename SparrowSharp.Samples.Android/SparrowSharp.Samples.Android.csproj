@@ -56,7 +56,6 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="TrigonometryTest.cs" />
-    <Compile Include="BenchmarkResources.cs" />
     <Compile Include="SampleGame.cs" />
   </ItemGroup>
   <ItemGroup>

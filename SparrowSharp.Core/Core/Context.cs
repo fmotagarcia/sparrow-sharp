@@ -116,7 +116,7 @@ namespace Sparrow.Core
 			#if __WINDOWS__
 			if (GL.CheckFramebufferStatus(All.Framebuffer) != FramebufferErrorCode.FramebufferComplete);
 			#else
-			if (GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete);
+			if (GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
 			#endif
 			{
                 Debug.WriteLine("Failed to create framebuffer for render texture");

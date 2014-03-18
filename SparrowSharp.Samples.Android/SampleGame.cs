@@ -4,6 +4,7 @@ using Sparrow.Display;
 using Sparrow;
 using OpenTK.Graphics.ES20;
 using Sparrow.Textures;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Android
 {
@@ -37,11 +38,12 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             List<Image> images = new List<Image>();
 
-			Texture tex = TextureFactory.CreateTexture ((uint) BenchmarkResources.Sparrow);
+			TextureLoader starRes = new TextureLoader ();
+			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
 
             for (int i = 0; i < 100; i++)
             {
-                Image img = new Image(tex);
+				Image img = new Image(starRes.GetResource());
                 AddChild(img);
                 //img.Color = 0xFFFFFE;
                 //img.Alpha = 0.98f;

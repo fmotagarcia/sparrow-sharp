@@ -5,6 +5,9 @@ using OpenTK.Graphics;
 using OpenTK.Platform.Android;
 using Android.Util;
 using SparrowSharp.Core;
+using Android.OS;
+using Sparrow.Textures;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Core
 {
@@ -14,25 +17,23 @@ namespace Sparrow.Core
 
         private OnLoadedAction _onLoadedAction;
         private bool _contextWasLost = false;
+        public static Android.Content.Context AndroidContext;
 
         public AndroidViewController(Android.Content.Context context, IAttributeSet attrs) : base(context, attrs)
         {
-            Setup();
-        }
-
-        public AndroidViewController(IntPtr handle, Android.Runtime.JniHandleOwnership transfer) : base(handle, transfer)
-        {
-            Setup();
+            Setup(context);
         }
 
         public AndroidViewController(Android.Content.Context context, OnLoadedAction onLoadedAction) : base(context)
         {
             this._onLoadedAction = onLoadedAction;
-            Setup();
+            Setup(context);
         }
 
-        public void Setup()
+        public void Setup(Android.Content.Context context)
         {
+            AndroidContext = context;
+            TextureLoader._context = context;
             RequestFocus();
             FocusableInTouchMode = true;
         }

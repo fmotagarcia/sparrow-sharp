@@ -85,16 +85,12 @@
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
-    <Compile Include="Textures\TextureFactory.cs" />
-    <Compile Include="Textures\ITextureProvider.cs" />
-    <Compile Include="Textures\AndroidTextureProvider.cs" />
     <Compile Include="Core\AndroidViewController.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
-    <Compile Include="ResourceLoading\ResourceType.cs" />
-    <Compile Include="ResourceLoading\Resource.cs" />
-    <Compile Include="ResourceLoading\AndroidResource.cs" />
     <Compile Include="SparrowSharpApp.cs" />
+    <Compile Include="ResourceLoading\LoaderBase.cs" />
+    <Compile Include="ResourceLoading\AndroidTextureLoader.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

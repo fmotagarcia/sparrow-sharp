@@ -8,7 +8,6 @@ using System;
 using Sparrow.Utils;
 using SparrowSharp.Samples.Android;
 using Sparrow.Textures;
-using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Android
 {
@@ -21,32 +20,13 @@ namespace Sparrow.Samples.Android
     public class MainActivity : Activity
     {
         AndroidViewController sparrowView;
-        //AndroidSurfaceView sparrowView;
-        public static global::Android.Content.Context ContextRef;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            ContextRef = this.BaseContext;
-            AndroidResource._context = BaseContext;
-            RegisterResources();
 
-            sparrowView = new AndroidViewController(this.ApplicationContext, (width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
+            sparrowView = new AndroidViewController(this.BaseContext, (width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
             SetContentView(sparrowView);
-            ;
-
-            //TrigonometryTest test = new TrigonometryTest ();
-            //string result = test.TestLUTAccuracy ();
-            //Console.WriteLine (result);
-        }
-
-        private void RegisterResources()
-        {
-            AndroidTextureProvider provider = new AndroidTextureProvider(BaseContext);
-            provider.RegisterResource((uint)BenchmarkResources.Star, SparrowSharp.Samples.Android.Resource.Drawable.star);
-            provider.RegisterResource((uint)BenchmarkResources.Sparrow, SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
-
-            TextureFactory.Provider = provider;
         }
 
         protected override void OnPause()
