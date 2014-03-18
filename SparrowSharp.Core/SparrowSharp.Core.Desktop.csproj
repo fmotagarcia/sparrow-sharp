@@ -39,6 +39,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -80,9 +81,10 @@
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
-    <Compile Include="Textures\TextureFactory.cs" />
     <Compile Include="SparrowSharpApp.cs" />
     <Compile Include="ResourceLoading\LoaderBase.cs" />
+    <Compile Include="Core\DesktopViewController.cs" />
+    <Compile Include="ResourceLoading\DesktopTextureLoader.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

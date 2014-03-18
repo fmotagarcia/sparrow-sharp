@@ -2,10 +2,11 @@ using System;
 using Sparrow.Display;
 using Sparrow.Textures;
 using SparrowSharp.Samples.Desktop;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.Desktop
 {
-	public class SampleGame : DisplayObjectContainer
+	public class Benchmark : Sprite
 	{
 	    readonly Texture _texture;
 	    readonly Sprite _container;
@@ -15,10 +16,11 @@ namespace Sparrow.Samples.Desktop
 		int _failCount = 0;
 		int _waitFrames = 0;
 
-		public SampleGame ()
+		public Benchmark ()
 		{
-			_texture = TextureFactory.CreateTexture ((uint)DesktopResources.Sparrow);
-
+			TextureLoader loader = new TextureLoader ();
+			loader.LoadLocalResource ("../../benchmark_object.png");
+			_texture = loader.GetResource ();
 			// the container will hold all test objects
 			_container = new Sprite ();
 			AddChild (_container);

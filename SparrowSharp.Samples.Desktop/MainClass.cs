@@ -1,6 +1,8 @@
 ﻿using System;
-using SparrowSharp.Samples.Desktop.Core;
 using Sparrow.Textures;
+using Sparrow.Core;
+using Sparrow.Samples.Desktop;
+using Sparrow;
 
 namespace SparrowSharp.Samples.Desktop
 {
@@ -9,17 +11,7 @@ namespace SparrowSharp.Samples.Desktop
 		[STAThread]
 		public static void Main()
 		{
-			RegisterResources ();
-
-			SampleGameWindow game = new SampleGameWindow ();
-			game.Start ();
-		}
-
-		private static void RegisterResources() {
-			DesktopTextureProvider provider = new DesktopTextureProvider ();
-			provider.RegisterResource((uint) DesktopResources.Sparrow, "benchmark_object.png");
-
-			TextureFactory.Provider = provider;
+			new DesktopViewController ((width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
 		}
 	}
 }
