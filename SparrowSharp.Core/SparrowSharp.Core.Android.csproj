@@ -93,7 +93,12 @@
     <Compile Include="ResourceLoading\AndroidTextureLoader.cs" />
     <Compile Include="ResourceLoading\ITextureLoader.cs" />
     <Compile Include="ResourceLoading\NewAndroidTextureLoader.cs" />
+    <Compile Include="Pool\ObjectPool.cs" />
+    <Compile Include="Pool\PooledObject.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Pool\" />
+  </ItemGroup>
 </Project>
