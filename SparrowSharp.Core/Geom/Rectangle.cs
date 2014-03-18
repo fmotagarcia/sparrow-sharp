@@ -51,7 +51,7 @@ namespace Sparrow.Geom
 		}
 
 		public Point TopLeft {
-			get { return new Point (_x, _y);}
+			get { return Point.Create (_x, _y);}
 			set { 
 				_x = value.X;
 				_y = value.Y;
@@ -59,7 +59,7 @@ namespace Sparrow.Geom
 		}
 
 		public Point BottomRight {
-			get { return new Point (_x + _width, _y + _height);}
+			get { return Point.Create (_x + _width, _y + _height);}
 			set { 
 				Right = value.X;
 				Bottom = value.Y;
@@ -67,7 +67,7 @@ namespace Sparrow.Geom
 		}
 
 		public Point Size {
-			get { return new Point (_width, _height);}
+			get { return Point.Create (_width, _height);}
 			set {
 				_width = value.X;
 				_height = value.Y;

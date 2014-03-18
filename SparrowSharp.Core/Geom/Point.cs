@@ -1,38 +1,55 @@
 using System;
 using Sparrow.Utils;
+using SparrowSharp.Pool;
 
 namespace Sparrow.Geom
 {
-	public class Point
+	public class Point : PooledObject
 	{
+		private static readonly ObjectPool _pool = new ObjectPool (new CreateObject<PooledObject> (Init), 1000);
+
+		public static Point Create (float x = 0.0f, float y = 0.0f)
+		{
+			Point point = (Point)_pool.GetObject ();
+			point.X = x;
+			point.Y = y;
+
+			return point;
+		}
+
+		private static Point Init ()
+		{
+			return new Point ();
+		}
+
 		private float _x;
 		private float _y;
 
 		public float X {
-			get { return _x;}
-			set { _x = value;}
+			get { return _x; }
+			set { _x = value; }
 		}
 
 		public float Y {
-			get { return _y;}
-			set { _y = value;}
+			get { return _y; }
+			set { _y = value; }
 		}
 
 		public float Length {
 			get {
-				return (float) Math.Sqrt (Math.Pow (_x, 2.0f) +  Math.Pow (_y, 2.0f));
+				return (float)Math.Sqrt (Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
 			}
 		}
 
 		public float SquaredLength {
 			get {
-				return (float) (Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
+				return (float)(Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
 			}
 		}
 
 		public float Angle {
 			get {
-				return (float) Math.Atan2 (_y, _x);
+				return (float)Math.Atan2 (_y, _x);
 			}
 		}
 
@@ -42,7 +59,7 @@ namespace Sparrow.Geom
 			}
 		}
 
-		public Point (float x = 0.0f, float y = 0.0f)
+		private Point (float x = 0.0f, float y = 0.0f)
 		{
 			_x = x;
 			_y = y;
@@ -50,29 +67,29 @@ namespace Sparrow.Geom
 
 		public Point Invert ()
 		{
-			return new Point (-_x, -_y);
+			return Point.Create (-_x, -_y);
 		}
 
 		public Point AddPoint (Point point)
 		{
-			return new Point (_x + point.X, _y + point.Y);
+			return Point.Create (_x + point.X, _y + point.Y);
 		}
 
 		public Point SubtractPoint (Point point)
 		{
-			return new Point (_x - point.X, _y - point.Y);
+			return Point.Create (_x - point.X, _y - point.Y);
 		}
 
 		public Point ScaleBy (float scalar)
 		{
-			return new Point (_x * scalar, _y * scalar);
+			return Point.Create (_x * scalar, _y * scalar);
 		}
 
 		public Point RotateBy (float angle)
 		{
-			float sin = NumberUtil.FastSin(angle);
-			float cos = NumberUtil.FastCos(angle);
-			return new Point (_x * cos - _y * sin, _x * sin + _y * cos);
+			float sin = NumberUtil.FastSin (angle);
+			float cos = NumberUtil.FastCos (angle);
+			return Point.Create (_x * cos - _y * sin, _x * sin + _y * cos);
 		}
 
 		public Point Normalize ()
@@ -82,7 +99,7 @@ namespace Sparrow.Geom
 			}
 
 			float inverseLength = 1 / Length;
-			return new Point (_x * inverseLength, _y * inverseLength);
+			return Point.Create (_x * inverseLength, _y * inverseLength);
 
 		}
 

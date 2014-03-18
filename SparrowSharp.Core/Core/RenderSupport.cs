@@ -85,8 +85,8 @@ namespace Sparrow.Core
         //        }
         public RenderSupport()
         {
-            _projectionMatrix = new Matrix();
-            _mvpMatrix = new Matrix();
+			_projectionMatrix = Matrix.Create();
+			_mvpMatrix = Matrix.Create();
 
             _stateStack = new List<RenderState>();
             _stateStack.Add(new RenderState());

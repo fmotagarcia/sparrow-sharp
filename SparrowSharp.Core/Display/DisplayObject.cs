@@ -393,7 +393,7 @@ namespace Sparrow.Display
 			_scaleY = 1.0f;
 			Visible = true;
 			Touchable = true;
-			_transformationMatrix = new Matrix ();
+			_transformationMatrix = Matrix.Create ();
 			_orientationChanged = false;
 			BlendMode = Sparrow.Display.BlendMode.AUTO;
 		}
@@ -458,18 +458,18 @@ namespace Sparrow.Display
 			Matrix targetMatrix;
 
 			if (targetSpace == this) {
-				Matrix identity = new Matrix ();
+				Matrix identity = Matrix.Create();
 				identity.Identity ();
 
 				return identity;
 			} else if (targetSpace == _parent || (targetSpace == null && _parent == null)) {
-				Matrix transformationMatrix = new Matrix ();
+				Matrix transformationMatrix = Matrix.Create ();
 				transformationMatrix.CopyFromMatrix (TransformationMatrix);
 				return transformationMatrix;
 			} else if (targetSpace == null || targetSpace == this.Base) {
 				// targetSpace 'null' represents the target coordinate of the base object.
 				// -> move up from this to base
-				selfMatrix = new Matrix ();
+				selfMatrix = Matrix.Create ();
 				selfMatrix.Identity ();
 				currentObject = this;
 				while (currentObject != targetSpace) {
@@ -478,7 +478,7 @@ namespace Sparrow.Display
 				}        
 				return selfMatrix; 
 			} else if (targetSpace.Parent == this) {
-				targetMatrix = new Matrix ();
+				targetMatrix = Matrix.Create ();
 				targetMatrix.CopyFromMatrix (_transformationMatrix);
 				targetMatrix.Invert ();
 
@@ -513,7 +513,7 @@ namespace Sparrow.Display
 			}
 
 			// 2.: Move up from this to common parent
-			selfMatrix = new Matrix ();
+			selfMatrix = Matrix.Create();
 			selfMatrix.Identity ();
 			currentObject = this;    
 			while (currentObject != commonParent) {
@@ -522,7 +522,7 @@ namespace Sparrow.Display
 			}
 
 			// 3.: Now move up from target until we reach the common parent
-			targetMatrix = new Matrix ();
+			targetMatrix = Matrix.Create();
 			targetMatrix.Identity ();
 			currentObject = targetSpace;
 			while (currentObject != null && currentObject != commonParent) {

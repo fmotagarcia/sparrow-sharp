@@ -110,7 +110,7 @@ namespace Sparrow.Core
 
         public BaseEffect()
         {
-            _mvpMatrix = new Matrix();
+			_mvpMatrix = Matrix.Create();
             _premultipliedAlpha = false;
             _useTinting = true;
             _alpha = 1.0f;

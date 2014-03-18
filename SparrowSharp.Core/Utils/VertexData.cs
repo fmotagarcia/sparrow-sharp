@@ -103,7 +103,7 @@ namespace Sparrow.Utils
 
 			Vector2 position = _vertices [index].Position;
 
-			return new Point (position.X, position.Y);
+			return Point.Create (position.X, position.Y);
 		}
 
 		public void SetPosition (Point position, int atIndex)
@@ -131,7 +131,7 @@ namespace Sparrow.Utils
 			}
 
 			Vector2 texCoords = _vertices [index].TexCoords;
-			return new Point (texCoords.X, texCoords.Y);
+			return Point.Create (texCoords.X, texCoords.Y);
 		}
 
 		public void SetTexCoords (Point texCoords, int atIndex)

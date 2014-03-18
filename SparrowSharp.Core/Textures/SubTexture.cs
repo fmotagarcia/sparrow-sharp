@@ -91,7 +91,7 @@ namespace Sparrow.Textures
 
             _parent = texture;
             _frame = frame.Copy();
-            _transformationMatrix = new Matrix();
+			_transformationMatrix = Matrix.Create();
             _width = rotated ? region.Height : region.Width;
             _height = rotated ? region.Width : region.Height;
 
@@ -117,7 +117,7 @@ namespace Sparrow.Textures
         override public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
         {
             Texture texture = this;
-            Matrix matrix = new Matrix();
+			Matrix matrix = Matrix.Create();
 
             do
             {

@@ -263,7 +263,7 @@ namespace Sparrow.Display
 				quadBatches = new List<QuadBatch> ();
 			}
 
-			Matrix identity = new Matrix ();
+			Matrix identity = Matrix.Create ();
 			identity.Identity ();
 
 			Compile (displayObject, quadBatches, -1, identity, 1.0f, Sparrow.Display.BlendMode.AUTO);
@@ -295,7 +295,7 @@ namespace Sparrow.Display
 			}
 
 			if (container != null) {
-				Matrix childMatrix = new Matrix ();
+				Matrix childMatrix = Matrix.Create ();
 				childMatrix.Identity ();
 				int numChildren = container.NumChildren;
 				for (int i = 0; i < numChildren; i++) {
@@ -429,45 +429,52 @@ namespace Sparrow.Display
 			}
 
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
-//			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
 
-			GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, All.StaticDraw);
-			IntPtr vertexBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
-			unsafe {
-				int numVertices = _vertexData.Vertices.Length;
-				Vertex[] vertices = _vertexData.Vertices;
+			if (GLExtensions.MapBufferSupported) {
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, All.StaticDraw);
+				IntPtr vertexBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
 
-				float* ptr = (float*)vertexBuffer.ToPointer ();
-				for (int i = 0; i < numVertices; i++) {
-					Vertex vertex = vertices [i];
-					*ptr++ = vertex.Position.X;
-					*ptr++ = vertex.Position.Y;
-					*ptr++ = vertex.TexCoords.X;
-					*ptr++ = vertex.TexCoords.Y;
-				}
-			}
-			GL.Oes.UnmapBuffer (All.ArrayBuffer);
-
-			if (_tinted || alpha != 1.0f) {
-				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
-//				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
-
-				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), IntPtr.Zero, All.StaticDraw);
-				IntPtr colorBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
 				unsafe {
 					int numVertices = _vertexData.Vertices.Length;
-					VertexColor[] colors = _vertexData.VertexColors;
+					Vertex[] vertices = _vertexData.Vertices;
 
-					byte* ptr = (byte*)colorBuffer.ToPointer ();
+					float* ptr = (float*)vertexBuffer.ToPointer ();
 					for (int i = 0; i < numVertices; i++) {
-						VertexColor color = colors [i];
-						*ptr++ = color.R;
-						*ptr++ = color.G;
-						*ptr++ = color.B;
-						*ptr++ = color.A;
+						Vertex vertex = vertices [i];
+						*ptr++ = vertex.Position.X;
+						*ptr++ = vertex.Position.Y;
+						*ptr++ = vertex.TexCoords.X;
+						*ptr++ = vertex.TexCoords.Y;
 					}
 				}
 				GL.Oes.UnmapBuffer (All.ArrayBuffer);
+			} else {
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+			}
+
+			if (_tinted || alpha != 1.0f) {
+				GL.BindBuffer (All.ArrayBuffer, _vertexColorsBufferName);
+
+				if (GLExtensions.MapBufferSupported) {
+					GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), IntPtr.Zero, All.StaticDraw);
+					IntPtr colorBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
+					unsafe {
+						int numVertices = _vertexData.Vertices.Length;
+						VertexColor[] colors = _vertexData.VertexColors;
+
+						byte* ptr = (byte*)colorBuffer.ToPointer ();
+						for (int i = 0; i < numVertices; i++) {
+							VertexColor color = colors [i];
+							*ptr++ = color.R;
+							*ptr++ = color.G;
+							*ptr++ = color.B;
+							*ptr++ = color.A;
+						}
+					}
+					GL.Oes.UnmapBuffer (All.ArrayBuffer);
+				} else {
+					GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
+				}
 			}
 
 			_syncRequired = false;

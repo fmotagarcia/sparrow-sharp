@@ -95,6 +95,7 @@
     <Compile Include="ResourceLoading\NewAndroidTextureLoader.cs" />
     <Compile Include="Pool\ObjectPool.cs" />
     <Compile Include="Pool\PooledObject.cs" />
+    <Compile Include="Utils\GLExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

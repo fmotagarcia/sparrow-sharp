@@ -1,11 +1,32 @@
 using System;
 using Sparrow.Utils;
 using OpenTK;
+using SparrowSharp.Pool;
 
 namespace Sparrow.Geom
 {
-	public class Matrix
+	public class Matrix : PooledObject
 	{
+		private static readonly ObjectPool _pool = new ObjectPool (new CreateObject<PooledObject> (Init), 1000);
+
+		public static Matrix Create (float a = 1.0f, float b = 0.0f, float c = 0.0f, float d = 1.0f, float tx = 0.0f, float ty = 0.0f)
+		{
+			Matrix matrix = (Matrix)_pool.GetObject ();
+			matrix.A = a;
+			matrix.B = b;
+			matrix.C = c;
+			matrix.D = d;
+			matrix.Tx = tx;
+			matrix.Ty = ty;
+
+			return matrix;
+		}
+
+		private static Matrix Init ()
+		{
+			return new Matrix ();
+		}
+
 		private Matrix4 _matrix4 = new Matrix4 () {
 			Row0 = new OpenTK.Vector4 (1, 0, 0, 0),
 			Row1 = new OpenTK.Vector4 (0, 1, 0, 0),
@@ -43,7 +64,7 @@ namespace Sparrow.Geom
 			get { return (float)Math.Atan (B / A); }
 		}
 
-		public Matrix (float a = 1.0f, float b = 0.0f, float c = 0.0f, float d = 1.0f, float tx = 0.0f, float ty = 0.0f)
+		private Matrix (float a = 1.0f, float b = 0.0f, float c = 0.0f, float d = 1.0f, float tx = 0.0f, float ty = 0.0f)
 		{
 			A = a;
 			B = b;
@@ -166,12 +187,12 @@ namespace Sparrow.Geom
 
 		public Point TransformPoint (Point point)
 		{
-			return new Point (A * point.X + C * point.Y + Tx, B * point.X + D * point.Y + Ty);
+			return Point.Create (A * point.X + C * point.Y + Tx, B * point.X + D * point.Y + Ty);
 		}
 
 		public Point TransformPoint (float x, float y)
 		{
-			return new Point (A * x + C * y + Tx, B * x + D * y + Ty);
+			return Point.Create  (A * x + C * y + Tx, B * x + D * y + Ty);
 		}
 
 		public void Invert ()

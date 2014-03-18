@@ -11,10 +11,9 @@ namespace SparrowSharp.Pool
 			_returnObject = returnObject;
 		}
 
-		~PooledObject()
+		~PooledObject ()
 		{
 			if (_returnObject != null) {
-				Console.WriteLine ("finalize");
 				_returnObject (this);
 				GC.ReRegisterForFinalize (this);
 			}
