@@ -1,7 +1,7 @@
 ﻿using System;
 using Sparrow.Textures;
 
-namespace SparrowSharp.Core.Android
+namespace Sparrow.ResourceLoading
 {
 	public interface ITextureLoader
 	{
@@ -15,17 +15,21 @@ namespace SparrowSharp.Core.Android
 		// we should use these. Plus I think they are faster than manually downloading 
 		// and passing the bytearray to some decoder.
 
-		void LoadRemoteResource (string remoteURL);
-
-		GLTexture LoadLocalResource (string pathToFile);
-
-		void LoadLocalResourceAsync (string pathToFile);
-
 		GLTexture GetResource ();
 
 		bool IsLoaded { get; }
 
 		event EventHandler<GLTexture> ResourceLoaded;
+
+		// these are not needed for the interface, just serve as a safety that the 
+		// implementations have the same base API on each platform.
+		void LoadRemoteImage (string remoteURL);
+
+		GLTexture LoadLocalImage (string pathToFile);
+
+		void LoadLocalImageAsync (string pathToFile);
+
+
 	}
 }
 
