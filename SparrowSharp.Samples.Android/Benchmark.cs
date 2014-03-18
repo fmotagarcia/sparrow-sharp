@@ -26,18 +26,16 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-            AndroidTextureLoader starRes = new AndroidTextureLoader();
-            starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
-            AndroidTextureLoader birdRes = new AndroidTextureLoader();
-            birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
-            textures = new Texture[] { birdRes.GetResource(), starRes.GetResource() };
+			GLTexture star = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
+			GLTexture bird = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
+			textures = new Texture[] { bird, star };
 
-            // the container will hold all test objects
-            _container = new Sprite();
-            AddChild(_container);
+			// the container will hold all test objects
+			_container = new Sprite();
+			AddChild(_container);
 
-            EnterFrame += EnterFrameHandler;
-            AddedToStage += AddedToStageHandler;
+			EnterFrame += EnterFrameHandler;
+			AddedToStage += AddedToStageHandler;
         }
 
         private void AddTestObjects(int numObjects)
@@ -47,7 +45,7 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-                Image egg = new Image(textures[0]);
+				Image egg = new Image(textures[1]);
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
