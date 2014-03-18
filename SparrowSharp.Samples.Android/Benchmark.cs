@@ -26,9 +26,9 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-            TextureLoader starRes = new TextureLoader();
+            AndroidTextureLoader starRes = new AndroidTextureLoader();
             starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
-            TextureLoader birdRes = new TextureLoader();
+            AndroidTextureLoader birdRes = new AndroidTextureLoader();
             birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
             textures = new Texture[] { birdRes.GetResource(), starRes.GetResource() };
 

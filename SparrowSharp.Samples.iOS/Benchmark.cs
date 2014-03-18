@@ -1,12 +1,11 @@
 using System;
 using Sparrow.Display;
 using Sparrow.Textures;
-using SparrowSharp.Samples.iOS;
-using System.Drawing;
+using Sparrow.ResourceLoading;
 
 namespace Sparrow.Samples.iOS
 {
-    public class Benchmark : DisplayObjectContainer
+    public class Benchmark : Sprite
     {
         private Sprite _container;
         private int _frameCount = 0;
@@ -18,9 +17,10 @@ namespace Sparrow.Samples.iOS
 
         public Benchmark()
         {
-            Texture _star = TextureFactory.CreateTexture((uint)BenchmarkResources.Star);
-            Texture _sparrow = TextureFactory.CreateTexture((uint)BenchmarkResources.Sparrow);
-            textures = new Texture[] { _star, _sparrow };
+            iOSTextureLoader starRes = new iOSTextureLoader();
+            starRes.LoadAndroidResource(0);
+            textures = new Texture[] { starRes.GetResource() };
+
             // the container will hold all test objects
             _container = new Sprite();
             AddChild(_container);
@@ -37,9 +37,7 @@ namespace Sparrow.Samples.iOS
             for (int i = 0; i < numObjects; ++i)
             {   
                 Quad egg = new Quad();
-                egg.Color = (uint)Color.FromArgb(r.Next(255), r.Next(255), r.Next(255)).ToArgb();
-
-//                Image egg = new Image(textures[1]);
+                egg.Color = 0xFFFF00;
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -54,8 +52,7 @@ namespace Sparrow.Samples.iOS
             Console.WriteLine("benchmark complete!");
             Console.WriteLine("number of objects: " + _container.NumChildren);
 
-//            Toast.MakeText(MainActivity.ContextRef.ApplicationContext, "number of objects: " + _container.NumChildren,
-//                ToastLength.Long).Show();
+//            Toast.MakeText(AndroidViewController.AndroidContext, "number of objects: " + _container.NumChildren, ToastLength.Long).Show();
 
             _started = false;
             _container.RemoveAllChildren();

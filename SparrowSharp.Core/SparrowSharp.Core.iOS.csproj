@@ -70,16 +70,18 @@
     <Compile Include="Utils\VertexData.cs" />
     <Compile Include="Core\IViewController.cs" />
     <Compile Include="Textures\GLTexture.cs" />
-    <Compile Include="Textures\ITextureProvider.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
-    <Compile Include="Textures\TextureFactory.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
     <Compile Include="Utils\Juggler.cs" />
     <Compile Include="Display\IAnimatable.cs" />
     <Compile Include="Display\MovieClip.cs" />
-    <Compile Include="Textures\iOSTextureProvider.cs" />
     <Compile Include="Core\EAGLView.cs" />
     <Compile Include="SparrowSharpApp.cs" />
+    <Compile Include="ResourceLoading\iOSTextureLoader.cs" />
+    <Compile Include="ResourceLoading\LoaderBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ResourceLoading\" />
   </ItemGroup>
 </Project>

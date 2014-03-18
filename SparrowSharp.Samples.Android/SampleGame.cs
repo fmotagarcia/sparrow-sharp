@@ -38,7 +38,7 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             List<Image> images = new List<Image>();
 
-			TextureLoader starRes = new TextureLoader ();
+			AndroidTextureLoader starRes = new AndroidTextureLoader ();
 			starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
 
             for (int i = 0; i < 100; i++)

@@ -33,7 +33,7 @@ namespace Sparrow.Core
         public void Setup(Android.Content.Context context)
         {
             AndroidContext = context;
-            TextureLoader._context = context;
+            AndroidTextureLoader._context = context;
             RequestFocus();
             FocusableInTouchMode = true;
         }

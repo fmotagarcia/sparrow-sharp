@@ -8,7 +8,7 @@
     <ProjectGuid>{49846257-890D-49D0-98D4-A315A55289ED}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SparrowSharp.Sample.iOS</RootNamespace>
+    <RootNamespace>SparrowSharp.Samples.iOS</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>SparrowSharpSampleiOS</AssemblyName>
   </PropertyGroup>
@@ -101,8 +101,6 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
-    <BundleResource Include="Shader.fsh" />
-    <BundleResource Include="Shader.vsh" />
     <BundleResource Include="Resources\benchmark_object.png" />
     <BundleResource Include="Resources\star.png" />
   </ItemGroup>
@@ -114,7 +112,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="OpenGLViewController.cs" />
-    <Compile Include="BenchmarkResources.cs" />
     <Compile Include="Benchmark.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

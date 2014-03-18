@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Deskto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Android", "Tests\Tests.Android.csproj", "{EE0AF766-1015-47E9-9EF5-50DAD0ECC094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Sample.iOS", "SparrowSharp.Sample.iOS\SparrowSharp.Sample.iOS.csproj", "{49846257-890D-49D0-98D4-A315A55289ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.iOS", "SparrowSharp.Samples.iOS\SparrowSharp.Samples.iOS.csproj", "{49846257-890D-49D0-98D4-A315A55289ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

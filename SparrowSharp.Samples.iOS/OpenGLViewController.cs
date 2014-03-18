@@ -1,28 +1,21 @@
 ﻿using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using Sparrow.Textures;
+using SparrowSharp.Core.iOS;
 using Sparrow;
 using Sparrow.Samples.iOS;
-using SparrowSharp.Core.iOS;
-using SparrowSharp.Samples.iOS;
 
 namespace SparrowSharp.Sample.iOS
 {
     [Register("OpenGLViewController")]
     public partial class OpenGLViewController : UIViewController
     {
+        public delegate void OnLoadedAction(int viewWidth,int viewHeight);
+
+        private OnLoadedAction _onLoadedAction;
+
         public OpenGLViewController(string nibName, NSBundle bundle) : base(nibName, bundle)
         {
-            RegisterResources();
-            SP.Start(new Benchmark());
-        }
-
-        private void RegisterResources()
-        {
-            iOSTextureProvider provider = new iOSTextureProvider();
-            provider.RegisterResource((uint)BenchmarkResources.Sparrow, 0);
-
-            TextureFactory.Provider = provider;
+            _onLoadedAction = (width, height) => SparrowSharpApp.Start(width, height, new Benchmark());
         }
 
         new EAGLView View { get { return (EAGLView)base.View; } }
@@ -30,6 +23,8 @@ namespace SparrowSharp.Sample.iOS
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
+            // todo: not the best place
+            _onLoadedAction((int)View.Bounds.Width, (int)View.Bounds.Height);
 
             NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.WillResignActiveNotification, a =>
             {
@@ -39,7 +34,9 @@ namespace SparrowSharp.Sample.iOS
             NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.DidBecomeActiveNotification, a =>
             {
                 if (IsViewLoaded && View.Window != null)
+                {
                     View.StartAnimating();
+                }
             }, this);
             NSNotificationCenter.DefaultCenter.AddObserver(UIApplication.WillTerminateNotification, a =>
             {

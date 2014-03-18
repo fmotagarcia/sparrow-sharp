@@ -9,16 +9,13 @@ using MonoTouch.CoreAnimation;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using MonoTouch.UIKit;
+using Sparrow;
 
 namespace SparrowSharp.Core.iOS
 {
     [Register("EAGLView")]
     public class EAGLView : iPhoneOSGameView
     {
-        public delegate void OnLoadedAction(int viewWidth,int viewHeight);
-
-        private OnLoadedAction _onLoadedAction;
-
         [Export("initWithCoder:")]
         public EAGLView(NSCoder coder) : base(coder)
         {
@@ -94,7 +91,7 @@ namespace SparrowSharp.Core.iOS
 
             IsAnimating = true;
 
-            _onLoadedAction(Size.Width, Size.Height);
+
         }
 
         public void StopAnimating()
@@ -121,7 +118,7 @@ namespace SparrowSharp.Core.iOS
             base.OnRenderFrame(e);
             MakeCurrent();
 			
-            SP.Step(e.Time);
+            SparrowSharpApp.Step(e.Time);
 
             SwapBuffers();
         }
