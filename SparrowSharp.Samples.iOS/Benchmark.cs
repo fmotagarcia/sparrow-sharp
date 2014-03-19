@@ -17,9 +17,9 @@ namespace Sparrow.Samples.iOS
 
         public Benchmark()
         {
-            iOSTextureLoader starRes = new iOSTextureLoader();
-            starRes.LoadAndroidResource(0);
-            textures = new Texture[] { starRes.GetResource() };
+            TextureLoader starRes = new TextureLoader();
+            starRes.LoadLocalImage("star.png");
+            textures = new Texture[] { starRes.Texture };
 
             // the container will hold all test objects
             _container = new Sprite();
