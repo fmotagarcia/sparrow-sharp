@@ -19,12 +19,12 @@ namespace Sparrow.ResourceLoading
 		{
 			return new TextureLoader ().LoadLocalImageAsync (pathToFile);
 		}
-
+#if __ANDROID__
 		public static GLTexture LoadAndroidResource(int AndroidResourceId)
 		{
 			return new TextureLoader ().LoadAndroidResource (AndroidResourceId);
 		}
-
+#endif
 
 	}
 }

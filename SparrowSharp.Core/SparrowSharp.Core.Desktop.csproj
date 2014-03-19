@@ -82,9 +82,12 @@
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
     <Compile Include="SparrowSharpApp.cs" />
-    <Compile Include="ResourceLoading\LoaderBase.cs" />
     <Compile Include="Core\DesktopViewController.cs" />
     <Compile Include="ResourceLoading\DesktopTextureLoader.cs" />
+    <Compile Include="ResourceLoading\SimpleTextureLoader.cs" />
+    <Compile Include="Pool\ObjectPool.cs" />
+    <Compile Include="Pool\PooledObject.cs" />
+    <Compile Include="Utils\GLExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

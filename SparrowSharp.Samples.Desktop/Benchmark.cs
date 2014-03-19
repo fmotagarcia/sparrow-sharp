@@ -19,8 +19,7 @@ namespace Sparrow.Samples.Desktop
 		public Benchmark ()
 		{
 			TextureLoader loader = new TextureLoader ();
-			loader.LoadLocalResource ("../../benchmark_object.png");
-			_texture = loader.GetResource ();
+			_texture = loader.LoadLocalImage ("../../benchmark_object.png");
 			// the container will hold all test objects
 			_container = new Sprite ();
 			AddChild (_container);
