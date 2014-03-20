@@ -69,7 +69,6 @@ namespace Sparrow.Textures
 			}
 		}
 
-		// TODO this had a TextureFormat format parameter too, but it seems to be never used
 		/// Initializes a texture with the given properties. Width and height are expected pixel dimensions.
 		public GLTexture (uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha) 
 			: base () 
@@ -88,6 +87,61 @@ namespace Sparrow.Textures
 			_repeat = true; // force first update
 			Repeat = false;
 			Smoothing = TextureSmoothing.Bilinear;
+		}
+
+		public GLTexture (object imgData, TextureProperties properties) 
+			: base () 
+		{
+			uint glTexName;
+			bool compressed = properties.TextureFormat.Compressed;
+			GL.GenTextures (1, out glTexName);
+			GL.BindTexture(All.Texture2D, glTexName);
+			/* TODO
+			if (!compressed)
+			{
+				int levelWidth  = properties.Width;
+				int levelHeight = properties.Height;
+				unsigned char *levelData = (unsigned char *)imgData;
+
+				for (int level=0; level<=properties.numMipmaps; ++level)
+				{
+					int size = levelWidth * levelHeight * bitsPerPixel / 8;
+					glTexImage2D(GL_TEXTURE_2D, level, glTexFormat, levelWidth, levelHeight,
+						0, glTexFormat, glTexType, levelData);
+					levelData += size;
+					levelWidth  /= 2;
+					levelHeight /= 2;
+				}
+
+				if (properties.numMipmaps == 0 && properties.generateMipmaps)
+					glGenerateMipmap(GL_TEXTURE_2D);
+			}
+			else
+			{
+				int levelWidth  = properties.width;
+				int levelHeight = properties.height;
+				unsigned char *levelData = (unsigned char *)imgData;
+
+				for (int level=0; level<=properties.numMipmaps; ++level)
+				{
+					int size = MAX(32, levelWidth * levelHeight * bitsPerPixel / 8);
+					glCompressedTexImage2D(GL_TEXTURE_2D, level, glTexFormat,
+						levelWidth, levelHeight, 0, size, levelData);
+					levelData += size;
+					levelWidth  /= 2;
+					levelHeight /= 2;
+				}
+			}
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			BOOL containsMipmaps = properties.numMipmaps > 0 || (properties.generateMipmaps && !compressed);
+
+			return [self initWithName:glTexName format:properties.format
+				width:properties.width height:properties.height
+				containsMipmaps:containsMipmaps scale:properties.scale
+				premultipliedAlpha:properties.premultipliedAlpha];
+			*/
 		}
 
 

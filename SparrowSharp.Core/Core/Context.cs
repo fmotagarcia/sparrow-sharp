@@ -59,11 +59,12 @@ namespace Sparrow.Core
 
             set
             {
-                if (value != null)
-                {
-                    GL.Enable(All.ScissorTest);
-                    GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
-                }
+				if (value != null) {
+					GL.Enable (All.ScissorTest);
+					GL.Scissor ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+				} else {
+					GL.Disable (All.ScissorTest);
+				}
             }
         }
 
@@ -87,6 +88,7 @@ namespace Sparrow.Core
                 GL.Viewport(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
                 _renderTarget = value;
             }
+			get { return _renderTarget;}
         }
 
         public void ResetRenderTarget()

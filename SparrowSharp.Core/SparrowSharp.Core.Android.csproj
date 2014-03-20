@@ -94,10 +94,15 @@
     <Compile Include="Utils\GLExtensions.cs" />
     <Compile Include="ResourceLoading\AndroidTextureLoader.cs" />
     <Compile Include="ResourceLoading\SimpleTextureLoader.cs" />
+    <Compile Include="Filters\FragmentFilter.cs" />
+    <Compile Include="Filters\FragmentFilterMode.cs" />
+    <Compile Include="Textures\TextureProperties.cs" />
+    <Compile Include="Textures\TextureFormat.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Pool\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
 </Project>

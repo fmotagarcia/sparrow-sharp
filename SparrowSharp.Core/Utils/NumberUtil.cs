@@ -37,5 +37,19 @@ namespace Sparrow.Utils
 			return cosLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; //325.949 is 2048/2PI    
         }
 
+		public static int NextPowerOfTwo(int number)
+		{    
+			int result = 1; 
+			while (result < number) result *= 2;
+			return result;    
+		}
+
+		public static int NextPowerOfTwo(float number)
+		{    
+			int result = 1; 
+			while (result < number) result *= 2;
+			return result;    
+		}
+
 	}
 }

@@ -5,6 +5,7 @@ using Sparrow.Geom;
 using Sparrow.Display;
 using Sparrow.Utils;
 using OpenTK.Graphics.ES20;
+using Sparrow.Textures;
 
 namespace Sparrow.Core
 {
@@ -74,15 +75,17 @@ namespace Sparrow.Core
                 }
             }
         }
-        //        public Texture RenderTarget
-        //        {
-        //            get { return SP.Context.RenderTarget; }
-        //            set
-        //            {
-        //                ApplyClipRect();
-        //                SP.Context.RenderTarget = value;
-        //            }
-        //        }
+
+        public Texture RenderTarget
+        {
+			get { return SparrowSharpApp.Context.RenderTarget; }
+            set
+            {
+                ApplyClipRect();
+				SparrowSharpApp.Context.RenderTarget = value;
+            }
+        }
+
         public RenderSupport()
         {
 			_projectionMatrix = Matrix.Create();
