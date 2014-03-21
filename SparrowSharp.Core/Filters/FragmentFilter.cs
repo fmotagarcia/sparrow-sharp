@@ -9,7 +9,7 @@ using Sparrow;
 using OpenTK.Graphics.ES20;
 using OpenTK;
 
-namespace SparrowSharp.Core.Android
+namespace SparrowSharp.Filters
 {
 	public abstract class FragmentFilter
 	{
@@ -422,7 +422,6 @@ namespace SparrowSharp.Core.Android
 			int legalWidth = NumberUtil.NextPowerOfTwo (width * scale);
 			int legalHeight = NumberUtil.NextPowerOfTwo (height * scale);
 
-
 			TextureProperties texProps = new TextureProperties {
 				TextureFormat = TextureFormat.Rgba4444,
 				Scale  = scale,
@@ -433,7 +432,7 @@ namespace SparrowSharp.Core.Android
 				PremultipliedAlpha = true
 			};
 
-			return new GLTexture (null, texProps);
+			return new GLTexture (IntPtr.Zero, texProps);
 		}
 
 

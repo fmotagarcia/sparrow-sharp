@@ -73,6 +73,10 @@ namespace Sparrow.Textures
 		public GLTexture (uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha) 
 			: base () 
 		{
+			Init (name, width, height, hasMipMaps, scale, premultipliedAlpha);
+		}
+
+		private void Init(uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha) {
 			if (width <= 0.0f) throw new InvalidOperationException("invalid width");
 			if (height <= 0.0f) throw new InvalidOperationException("invalid height");
 			if (scale <= 0.0f) throw new InvalidOperationException("invalid scale");
@@ -89,66 +93,73 @@ namespace Sparrow.Textures
 			Smoothing = TextureSmoothing.Bilinear;
 		}
 
-		public GLTexture (object imgData, TextureProperties properties) 
+		/// Initializes an uncompressed texture with with raw pixel data and a set of properties.
+		/// Width and Height are expected pixel dimensions.
+		/// imgData is some kind of pointer
+		public GLTexture (IntPtr imgData, TextureProperties properties) 
 			: base () 
 		{
 			uint glTexName;
 			bool compressed = properties.TextureFormat.Compressed;
 			GL.GenTextures (1, out glTexName);
 			GL.BindTexture(All.Texture2D, glTexName);
-			/* TODO
+
 			if (!compressed)
 			{
 				int levelWidth  = properties.Width;
 				int levelHeight = properties.Height;
-				unsigned char *levelData = (unsigned char *)imgData;
 
-				for (int level=0; level<=properties.numMipmaps; ++level)
+				for (int level=0; level <= properties.NumMipmaps; ++level)
 				{
-					int size = levelWidth * levelHeight * bitsPerPixel / 8;
-					glTexImage2D(GL_TEXTURE_2D, level, glTexFormat, levelWidth, levelHeight,
-						0, glTexFormat, glTexType, levelData);
-					levelData += size;
+					int size = levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8;
+					GL.TexImage2D (
+						All.Texture2D, 
+						level, 
+						(int)properties.TextureFormat.Format, 
+						levelWidth, 
+						levelHeight, 
+						0, 
+						properties.TextureFormat.Format,
+						properties.TextureFormat.TexType,
+						imgData);
+					imgData += size;
 					levelWidth  /= 2;
 					levelHeight /= 2;
 				}
 
-				if (properties.numMipmaps == 0 && properties.generateMipmaps)
-					glGenerateMipmap(GL_TEXTURE_2D);
+				if (properties.NumMipmaps == 0 && properties.GenerateMipmaps) {
+					GL.GenerateMipmap (All.Texture2D);
+				}
 			}
 			else
 			{
-				int levelWidth  = properties.width;
-				int levelHeight = properties.height;
-				unsigned char *levelData = (unsigned char *)imgData;
+				int levelWidth  = properties.Width;
+				int levelHeight = properties.Height;
 
-				for (int level=0; level<=properties.numMipmaps; ++level)
+				for (int level=0; level <= properties.NumMipmaps; ++level)
 				{
-					int size = MAX(32, levelWidth * levelHeight * bitsPerPixel / 8);
-					glCompressedTexImage2D(GL_TEXTURE_2D, level, glTexFormat,
-						levelWidth, levelHeight, 0, size, levelData);
-					levelData += size;
+					int size = Math.Max(32, levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8);
+					GL.CompressedTexImage2D (
+						All.Texture2D,
+						level, 
+						properties.TextureFormat.Format,
+						levelWidth, 
+						levelHeight,
+						0,
+						size,
+						imgData);
+					imgData += size;
 					levelWidth  /= 2;
 					levelHeight /= 2;
 				}
 			}
 
-			glBindTexture(GL_TEXTURE_2D, 0);
+			GL.BindTexture (All.Texture2D, 0);
 
-			BOOL containsMipmaps = properties.numMipmaps > 0 || (properties.generateMipmaps && !compressed);
+			bool containsMipmaps = properties.NumMipmaps > 0 || (properties.GenerateMipmaps && !compressed);
 
-			return [self initWithName:glTexName format:properties.format
-				width:properties.width height:properties.height
-				containsMipmaps:containsMipmaps scale:properties.scale
-				premultipliedAlpha:properties.premultipliedAlpha];
-			*/
+			Init(glTexName, properties.Width, properties.Height, containsMipmaps, properties.Scale, properties.PremultipliedAlpha);
 		}
-
-
-		/// Initializes an uncompressed texture with with raw pixel data and a set of properties.
-		/// Width and height are expected pixel dimensions.
-		//public GLTexture (byte[] imgData, TextureProperties properties) {
-		//}
 
 		/// Initializes a PVR texture with with a certain scale factor.
 		//public GLTexture (PVRData pvrData, float scale) {

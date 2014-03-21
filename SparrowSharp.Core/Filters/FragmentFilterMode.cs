@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Core.Android
+namespace SparrowSharp.Filters
 {
 	public enum FragmentFilterMode
 	{
