@@ -101,6 +101,7 @@
     <Compile Include="Filters\BlurFilter.cs" />
     <Compile Include="Filters\BlurProgram.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
+    <Compile Include="Filters\EmptyFilter.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

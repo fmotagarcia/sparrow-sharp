@@ -8,6 +8,7 @@ using Sparrow.Core;
 using Sparrow;
 using OpenTK.Graphics.ES20;
 using OpenTK;
+using System.Text;
 
 namespace SparrowSharp.Filters
 {
@@ -145,25 +146,27 @@ namespace SparrowSharp.Filters
 
 		public static String StandardVertexShader()
 		{
-			return
-				@"attribute vec4 aPosition; \n" + 
-				@"attribute lowp vec2 aTexCoords; \n" + 
-				@"uniform mat4 uMvpMatrix; \n" +
-				@"varying lowp vec2 vTexCoords; \n" +
-				@"void main() { \n" +
-				@"  gl_Position = uMvpMatrix * aPosition; \n" +
-				@"  vTexCoords  = aTexCoords; \n" +
-			    @"} \n";
+			StringBuilder source = new StringBuilder("");
+			source.AppendLine("attribute vec4 aPosition;");
+			source.AppendLine("attribute lowp vec2 aTexCoords;");
+			source.AppendLine("uniform mat4 uMvpMatrix;");
+			source.AppendLine("varying lowp vec2 vTexCoords;");
+			source.AppendLine("void main() {");
+			source.AppendLine("    gl_Position = uMvpMatrix * aPosition;");
+			source.AppendLine("    vTexCoords  = aTexCoords;");
+			source.AppendLine("}");
+			return source.ToString ();
 		}
 
 		public static String StandardFragmentShader()
 		{
-			return
-				@"uniform lowp sampler2D uTexture;" +
-				@"varying lowp vec2 vTexCoords;" +
-				@"void main() { \n" +
-				@"  gl_FragColor = texture2D(uTexture, vTexCoords); \n" +
-			    @"} \n";
+			StringBuilder source = new StringBuilder("");
+			source.AppendLine("uniform lowp sampler2D uTexture;");
+			source.AppendLine("varying lowp vec2 vTexCoords;");
+			source.AppendLine("void main() {");
+			source.AppendLine("    gl_FragColor = texture2D(uTexture, vTexCoords);");
+			source.AppendLine("}");
+			return source.ToString ();
 		}
 
 		// TODO: do we want to support POT textures?

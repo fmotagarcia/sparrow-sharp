@@ -80,13 +80,12 @@ namespace Sparrow.Core
 	                    framebuffer = CreateFramebufferForTexture(value);
 	                    FramebufferCache.Add(value.Name, framebuffer);
 	                }
-
-	                GL.BindFramebuffer(All.Framebuffer, framebuffer);
+					GL.BindFramebuffer(All.Framebuffer, framebuffer);
 					GL.Viewport (0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
 	            }
 				else
 				{
-					GL.BindFramebuffer(All.Framebuffer, 1);
+					GL.BindFramebuffer(All.Framebuffer, 0); //its 1 in sparrow-s, this might need to be 0
 					GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
 				}
 			}
@@ -113,8 +112,6 @@ namespace Sparrow.Core
 			{
                 Debug.WriteLine("Failed to create framebuffer for render texture");
             }
-
-
             return framebuffer;
         }
 
