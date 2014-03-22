@@ -135,8 +135,11 @@ namespace SparrowSharp.Filters
 			}
 		}
 
+		/// Subclasses must override this method and use it to create their fragment and vertex shaders.
 		public abstract void CreatePrograms();
 
+		/// Subclasses must override this method and use it to activate their shader program.
+		/// The 'activate' call directly precedes the call to 'glDrawElements'.
 		public abstract void ActivateWithPass (int pass, Texture texture, Matrix mvpMatrix);
 
 		public void DeactivateWithPass (int pass, Texture texture)
@@ -356,7 +359,6 @@ namespace SparrowSharp.Filters
 				// Create an image containing the cache. To have a display object that contains
 				// the filter output in object coordinates, we wrap it in a QuadBatch: that way,
 				// we can modify it with a transformation matrix.
-
 				cache = new QuadBatch ();
 				Image image = new Image (cacheTexture);
 

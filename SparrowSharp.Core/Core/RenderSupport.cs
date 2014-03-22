@@ -21,6 +21,7 @@ namespace Sparrow.Core
 		private QuadBatch _quadBatchTop;
 		private int _quadBatchIndex;
 		private List<Rectangle> _clipRectStack;
+		private int _clipRectStackSize;
 
         public Matrix ProjectionMatrix
         {
@@ -103,6 +104,7 @@ namespace Sparrow.Core
             _quadBatchTop = _quadBatches[0];
 
             _clipRectStack = new List<Rectangle>();
+			_clipRectStackSize = 0;
 
             SetupOrthographicProjection(0, 320, 0, 480);
         }
@@ -164,7 +166,7 @@ namespace Sparrow.Core
 
         public void NextFrame()
         {
-            _clipRectStack.Clear();
+			_clipRectStackSize = 0;
             _stateStackIndex = 0;
             _quadBatchIndex = 0;
             _numDrawCalls = 0;
@@ -233,16 +235,18 @@ namespace Sparrow.Core
 
         public Rectangle PushClipRect(Rectangle clipRect)
         {
-            Rectangle rectangle = new Rectangle();
+			if (_clipRectStack.Count < _clipRectStackSize + 1) {
+				_clipRectStack.Add (new Rectangle ());
+			}
+			Rectangle rectangle = _clipRectStack [_clipRectStackSize];
             rectangle.CopyFromRectangle(clipRect);
 
-            _clipRectStack.Add(rectangle);
-
-            if (_clipRectStack.Count > 1)
+			if (_clipRectStackSize > 0)
             {
-                rectangle = rectangle.Intersection(_clipRectStack[_clipRectStack.Count - 2]);
+				rectangle = rectangle.Intersection(_clipRectStack[_clipRectStackSize - 1]);
             }
 
+			_clipRectStackSize++;
             ApplyClipRect();
 
             return rectangle;
@@ -250,8 +254,9 @@ namespace Sparrow.Core
 
         public void PopClipRect()
         {
-            if (_clipRectStack.Count > 0)
+			if (_clipRectStackSize > 0)
             {
+				_clipRectStackSize--;
                 ApplyClipRect();
             }
         }
@@ -266,11 +271,11 @@ namespace Sparrow.Core
                 return;
             }
 
-            if (_clipRectStack.Count > 0)
+			if (_clipRectStackSize > 0)
             {
                 int width;
                 int height;
-                Rectangle rect = _clipRectStack[_clipRectStack.Count - 1];
+				Rectangle rect = _clipRectStack[_clipRectStackSize - 1];
                 Rectangle clipRect = new Rectangle();
 				Texture renderTarget = context.RenderTarget;
 
