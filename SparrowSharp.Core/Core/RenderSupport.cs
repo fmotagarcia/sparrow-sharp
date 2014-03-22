@@ -17,9 +17,11 @@ namespace Sparrow.Core
 		private List<RenderState> _stateStack;
 		private RenderState _stateStackTop;
 		private int _stateStackIndex;
+		private int _stateStackSize;
 		private List<QuadBatch> _quadBatches;
 		private QuadBatch _quadBatchTop;
 		private int _quadBatchIndex;
+		private int _quadBatchSize;
 		private List<Rectangle> _clipRectStack;
 		private int _clipRectStackSize;
 
@@ -43,11 +45,11 @@ namespace Sparrow.Core
 
         public Matrix MvpMatrix
         {
-            get { return _mvpMatrix; }
-            set
+			get
             {
-                _mvpMatrix.CopyFromMatrix(value);
+				_mvpMatrix.CopyFromMatrix(_stateStackTop.ModelViewMatrix);
                 _mvpMatrix.AppendMatrix(_projectionMatrix);
+				return _mvpMatrix;
             }
         }
 
@@ -94,13 +96,14 @@ namespace Sparrow.Core
 
             _stateStack = new List<RenderState>();
             _stateStack.Add(new RenderState());
-
             _stateStackIndex = 0;
+			_stateStackSize = 1;
             _stateStackTop = _stateStack[0];
 
             _quadBatches = new List<QuadBatch>();
             _quadBatches.Add(new QuadBatch());
             _quadBatchIndex = 0;
+			_quadBatchSize = 1;
             _quadBatchTop = _quadBatches[0];
 
             _clipRectStack = new List<Rectangle>();
@@ -116,6 +119,7 @@ namespace Sparrow.Core
             _quadBatches.Add(_quadBatchTop);
 
             _quadBatchIndex = 0;
+			_quadBatchSize = 1;
         }
 
         public void Clear()
@@ -195,9 +199,10 @@ namespace Sparrow.Core
                 _quadBatchTop.Render(_projectionMatrix);
                 _quadBatchTop.Reset();
 
-                if (_quadBatches.Count == _quadBatchIndex + 1)
+				if (_quadBatchSize == _quadBatchIndex + 1)
                 {
                     _quadBatches.Add(new QuadBatch());
+					_quadBatchSize++;
                 }					
 
                 _numDrawCalls++;
@@ -209,9 +214,10 @@ namespace Sparrow.Core
         {
             RenderState previousState = _stateStackTop;
 
-            if (_stateStack.Count == _stateStackIndex + 1)
+			if (_stateStackSize == _stateStackIndex + 1)
             {
                 _stateStack.Add(new RenderState());
+				_stateStackSize++;
             }
 
             _stateStackTop = _stateStack[++_stateStackIndex];
