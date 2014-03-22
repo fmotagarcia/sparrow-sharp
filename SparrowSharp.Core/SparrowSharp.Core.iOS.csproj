@@ -80,8 +80,12 @@
     <Compile Include="SparrowSharpApp.cs" />
     <Compile Include="ResourceLoading\iOSTextureLoader.cs" />
     <Compile Include="ResourceLoading\LoaderBase.cs" />
+    <Compile Include="Pool\ObjectPool.cs" />
+    <Compile Include="Pool\PooledObject.cs" />
+    <Compile Include="Utils\GLExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ResourceLoading\" />
+    <Folder Include="Pool\" />
   </ItemGroup>
 </Project>

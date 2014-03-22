@@ -431,7 +431,7 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 
 			if (GLExtensions.MapBufferSupported) {
-				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, All.StaticDraw);
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * Vertex.SIZE), IntPtr.Zero, All.StaticDraw);
 				IntPtr vertexBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
 
 				unsafe {
@@ -449,7 +449,7 @@ namespace Sparrow.Display
 				}
 				GL.Oes.UnmapBuffer (All.ArrayBuffer);
 			} else {
-				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * Vertex.SIZE), _vertexData.Vertices, All.StaticDraw);
 			}
 
 			if (_tinted || alpha != 1.0f) {
