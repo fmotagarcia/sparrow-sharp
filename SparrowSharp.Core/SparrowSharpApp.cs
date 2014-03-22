@@ -91,7 +91,10 @@ namespace Sparrow
 
         public static Program GetProgram(string name)
         {
-            return Programs[name];
+			if (Programs.ContainsKey (name)) {
+				return Programs[name];
+			}
+			return null;
         }
 
 		public static float ContentScaleFactor

@@ -28,10 +28,12 @@ namespace SparrowSharp.Filters
 			Tinted = isTinted;
 			APosition = Attributes["aPosition"];
 			ATexCoords = Attributes["aTexCoords"];
-			UOffsets = Attributes["uOffsets"];
-			UWeights = Attributes["uWeights"];
-			UColor = Attributes["uColor"];
-			UMvpMatrix = Attributes["uMvpMatrix"];
+			UOffsets = Uniforms["uOffsets"];
+			UWeights = Uniforms["uWeights"];
+			if (isTinted) {
+				UColor = Uniforms["uColor"];
+			}
+			UMvpMatrix = Uniforms["uMvpMatrix"];
 		}
 
 		private string GetVertexShader (){

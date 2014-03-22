@@ -276,8 +276,9 @@ namespace SparrowSharp.Filters
 			Texture previousRenderTarget = support.RenderTarget;
 
 			// use cache?
-			if (intoCache)
+			if (intoCache) {
 				cacheTexture = CreateTexture((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
+			}
 
 			// draw the original object into a texture
 			support.RenderTarget = _passTextures[0];
@@ -362,7 +363,6 @@ namespace SparrowSharp.Filters
 				cache.AddQuad (image, 1.0f, BlendMode.AUTO, matrix);
 			}
 
-			previousRenderTarget = null;
 			return cache;
 		}
 

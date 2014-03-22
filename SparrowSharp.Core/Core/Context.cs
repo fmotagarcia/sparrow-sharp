@@ -68,26 +68,29 @@ namespace Sparrow.Core
             }
         }
 
-        public void ResetScissorBox()
-        {
-            GL.Disable(All.ScissorTest);
-        }
-
         public Texture RenderTarget
         {
             set
             {
-                uint framebuffer;
-                if (!FramebufferCache.TryGetValue(value.Name, out framebuffer))
-                {
-                    framebuffer = CreateFramebufferForTexture(value);
-                    FramebufferCache.Add(value.Name, framebuffer);
-                }
+				_renderTarget = value;
+				if (value != null)
+				{
+	                uint framebuffer;
+	                if (!FramebufferCache.TryGetValue(value.Name, out framebuffer))
+	                {
+	                    framebuffer = CreateFramebufferForTexture(value);
+	                    FramebufferCache.Add(value.Name, framebuffer);
+	                }
 
-                GL.BindFramebuffer(All.Framebuffer, framebuffer);
-                GL.Viewport(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
-                _renderTarget = value;
-            }
+	                GL.BindFramebuffer(All.Framebuffer, framebuffer);
+					GL.Viewport (0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
+	            }
+				else
+				{
+					GL.BindFramebuffer(All.Framebuffer, 1);
+					GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
+				}
+			}
 			get { return _renderTarget;}
         }
 

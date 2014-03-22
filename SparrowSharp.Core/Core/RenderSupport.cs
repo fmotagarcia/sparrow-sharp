@@ -252,7 +252,7 @@ namespace Sparrow.Core
             }
         }
 
-        public void ApplyClipRect()
+		private void ApplyClipRect()
         {
             FinishQuadBatch();
 
@@ -268,39 +268,39 @@ namespace Sparrow.Core
                 int height;
                 Rectangle rect = _clipRectStack[_clipRectStack.Count - 1];
                 Rectangle clipRect = new Rectangle();
-                //SPTexture *renderTarget = context.renderTarget;
+				Texture renderTarget = context.RenderTarget;
 
-//				if (renderTarget != null)
-//				{
-//					width = renderTarget.NativeWidth;
-//					height = renderTarget.NativeHeight;
-//				}
-//				else
-//				{
-                width = (int)SparrowSharpApp.DrawableWidth;
-                height = (int)SparrowSharpApp.DrawableHeight;
-//				}
+				if (renderTarget != null)
+				{
+					width = (int)renderTarget.NativeWidth;
+					height = (int)renderTarget.NativeHeight;
+				}
+				else
+				{
+	                width = (int)SparrowSharpApp.DrawableWidth;
+	                height = (int)SparrowSharpApp.DrawableHeight;
+				}
 
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])
                 Point topLeft = _projectionMatrix.TransformPoint(rect.X, rect.Y);
-//				if (renderTarget!= null) {
-//					topLeft.Y = -topLeft.Y;
-//				}
+				if (renderTarget!= null) {
+					topLeft.Y = -topLeft.Y;
+				}
                 clipRect.X = (topLeft.X * 0.5f + 0.5f) * width;
                 clipRect.Y = (0.5f - topLeft.Y * 0.5f) * height;
 
                 Point bottomRight = _projectionMatrix.TransformPoint(rect.Right, rect.Bottom);
-//				if (renderTarget != null) {
-//					bottomRight.Y = -bottomRight.Y;
-//				}
+				if (renderTarget != null) {
+					bottomRight.Y = -bottomRight.Y;
+				}
                 clipRect.Right = (bottomRight.X * 0.5f + 0.5f) * width;
                 clipRect.Bottom = (0.5f - bottomRight.Y * 0.5f) * height;
 
                 // flip y coordiantes when rendering to backbuffer
-//				if (renderTarget == null) 
-//				{
-                clipRect.Y = height - clipRect.Y - clipRect.Height;
-//				}
+				if (renderTarget == null) 
+				{
+                	clipRect.Y = height - clipRect.Y - clipRect.Height;
+				}
 
                 Rectangle bufferRect = new Rectangle(0, 0, width, height);
                 Rectangle scissorRect = clipRect.Intersection(bufferRect);
@@ -315,7 +315,7 @@ namespace Sparrow.Core
             }
             else
             {
-				context.ResetScissorBox();
+				context.ScissorBox = null;
             }
 
         }
