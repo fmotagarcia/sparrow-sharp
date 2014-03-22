@@ -23,7 +23,7 @@ namespace Sparrow
         // not used yet
         private static RenderSupport RenderSupport { get; set; }
 
-        private static DisplayObject Root { get; set; }
+		public static DisplayObject Root { get; set; }
 
         public static Juggler DefaultJuggler { get; set; }
 
@@ -88,12 +88,8 @@ namespace Sparrow
         {
             Programs.Remove(name);
         }
-        //      public static Juggler Juggler {
-        //          get {
-        //              return CurrentController.Juggler;
-        //          }
-        //      }
-        private static float ContentScaleFactor
+
+		public static float ContentScaleFactor
         {
             get { return 1.0f; }
         }

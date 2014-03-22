@@ -1,5 +1,4 @@
 ﻿using System;
-using Sparrow.Textures;
 using Sparrow.Core;
 using Sparrow.Samples.Desktop;
 using Sparrow;

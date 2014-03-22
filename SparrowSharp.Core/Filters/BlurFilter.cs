@@ -1,0 +1,219 @@
+﻿using System;
+using Sparrow.Textures;
+using Sparrow.Geom;
+
+namespace SparrowSharp.Filters
+{
+	/// <summary>
+	/// The BlurFilter applies a gaussian blur to an object. The strength of the blur can be
+	/// set for x- and y-axis separately (always relative to the stage).
+
+	///	A blur filter can also be set up as a drop shadow or glow filter. Use the respective
+	///	static methods to create such a filter.
+
+	///	For each blur direction, the number of required passes is ceil(blur).
+	///	blur = 0.5: 1 pass
+	///		blur = 1.0: 1 pass
+	///		blur = 1.5: 2 passes
+	///		blur = 2.0: 2 passes
+	///		etc.
+	/// </summary>
+	public class BlurFilter : FragmentFilter
+	{
+
+		private float _blurX;
+		public float BlurX { 
+			get { return _blurX;}
+			set { 
+				_blurX = value;
+				UpdateMarginsAndPasses();
+			}
+		}
+
+		private float _blurY;
+		public float BlurY {
+			get { return _blurY; }
+			set { 
+				_blurY = value;
+				UpdateMarginsAndPasses();
+			}
+		}
+		private bool _enableColorUniform;
+		private float[] _offsets = new float[4];
+		private float[] _weights = new float[4];
+		private float[] _color = new float[4];
+		private BlurProgram _program;
+		private BlurProgram _tintedProgram;
+		/// Initializes a blur filter with the specified blur and a resolution.
+		public BlurFilter (float blur, float resolution) : base(1, resolution)
+		{
+			_blurX = blur;
+			_blurY = blur;
+			UpdateMarginsAndPasses();
+		}
+
+		/// Initializes a blur filter with the specified blur and a resolution of 1.0f.
+		public BlurFilter (float blur) : this(blur, 1.0f)
+		{
+		}
+
+		/// Initializes a blur filter with 1.0f blur and resolution of 1.0f.
+		public BlurFilter () : this(1.0f)
+		{
+		}
+
+		/// 0x000000 will replace the RGB values of the input color. Pass false to deactivate
+		/// the uniform color. Alpha will be set to 1.0f
+		public void SetUniformColor(bool enable) {
+			SetUniformColor (enable, 0x000000);
+			
+		}
+
+		/// The passed color will replace the RGB values of the input color. Pass false as the first parameter
+		/// to deactivate the uniform color. Alpha will be set to 1.0f
+		public void SetUniformColor(bool enable, uint color) {
+			SetUniformColor (enable, color, 1.0f);
+		}
+
+		/// A uniform color will replace the RGB values of the input color, while the alpha value will be
+		/// multiplied with the given factor. Pass NO as the first parameter to deactivate the uniform color.
+		public void SetUniformColor(bool enable, uint color, float alpha) {
+			/*_color[0] = SP_COLOR_PART_RED(color) / 255.0;
+			_color[1] = SP_COLOR_PART_GREEN(color) / 255.0;
+			_color[2] = SP_COLOR_PART_BLUE(color) / 255.0;
+			_color[3] = alpha;
+			_enableColorUniform = enable;*/
+		}
+
+		override public void CreatePrograms()
+		{
+			/*if (!_program)
+			{
+				NSString *programName = [SPBlurProgram programNameForTinting:NO];
+				_program = (SPBlurProgram *)[[[Sparrow currentController] programByName:programName] retain];
+
+				if (!_program)
+				{
+					_program = [[SPBlurProgram alloc] initWithTintedFragmentShader:NO];
+					[[Sparrow currentController] registerProgram:_program name:programName];
+				}
+			}
+
+			if (!_tintedProgram)
+			{
+				NSString *programName = [SPBlurProgram programNameForTinting:YES];
+				_tintedProgram = (SPBlurProgram *)[[[Sparrow currentController] programByName:programName] retain];
+
+				if (!_tintedProgram)
+				{
+					_tintedProgram = [[SPBlurProgram alloc] initWithTintedFragmentShader:YES];
+					[[Sparrow currentController] registerProgram:_tintedProgram name:programName];
+				}
+			}
+
+			self.vertexPosID = _program.aPosition;
+			self.texCoordsID = _program.aTexCoords;*/
+		}
+
+		override public void ActivateWithPass (int pass, Texture texture, Matrix matrix)
+		{
+			/*[self updateParamatersWithPass:pass texWidth:texture.nativeWidth texHeight:texture.nativeHeight];
+
+			BOOL isColorPass = _enableColorUniform && pass == self.numPasses - 1;
+			SPBlurProgram *program = isColorPass ? _tintedProgram : _program;
+
+			glUseProgram(program.name);
+
+			GLKMatrix4 mvp = [matrix convertToGLKMatrix4];
+			glUniformMatrix4fv(program.uMvpMatrix, 1, false, mvp.m);
+
+			glUniform4fv(program.uOffsets, 1, _offsets);
+			glUniform4fv(program.uWeights, 1, _weights);
+
+			if (isColorPass)
+				glUniform4fv(program.uColor, 1, _color);*/
+		}
+
+		private void UpdateParamaters(int pass, int texWidth, int texHeight)
+		{
+			const float MAX_SIGMA = 2.0f;
+
+			// algorithm described here:
+			// http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
+			//
+			// Normally, we'd have to use 9 texture lookups in the fragment shader. But by making smart
+			// use of linear texture sampling, we can produce the same output with only 5 lookups.
+			bool horizontal = pass < _blurX;
+			float sigma;
+			float pixelSize;
+
+			if (horizontal)
+			{
+				sigma = Math.Min(1.0f, _blurX - pass) * MAX_SIGMA;
+				pixelSize = 1.0f / texWidth;
+			}
+			else
+			{
+				sigma = Math.Min(1.0f, _blurY - (pass - (float)Math.Ceiling(_blurX))) * MAX_SIGMA;
+				pixelSize = 1.0f / texHeight;
+			}
+
+			float twoSigmaSq = 2.0f * sigma * sigma;
+			float multiplier = 1.0f / (float)Math.Sqrt(twoSigmaSq * Math.PI);
+
+			// get weights on the exact pixels(sTmpWeights) and calculate sums(_weights)
+			float[] sTmpWeights = new float[6];
+
+			for (int i = 0; i < 5; ++i)
+				sTmpWeights[i] = multiplier * (float)Math.Exp(-i*i / twoSigmaSq);
+
+			_weights[0] = sTmpWeights[0];
+			_weights[1] = sTmpWeights[1] + sTmpWeights[2];
+			_weights[2] = sTmpWeights[3] + sTmpWeights[4];
+
+			// normalize weights so that sum equals "1.0"
+
+			float weightSum = _weights[0] + (2.0f * _weights[1]) + (2.0f * _weights[2]);
+			float invWeightSum = 1.0f / weightSum;
+
+			_weights[0] *= invWeightSum;
+			_weights[1] *= invWeightSum;
+			_weights[2] *= invWeightSum;
+
+			// calculate intermediate offsets
+
+			float offset1 = (pixelSize * sTmpWeights[1] + 2*pixelSize * sTmpWeights[2]) / _weights[1];
+			float offset2 = (3*pixelSize * sTmpWeights[3] + 4*pixelSize * sTmpWeights[4]) / _weights[2];
+
+			// depending on pass, we move in x- or y-direction
+
+			if (horizontal)
+			{
+				_offsets[0] = offset1;
+				_offsets[1] = 0;
+				_offsets[2] = offset2;
+				_offsets[3] = 0;
+			}
+			else
+			{
+				_offsets[0] = 0;
+				_offsets[1] = offset1;
+				_offsets[2] = 0;
+				_offsets[3] = offset2;
+			}
+		}
+
+
+		private void UpdateMarginsAndPasses() {
+			if (_blurX == 0 && _blurY == 0) {
+				_blurX = 0.001f;
+			}
+			NumPasses = (int)Math.Ceiling(_blurX) + (int)Math.Ceiling(_blurY);
+			MarginX = 4.0f + (int)Math.Ceiling(_blurX);
+			MarginY = 4.0f + (int)Math.Ceiling(_blurY);
+		}
+
+
+	}
+}
+

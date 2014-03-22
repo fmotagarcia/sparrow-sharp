@@ -26,18 +26,17 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-            AndroidTextureLoader starRes = new AndroidTextureLoader();
-            starRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
-            AndroidTextureLoader birdRes = new AndroidTextureLoader();
-            birdRes.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
-            textures = new Texture[] { birdRes.GetResource(), starRes.GetResource() };
+			GLTexture star = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
+			GLTexture bird = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
+			GLTexture bigstar = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.bigstar);
+			textures = new Texture[] { bird, star, bigstar };
 
-            // the container will hold all test objects
-            _container = new Sprite();
-            AddChild(_container);
+			// the container will hold all test objects
+			_container = new Sprite();
+			AddChild(_container);
 
-            EnterFrame += EnterFrameHandler;
-            AddedToStage += AddedToStageHandler;
+			EnterFrame += EnterFrameHandler;
+			AddedToStage += AddedToStageHandler;
         }
 
         private void AddTestObjects(int numObjects)
@@ -47,7 +46,7 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-                Image egg = new Image(textures[0]);
+				Image egg = new Image(textures[2]);
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -72,7 +71,7 @@ namespace Sparrow.Samples.Android
         {
             _started = true;
             _waitFrames = 3;
-            AddTestObjects(100);
+			AddTestObjects(50);
         }
 
         private void EnterFrameHandler(DisplayObject target, DisplayObject currentTarget, float passedTime)
@@ -82,7 +81,7 @@ namespace Sparrow.Samples.Android
 
             _elapsed += passedTime / 1000;
             ++_frameCount;
-
+			/*
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
@@ -108,7 +107,7 @@ namespace Sparrow.Samples.Android
 
                 _elapsed = _frameCount = 0;
             }
-
+            */
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);

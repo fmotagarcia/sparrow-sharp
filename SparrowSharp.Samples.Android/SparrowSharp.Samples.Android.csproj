@@ -56,7 +56,6 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="TrigonometryTest.cs" />
-    <Compile Include="SampleGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AboutAssets.txt" />
@@ -71,6 +70,7 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\drawable-nodpi\benchmark_object.png" />
     <AndroidResource Include="Resources\drawable-nodpi\star.png" />
+    <AndroidResource Include="Resources\drawable-nodpi\bigstar.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">

@@ -431,7 +431,7 @@ namespace Sparrow.Display
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 
 			if (GLExtensions.MapBufferSupported) {
-				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * Vertex.SIZE), IntPtr.Zero, All.StaticDraw);
+				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, All.StaticDraw);
 				IntPtr vertexBuffer = GL.Oes.MapBuffer (All.ArrayBuffer, All.WriteOnlyOes);
 
 				unsafe {
@@ -449,7 +449,11 @@ namespace Sparrow.Display
 				}
 				GL.Oes.UnmapBuffer (All.ArrayBuffer);
 			} else {
-				GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * Vertex.SIZE), _vertexData.Vertices, All.StaticDraw);
+				if (_bufferNeedsReInit) {
+					GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+				} else {
+					GL.BufferSubData (All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices);
+				}
 			}
 
 			if (_tinted || alpha != 1.0f) {
@@ -473,12 +477,18 @@ namespace Sparrow.Display
 					}
 					GL.Oes.UnmapBuffer (All.ArrayBuffer);
 				} else {
-					GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
+					if (_bufferNeedsReInit) {
+						GL.BufferData (All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
+					} else {
+						GL.BufferSubData (All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.VertexColors);
+					}
 				}
 			}
-
+			_bufferNeedsReInit = false;
 			_syncRequired = false;
 		}
+
+		private bool _bufferNeedsReInit = true;
 
 		private int _capacity;
 
@@ -488,6 +498,7 @@ namespace Sparrow.Display
 				if (value == 0) {
 					throw new Exception ("Capacity must not be zero");
 				}
+				_bufferNeedsReInit = true;
 				uint oldCapacity = (uint)_capacity;
 				_capacity = value;
 				int numVertices = value * 4;

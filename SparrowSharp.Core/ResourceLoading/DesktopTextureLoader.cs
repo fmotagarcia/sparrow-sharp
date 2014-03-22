@@ -6,18 +6,47 @@ using Sparrow.Textures;
 
 namespace Sparrow.ResourceLoading
 {
-	public class TextureLoader : LoaderBase
+	public class TextureLoader
 	{
 
-		public delegate void EventHandler (GLTexture resource, LoaderBase resourceLoader);
-		public event EventHandler ResourceLoaded;
-		protected GLTexture _resource;
+		protected bool _isLoaded = false;
+		protected GLTexture _glTexture;
+		public bool IsLoaded { get { return _isLoaded;}	}
+		public GLTexture Texture { get { return _glTexture;} }
+		public event EventHandler<GLTexture> ResourceLoaded;
 
-		override public LoaderBase LoadLocalResource (string pathToFile) {
+		public TextureLoader LoadRemoteImage (string remoteURL)
+		{
+			_isLoaded = false;
+			return this; 
+		}
+
+		public GLTexture LoadLocalImage (string pathToFile)
+		{
+			_isLoaded = false;
+			GenerateTexture( new Bitmap(pathToFile) );
+			return _glTexture;
+		}
+
+		public TextureLoader LoadLocalImageAsync (string pathToFile)
+		{
+			_isLoaded = false;
+			LoadLocalBitmapAsync (pathToFile);
+			// TODO check wether the async call can be executed instantly, 
+			// because in that case it will be impossible to catch the event
+			return this; 
+		}
+
+		private async void LoadLocalBitmapAsync (string path)
+		{
+
+		}
+
+		private void GenerateTexture(Bitmap bitmap) {
 			_isLoaded = false;
 			uint name = (uint)GL.GenTexture ();
 			GL.BindTexture (TextureTarget.Texture2D, name);
-			Bitmap bitmap = new Bitmap(pathToFile);
+
 			BitmapData bitmapData = bitmap.LockBits(
 				new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
 				ImageLockMode.ReadOnly, 
@@ -36,25 +65,18 @@ namespace Sparrow.ResourceLoading
 			// was brga
 			bitmap.UnlockBits(bitmapData);
 
-			_resource = new GLTexture (name, bitmap.Width, bitmap.Height, false, 1.0f, false);
+			_glTexture = new GLTexture (name, bitmap.Width, bitmap.Height, false, 1.0f, false);
 
 			_isLoaded = true;
 			// Make a temporary copy of the event to avoid possibility of 
 			// a race condition if the last subscriber unsubscribes 
 			// immediately after the null check and before the event is raised.
-			EventHandler handler = ResourceLoaded;
-			if (handler != null) {
-				handler (_resource, this);
+			EventHandler<GLTexture> handler = ResourceLoaded;
+			if (handler != null)
+			{
+				handler(this, _glTexture);
 			}
-			return this;
 		}
-
-		override protected void DecodeRawResult(byte[] data) 
-		{
-			throw new Exception ("Not implemented!");
-		}
-
-		public GLTexture GetResource () {return _resource;}
 	}
 }
 

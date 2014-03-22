@@ -8,40 +8,46 @@ using System.Drawing;
 
 namespace Sparrow.ResourceLoading
 {
-    public class iOSTextureLoader : LoaderBase
+    public class TextureLoader
     {
-        public delegate void EventHandler(GLTexture resource,LoaderBase resourceLoader);
+        protected bool _isLoaded = false;
+        protected GLTexture _glTexture;
+        public bool IsLoaded { get { return _isLoaded; } }
+        public GLTexture Texture { get { return _glTexture; } }
+        public event EventHandler<GLTexture> ResourceLoaded;
 
-        public event EventHandler ResourceLoaded;
-
-        protected GLTexture _resource;
-
-        /// <summary>
-        /// Loads an image based on resource ID, only avaiable on Andoid. 
-        /// The resource will be scaled based on screen DPI, put it into the drawable-nodpi folder if you dont want this.
-        /// </summary>
-        public LoaderBase LoadAndroidResource(int AndroidResourceId)
+        public TextureLoader LoadRemoteImage(string remoteURL)
         {
             _isLoaded = false;
-            UIImage image = UIImage.FromBundle("star.png");
-            GenerateTexture(image);
+            LoadRemoteImageAsync(remoteURL);
             return this;
         }
 
-        #region implemented abstract members of LoaderBase
-
-        protected override void DecodeRawResult(byte[] data)
-        {
-            throw new NotImplementedException();
+        private async void LoadRemoteImageAsync(string url)
+        { 
         }
 
-        #endregion
+        public GLTexture LoadLocalImage(string pathToFile)
+        {
+            _isLoaded = false;
+            UIImage image = UIImage.FromBundle(pathToFile);
+            GenerateTexture(image);
+            return _glTexture;
+        }
 
-        //        override protected void DecodeRawResult(byte[] data)
-        //        {
-        //            Bitmap bitmap = BitmapFactory.DecodeByteArray(data, 0, data.Length);
-        //            GenerateTexture(bitmap);
-        //        }
+        public TextureLoader LoadLocalImageAsync(string pathToFile)
+        {
+            _isLoaded = false;
+            LoadLocalBitmapAsync(pathToFile);
+            // TODO check wether the async call can be executed instantly, 
+            // because in that case it will be impossible to cacth the event
+            return this;
+        }
+
+        private async void LoadLocalBitmapAsync(string path)
+        {
+        }
+
         private void GenerateTexture(UIImage image)
         {
             uint name = (uint)GL.GenTexture();
@@ -56,16 +62,15 @@ namespace Sparrow.ResourceLoading
 
             // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
             // for how MonoGame does it
-            GLTexture texture = new GLTexture(name, image.CGImage.Width, image.CGImage.Height, false, 1.0f, false);
-            _resource = texture;
+            _glTexture = new GLTexture(name, image.CGImage.Width, image.CGImage.Height, false, 1.0f, false);
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
-            EventHandler handler = ResourceLoaded;
+            EventHandler<GLTexture> handler = ResourceLoaded;
             if (handler != null)
             {
-                handler(_resource, this);
+                handler(this, _glTexture);
             }
         }
 
@@ -111,10 +116,6 @@ namespace Sparrow.ResourceLoading
             return data;
         }
 
-        public GLTexture GetResource()
-        {
-            return _resource;
-        }
     }
 }
 
