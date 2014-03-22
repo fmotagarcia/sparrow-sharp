@@ -17,10 +17,12 @@ namespace Sparrow
 
         public static Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
-        public static int DrawableWidth { get { return 300; } }
-        // not used yet
-        public static int DrawableHeight { get { return 300; } }
-        // not used yet
+		private static int _drawableWidth;
+		public static int DrawableWidth { get { return _drawableWidth; } }
+       
+		private static int _drawableHeight;
+		public static int DrawableHeight { get { return _drawableHeight; } }
+        
         private static RenderSupport RenderSupport { get; set; }
 
 		public static DisplayObject Root { get; set; }
@@ -61,6 +63,8 @@ namespace Sparrow
             {
                 throw new InvalidOperationException("App already initialized!");
             }
+			_drawableWidth = (int)width;
+			_drawableHeight = (int)height;
 
             _stage = new Stage(width, height);
             ReadjustStageSize(width, height); 
