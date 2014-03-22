@@ -377,7 +377,7 @@ namespace SparrowSharp.Filters
 			const int indexSize = sizeof(ushort) * 6;
 			const int vertexSize = Vertex.SIZE * 4;
 
-			if (_vertexBufferName != 0)
+			if (_vertexBufferName == 0)
 			{
 				GL.GenBuffers (1, out _vertexBufferName);
 				GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);

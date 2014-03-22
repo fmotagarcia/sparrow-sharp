@@ -131,13 +131,17 @@ namespace Sparrow.Core
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public void CheckForOpenGLError()
+		public static void CheckForOpenGLError()
 		{
 			ErrorCode err = (ErrorCode)GL.GetError ();
+			string errstr = "";
 			while (err != ErrorCode.NoError)
 			{
-				Console.WriteLine(@"There was an OpenGL error: " +  err.ToString());
+				errstr += "There was an OpenGL error: " + err.ToString ();
 				err = (ErrorCode)GL.GetError ();
+			}
+			if (errstr != "") {
+				Console.WriteLine(errstr);
 			}
         }
 
