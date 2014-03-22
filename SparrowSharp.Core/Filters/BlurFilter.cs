@@ -1,6 +1,10 @@
 ﻿using System;
 using Sparrow.Textures;
 using Sparrow.Geom;
+using Sparrow.Utils;
+using Sparrow;
+using OpenTK.Graphics.ES20;
+using OpenTK;
 
 namespace SparrowSharp.Filters
 {
@@ -78,60 +82,59 @@ namespace SparrowSharp.Filters
 		/// A uniform color will replace the RGB values of the input color, while the alpha value will be
 		/// multiplied with the given factor. Pass NO as the first parameter to deactivate the uniform color.
 		public void SetUniformColor(bool enable, uint color, float alpha) {
-			/*_color[0] = SP_COLOR_PART_RED(color) / 255.0;
-			_color[1] = SP_COLOR_PART_GREEN(color) / 255.0;
-			_color[2] = SP_COLOR_PART_BLUE(color) / 255.0;
+			_color[0] = ColorUtil.GetR(color) / 255.0f;
+			_color[1] = ColorUtil.GetG(color) / 255.0f;
+			_color[2] = ColorUtil.GetB(color) / 255.0f;
 			_color[3] = alpha;
-			_enableColorUniform = enable;*/
+			_enableColorUniform = enable;
 		}
 
 		override public void CreatePrograms()
 		{
-			/*if (!_program)
+			if (_program == null)
 			{
-				NSString *programName = [SPBlurProgram programNameForTinting:NO];
-				_program = (SPBlurProgram *)[[[Sparrow currentController] programByName:programName] retain];
-
-				if (!_program)
+				string programName = BlurProgram.GetProgramName (false);
+                _program = (BlurProgram)SparrowSharpApp.GetProgram(programName);
+                if (_program == null)
 				{
-					_program = [[SPBlurProgram alloc] initWithTintedFragmentShader:NO];
-					[[Sparrow currentController] registerProgram:_program name:programName];
+                    _program = new BlurProgram(false);
+                    SparrowSharpApp.RegisterProgram(programName, _program);
 				}
 			}
 
-			if (!_tintedProgram)
+            if (_tintedProgram == null)
 			{
-				NSString *programName = [SPBlurProgram programNameForTinting:YES];
-				_tintedProgram = (SPBlurProgram *)[[[Sparrow currentController] programByName:programName] retain];
+                string programName = BlurProgram.GetProgramName (true);
+                _tintedProgram = (BlurProgram)SparrowSharpApp.GetProgram(programName);
 
-				if (!_tintedProgram)
+                if (_tintedProgram == null)
 				{
-					_tintedProgram = [[SPBlurProgram alloc] initWithTintedFragmentShader:YES];
-					[[Sparrow currentController] registerProgram:_tintedProgram name:programName];
+                    _tintedProgram = new BlurProgram(true);
+                    SparrowSharpApp.RegisterProgram(programName, _tintedProgram);
 				}
 			}
 
-			self.vertexPosID = _program.aPosition;
-			self.texCoordsID = _program.aTexCoords;*/
+            VertexPosID = _program.APosition;
+            TexCoordsID = _program.ATexCoords;
 		}
 
 		override public void ActivateWithPass (int pass, Texture texture, Matrix matrix)
 		{
-			/*[self updateParamatersWithPass:pass texWidth:texture.nativeWidth texHeight:texture.nativeHeight];
+            UpdateParamaters(pass, (int)texture.NativeWidth, (int)texture.NativeHeight);
+            bool isColorPass = _enableColorUniform && pass == NumPasses - 1;
+            BlurProgram program = isColorPass ? _tintedProgram : _program;
 
-			BOOL isColorPass = _enableColorUniform && pass == self.numPasses - 1;
-			SPBlurProgram *program = isColorPass ? _tintedProgram : _program;
+            GL.UseProgram(program.Name);
+            Matrix4 mvp = matrix.ConvertToMatrix4();
+            GL.UniformMatrix4(program.UMvpMatrix, false, ref mvp);
 
-			glUseProgram(program.name);
+            GL.Uniform4(program.UOffsets, 1, _offsets);
+            GL.Uniform4(program.UWeights, 1, _weights);
 
-			GLKMatrix4 mvp = [matrix convertToGLKMatrix4];
-			glUniformMatrix4fv(program.uMvpMatrix, 1, false, mvp.m);
-
-			glUniform4fv(program.uOffsets, 1, _offsets);
-			glUniform4fv(program.uWeights, 1, _weights);
-
-			if (isColorPass)
-				glUniform4fv(program.uColor, 1, _color);*/
+            if (isColorPass)
+            {
+                GL.Uniform4(program.UColor, 1, _color);
+            }
 		}
 
 		private void UpdateParamaters(int pass, int texWidth, int texHeight)

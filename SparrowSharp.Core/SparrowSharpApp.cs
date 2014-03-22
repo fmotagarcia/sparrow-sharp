@@ -89,6 +89,11 @@ namespace Sparrow
             Programs.Remove(name);
         }
 
+        public static Program GetProgram(string name)
+        {
+            return Programs[name];
+        }
+
 		public static float ContentScaleFactor
         {
             get { return 1.0f; }

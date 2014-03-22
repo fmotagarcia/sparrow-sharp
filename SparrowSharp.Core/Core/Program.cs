@@ -13,8 +13,8 @@ namespace Sparrow.Core
         public int Name { get; private set; }
 
         private string _vertexShader, _fragmentShader;
-        private readonly Dictionary<String, int> _uniforms;
-        private readonly Dictionary<String, int> _attributes;
+		private readonly Dictionary<String, int> _uniforms = new Dictionary<string, int>();
+		private readonly Dictionary<String, int> _attributes = new Dictionary<string, int>();
 
         public Dictionary<String, int> Uniforms
         {
@@ -32,15 +32,22 @@ namespace Sparrow.Core
             }
         }
 
-        public Program(string vertexShader, string fragmentShader)
-        {
-            _vertexShader = vertexShader;
-            _fragmentShader = fragmentShader;
-            _uniforms = new Dictionary<string, int>();
-            _attributes = new Dictionary<string, int>();
+		// added so derived classes can manually call init()
+		protected Program()
+		{
+		}
 
-            Compile();
+		public Program(string vertexShader, string fragmentShader)
+        {
+			Init (vertexShader, fragmentShader);
         }
+
+		protected void Init (string vertexShader, string fragmentShader) {
+			_vertexShader = vertexShader;
+			_fragmentShader = fragmentShader;
+
+			Compile();
+		}
 
         public string Description()
         {

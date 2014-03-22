@@ -5,7 +5,7 @@ using System.Text;
 namespace SparrowSharp.Filters
 {
 	// TODO: implement remaining methods
-	internal class BlurProgram //: Program
+	internal class BlurProgram : Program
 	{
 
 		public static string GetProgramName(bool tinting)
@@ -13,8 +13,7 @@ namespace SparrowSharp.Filters
 			if (tinting) return "SPBlurFilter#01";
 			else return "SPBlurFilter#00";
 		}
-		/*
-
+			
 		public readonly bool Tinted;
 		public readonly int APosition;
 		public readonly int ATexCoords;
@@ -23,9 +22,9 @@ namespace SparrowSharp.Filters
 		public readonly int UColor;
 		public readonly int UMvpMatrix;
 
-		public BlurProgram (bool isTinted) : 
-			base(GetVertexShader(), GetFragmentShader(isTinted))
+		public BlurProgram (bool isTinted) : base()
 		{
+			Init(GetVertexShader(), GetFragmentShader(isTinted));
 			Tinted = isTinted;
 			APosition = Attributes["aPosition"];
 			ATexCoords = Attributes["aTexCoords"];
@@ -124,7 +123,7 @@ namespace SparrowSharp.Filters
 			source.AppendLine("}");
 
 			return source.ToString ();
-		}*/
+		}
 	}
 }
 
