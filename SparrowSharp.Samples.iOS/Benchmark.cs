@@ -2,6 +2,7 @@ using System;
 using Sparrow.Display;
 using Sparrow.Textures;
 using Sparrow.ResourceLoading;
+using MonoTouch.UIKit;
 
 namespace Sparrow.Samples.iOS
 {
@@ -37,7 +38,7 @@ namespace Sparrow.Samples.iOS
 			for (int i = 0; i < numObjects; ++i)
 			{   
 				Image egg = new Image(textures[0]);
-				egg.Color = 0xFFFF00;
+//				egg.Color = 0xFFFF00;
 				//MovieClip egg = new MovieClip (textures, 3);
 				//SP.DefaultJuggler.Add (egg);
 				egg.X = r.Next(border, (int)Stage.Width - border);
@@ -51,6 +52,9 @@ namespace Sparrow.Samples.iOS
 		{
 			Console.WriteLine("benchmark complete!");
 			Console.WriteLine("number of objects: " + _container.NumChildren);
+
+			UIAlertView alert = new UIAlertView("Benchmark Completed", "Total objects: " + _container.NumChildren, null, "ok", null);
+			alert.Show();
 
 //            Toast.MakeText(AndroidViewController.AndroidContext, "number of objects: " + _container.NumChildren, ToastLength.Long).Show();
 
