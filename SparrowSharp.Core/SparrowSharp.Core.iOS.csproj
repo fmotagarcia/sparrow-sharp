@@ -79,10 +79,12 @@
     <Compile Include="Core\EAGLView.cs" />
     <Compile Include="SparrowSharpApp.cs" />
     <Compile Include="ResourceLoading\iOSTextureLoader.cs" />
-    <Compile Include="ResourceLoading\LoaderBase.cs" />
     <Compile Include="Pool\ObjectPool.cs" />
     <Compile Include="Pool\PooledObject.cs" />
     <Compile Include="Utils\GLExtensions.cs" />
+    <Compile Include="Textures\TextureFormat.cs" />
+    <Compile Include="Textures\TextureInfo.cs" />
+    <Compile Include="Textures\TextureProperties.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ResourceLoading\" />
