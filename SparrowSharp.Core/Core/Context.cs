@@ -39,13 +39,12 @@ namespace Sparrow.Core
 
             set
             {
-                GL.Viewport((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
+				if (value != null) {
+					GL.Viewport ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
+				} else {
+					GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
+				}
             }
-        }
-
-        public void ResetViewport()
-        {
-			GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
         }
 
         public Rectangle ScissorBox
@@ -92,18 +91,6 @@ namespace Sparrow.Core
 				}
 			}
 			get { return _renderTarget;}
-        }
-
-        public void ResetRenderTarget()
-        {
-            GL.BindFramebuffer(All.Framebuffer, 1);
-            GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
-            _renderTarget = null;
-        }
-
-        private void RenderToBackBuffer()
-        {
-            _renderTarget = null;
         }
 
         public static bool DeviceSupportsOpenGLExtension(string extensionName)

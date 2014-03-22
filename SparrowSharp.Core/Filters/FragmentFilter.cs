@@ -53,7 +53,6 @@ namespace SparrowSharp.Filters
 		public int TexCoordsID;
 
 		private List<Texture> _passTextures;
-		private int[] _savedViewport = new int[4];
 		private Matrix _projMatrix;
 		private QuadBatch _cache;
 		private bool _cacheRequested;
