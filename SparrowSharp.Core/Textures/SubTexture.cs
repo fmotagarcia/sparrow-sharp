@@ -67,23 +67,10 @@ namespace Sparrow.Textures
             set { _parent.Smoothing = value; }
         }
 
-        /// Initializes a subtexture with a region (in points) of another texture.
-        public SubTexture(Rectangle region, Texture texture) 
-			: this(region, null, texture)
-        {
-        }
-
-        /// Initializes a subtexture with a region (in points) of another texture, using a frame rectangle
-        /// to place the texture within an image.
-        public SubTexture(Rectangle region, Rectangle frame, Texture texture) 
-			: this(region, frame, false, texture)
-        {
-        }
-
         /// Initializes a subtexture with a region (in points) of another texture, using a frame rectangle
         /// to place the texture within an image. If `rotated` is `true`, the subtexture will show the base
-        /// region rotated by 90 degrees (CCW). _Designated Initializer_.
-        public SubTexture(Rectangle region, Rectangle frame, bool rotated, Texture texture)
+		/// region rotated by 90 degrees (CCW). If frame is null, it will use the whole texture.
+		public SubTexture(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false )
 			: base()
         {
             if (region == null)

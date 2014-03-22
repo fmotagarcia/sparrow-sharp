@@ -95,7 +95,6 @@ namespace Sparrow.Textures
 
 		/// Initializes an uncompressed texture with with raw pixel data and a set of properties.
 		/// Width and Height are expected pixel dimensions.
-		/// imgData is some kind of pointer
 		public GLTexture (IntPtr imgData, TextureProperties properties) 
 			: base () 
 		{

@@ -53,7 +53,6 @@ namespace SparrowSharp.Filters
 		public int TexCoordsID;
 
 		private List<Texture> _passTextures;
-		private int _savedFramebuffer;
 		private int[] _savedViewport = new int[4];
 		private Matrix _projMatrix;
 		private QuadBatch _cache;
@@ -65,7 +64,7 @@ namespace SparrowSharp.Filters
 
 		/// Initializes a fragment filter with the specified number of passes and resolution.
 		/// This initializer must only be called by the initializer of a subclass.
-		public FragmentFilter (int numPasses, float resolution)
+		public FragmentFilter (int numPasses = 1, float resolution = 1.0f)
 		{
 			NumPasses = numPasses;
 			Resolution = resolution;
@@ -87,16 +86,6 @@ namespace SparrowSharp.Filters
 			_indexData[5] = 2;
 
 			CreatePrograms();
-		}
-
-		/// Initializes a fragment filter with the specified number of passes and a resolution of 1.0f.
-		public FragmentFilter (int numPasses) : this(numPasses, 1.0f)
-		{
-		}
-
-		/// Initializes a fragment filter with 1 pass and a resolution of 1.0f.
-		public FragmentFilter () : this(1)
-		{
 		}
 
 		/// Caches the filter output into a SPTexture. An uncached filter is rendered in every frame; a

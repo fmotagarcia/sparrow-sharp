@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sparrow.Geom;
 using Sparrow.Utils;
 using Sparrow.Core;
+using SparrowSharp.Filters;
 
 namespace Sparrow.Display
 {
@@ -100,6 +101,9 @@ namespace Sparrow.Display
 		public bool Touchable;
         /// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
 		public string Name;
+		/// The filter that is attached to the display object. Beware that you should NOT use the same
+		/// filter on more than one object (for performance reasons).
+		public FragmentFilter Filter;
 
         /// The width of the object in points.
 		virtual public float Width {

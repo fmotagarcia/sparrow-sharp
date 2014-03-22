@@ -49,39 +49,16 @@ namespace SparrowSharp.Filters
 		private BlurProgram _program;
 		private BlurProgram _tintedProgram;
 		/// Initializes a blur filter with the specified blur and a resolution.
-		public BlurFilter (float blur, float resolution) : base(1, resolution)
+		public BlurFilter (float blur = 1.0f, float resolution = 1.0f) : base(1, resolution)
 		{
 			_blurX = blur;
 			_blurY = blur;
 			UpdateMarginsAndPasses();
 		}
 
-		/// Initializes a blur filter with the specified blur and a resolution of 1.0f.
-		public BlurFilter (float blur) : this(blur, 1.0f)
-		{
-		}
-
-		/// Initializes a blur filter with 1.0f blur and resolution of 1.0f.
-		public BlurFilter () : this(1.0f)
-		{
-		}
-
-		/// 0x000000 will replace the RGB values of the input color. Pass false to deactivate
-		/// the uniform color. Alpha will be set to 1.0f
-		public void SetUniformColor(bool enable) {
-			SetUniformColor (enable, 0x000000);
-			
-		}
-
-		/// The passed color will replace the RGB values of the input color. Pass false as the first parameter
-		/// to deactivate the uniform color. Alpha will be set to 1.0f
-		public void SetUniformColor(bool enable, uint color) {
-			SetUniformColor (enable, color, 1.0f);
-		}
-
 		/// A uniform color will replace the RGB values of the input color, while the alpha value will be
 		/// multiplied with the given factor. Pass NO as the first parameter to deactivate the uniform color.
-		public void SetUniformColor(bool enable, uint color, float alpha) {
+		public void SetUniformColor(bool enable, uint color = 0x000000, float alpha = 1.0f) {
 			_color[0] = ColorUtil.GetR(color) / 255.0f;
 			_color[1] = ColorUtil.GetG(color) / 255.0f;
 			_color[2] = ColorUtil.GetB(color) / 255.0f;

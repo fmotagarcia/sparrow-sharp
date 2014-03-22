@@ -231,14 +231,14 @@ namespace Sparrow.Display
                 {
                     support.PushState(child.TransformationMatrix, child.Alpha, child.BlendMode);
 
-                    //if (child.HasFilter ??) 
-                    //{
-                    //    child.Filter(child, support);
-                    //}
-                    //else
-                    //{
-                    child.Render(support);
-                    //}
+					if (child.Filter != null) 
+                    {
+						child.Filter.RenderObject(child, support);
+                    }
+                    else
+                    {
+                    	child.Render(support);
+                    }
                     support.PopState();
                 }
             }
