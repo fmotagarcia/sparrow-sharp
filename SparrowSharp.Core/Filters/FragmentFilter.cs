@@ -53,12 +53,12 @@ namespace SparrowSharp.Filters
 		/// The ID of the vertex buffer attribute that stores the SPTexture coordinates.
 		public int TexCoordsID;
 
-		private List<Texture> _passTextures;
-		private Matrix _projMatrix;
+		private readonly List<Texture> _passTextures;
+		private readonly Matrix _projMatrix;
 		private QuadBatch _cache;
 		private bool _cacheRequested;
-		private VertexData _vertexData;
-		private ushort[] _indexData = new ushort[6];
+		private readonly VertexData _vertexData;
+		private readonly ushort[] _indexData = new ushort[6];
 		private uint _vertexBufferName;
 		private uint _indexBufferName;
 
@@ -163,8 +163,12 @@ namespace SparrowSharp.Filters
 
 		public static String StandardFragmentShader()
 		{
-			StringBuilder source = new StringBuilder("");
+			StringBuilder source = new StringBuilder ("");
+#if __WINDOWS__
+			source.AppendLine("uniform sampler2D uTexture;");
+#else
 			source.AppendLine("uniform lowp sampler2D uTexture;");
+#endif
 			source.AppendLine("varying lowp vec2 vTexCoords;");
 			source.AppendLine("void main() {");
 			source.AppendLine("    gl_FragColor = texture2D(uTexture, vTexCoords);");
@@ -172,7 +176,6 @@ namespace SparrowSharp.Filters
 			return source.ToString ();
 		}
 
-		// TODO: do we want to support POT textures?
 		private void CalcBounds(DisplayObject obj,
 			Stage stage, 
 			float scale,
@@ -222,16 +225,13 @@ namespace SparrowSharp.Filters
 		{
 			if (_cache != null)
 				return _cache;
-			else
-			{
-				if (obj.Stage == null)
-					throw new  InvalidOperationException(@"Filtered object must be on the stage.");
+		    if (obj.Stage == null)
+		        throw new  InvalidOperationException(@"Filtered object must be on the stage.");
 
-				RenderSupport support = new RenderSupport();
-				support.PushState(obj.TransformationMatrixToSpace(obj.Stage), obj.Alpha, obj.BlendMode);
+		    RenderSupport support = new RenderSupport();
+		    support.PushState(obj.TransformationMatrixToSpace(obj.Stage), obj.Alpha, obj.BlendMode);
 
-				return RenderPasses(obj, support, true);
-			}
+		    return RenderPasses(obj, support, true);
 		}
 
 		private void DisposeCache()

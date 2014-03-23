@@ -70,8 +70,7 @@ namespace Sparrow.Textures
 		}
 
 		/// Initializes a texture with the given properties. Width and height are expected pixel dimensions.
-		public GLTexture (uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha) 
-			: base () 
+		public GLTexture (uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha)
 		{
 			Init (name, width, height, hasMipMaps, scale, premultipliedAlpha);
 		}
@@ -95,8 +94,7 @@ namespace Sparrow.Textures
 
 		/// Initializes an uncompressed texture with with raw pixel data and a set of properties.
 		/// Width and Height are expected pixel dimensions.
-		public GLTexture (IntPtr imgData, TextureProperties properties) 
-			: base () 
+		public GLTexture (IntPtr imgData, TextureProperties properties)
 		{
 			uint glTexName;
 			bool compressed = properties.TextureFormat.Compressed;
