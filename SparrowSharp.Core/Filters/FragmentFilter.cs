@@ -16,43 +16,35 @@ namespace SparrowSharp.Filters
 	{
 		public const int MIN_TEXTURE_SIZE = 64;
 		private bool _cached;
+
 		/// Indicates if the filter is cached (via the "cache" method).
-		public bool Cached {get {return _cached;} }
+		public bool Cached { get { return _cached; } }
 
 		/// The resolution of the filter texture. "1" means stage resolution, "0.5" half the stage
 		/// resolution. A lower resolution saves memory and execution time(depending on the GPU), but
 		/// results in a lower output quality. Values greater than 1 are allowed; such values might make
 		/// sense for a cached filter when it is scaled up. default 1
 		public float Resolution;
-
 		/// The filter mode, which is one of the constants defined in the 'FragmentFilterMode' enum.
 		/// (default: FragmentFilterMode.Replace)
 		public FragmentFilterMode Mode;
-
 		/// Use the x-offset to move the filter output to the right or left.
 		public float OffsetX;
-
 		/// Use the y-offset to move the filter output to the top or bottom.
 		public float OffsetY;
-
 		/// The x-margin will extend the size of the filter texture along the x-axis.
 		/// Useful when the filter will "grow" the rendered object.
 		public float MarginX;
-
 		/// The y-margin will extend the size of the filter texture along the y-axis.
 		/// Useful when the filter will "grow" the rendered object.
 		public float MarginY;
-
 		/// The number of passes the filter is applied. The "activate" and "deactivate" methods will be
 		/// called that often.
 		public int NumPasses;
-
 		/// The ID of the vertex buffer attribute that stores the vertex position.
 		public int VertexPosID;
-
 		/// The ID of the vertex buffer attribute that stores the SPTexture coordinates.
 		public int TexCoordsID;
-
 		private readonly List<Texture> _passTextures;
 		private readonly Matrix _projMatrix;
 		private QuadBatch _cache;
@@ -70,28 +62,28 @@ namespace SparrowSharp.Filters
 			Resolution = resolution;
 			Mode = FragmentFilterMode.Replace;
 			_passTextures = new List<Texture> (numPasses);
-			_projMatrix = Matrix.Create(0,0,0,0,0,0);
+			_projMatrix = Matrix.Create (0, 0, 0, 0, 0, 0);
 
-			_vertexData = new VertexData(4, true);
-			_vertexData.Vertices[1].TexCoords.X = 1.0f;
-			_vertexData.Vertices[2].TexCoords.Y = 1.0f;
-			_vertexData.Vertices[3].TexCoords.X = 1.0f;
-			_vertexData.Vertices[3].TexCoords.Y = 1.0f;
+			_vertexData = new VertexData (4, true);
+			_vertexData.Vertices [1].TexCoords.X = 1.0f;
+			_vertexData.Vertices [2].TexCoords.Y = 1.0f;
+			_vertexData.Vertices [3].TexCoords.X = 1.0f;
+			_vertexData.Vertices [3].TexCoords.Y = 1.0f;
 
-			_indexData[0] = 0;
-			_indexData[1] = 1;
-			_indexData[2] = 2;
-			_indexData[3] = 1;
-			_indexData[4] = 3;
-			_indexData[5] = 2;
+			_indexData [0] = 0;
+			_indexData [1] = 1;
+			_indexData [2] = 2;
+			_indexData [3] = 1;
+			_indexData [4] = 3;
+			_indexData [5] = 2;
 
-			CreatePrograms();
+			CreatePrograms ();
 		}
 
 		/// Caches the filter output into a SPTexture. An uncached filter is rendered in every frame; a
 		/// cached filter only once. However, if the filtered object or the filter settings change, it has
 		/// to be updated manually; to do that, call "cache" again.
-		public void Cache() 
+		public void Cache ()
 		{
 			_cacheRequested = true;
 			DisposeCache ();
@@ -99,7 +91,7 @@ namespace SparrowSharp.Filters
 
 		/// Clears the cached output of the filter. After calling this method, the filter will be executed
 		/// once per frame again.
-		public void ClearCache() 
+		public void ClearCache ()
 		{
 			_cacheRequested = false;
 			DisposeCache ();
@@ -108,25 +100,24 @@ namespace SparrowSharp.Filters
 		/// Applies the filter on a certain display object, rendering the output into the current render
 		/// target. This method is called automatically by Sparrow's rendering system for the object the
 		/// filter is attached to.
-		public void RenderObject(DisplayObject obj, RenderSupport support) 
+		public void RenderObject (DisplayObject obj, RenderSupport support)
 		{
 			// bottom layer
 			if (Mode == FragmentFilterMode.Above) {
-				obj.Render(support);
+				obj.Render (support);
 			}
 				
 			// center layer
-			if (_cacheRequested)
-			{
+			if (_cacheRequested) {
 				_cacheRequested = false;
-				_cache = RenderPasses(obj, support, true);
+				_cache = RenderPasses (obj, support, true);
 				DisposePassTextures ();
 			}
 
 			if (_cache != null) {
 				_cache.Render (support);
 			} else {
-				RenderPasses(obj, support, false);
+				RenderPasses (obj, support, false);
 			}
 
 			// top layer
@@ -136,7 +127,7 @@ namespace SparrowSharp.Filters
 		}
 
 		/// Subclasses must override this method and use it to create their fragment and vertex shaders.
-		public abstract void CreatePrograms();
+		public abstract void CreatePrograms ();
 
 		/// Subclasses must override this method and use it to activate their shader program.
 		/// The 'activate' call directly precedes the call to 'glDrawElements'.
@@ -147,109 +138,105 @@ namespace SparrowSharp.Filters
 			// override in subclass
 		}
 
-		public static String StandardVertexShader()
+		public static String StandardVertexShader ()
 		{
-			StringBuilder source = new StringBuilder("");
-			source.AppendLine("attribute vec4 aPosition;");
-			source.AppendLine("attribute lowp vec2 aTexCoords;");
-			source.AppendLine("uniform mat4 uMvpMatrix;");
-			source.AppendLine("varying lowp vec2 vTexCoords;");
-			source.AppendLine("void main() {");
-			source.AppendLine("    gl_Position = uMvpMatrix * aPosition;");
-			source.AppendLine("    vTexCoords  = aTexCoords;");
-			source.AppendLine("}");
+			StringBuilder source = new StringBuilder ("");
+			source.AppendLine ("attribute vec4 aPosition;");
+			source.AppendLine ("attribute lowp vec2 aTexCoords;");
+			source.AppendLine ("uniform mat4 uMvpMatrix;");
+			source.AppendLine ("varying lowp vec2 vTexCoords;");
+			source.AppendLine ("void main() {");
+			source.AppendLine ("    gl_Position = uMvpMatrix * aPosition;");
+			source.AppendLine ("    vTexCoords  = aTexCoords;");
+			source.AppendLine ("}");
 			return source.ToString ();
 		}
 
-		public static String StandardFragmentShader()
+		public static String StandardFragmentShader ()
 		{
 			StringBuilder source = new StringBuilder ("");
 #if __WINDOWS__
 			source.AppendLine("uniform sampler2D uTexture;");
 #else
-			source.AppendLine("uniform lowp sampler2D uTexture;");
+			source.AppendLine ("uniform lowp sampler2D uTexture;");
 #endif
-			source.AppendLine("varying lowp vec2 vTexCoords;");
-			source.AppendLine("void main() {");
-			source.AppendLine("    gl_FragColor = texture2D(uTexture, vTexCoords);");
-			source.AppendLine("}");
+			source.AppendLine ("varying lowp vec2 vTexCoords;");
+			source.AppendLine ("void main() {");
+			source.AppendLine ("    gl_FragColor = texture2D(uTexture, vTexCoords);");
+			source.AppendLine ("}");
 			return source.ToString ();
 		}
 
-		private void CalcBounds(DisplayObject obj,
-			Stage stage, 
-			float scale,
-			bool intersectWithStage,
-			out Rectangle bounds,
-			out Rectangle boundsPOT)
+		private void CalcBounds (DisplayObject obj,
+		                         Stage stage, 
+		                         float scale,
+		                         bool intersectWithStage,
+		                         out Rectangle bounds,
+		                         out Rectangle boundsPOT)
 		{
 			float marginX;
 			float marginY;
 
 			// optimize for full-screen effects
-			if (obj == stage || obj == SparrowSharpApp.Root)
-			{
+			if (obj == stage || obj == SparrowSharpApp.Root) {
 				marginX = marginY = 0;
-				bounds = new Rectangle(0, 0, stage.Width, stage.Height);
-			}
-			else
-			{
+				bounds = new Rectangle (0, 0, stage.Width, stage.Height);
+			} else {
 				marginX = MarginX;
 				marginY = MarginY;
-				bounds = obj.BoundsInSpace(stage);
+				bounds = obj.BoundsInSpace (stage);
 			}
 
 			if (intersectWithStage)
 				bounds = bounds.Intersection (stage.Bounds);
 			boundsPOT = null;
 			Rectangle result = bounds;
-			if (!result.IsEmpty())
-			{
+			if (!result.IsEmpty ()) {
 				// the bounds are a rectangle around the object, in stage coordinates,
 				// and with an optional margin.
-				bounds.Inflate(marginX, marginY);
+				bounds.Inflate (marginX, marginY);
 
 				// To fit into a POT-texture, we extend it towards the right and bottom.
 				int minSize = (int)(MIN_TEXTURE_SIZE / scale);
-				float minWidth  = result.Width  > minSize ? result.Width  : minSize;
+				float minWidth = result.Width > minSize ? result.Width : minSize;
 				float minHeight = result.Height > minSize ? result.Height : minSize;
 
-				boundsPOT = new Rectangle(result.X,
+				boundsPOT = new Rectangle (result.X,
 					result.Y,
-					NumberUtil.NextPowerOfTwo(minWidth  * scale) / scale,
-					NumberUtil.NextPowerOfTwo(minHeight * scale) / scale);
+					NumberUtil.NextPowerOfTwo (minWidth * scale) / scale,
+					NumberUtil.NextPowerOfTwo (minHeight * scale) / scale);
 			}
 		}
 
-		private QuadBatch CompileWith(DisplayObject obj)
+		private QuadBatch CompileWith (DisplayObject obj)
 		{
 			if (_cache != null)
 				return _cache;
-		    if (obj.Stage == null)
-		        throw new  InvalidOperationException(@"Filtered object must be on the stage.");
+			if (obj.Stage == null)
+				throw new  InvalidOperationException (@"Filtered object must be on the stage.");
 
-		    RenderSupport support = new RenderSupport();
-		    support.PushState(obj.TransformationMatrixToSpace(obj.Stage), obj.Alpha, obj.BlendMode);
+			RenderSupport support = new RenderSupport ();
+			support.PushState (obj.TransformationMatrixToSpace (obj.Stage), obj.Alpha, obj.BlendMode);
 
-		    return RenderPasses(obj, support, true);
+			return RenderPasses (obj, support, true);
 		}
 
-		private void DisposeCache()
+		private void DisposeCache ()
 		{
 			_cache = null;
 		}
 
-		private void DisposePassTextures()
+		private void DisposePassTextures ()
 		{
 			_passTextures.Clear ();
 		}
 
-		private Texture PassTextureForPass(int pass)
+		private Texture PassTextureForPass (int pass)
 		{
-			return _passTextures[pass % 2];
+			return _passTextures [pass % 2];
 		}
 
-		private QuadBatch RenderPasses(DisplayObject obj, RenderSupport support, bool intoCache)
+		private QuadBatch RenderPasses (DisplayObject obj, RenderSupport support, bool intoCache)
 		{
 			Texture cacheTexture = null;
 			Stage stage = obj.Stage;
@@ -261,36 +248,35 @@ namespace SparrowSharp.Filters
 			// the bounds of the object in stage coordinates
 			Rectangle boundsPOT;
 			Rectangle bounds;
-			CalcBounds(obj, stage, scale, !intoCache, out bounds, out boundsPOT);
+			CalcBounds (obj, stage, scale, !intoCache, out bounds, out boundsPOT);
 
-			if (bounds.IsEmpty())
-			{
-				DisposePassTextures();
-				return intoCache ? new QuadBatch() : null;
+			if (bounds.IsEmpty ()) {
+				DisposePassTextures ();
+				return intoCache ? new QuadBatch () : null;
 			}
 
-			UpdateBuffers(boundsPOT);
-			UpdatePassTextures((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
+			UpdateBuffers (boundsPOT);
+			UpdatePassTextures ((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
 
 			support.FinishQuadBatch ();
-			support.AddDrawCalls(NumPasses);
-			support.PushState(Matrix.Create(), 1.0f, BlendMode.AUTO);
+			support.AddDrawCalls (NumPasses);
+			support.PushState (Matrix.Create (), 1.0f, BlendMode.AUTO);
 
 			// save original projection matrix and render target
-			_projMatrix.CopyFromMatrix(support.ProjectionMatrix);
+			_projMatrix.CopyFromMatrix (support.ProjectionMatrix);
 			Texture previousRenderTarget = support.RenderTarget;
 
 			// use cache?
 			if (intoCache) {
-				cacheTexture = CreateTexture((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
+				cacheTexture = CreateTexture ((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
 			}
 
 			// draw the original object into a texture
-			support.RenderTarget = _passTextures[0];
+			support.RenderTarget = _passTextures [0];
 			SparrowSharpApp.Context.ScissorBox = null; // we want the entire texture cleared
 			support.Clear ();
 			support.BlendMode = BlendMode.NORMAL;
-			support.SetupOrthographicProjection(boundsPOT.Left, boundsPOT.Right, boundsPOT.Bottom, boundsPOT.Top);
+			support.SetupOrthographicProjection (boundsPOT.Left, boundsPOT.Right, boundsPOT.Bottom, boundsPOT.Top);
 			obj.Render (support);
 			support.FinishQuadBatch ();
 
@@ -299,6 +285,7 @@ namespace SparrowSharp.Filters
 			support.ModelViewMatrix.Identity ();
 			support.PushClipRect (bounds);
 
+			#if __ANDROID__
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (All.ElementArrayBuffer, _indexBufferName);
 
@@ -308,25 +295,30 @@ namespace SparrowSharp.Filters
 			GL.EnableVertexAttribArray (TexCoordsID);
 			GL.VertexAttribPointer (TexCoordsID, 2, All.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
 
+			#elif __IOS__ || __WINDOWS__
+			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+			GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
+
+			GL.EnableVertexAttribArray (VertexPosID);
+			GL.VertexAttribPointer (VertexPosID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
+
+			GL.EnableVertexAttribArray (TexCoordsID);
+			GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
+
+			#endif
+
 			// draw all passes
-			for (int i=0; i<NumPasses; ++i)
-			{
-				if (i < NumPasses - 1) // intermediate pass
-				{
+			for (int i = 0; i < NumPasses; ++i) {
+				if (i < NumPasses - 1) { // intermediate pass
 					// draw into pass texture
 					support.RenderTarget = PassTextureForPass (i + 1);
 					support.Clear ();
-				}
-				else // final pass
-				{
-					if (intoCache)
-					{
+				} else { // final pass
+					if (intoCache) {
 						// draw into cache texture
 						support.RenderTarget = cacheTexture;
 						support.Clear ();
-					}
-					else
-					{
+					} else {
 						// draw into back buffer, at original (stage) coordinates
 						support.RenderTarget = previousRenderTarget;
 						support.ProjectionMatrix = _projMatrix;
@@ -338,11 +330,20 @@ namespace SparrowSharp.Filters
 
 				Texture passTexture = PassTextureForPass (i);
 
+				#if __ANDROID__
 				GL.ActiveTexture (All.Texture0);
 				GL.BindTexture (All.Texture2D, passTexture.Name);
 
 				ActivateWithPass (i, passTexture, support.MvpMatrix);
 				GL.DrawElements (All.Triangles, 6, All.UnsignedShort, IntPtr.Zero);
+				#elif __IOS__ || __WINDOWS__
+				GL.ActiveTexture (TextureUnit.Texture0);
+				GL.BindTexture (TextureTarget.Texture2D, passTexture.Name);
+
+				ActivateWithPass (i, passTexture, support.MvpMatrix);
+				GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
+				#endif
+
 				DeactivateWithPass (i, passTexture);
 			}
 
@@ -350,8 +351,7 @@ namespace SparrowSharp.Filters
 			support.PopClipRect ();
 
 			QuadBatch cache = null;
-			if (intoCache)
-			{
+			if (intoCache) {
 				// restore support settings
 				support.RenderTarget = previousRenderTarget;
 				support.ProjectionMatrix = _projMatrix;
@@ -370,17 +370,18 @@ namespace SparrowSharp.Filters
 			return cache;
 		}
 
-		private void UpdateBuffers(Rectangle bounds)
+		private void UpdateBuffers (Rectangle bounds)
 		{
 			Vertex[] vertices = _vertexData.Vertices;
-			vertices[0].Position = new Vector2(bounds.X, bounds.Y);
-			vertices[1].Position = new Vector2(bounds.Right, bounds.Y);
-			vertices[2].Position = new Vector2(bounds.X,     bounds.Bottom);
-			vertices[3].Position = new Vector2(bounds.Right, bounds.Bottom);
+			vertices [0].Position = new Vector2 (bounds.X, bounds.Y);
+			vertices [1].Position = new Vector2 (bounds.Right, bounds.Y);
+			vertices [2].Position = new Vector2 (bounds.X, bounds.Bottom);
+			vertices [3].Position = new Vector2 (bounds.Right, bounds.Bottom);
 
 			const int indexSize = sizeof(ushort) * 6;
 			const int vertexSize = Vertex.SIZE * 4;
 
+			#if __ANDROID__
 			if (_vertexBufferName == 0)
 			{
 				GL.GenBuffers (1, out _vertexBufferName);
@@ -393,32 +394,44 @@ namespace SparrowSharp.Filters
 
 			GL.BindBuffer (All.ArrayBuffer, _vertexBufferName);
 			GL.BufferData (All.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, All.StaticDraw);
+			#elif __IOS__ || __WINDOWS__
+			if (_vertexBufferName == 0) {
+				GL.GenBuffers (1, out _vertexBufferName);
+				GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+
+				GL.GenBuffers (1, out _indexBufferName);
+				GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
+				GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)indexSize, _indexData, BufferUsage.StaticDraw);
+			}
+
+			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, BufferUsage.StaticDraw);
+			#endif
 		}
 
-		private void UpdatePassTextures(int width, int height, float scale)
+		private void UpdatePassTextures (int width, int height, float scale)
 		{
 			int numPassTextures = NumPasses > 1 ? 2 : 1;
 			bool needsUpdate = _passTextures.Count != numPassTextures ||
-				_passTextures[0].Width != width ||
-				_passTextures[0].Height != height;
+			                   _passTextures [0].Width != width ||
+			                   _passTextures [0].Height != height;
 
-			if (needsUpdate)
-			{
+			if (needsUpdate) {
 				_passTextures.Clear ();
 				for (int i = 0; i < numPassTextures; ++i)
 					_passTextures.Add (CreateTexture (width, height, scale));
 			}
 		}
 
-		private Texture CreateTexture(int width, int height, float scale)
+		private Texture CreateTexture (int width, int height, float scale)
 		{
 			int legalWidth = NumberUtil.NextPowerOfTwo (width * scale);
 			int legalHeight = NumberUtil.NextPowerOfTwo (height * scale);
 
 			TextureProperties texProps = new TextureProperties {
-				TextureFormat = TextureFormat.Rgba4444,
-				Scale  = scale,
-				Width  = legalWidth,
+				TextureFormat = TextureFormat.Rgba8888,
+				Scale = scale,
+				Width = legalWidth,
 				Height = legalHeight,
 				NumMipmaps = 0,
 				GenerateMipmaps = false,
@@ -427,8 +440,6 @@ namespace SparrowSharp.Filters
 
 			return new GLTexture (IntPtr.Zero, texProps);
 		}
-
-
 	}
 }
 

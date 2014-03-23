@@ -1,8 +1,6 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Graphics.ES20;
-using GL1 = OpenTK.Graphics.ES11.GL;
-using All1 = OpenTK.Graphics.ES11.All;
 using OpenTK.Platform.iPhoneOS;
 using MonoTouch.Foundation;
 using MonoTouch.CoreAnimation;
@@ -46,11 +44,10 @@ namespace SparrowSharp.Core.iOS
                 Console.WriteLine("Minimum supported OpenGL ES version is 2.0");
             }
 
-            GL.Disable(All.CullFace);
-            GL.Disable(All.DepthTest);
-            GL.Disable(All.Alpha);
-            GL.Disable(All.Dither);
-            GL.Enable(All.Blend);
+			GL.Disable(EnableCap.CullFace);
+			GL.Disable(EnableCap.DepthTest);
+			GL.Disable(EnableCap.Dither);
+			GL.Enable(EnableCap.Blend);
         }
 
         #region DisplayLink support

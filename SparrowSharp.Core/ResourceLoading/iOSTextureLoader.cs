@@ -54,11 +54,11 @@ namespace Sparrow.ResourceLoading
 		private void GenerateTexture(UIImage image)
 		{
 			uint name = (uint)GL.GenTexture();
-			GL.BindTexture(All.Texture2D, name);
-			GL.TexParameter(All.Texture2D, All.TextureMaxAnisotropyExt, 1);
-			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.NearestMipmapNearest);
-			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-			GL.TexParameter(All.Texture2D, All.GenerateMipmapHint, (int)All.False);
+			GL.BindTexture(TextureTarget.Texture2D, name);
+//			GL.TexParameter(TextureTarget.Texture2D, All.TextureMaxAnisotropyExt, 1);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+//			GL.TexParameter(TextureTarget.Texture2D, All.GenerateMipmapHint, (int)All.False);
 			LoadTexture(image);
 
 			// see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
