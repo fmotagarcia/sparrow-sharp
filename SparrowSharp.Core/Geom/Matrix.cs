@@ -80,8 +80,8 @@ namespace Sparrow.Geom
 			float b = matrix.B * A + matrix.D * B;
 			float c = matrix.A * C + matrix.C * D;
 			float d = matrix.B * C + matrix.D * D;
-			float tx = matrix.A * Tx + matrix.C * matrix.Ty + matrix.Tx;
-			float ty = matrix.B * Tx + matrix.D * matrix.Ty + matrix.Ty;
+			float tx = matrix.A * Tx + matrix.C * Ty + matrix.Tx;
+			float ty = matrix.B * Tx + matrix.D * Ty + matrix.Ty;
 
 			A = a;
 			B = b;
