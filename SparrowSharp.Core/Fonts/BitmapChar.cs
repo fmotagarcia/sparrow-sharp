@@ -3,34 +3,53 @@ using Sparrow.Textures;
 
 namespace Sparrow.Fonts
 {
-    public class BitmapChar
-    {
-        private int _charId;
-        private Texture _texture;
-        private float _xOffset;
-        private float _yOffset;
-        private float _xAdvance;
-        private Dictionary<int, float> _kernings;
+	public class BitmapChar
+	{
+		private int _charId;
+		private Dictionary<int, float> _kernings;
 
-        public BitmapChar(int charId, Texture texture, float xOffset, float yOffset, float xAdvance)
-        {
-            _charId = charId;
-            _texture = texture;
-            _xOffset = xOffset;
-            _yOffset = yOffset;
-            _xAdvance = xAdvance;
-        }
+		public  Texture Texture { get; private set; }
 
-        public void AddKerning(float amount, int charId)
-        {
-            // TODO: sparrow lazy loads the kernings dictionary, revisit to check that we really want this
-            if (_kernings == null)
-            {
-                _kernings = new Dictionary<int, float>();
-            }
+		public float XOffset { get; private set; }
 
-            _kernings.Add(charId, amount);
-        }
-    }
+		public float YOffset { get; private set; }
+
+		public float XAdvance { get; private set; }
+
+		public float Width
+		{
+			get { return Texture.Width; }
+		}
+
+		public float Height
+		{
+			get { return Texture.Height; }
+		}
+
+		public BitmapChar(int charId, Texture texture, float xOffset, float yOffset, float xAdvance)
+		{
+			_charId = charId;
+			XAdvance = xAdvance;
+			Texture = texture;
+			XOffset = xOffset;
+			YOffset = yOffset;
+		}
+
+		public void AddKerning(float amount, int charId)
+		{
+			// TODO: sparrow lazy loads the kernings dictionary, revisit to check that we really want this
+			if (_kernings == null)
+			{
+				_kernings = new Dictionary<int, float>();
+			}
+
+			_kernings.Add(charId, amount);
+		}
+
+		public float KerningToChar(int charId)
+		{
+			return _kernings[charId];
+		}
+	}
 }
 

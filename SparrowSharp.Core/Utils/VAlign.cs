@@ -1,12 +1,10 @@
-using System;
-
-namespace Sparrow.Utils
+﻿namespace SparrowSharp.Core
 {
-	public class VAlign
+	public enum VAlign
 	{
-		public const string CENTER = "center";
-		public const string TOP = "top";
-		public const string BOTTOM = "bottom";
+		Top,
+		Center,
+		Bottom
 	}
 }
 

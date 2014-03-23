@@ -3,8 +3,8 @@ using System.Collections.Concurrent;
 
 namespace SparrowSharp.Pool
 {
-	public delegate T CreateObject<T> () where T : PooledObject;
-	public delegate void ReturnObject<PooledObject> (PooledObject pooledObject);
+	public delegate T CreateObject<T>() where T : PooledObject;
+	public delegate void ReturnObject<PooledObject>(PooledObject pooledObject);
 	public class ObjectPool
 	{
 		private ConcurrentQueue<PooledObject> _objects;
@@ -12,39 +12,43 @@ namespace SparrowSharp.Pool
 		private int _initialSize;
 		private int _maxBuffer;
 
-		public ObjectPool (CreateObject<PooledObject> createObject, int initalSize = 0, int maxBuffer = 0)
+		public ObjectPool(CreateObject<PooledObject> createObject, int initalSize = 0, int maxBuffer = 0)
 		{
-			if (createObject == null) {
-				throw new ArgumentNullException ("createObject");
+			if (createObject == null)
+			{
+				throw new ArgumentNullException("createObject");
 			}
 
 			_initialSize = initalSize;
 			_maxBuffer = maxBuffer;
 
-			_objects = new ConcurrentQueue<PooledObject> ();
+			_objects = new ConcurrentQueue<PooledObject>();
 			_createObject = createObject;
 
-			for (int i = 0; i < _initialSize; i++) {
-				PooledObject item = _createObject ();
-				item.Init (new ReturnObject<PooledObject> (PutObject));
+			for (int i = 0; i < _initialSize; i++)
+			{
+				PooledObject item = _createObject();
+				item.Init(new ReturnObject<PooledObject>(PutObject));
 
-				_objects.Enqueue (item);
+				_objects.Enqueue(item);
 			}
 		}
 
-		public PooledObject GetObject ()
+		public PooledObject GetObject()
 		{
 			PooledObject item;
-			if (!_objects.TryDequeue (out item)) {
-				item = _createObject ();
+			if (!_objects.TryDequeue(out item))
+			{
+				item = _createObject();
 			}
-			item.Init (new ReturnObject<PooledObject> (PutObject));
+			item.Init(new ReturnObject<PooledObject>(PutObject));
 			return item;
 		}
 
-		void PutObject (PooledObject item)
+		void PutObject(PooledObject item)
 		{
-			if (_maxBuffer == 0 || _maxBuffer > 0 && _objects.Count < _maxBuffer) {
+			if (_maxBuffer == 0 || _maxBuffer > 0 && _objects.Count < _maxBuffer)
+			{
 				_objects.Enqueue(item);
 			}
 		}

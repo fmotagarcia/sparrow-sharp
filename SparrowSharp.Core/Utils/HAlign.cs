@@ -1,12 +1,11 @@
-using System;
-
-namespace Sparrow.Utils
+﻿
+namespace SparrowSharp.Core
 {
-	public class HAlign
+	public enum HAlign
 	{
-		public const string CENTER = "center";
-		public const string LEFT = "left";
-		public const string RIGHT = "right";
+		Left,
+		Center,
+		Right
 	}
 }
 

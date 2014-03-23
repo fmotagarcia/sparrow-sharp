@@ -15,7 +15,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>SparrowSharp.Core.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,10 +72,8 @@
     <Compile Include="Geom\Rectangle.cs" />
     <Compile Include="Utils\AssetManager.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
-    <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\Juggler.cs" />
     <Compile Include="Utils\NumberUtil.cs" />
-    <Compile Include="Utils\VAlign.cs" />
     <Compile Include="Utils\Vertex.cs" />
     <Compile Include="Utils\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
@@ -102,6 +100,9 @@
     <Compile Include="Filters\BlurProgram.cs" />
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\EmptyFilter.cs" />
+    <Compile Include="Fonts\CharLocation.cs" />
+    <Compile Include="Utils\HAlign.cs" />
+    <Compile Include="Utils\VAlign.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

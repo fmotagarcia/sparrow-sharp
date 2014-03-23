@@ -4,10 +4,11 @@ using Sparrow.Geom;
 using Sparrow.Utils;
 using Sparrow.Core;
 using SparrowSharp.Filters;
+using SparrowSharp.Core;
 
 namespace Sparrow.Display
 {
-    /** 
+	/** 
      The DisplayObject class is the base class for all objects that are rendered on the screen.
  
      In Sparrow, all displayable objects are organized in a display tree. Only objects that are part of
@@ -60,9 +61,9 @@ namespace Sparrow.Display
 	{
 		#region Events
 
-		public delegate void EventHandler (DisplayObject target, DisplayObject currentTarget);
+		public delegate void EventHandler(DisplayObject target,DisplayObject currentTarget);
 
-		public delegate void EnterFrameEventHandler (DisplayObject target, DisplayObject currentTarget, float passedTime);
+		public delegate void EnterFrameEventHandler(DisplayObject target,DisplayObject currentTarget,float passedTime);
 
 		public event EventHandler Added;
 		public event EventHandler AddedToStage;
@@ -79,7 +80,7 @@ namespace Sparrow.Display
 		private float _x;
 		private float _y;
 		private float _pivotX;
-        private float _pivotY;
+		private float _pivotY;
 		private float _scaleX;
 		private float _scaleY;
 		private float _skewX;
@@ -93,134 +94,166 @@ namespace Sparrow.Display
 		/// filter on more than one object (for performance reasons).
 		//		private SPFragmentFilter *_filter;
 		private readonly Matrix _transformationMatrix;
-        /// The blend mode determines how the object is blended with the objects underneath. Default: AUTO
-        public uint BlendMode;
-        /// The visibility of the object. An invisible object will be untouchable.
+		/// The blend mode determines how the object is blended with the objects underneath. Default: AUTO
+		public uint BlendMode;
+		/// The visibility of the object. An invisible object will be untouchable.
 		public bool Visible;
-        /// Indicates if this object (and its children) will receive touch events.
+		/// Indicates if this object (and its children) will receive touch events.
 		public bool Touchable;
-        /// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
+		/// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
 		public string Name;
 		/// The filter that is attached to the display object. Beware that you should NOT use the same
 		/// filter on more than one object (for performance reasons).
 		public FragmentFilter Filter;
 
-        /// The width of the object in points.
-		virtual public float Width {
-			get { return BoundsInSpace (_parent).Width; }
-			set {
+		/// The width of the object in points.
+		virtual public float Width
+		{
+			get { return BoundsInSpace(_parent).Width; }
+			set
+			{
 				ScaleX = 1.0f;
 				float actualWidth = Width;
-				if (actualWidth != 0.0f) {
+				if (actualWidth != 0.0f)
+				{
 					ScaleX = value / actualWidth;
 				}
 			}
 		}
 
-        /// The height of the object in points.
-		virtual public float Height {
-			get { return BoundsInSpace (_parent).Height; }
-			set {
+		/// The height of the object in points.
+		virtual public float Height
+		{
+			get { return BoundsInSpace(_parent).Height; }
+			set
+			{
 				ScaleY = 1.0f;
 				float actualHeight = Width;
-				if (actualHeight != 0.0f) {
+				if (actualHeight != 0.0f)
+				{
 					ScaleY = value / actualHeight;
 				}
 			}
 		}
 
-        /// The x coordinate of the object relative to the local coordinates of the parent.
-		virtual public float X {
+		/// The x coordinate of the object relative to the local coordinates of the parent.
+		virtual public float X
+		{
 			get { return _x; }
-			set {
-				if (value != _x) {
+			set
+			{
+				if (value != _x)
+				{
 					_x = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The y coordinate of the object relative to the local coordinates of the parent.
-		virtual public float Y {
+		/// The y coordinate of the object relative to the local coordinates of the parent.
+		virtual public float Y
+		{
 			get { return _y; }
-			set {
-				if (value != _y) {
+			set
+			{
+				if (value != _y)
+				{
 					_y = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The horizontal scale factor. "1" means no scale, negative values flip the object.
-		virtual public float ScaleX {
+		/// The horizontal scale factor. "1" means no scale, negative values flip the object.
+		virtual public float ScaleX
+		{
 			get { return _scaleX; }
-			set {
-				if (value != _scaleX) {
+			set
+			{
+				if (value != _scaleX)
+				{
 					_scaleX = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The vertical scale factor. "1" means no scale, negative values flip the object.
-		virtual public float ScaleY {
+		/// The vertical scale factor. "1" means no scale, negative values flip the object.
+		virtual public float ScaleY
+		{
 			get { return _scaleY; }
-			set {
-				if (value != _scaleY) {
+			set
+			{
+				if (value != _scaleY)
+				{
 					_scaleY = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The horizontal skew angle in radians.
-		virtual public float SkewX {
+		/// The horizontal skew angle in radians.
+		virtual public float SkewX
+		{
 			get { return _skewX; }
-			set {
-				if (value != _skewX) {
+			set
+			{
+				if (value != _skewX)
+				{
 					_skewX = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The vertical skew angle in radians.
-		virtual public float SkewY {
+		/// The vertical skew angle in radians.
+		virtual public float SkewY
+		{
 			get { return _skewY; }
-			set {
-				if (value != _skewY) {
+			set
+			{
+				if (value != _skewY)
+				{
 					_skewY = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The x coordinate of the object's origin in its own coordinate space (default: 0).
-		virtual public float PivotX {
+		/// The x coordinate of the object's origin in its own coordinate space (default: 0).
+		virtual public float PivotX
+		{
 			get { return _pivotX; }
-			set {
-				if (value != _pivotX) {
+			set
+			{
+				if (value != _pivotX)
+				{
 					_pivotX = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The y coordinate of the object's origin in its own coordinate space (default: 0).
-		virtual public float PivotY {
+		/// The y coordinate of the object's origin in its own coordinate space (default: 0).
+		virtual public float PivotY
+		{
 			get { return _pivotY; }
-			set {
-				if (value != _pivotY) {
+			set
+			{
+				if (value != _pivotY)
+				{
 					_pivotY = value;
 					_orientationChanged = true;
 				}
 			}
 		}
 
-        /// The rotation of the object in radians. (In Sparrow, all angles are measured in radians.)
-		virtual public float Rotation {
+		/// The rotation of the object in radians. (In Sparrow, all angles are measured in radians.)
+		virtual public float Rotation
+		{
 			get { return _rotation; }
-			set {
+			set
+			{
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
 				value = value % (2.0f * (float)Math.PI);
 				// move to [-180 deg, +180 deg]
@@ -234,70 +267,87 @@ namespace Sparrow.Display
 			}
 		}
 
-        /// The opacity of the object. 0 = transparent, 1 = opaque.
-		virtual public float Alpha {
+		/// The opacity of the object. 0 = transparent, 1 = opaque.
+		virtual public float Alpha
+		{
 			get { return _alpha; }
-			set {
-				_alpha = NumberUtil.Clamp (value, 0.0f, 1.0f);
+			set
+			{
+				_alpha = NumberUtil.Clamp(value, 0.0f, 1.0f);
 			}
 		}
 
-        /// The topmost object in the display tree the object is part of.
-		public DisplayObject Base {
-			get {
+		/// The topmost object in the display tree the object is part of.
+		public DisplayObject Base
+		{
+			get
+			{
 				DisplayObject currentObject = this;
-				while (currentObject.Parent != null) {
+				while (currentObject.Parent != null)
+				{
 					currentObject = currentObject.Parent;
 				}
 				return currentObject;
 			}
 		}
 
-        /// The root object the display object is connected to (i.e. an instance of the class
-        /// that was passed to 'ViewController.Start()'), or null if the object is not connected
-        /// to it.
-		public DisplayObject Root {
-			get {
+		/// The root object the display object is connected to (i.e. an instance of the class
+		/// that was passed to 'ViewController.Start()'), or null if the object is not connected
+		/// to it.
+		public DisplayObject Root
+		{
+			get
+			{
 				DisplayObject currentObject = this;
 				while (currentObject.Parent != null)
 				{
-				    if (currentObject.Parent is Stage) {
+					if (currentObject.Parent is Stage)
+					{
 						return currentObject;
 					}
-				    currentObject = currentObject.Parent;
+					currentObject = currentObject.Parent;
 				}
-			    return null;
+				return null;
 			}
 		}
 
-        /// The Stage the display object is connected to, or null if it is not connected to a Stage.
-		public Stage Stage {
+		/// The Stage the display object is connected to, or null if it is not connected to a Stage.
+		public Stage Stage
+		{
 			get
 			{
-			    if (Base is Stage) {
+				if (Base is Stage)
+				{
 					return (Stage)Base;
 				}
-			    return null;
+				return null;
 			}
 		}
 
-        /// The transformation matrix of the object relative to its parent.
-        /// @returns CAUTION: not a copy, but the actual object!
-		public Matrix TransformationMatrix {
-			get {
-				if (_orientationChanged) {
+		/// The transformation matrix of the object relative to its parent.
+		/// @returns CAUTION: not a copy, but the actual object!
+		public Matrix TransformationMatrix
+		{
+			get
+			{
+				if (_orientationChanged)
+				{
 					_orientationChanged = false;
 
-					if (_skewX == 0.0f && _skewY == 0.0f) {
+					if (_skewX == 0.0f && _skewY == 0.0f)
+					{
 						// optimization: no skewing / rotation simplifies the matrix math
-						if (_rotation == 0.0f) {
+						if (_rotation == 0.0f)
+						{
 							_transformationMatrix.A = _scaleX;
 							_transformationMatrix.B = 0.0f;
 							_transformationMatrix.C = 0.0f;
 							_transformationMatrix.D = _scaleY;
 							_transformationMatrix.Tx = _x - _pivotX * _scaleX;
 							_transformationMatrix.Ty = _y - _pivotY * _scaleY;
-						} else {
+						}
+						else
+						{
 
 							float sin = NumberUtil.sinLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
 							float cos = NumberUtil.cosLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
@@ -316,14 +366,17 @@ namespace Sparrow.Display
 							_transformationMatrix.Tx = tx;
 							_transformationMatrix.Ty = ty;
 						}
-					} else {
-						_transformationMatrix.Identity ();
-						_transformationMatrix.Scale (_scaleX, _scaleY);
-						_transformationMatrix.Skew (_skewX, _skewY);
-						_transformationMatrix.Rotate (_rotation);
-						_transformationMatrix.Translate (_x, _y);
+					}
+					else
+					{
+						_transformationMatrix.Identity();
+						_transformationMatrix.Scale(_scaleX, _scaleY);
+						_transformationMatrix.Skew(_skewX, _skewY);
+						_transformationMatrix.Rotate(_rotation);
+						_transformationMatrix.Translate(_x, _y);
 
-						if (_pivotX != 0.0f || _pivotY != 0.0f) {
+						if (_pivotX != 0.0f || _pivotY != 0.0f)
+						{
 							// prepend pivot transformation
 							_transformationMatrix.Tx = _x - _transformationMatrix.A * _pivotX
 							- _transformationMatrix.C * _pivotY;
@@ -336,9 +389,10 @@ namespace Sparrow.Display
 				return _transformationMatrix;
 			}
 
-			set {
+			set
+			{
 				_orientationChanged = false;
-				_transformationMatrix.CopyFromMatrix (value);
+				_transformationMatrix.CopyFromMatrix(value);
 
 
 				_pivotX = 0.0f;
@@ -347,286 +401,326 @@ namespace Sparrow.Display
 				_x = value.Tx;
 				_y = value.Ty;
 
-				_skewX = (float)Math.Atan (-value.C / value.D);
-				_skewY = (float)Math.Atan (value.B / value.A);
+				_skewX = (float)Math.Atan(-value.C / value.D);
+				_skewY = (float)Math.Atan(value.B / value.A);
 
-				_scaleX = value.A / (float)Math.Cos (_skewY);
-				_scaleY = value.D / (float)Math.Cos (_skewX);
+				_scaleX = value.A / (float)Math.Cos(_skewY);
+				_scaleY = value.D / (float)Math.Cos(_skewX);
 
-				if (NumberUtil.Equals (_skewX, _skewY)) {
+				if (NumberUtil.Equals(_skewX, _skewY))
+				{
 					_rotation = _skewX;
 					_skewX = _skewY = 0.0f;
-				} else {
+				}
+				else
+				{
 					_rotation = 0.0f;
 				}
 			}
 		}
 
-        /// Indicates if an object occupies any visible area. (Which is the case when its 'Alpha',
-        /// 'ScaleX` and 'ScaleY' values are not zero, and its 'Visible' property is true.)
-		public bool HasVisibleArea {
-			get {
+		/// Indicates if an object occupies any visible area. (Which is the case when its 'Alpha',
+		/// 'ScaleX` and 'ScaleY' values are not zero, and its 'Visible' property is true.)
+		public bool HasVisibleArea
+		{
+			get
+			{
 				return _alpha != 0.0f && Visible && _scaleX != 0.0f && _scaleY != 0.0f;
 			}
 		}
 
-        /// The bounds of the object relative to the local coordinates of the parent.
-		public Rectangle Bounds {
-			get { return BoundsInSpace (Parent); }
+		/// The bounds of the object relative to the local coordinates of the parent.
+		public Rectangle Bounds
+		{
+			get { return BoundsInSpace(Parent); }
 		}
 
-        /// The DisplayObjectContainer that contains this display object.
-		public DisplayObjectContainer Parent {
+		/// The DisplayObjectContainer that contains this display object.
+		public DisplayObjectContainer Parent
+		{
 			get { return _parent; }
-			internal set {
+			internal set
+			{
 				DisplayObject ancestor = value;
-				while (ancestor != this && ancestor != null) {
+				while (ancestor != this && ancestor != null)
+				{
 					ancestor = ancestor.Parent;
 				}
-				if (ancestor == this) {
-					throw new InvalidOperationException ("An object cannot be added as a child to itself or one of its children");
+				if (ancestor == this)
+				{
+					throw new InvalidOperationException("An object cannot be added as a child to itself or one of its children");
 				}
-			    _parent = value;
+				_parent = value;
 			}	
 		}
 
-		public DisplayObject ()
+		public DisplayObject()
 		{
 			_alpha = 1.0f;
 			_scaleX = 1.0f;
 			_scaleY = 1.0f;
 			Visible = true;
 			Touchable = true;
-			_transformationMatrix = Matrix.Create ();
+			_transformationMatrix = Matrix.Create();
 			_orientationChanged = false;
 			BlendMode = Sparrow.Display.BlendMode.AUTO;
 		}
 
-        /// Renders the display object with the help of a support object. 
-		public abstract void Render (RenderSupport support);
+		/// Renders the display object with the help of a support object. 
+		public abstract void Render(RenderSupport support);
 
-        /// Removes the object from its parent, if it has one.
-		public void RemoveFromParent ()
+		/// Removes the object from its parent, if it has one.
+		public void RemoveFromParent()
 		{
-			if (Parent != null) {
-				Parent.RemoveChild (this);
+			if (Parent != null)
+			{
+				Parent.RemoveChild(this);
 			}
 		}
 
-        /// Moves the pivot point to the center of the object.
-		public void AlignPivotToCenter ()
+		/// Moves the pivot point to the center of the object.
+		public void AlignPivotToCenter()
 		{
-			Align (HAlign.CENTER, VAlign.CENTER);
+			Align(HAlign.Center, VAlign.Center);
 		}
 
-        /// Moves the pivot point to a certain position within the local coordinate system of the object.
-        public void Align (string hAlign, string vAlign)
+		/// Moves the pivot point to a certain position within the local coordinate system of the object.
+		public void Align(HAlign hAlign, VAlign vAlign)
 		{
-			Rectangle bounds = BoundsInSpace (this);
+			Rectangle bounds = BoundsInSpace(this);
 			_orientationChanged = true;
 
-			switch (hAlign) {
-			case HAlign.LEFT:
-				_pivotX = bounds.X;
-				break;
-			case HAlign.CENTER:
-				_pivotX = bounds.X + bounds.Width / 2.0f;
-				break;
-			case HAlign.RIGHT:
-				_pivotX = bounds.X + bounds.Width; 
-				break;
-			default:
-				throw new InvalidOperationException ("invalid horizontal alignment");
+			switch (hAlign)
+			{
+				case HAlign.Left:
+					_pivotX = bounds.X;
+					break;
+				case HAlign.Center:
+					_pivotX = bounds.X + bounds.Width / 2.0f;
+					break;
+				case HAlign.Right:
+					_pivotX = bounds.X + bounds.Width; 
+					break;
+				default:
+					throw new InvalidOperationException("invalid horizontal alignment");
 			}
 
-			switch (vAlign) {
-			case VAlign.TOP:
-				_pivotY = bounds.Y;  
-				break;
-			case VAlign.CENTER:
-				_pivotY = bounds.Y + bounds.Height / 2.0f; 
-				break;
-			case VAlign.BOTTOM:
-				_pivotY = bounds.Y + bounds.Height; 
-				break;
-			default:
-				throw new InvalidOperationException ("invalid vertical alignment");
+			switch (vAlign)
+			{
+				case VAlign.Top:
+					_pivotY = bounds.Y;  
+					break;
+				case VAlign.Center:
+					_pivotY = bounds.Y + bounds.Height / 2.0f; 
+					break;
+				case VAlign.Bottom:
+					_pivotY = bounds.Y + bounds.Height; 
+					break;
+				default:
+					throw new InvalidOperationException("invalid vertical alignment");
 			}
 		}
 
-        /// Creates a matrix that represents the transformation from the local coordinate system to another.
-		public Matrix TransformationMatrixToSpace (DisplayObject targetSpace)
+		/// Creates a matrix that represents the transformation from the local coordinate system to another.
+		public Matrix TransformationMatrixToSpace(DisplayObject targetSpace)
 		{     
 			DisplayObject currentObject;
 			Matrix selfMatrix;
 			Matrix targetMatrix;
 
-			if (targetSpace == this) {
+			if (targetSpace == this)
+			{
 				Matrix identity = Matrix.Create();
-				identity.Identity ();
+				identity.Identity();
 
 				return identity;
-			} else if (targetSpace == _parent || (targetSpace == null && _parent == null)) {
-				Matrix transformationMatrix = Matrix.Create ();
-				transformationMatrix.CopyFromMatrix (TransformationMatrix);
+			}
+			else if (targetSpace == _parent || (targetSpace == null && _parent == null))
+			{
+				Matrix transformationMatrix = Matrix.Create();
+				transformationMatrix.CopyFromMatrix(TransformationMatrix);
 				return transformationMatrix;
-			} else if (targetSpace == null || targetSpace == this.Base) {
+			}
+			else if (targetSpace == null || targetSpace == this.Base)
+			{
 				// targetSpace 'null' represents the target coordinate of the base object.
 				// -> move up from this to base
-				selfMatrix = Matrix.Create ();
-				selfMatrix.Identity ();
+				selfMatrix = Matrix.Create();
+				selfMatrix.Identity();
 				currentObject = this;
-				while (currentObject != targetSpace) {
-					selfMatrix.AppendMatrix (currentObject.TransformationMatrix);
+				while (currentObject != targetSpace)
+				{
+					selfMatrix.AppendMatrix(currentObject.TransformationMatrix);
 					currentObject = currentObject.Parent;
 				}        
 				return selfMatrix; 
-			} else if (targetSpace.Parent == this) {
-				targetMatrix = Matrix.Create ();
-				targetMatrix.CopyFromMatrix (_transformationMatrix);
-				targetMatrix.Invert ();
+			}
+			else if (targetSpace.Parent == this)
+			{
+				targetMatrix = Matrix.Create();
+				targetMatrix.CopyFromMatrix(_transformationMatrix);
+				targetMatrix.Invert();
 
 				return targetMatrix;
 			}
 
 			// 1.: Find a common parent of this and the target coordinate space.
-			List<DisplayObject> ancestors = new List<DisplayObject> ();
+			List<DisplayObject> ancestors = new List<DisplayObject>();
 
 			int count = 0;
 			DisplayObject commonParent = null;
 			currentObject = this;
-			while (currentObject != null && count < MAX_DISPLAY_TREE_DEPTH) {
-				ancestors.Add (currentObject);
+			while (currentObject != null && count < MAX_DISPLAY_TREE_DEPTH)
+			{
+				ancestors.Add(currentObject);
 				currentObject = currentObject.Parent;
-			    count++;
+				count++;
 			}
 
 			currentObject = targetSpace;    
-			while (currentObject != null && commonParent == null) {        
-				for (int i = 0; i < count; ++i) {
-					if (currentObject == ancestors [i]) {
-						commonParent = ancestors [i];
+			while (currentObject != null && commonParent == null)
+			{        
+				for (int i = 0; i < count; ++i)
+				{
+					if (currentObject == ancestors[i])
+					{
+						commonParent = ancestors[i];
 						break;                
 					}            
 				}
 				currentObject = currentObject.Parent;
 			}
 
-			if (commonParent == null) {
-				throw new Exception ("Object not connected to target");
+			if (commonParent == null)
+			{
+				throw new Exception("Object not connected to target");
 			}
 
 			// 2.: Move up from this to common parent
 			selfMatrix = Matrix.Create();
-			selfMatrix.Identity ();
+			selfMatrix.Identity();
 			currentObject = this;    
-			while (currentObject != commonParent) {
-				selfMatrix.AppendMatrix (currentObject.TransformationMatrix);
+			while (currentObject != commonParent)
+			{
+				selfMatrix.AppendMatrix(currentObject.TransformationMatrix);
 				currentObject = currentObject.Parent;
 			}
 
 			// 3.: Now move up from target until we reach the common parent
 			targetMatrix = Matrix.Create();
-			targetMatrix.Identity ();
+			targetMatrix.Identity();
 			currentObject = targetSpace;
-			while (currentObject != null && currentObject != commonParent) {
-				targetMatrix.AppendMatrix (currentObject.TransformationMatrix);
+			while (currentObject != null && currentObject != commonParent)
+			{
+				targetMatrix.AppendMatrix(currentObject.TransformationMatrix);
 				currentObject = currentObject.Parent;
 			}    
 
 			// 4.: Combine the two matrices
-			targetMatrix.Invert ();
-			selfMatrix.AppendMatrix (targetMatrix);
+			targetMatrix.Invert();
+			selfMatrix.AppendMatrix(targetMatrix);
 
 			return selfMatrix;
 		}
 
-        /// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
-		public abstract Rectangle BoundsInSpace (DisplayObject targetSpace);
+		/// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
+		public abstract Rectangle BoundsInSpace(DisplayObject targetSpace);
 
-        /// Returns the object that is found topmost on a point in local coordinates, or nil if the test fails.
-		virtual public DisplayObject HitTestPoint (Point localPoint)
+		/// Returns the object that is found topmost on a point in local coordinates, or nil if the test fails.
+		virtual public DisplayObject HitTestPoint(Point localPoint)
 		{
 			// invisible or untouchable objects cause the test to fail
-			if (!Visible || !Touchable) {
+			if (!Visible || !Touchable)
+			{
 				return null;
 			}
 
 			// otherwise, check bounding box
-			if (BoundsInSpace (this).Contains (localPoint)) {
+			if (BoundsInSpace(this).Contains(localPoint))
+			{
 				return this; 
-			} else {
+			}
+			else
+			{
 				return null;
 			}
 		}
 
-        /// Transforms a point from the local coordinate system to global (stage) coordinates.
-		public Point LocalToGlobal (Point localPoint)
+		/// Transforms a point from the local coordinate system to global (stage) coordinates.
+		public Point LocalToGlobal(Point localPoint)
 		{
-			Matrix matrix = TransformationMatrixToSpace (Base);
-			return matrix.TransformPoint (localPoint);
+			Matrix matrix = TransformationMatrixToSpace(Base);
+			return matrix.TransformPoint(localPoint);
 		}
 
-        /// Transforms a point from global (stage) coordinates to the local coordinate system.
-        public Point GlobalToLocal(Point globalPoint)
+		/// Transforms a point from global (stage) coordinates to the local coordinate system.
+		public Point GlobalToLocal(Point globalPoint)
 		{
-			Matrix matrix = TransformationMatrixToSpace (Base);
-			return matrix.TransformPoint (globalPoint);
+			Matrix matrix = TransformationMatrixToSpace(Base);
+			return matrix.TransformPoint(globalPoint);
 		}
 
-		internal virtual void InvokeAdded (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeAdded(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (Added != null) {
-				Added (target, currentTarget);
+			if (Added != null)
+			{
+				Added(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeAddedToStage (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeAddedToStage(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (AddedToStage != null) {
-				AddedToStage (target, currentTarget);
+			if (AddedToStage != null)
+			{
+				AddedToStage(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeRemoved (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeRemoved(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (Removed != null) {
-				Removed (target, currentTarget);
+			if (Removed != null)
+			{
+				Removed(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeRemovedFromStage (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeRemovedFromStage(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (RemovedFromStage != null) {
-				RemovedFromStage (target, currentTarget);
+			if (RemovedFromStage != null)
+			{
+				RemovedFromStage(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeEnterFrame (DisplayObject target, DisplayObject currentTarget, float passedTime)
+		internal virtual void InvokeEnterFrame(DisplayObject target, DisplayObject currentTarget, float passedTime)
 		{
-			if (EnterFrame != null) {
-				EnterFrame (target, currentTarget, passedTime);
+			if (EnterFrame != null)
+			{
+				EnterFrame(target, currentTarget, passedTime);
 			}
 		}
 
-		internal virtual void InvokeTouch (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeTouch(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (Touch != null) {
-				Touch (target, currentTarget);
+			if (Touch != null)
+			{
+				Touch(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeKeyUp (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeKeyUp(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (KeyUp != null) {
-				KeyUp (target, currentTarget);
+			if (KeyUp != null)
+			{
+				KeyUp(target, currentTarget);
 			}
 		}
 
-		internal virtual void InvokeKeyDown (DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeKeyDown(DisplayObject target, DisplayObject currentTarget)
 		{
-			if (KeyDown != null) {
-				KeyDown (target, currentTarget);
+			if (KeyDown != null)
+			{
+				KeyDown(target, currentTarget);
 			}
 		}
 	}
