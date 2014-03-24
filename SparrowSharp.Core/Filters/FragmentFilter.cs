@@ -17,7 +17,7 @@ namespace SparrowSharp.Filters
 		public const int MIN_TEXTURE_SIZE = 64;
 		private bool _cached;
 
-		/// Indicates if the filter is cached (via the "cache" method).
+		/// Indicates if the filter is cached (via the "Cache()" method).
 		public bool Cached { get { return _cached; } }
 
 		/// The resolution of the filter texture. "1" means stage resolution, "0.5" half the stage
@@ -40,11 +40,11 @@ namespace SparrowSharp.Filters
 		public float MarginY;
 		/// The number of passes the filter is applied. The "activate" and "deactivate" methods will be
 		/// called that often.
-		public int NumPasses;
-		/// The ID of the vertex buffer attribute that stores the vertex position.
-		public int VertexPosID;
-		/// The ID of the vertex buffer attribute that stores the SPTexture coordinates.
-		public int TexCoordsID;
+		protected int NumPasses;
+		/// The ID of the vertex buffer attribute that stores the Vertex position.
+		protected int VertexPosID;
+		/// The ID of the vertex buffer attribute that stores the Texture coordinates.
+		protected int TexCoordsID;
 		private readonly List<Texture> _passTextures;
 		private readonly Matrix _projMatrix;
 		private QuadBatch _cache;
@@ -80,13 +80,14 @@ namespace SparrowSharp.Filters
 			CreatePrograms ();
 		}
 
-		/// Caches the filter output into a SPTexture. An uncached filter is rendered in every frame; a
+		/// Caches the filter output into a Texture. An uncached filter is rendered in every frame; a
 		/// cached filter only once. However, if the filtered object or the filter settings change, it has
 		/// to be updated manually; to do that, call "cache" again.
 		public void Cache ()
 		{
 			_cacheRequested = true;
 			DisposeCache ();
+			_cached = true;
 		}
 
 		/// Clears the cached output of the filter. After calling this method, the filter will be executed
@@ -95,6 +96,7 @@ namespace SparrowSharp.Filters
 		{
 			_cacheRequested = false;
 			DisposeCache ();
+			_cached = false;
 		}
 
 		/// Applies the filter on a certain display object, rendering the output into the current render
@@ -130,7 +132,7 @@ namespace SparrowSharp.Filters
 		protected abstract void CreatePrograms ();
 
 		/// Subclasses must override this method and use it to activate their shader program.
-		/// The 'activate' call directly precedes the call to 'glDrawElements'.
+		/// The 'ActivateWithPass' call directly precedes the call to 'GL.DrawElements'.
 		protected abstract void ActivateWithPass (int pass, Texture texture, Matrix mvpMatrix);
 
 		protected void DeactivateWithPass (int pass, Texture texture)
@@ -138,7 +140,7 @@ namespace SparrowSharp.Filters
 			// override in subclass
 		}
 
-		public static String StandardVertexShader ()
+		protected static String StandardVertexShader ()
 		{
 			StringBuilder source = new StringBuilder ("");
 			source.AppendLine ("attribute vec4 aPosition;");
@@ -152,7 +154,7 @@ namespace SparrowSharp.Filters
 			return source.ToString ();
 		}
 
-		public static String StandardFragmentShader ()
+		protected static String StandardFragmentShader ()
 		{
 			StringBuilder source = new StringBuilder ("");
 #if __WINDOWS__
