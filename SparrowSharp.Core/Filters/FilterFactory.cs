@@ -38,6 +38,14 @@ namespace SparrowSharp.Filters
 			glow.SetUniformColor(true, color, alpha);
 			return glow;
 		}
+
+		/// Creates a color matrix filter wit the specified color matrix.
+		/// If the matrix is not specified it will use an identity matrix 
+		/// (that does nothing)
+		public static ColorMatrixFilter ColorMatrix(ColorMatrix colorMatrix = null)
+		{
+			return new ColorMatrixFilter (colorMatrix);
+		}
 	}
 }
 

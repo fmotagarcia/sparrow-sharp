@@ -127,13 +127,13 @@ namespace SparrowSharp.Filters
 		}
 
 		/// Subclasses must override this method and use it to create their fragment and vertex shaders.
-		public abstract void CreatePrograms ();
+		protected abstract void CreatePrograms ();
 
 		/// Subclasses must override this method and use it to activate their shader program.
 		/// The 'activate' call directly precedes the call to 'glDrawElements'.
-		public abstract void ActivateWithPass (int pass, Texture texture, Matrix mvpMatrix);
+		protected abstract void ActivateWithPass (int pass, Texture texture, Matrix mvpMatrix);
 
-		public void DeactivateWithPass (int pass, Texture texture)
+		protected void DeactivateWithPass (int pass, Texture texture)
 		{
 			// override in subclass
 		}

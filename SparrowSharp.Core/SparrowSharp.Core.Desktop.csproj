@@ -96,6 +96,9 @@
     <Compile Include="Filters\FragmentFilterMode.cs" />
     <Compile Include="Textures\TextureProperties.cs" />
     <Compile Include="Textures\TextureFormat.cs" />
+    <Compile Include="Fonts\CharLocation.cs" />
+    <Compile Include="Filters\ColorMatrix.cs" />
+    <Compile Include="Filters\ColorMatrixFilter.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

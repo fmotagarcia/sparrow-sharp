@@ -66,7 +66,7 @@ namespace SparrowSharp.Filters
 			_enableColorUniform = enable;
 		}
 
-		override public void CreatePrograms()
+		override protected void CreatePrograms()
 		{
 			if (_program == null)
 			{
@@ -95,7 +95,7 @@ namespace SparrowSharp.Filters
             TexCoordsID = _program.ATexCoords;
 		}
 
-		override public void ActivateWithPass (int pass, Texture texture, Matrix matrix)
+		override protected void ActivateWithPass (int pass, Texture texture, Matrix matrix)
 		{
             UpdateParamaters(pass, (int)texture.NativeWidth, (int)texture.NativeHeight);
             bool isColorPass = _enableColorUniform && pass == NumPasses - 1;

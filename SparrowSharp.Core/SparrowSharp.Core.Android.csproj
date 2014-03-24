@@ -15,7 +15,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>SparrowSharp.Core.Android</AssemblyName>
-    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -103,6 +103,8 @@
     <Compile Include="Fonts\CharLocation.cs" />
     <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\VAlign.cs" />
+    <Compile Include="Filters\ColorMatrix.cs" />
+    <Compile Include="Filters\ColorMatrixFilter.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />

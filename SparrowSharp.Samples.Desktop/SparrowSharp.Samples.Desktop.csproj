@@ -90,4 +90,7 @@
   <ItemGroup>
     <AndroidResource Include="benchmark_object.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bigstar.png" />
+  </ItemGroup>
 </Project>

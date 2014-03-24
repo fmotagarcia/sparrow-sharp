@@ -12,7 +12,7 @@ namespace SparrowSharp.Filters
 	{
 		Program _program;
 
-		override public void CreatePrograms()
+		override protected void CreatePrograms()
 		{
 			if (_program == null)
 			{
@@ -28,7 +28,7 @@ namespace SparrowSharp.Filters
 			TexCoordsID = _program.Attributes["aTexCoords"];
 		}
 
-		override public void ActivateWithPass (int pass, Texture texture, Matrix matrix)
+		override protected void ActivateWithPass (int pass, Texture texture, Matrix matrix)
 		{
 			GL.UseProgram(_program.Name);
 			Matrix4 mvp = matrix.ConvertToMatrix4();
