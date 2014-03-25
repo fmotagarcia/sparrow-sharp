@@ -114,6 +114,12 @@ namespace Sparrow.Geom
 			Ty += dy;
 		}
 
+		public void PrependTranslation(float dx, float dy)
+		{
+			Tx += A * dx + C * dy;
+			Ty += B * dx + D * dy;
+		}
+
 		public void Scale (float sx, float sy)
 		{
 			if (sx != 1.0f) {

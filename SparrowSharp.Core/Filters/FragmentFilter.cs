@@ -365,7 +365,10 @@ namespace SparrowSharp.Filters
 				Image image = new Image (cacheTexture);
 
 				Matrix matrix = stage.TransformationMatrixToSpace (obj);
-				matrix.Translate (bounds.X + OffsetX, bounds.Y + OffsetY);
+				// Note: the next line was originally:
+				// matrix.Translate (bounds.X + OffsetX, bounds.Y + OffsetY);
+				// this seems like a sparrow-s bug; fix is from Starling
+				matrix.PrependTranslation (bounds.X + OffsetX, bounds.Y + OffsetY);
 				cache.AddQuad (image, 1.0f, BlendMode.AUTO, matrix);
 			}
 
