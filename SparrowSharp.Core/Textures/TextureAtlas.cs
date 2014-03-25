@@ -1,12 +1,12 @@
 ﻿using System;
-using Sparrow.Geom;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+using System.Xml;
+using Sparrow.Geom;
+using System.Text.RegularExpressions;
 
 namespace Sparrow.Textures
 {
-
 	/**
 	 A texture atlas is a collection of many smaller textures in one big image. The class
 	 TextureAtlas is used to access textures from such an atlas.
@@ -51,136 +51,179 @@ namespace Sparrow.Textures
 		private readonly Dictionary<string, TextureInfo> _textureInfos;
 
 		/// The number of available subtextures.
-		public int NumTextures{ get {return _textureInfos.Count;}}
+		public int NumTextures{ get { return _textureInfos.Count; } }
 
 		/// All texture names of the atlas, sorted alphabetically.
-        public List<string> Names { get { return GetNamesStartingWith(null); } }
+		public List<string> Names { get { return GetNamesStartingWith (null); } }
 
 		/// All textures of the atlas, sorted alphabetically.
-        public List<Texture> Textures { get { return GetTexturesStartingWith(null); } }
+		public List<Texture> Textures { get { return GetTexturesStartingWith (null); } }
 
 		/// The base texture that makes up the atlas.
-		public Texture Texture{ get {return _atlasTexture;}}
+		public Texture Texture{ get { return _atlasTexture; } }
 
 		/// Initializes a texture atlas from an XML file and a custom texture.
-		public TextureAtlas (string xml, Texture texture) {
-            _textureInfos = new Dictionary<string, TextureInfo>();
+		public TextureAtlas (string xml, Texture texture)
+		{
+			_textureInfos = new Dictionary<string, TextureInfo> ();
 			_atlasTexture = texture;
-            ParseAtlasXml(xml);
+			ParseAtlasXml (xml);
 		}
 
-        /// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
-		public TextureAtlas (Texture texture) : this(null, texture) {}
+		/// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
+		public TextureAtlas (Texture texture) : this (null, texture)
+		{
+		}
 
 		/// Retrieve a subtexture by name. Returns 'null' if it is not found.
-		public SubTexture GetTextureByName(string name) {
-			TextureInfo info = _textureInfos[name];
-		    if (info != null)
-			{
-				return new SubTexture(info.Region, _atlasTexture, info.Frame, info.Rotated);
+		public SubTexture GetTextureByName (string name)
+		{
+			TextureInfo info = _textureInfos [name];
+			if (info != null) {
+				return new SubTexture (info.Region, _atlasTexture, info.Frame, info.Rotated);
 			}
-		    return null;
+			return null;
 		}
 
 		/// The region rectangle associated with a specific name.
-		public Rectangle GetRegionByName(string name) {
-			return _textureInfos[name].Region;
+		public Rectangle GetRegionByName (string name)
+		{
+			return _textureInfos [name].Region;
 		}
 
 		/// The frame rectangle of a specific region, or 'null' if that region has no frame.
-		public Rectangle GetFrameByName(String name) {
-			return _textureInfos[name].Frame;
+		public Rectangle GetFrameByName (String name)
+		{
+			return _textureInfos [name].Frame;
 		}
 
 		/// Returns all textures that start with a certain string, sorted alphabetically
 		/// (especially useful for 'MovieClip').
-        public List<Texture> GetTexturesStartingWith(string prefix)
-        {
-            List<string> names = GetNamesStartingWith(prefix);
-            List<Texture> textures = new List<Texture>(names.Count);
-			for (int i = 0; i < names.Count; i++) {
-				textures[i] = GetTextureByName(names[i]);
+		public List<Texture> GetTexturesStartingWith (string prefix)
+		{
+			List<string> names = GetNamesStartingWith (prefix);
+			List<Texture> textures = new List<Texture> ();
+			foreach (string name in names) {
+				textures.Add (GetTextureByName (name));
 			}
 			return textures;
 		}
 
 		/// Returns all texture names that start with a certain string, sorted alphabetically.
-        public List<string> GetNamesStartingWith(string prefix)
-        {
-			List<string> names = new List<string>();
+		public List<string> GetNamesStartingWith (string prefix)
+		{
+			List<string> names = new List<string> ();
 			if (prefix != null) {
-			    names.AddRange(_textureInfos.Keys.Where(name => name.StartsWith(prefix)));
+				foreach (string name in _textureInfos.Keys) {
+					if (name.IndexOf (prefix) == 0) {
+						names.Add (name);
+					}
+				}
 			} else {
-				names.AddRange(_textureInfos.Keys);
+				names.AddRange (_textureInfos.Keys);
 			}
-			names.Sort (); // todo check if default comparer sorts correctly
+
+			// TODO: alphanumeric sort
+			names.Sort ();
+
 			return names;
 		}
 
 		/// Creates a region for a subtexture and gives it a name.
-		public void AddRegion(Rectangle region, string name) {
-			AddRegion(region, name, null, false);
+		public void AddRegion (Rectangle region, string name)
+		{
+			AddRegion (region, name, null, false);
 		}
 
 		/// Creates a region for a subtexture with a frame and gives it a name.
-		public void AddRegion(Rectangle region, string name, Rectangle frame) {
-			AddRegion(region, name, frame, false);
+		public void AddRegion (Rectangle region, string name, Rectangle frame)
+		{
+			AddRegion (region, name, frame, false);
 		}
 
 		/// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
 		/// the subtexture will show the region rotated by 90 degrees (CCW).
-		public void AddRegion(Rectangle region, string name, Rectangle frame, bool rotated) {
-			TextureInfo info = new TextureInfo(region, frame, rotated);
-			_textureInfos[name] = info;
+		public void AddRegion (Rectangle region, string name, Rectangle frame, bool rotated)
+		{
+			TextureInfo info = new TextureInfo (region, frame, rotated);
+			_textureInfos [name] = info;
 		}
 
 		/// Removes a region with a certain name.
-		public void RemoveRegion(string name) {
+		public void RemoveRegion (string name)
+		{
 			_textureInfos.Remove (name);
 		}
 
-		protected void ParseAtlasXml(string xmlString)
+		protected void ParseAtlasXml (string xmlString)
 		{
-		    XDocument xml = XDocument.Parse(xmlString);
-		    bool parsed = false;
-            foreach (var subTexture in xml.Descendants("SubTexture"))
-            {
-                float scale = _atlasTexture.Scale;
-                float x = (float)subTexture.Element("x") / scale;
-                float y = (float)subTexture.Element("y") / scale;
-                float width = (float)subTexture.Element("width") / scale;
-                float height = (float)subTexture.Element("height") / scale;
-                float frameX = (float)subTexture.Element("frameX") / scale;
-                float frameY = (float)subTexture.Element("frameY") / scale;
-                float frameWidth = (float)subTexture.Element("frameWidth") / scale;
-                float frameHeight = (float)subTexture.Element("frameHeight") / scale;
-                bool rotated = (bool)subTexture.Element("rotated");
-                string name = subTexture.Element("name").Value;
+			XmlDocument xml = new XmlDocument ();
+			xml.LoadXml (xmlString);
 
-                Rectangle region = new Rectangle(x, y, width, height);
-                Rectangle frame = null;
-                if (frameWidth > 0.0f && frameHeight > 0.0f)
-                {
-                    frame = new Rectangle(frameX, frameY, frameWidth, frameHeight);
-                }
-                AddRegion(region, name, frame, rotated);
-                parsed = true;
-            }
-            // TODO suppport texture atlases that specify the path to the image
-            //if (!parsed)  
-            //{
-            //    foreach (var subTexture in xml.Descendants("TextureAtlas"))
-            //    {
-            //        string name = subTexture.Element("imagePath").Value;
-            //        parsed = true;
-            //    }   
-            //}
-            if (!parsed)
-		    {
-		        throw new Exception("could not parse texture atlas");
-		    }
+			bool parsed = false;
+
+			XmlNodeList subTextures = xml.SelectNodes ("TextureAtlas/SubTexture");
+			foreach (XmlNode subTexture in subTextures) {
+				float scale = _atlasTexture.Scale;
+				float x = GetFloat (subTexture, "x") / scale;
+				float y = GetFloat (subTexture, "y") / scale;
+				float width = GetFloat (subTexture, "width") / scale;
+				float height = GetFloat (subTexture, "height") / scale;
+				float frameX = GetFloat (subTexture, "frameX") / scale;
+				float frameY = GetFloat (subTexture, "frameY") / scale;
+				float frameWidth = GetFloat (subTexture, "frameWidth") / scale;
+				float frameHeight = GetFloat (subTexture, "frameHeight") / scale;
+				bool rotated = GetBool (subTexture, "rotated");
+				string name = GetString (subTexture, "name");
+
+				Rectangle region = new Rectangle (x, y, width, height);
+				Rectangle frame = null;
+				if (frameWidth > 0.0f && frameHeight > 0.0f) {
+					frame = new Rectangle (frameX, frameY, frameWidth, frameHeight);
+				}
+				AddRegion (region, name, frame, rotated);
+				parsed = true;
+			}
+
+			// TODO suppport texture atlases that specify the path to the image
+			//if (!parsed)  
+			//{
+			//    foreach (var subTexture in xml.Descendants("TextureAtlas"))
+			//    {
+			//        string name = subTexture.Element("imagePath").Value;
+			//        parsed = true;
+			//    }   
+			//}
+			if (!parsed) {
+				throw new Exception ("could not parse texture atlas");
+			}
 		}
 
+		float GetFloat (XmlNode node, string attribute)
+		{
+			float result = 0;
+			if (node.Attributes.GetNamedItem (attribute) != null) {
+				result = float.Parse (node.Attributes.GetNamedItem (attribute).Value);
+			}
+			return result;
+		}
+
+		bool GetBool (XmlNode node, string attribute)
+		{
+			bool result = false;
+			if (node.Attributes.GetNamedItem (attribute) != null) {
+				result = bool.Parse (node.Attributes.GetNamedItem (attribute).Value);
+			}
+			return result;
+		}
+
+		string GetString (XmlNode node, string attribute)
+		{
+			string result = "";
+			if (node.Attributes.GetNamedItem (attribute) != null) {
+				result = node.Attributes.GetNamedItem (attribute).Value;
+			}
+			return result;
+		}
 	}
 }
-

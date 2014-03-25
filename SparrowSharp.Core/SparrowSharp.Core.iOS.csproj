@@ -92,9 +92,15 @@
     <Compile Include="Filters\FragmentFilter.cs" />
     <Compile Include="Filters\FragmentFilterMode.cs" />
     <Compile Include="Fonts\CharLocation.cs" />
+    <Compile Include="Textures\TextureAtlas.cs" />
+    <Compile Include="Filters\ColorMatrix.cs" />
+    <Compile Include="Filters\ColorMatrixFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ResourceLoading\" />
     <Folder Include="Pool\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Textures\.DS_Store" />
   </ItemGroup>
 </Project>

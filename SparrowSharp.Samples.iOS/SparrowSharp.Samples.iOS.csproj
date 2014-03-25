@@ -114,6 +114,8 @@
     <BundleResource Include="Resources\Default-568h%402x.png" />
     <BundleResource Include="Resources\benchmark_object.png" />
     <BundleResource Include="Resources\star.png" />
+    <BundleResource Include="Resources\atlas_1.png" />
+    <BundleResource Include="Resources\atlas_1.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

@@ -11,11 +11,15 @@ namespace Sparrow.Textures
 
 		public TextureInfo (Rectangle region, Rectangle frame, bool rotated)
 		{
-			Region = region.Copy ();
-			Frame = frame.Copy ();
+			if (region != null) {
+				Region = region.Copy ();
+			}
+
+			if (frame != null) {
+				Frame = frame.Copy ();
+			}
+
 			Rotated = rotated;
 		}
-
 	}
 }
-

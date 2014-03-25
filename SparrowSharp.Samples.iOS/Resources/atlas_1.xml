@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:c42011e2c35cfb69f6569b2667927a61$ -->
+<TextureAtlas imagePath="atlas_1.png">
+    <SubTexture name="symbols$A$A_1" x="1828" y="1593" width="89" height="75" frameX="-15" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_10" x="1841" y="1342" width="91" height="75" frameX="-13" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_12" x="1644" y="1444" width="91" height="75" frameX="-13" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_14" x="1239" y="1857" width="93" height="77" frameX="-13" frameY="-20" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_16" x="1644" y="1521" width="91" height="79" frameX="-14" frameY="-18" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_18" x="1551" y="1476" width="91" height="79" frameX="-14" frameY="-18" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_2" x="1934" y="1342" width="89" height="75" frameX="-15" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_20" x="1748" y="1317" width="91" height="77" frameX="-14" frameY="-20" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_4" x="1723" y="1821" width="89" height="75" frameX="-15" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_6" x="1737" y="1570" width="89" height="75" frameX="-15" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$A$A_8" x="1432" y="1694" width="91" height="75" frameX="-13" frameY="-22" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$B$B_1" x="1313" y="1619" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_10" x="1194" y="1738" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_12" x="1432" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_14" x="1313" y="1500" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_16" x="1194" y="1619" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_18" x="1075" y="1738" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_2" x="1313" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_20" x="1194" y="1500" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_22" x="1075" y="1619" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_24" x="956" y="1738" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_26" x="1194" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_28" x="1075" y="1500" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_30" x="956" y="1619" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_32" x="837" y="1738" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_34" x="1075" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_36" x="956" y="1500" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_38" x="1313" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_4" x="837" y="1619" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_6" x="956" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$B$B_8" x="837" y="1500" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_1" x="837" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_10" x="1629" y="1230" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_12" x="1510" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_14" x="1391" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_16" x="1272" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_18" x="1153" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_20" x="1034" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_22" x="915" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_24" x="796" y="1262" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_26" x="1510" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_28" x="1391" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_3" x="837" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_30" x="1272" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_32" x="1153" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_34" x="1034" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_36" x="915" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_37" x="915" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_5" x="837" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_7" x="837" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$C$C_9" x="837" y="1381" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_1" x="796" y="1143" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_10" x="716" y="1915" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_12" x="718" y="1796" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_14" x="718" y="1677" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_16" x="718" y="1558" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_18" x="718" y="1439" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_2" x="677" y="1201" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_20" x="671" y="1320" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_22" x="597" y="1915" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_24" x="599" y="1796" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_26" x="599" y="1677" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_28" x="599" y="1558" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_30" x="599" y="1439" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_32" x="564" y="1082" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_4" x="558" y="1201" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_6" x="552" y="1320" width="117" height="117"/>
+    <SubTexture name="symbols$D$D_8" x="478" y="1915" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_1" x="480" y="1796" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_10" x="480" y="1677" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_12" x="480" y="1558" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_14" x="480" y="1439" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_16" x="433" y="1320" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_18" x="439" y="1201" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_2" x="445" y="1082" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_20" x="449" y="963" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_22" x="359" y="1905" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_24" x="240" y="1905" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_26" x="361" y="1786" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_28" x="242" y="1786" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_30" x="1881" y="1223" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_32" x="1762" y="1198" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_34" x="1643" y="1111" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_35" x="1524" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_4" x="1405" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_6" x="1286" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$E$E_8" x="1167" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_1" x="1048" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_10" x="929" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_12" x="810" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_14" x="691" y="1024" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_16" x="1881" y="1104" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_18" x="1762" y="1079" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_2" x="572" y="959" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_20" x="1643" y="992" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_22" x="1524" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_24" x="1405" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_26" x="1286" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_28" x="1167" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_30" x="1048" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_4" x="929" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_6" x="810" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$F$F_8" x="691" y="905" width="117" height="117"/>
+    <SubTexture name="symbols$J$J_1" x="1942" y="1852" width="61" height="87" frameX="-22" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_10" x="1881" y="1763" width="65" height="87" frameX="-20" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_12" x="1814" y="1848" width="63" height="87" frameX="-21" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_14" x="1814" y="1759" width="65" height="87" frameX="-19" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_16" x="1812" y="1670" width="67" height="87" frameX="-17" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_18" x="1881" y="1674" width="65" height="87" frameX="-19" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_2" x="1879" y="1852" width="61" height="87" frameX="-22" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_20" x="1363" y="1922" width="65" height="87" frameX="-19" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_4" x="1300" y="1936" width="61" height="87" frameX="-22" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_6" x="1948" y="1763" width="63" height="87" frameX="-21" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$J$J_8" x="1948" y="1674" width="63" height="87" frameX="-22" frameY="-14" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_1" x="1919" y="1593" width="83" height="79" frameX="-18" frameY="-18" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_10" x="1915" y="1419" width="87" height="85" frameX="-18" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_12" x="1826" y="1419" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_14" x="1723" y="1734" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_16" x="1723" y="1647" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_18" x="1737" y="1483" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_2" x="1737" y="1396" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_4" x="1334" y="1835" width="87" height="85" frameX="-17" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_6" x="1915" y="1506" width="83" height="85" frameX="-18" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$K$K_8" x="1828" y="1506" width="85" height="85" frameX="-18" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_1" x="1207" y="1936" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_10" x="1644" y="1349" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_12" x="1114" y="1936" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_14" x="1432" y="1597" width="91" height="95" frameX="-13" frameY="-10" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_16" x="1313" y="1738" width="91" height="95" frameX="-13" frameY="-10" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_18" x="1432" y="1500" width="91" height="95" frameX="-13" frameY="-10" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_2" x="1021" y="1936" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_20" x="2" y="1939" width="91" height="95" frameX="-13" frameY="-10" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_4" x="928" y="1936" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_6" x="835" y="1936" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Q$Q_8" x="1551" y="1381" width="91" height="93" frameX="-13" frameY="-12" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$S$S_1" x="1643" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_10" x="1524" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_12" x="1524" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_14" x="453" y="691" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_16" x="453" y="538" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_18" x="361" y="1633" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_2" x="1405" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_20" x="361" y="1480" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_22" x="242" y="1633" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_24" x="242" y="1480" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_26" x="123" y="1543" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_28" x="123" y="1390" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_30" x="123" y="1237" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_32" x="123" y="1084" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_34" x="2" y="1786" width="117" height="151" frameX="0" frameY="0" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_36" x="1405" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_38" x="1286" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_4" x="1286" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_40" x="1167" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_42" x="1167" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_44" x="1048" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_46" x="1048" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_48" x="929" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_50" x="929" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_52" x="810" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_54" x="810" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_56" x="691" y="635" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_58" x="691" y="484" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_6" x="572" y="689" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_60" x="572" y="538" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_62" x="121" y="1815" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$S$S_8" x="1912" y="358" width="117" height="149" frameX="0" frameY="-2" frameWidth="117" frameHeight="153"/>
+    <SubTexture name="symbols$T$T_1" x="1624" y="1760" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_10" x="1624" y="1681" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_12" x="1624" y="1602" width="97" height="77" frameX="-13" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_14" x="1039" y="1857" width="99" height="77" frameX="-13" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_16" x="938" y="1857" width="99" height="77" frameX="-13" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_18" x="837" y="1857" width="99" height="77" frameX="-13" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_2" x="1525" y="1715" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_20" x="95" y="1966" width="99" height="77" frameX="-13" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_4" x="1525" y="1636" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_6" x="1525" y="1557" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$T$T_8" x="1140" y="1857" width="97" height="77" frameX="-12" frameY="-21" frameWidth="117" frameHeight="117"/>
+    <SubTexture name="symbols$Z$Z_1" x="1881" y="985" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_14" x="1762" y="960" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_16" x="453" y="844" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_18" x="572" y="840" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_20" x="1643" y="873" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_22" x="1524" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_24" x="1405" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_26" x="1286" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_28" x="1167" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_30" x="1048" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_32" x="929" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_34" x="810" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_36" x="691" y="786" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_38" x="1881" y="866" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_40" x="1762" y="841" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_42" x="1881" y="747" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_44" x="1643" y="754" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_46" x="1762" y="722" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_48" x="1881" y="628" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_50" x="1881" y="509" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_52" x="1762" y="603" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_54" x="1762" y="484" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_56" x="1643" y="635" width="117" height="117"/>
+    <SubTexture name="symbols$Z$Z_58" x="123" y="1696" width="117" height="117"/>
+    <SubTexture name="symbols$Z_FS$Z2_1" x="123" y="962" width="119" height="120" frameX="-43" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_11" x="242" y="1114" width="195" height="120" frameX="-7" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_13" x="244" y="992" width="199" height="120" frameX="-5" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_15" x="244" y="870" width="203" height="120" frameX="-2" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_17" x="1705" y="358" width="205" height="124" frameX="-1" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_19" x="244" y="748" width="207" height="120" frameX="0" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_21" x="1496" y="358" width="207" height="124" frameX="0" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_23" x="244" y="626" width="207" height="120" frameX="0" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_25" x="1287" y="358" width="207" height="124" frameX="0" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_27" x="1078" y="358" width="207" height="124" frameX="0" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_29" x="869" y="358" width="207" height="124" frameX="0" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_3" x="123" y="840" width="119" height="120" frameX="-43" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_31" x="660" y="358" width="207" height="124" frameX="0" frameY="-234" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_33" x="451" y="358" width="207" height="178" frameX="0" frameY="-180" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_35" x="244" y="358" width="205" height="266" frameX="-1" frameY="-88" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_37" x="2" y="2" width="201" height="358" frameX="-4" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_39" x="123" y="362" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_41" x="1899" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_43" x="1778" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_45" x="1657" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_47" x="1536" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_49" x="1415" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_5" x="123" y="718" width="119" height="120" frameX="-43" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_51" x="1294" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_53" x="1173" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_55" x="1052" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_57" x="931" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_59" x="810" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_61" x="689" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_63" x="568" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_65" x="2" y="1430" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_67" x="447" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_69" x="2" y="1074" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_7" x="242" y="1358" width="171" height="120" frameX="-19" frameY="-233" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_71" x="326" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_73" x="2" y="718" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_75" x="205" y="2" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_77" x="2" y="362" width="119" height="354" frameX="-43" frameY="0" frameWidth="207" frameHeight="358"/>
+    <SubTexture name="symbols$Z_FS$Z2_9" x="242" y="1236" width="189" height="120" frameX="-10" frameY="-233" frameWidth="207" frameHeight="358"/>
+</TextureAtlas>
