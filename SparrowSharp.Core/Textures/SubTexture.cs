@@ -55,6 +55,8 @@ namespace Sparrow.Textures
 
         override public float Scale { get { return _parent.Scale; } }
 
+		override public Rectangle Frame { get { return _frame; } }
+
         override public bool Repeat
         { 
             get { return _parent.Repeat; }
@@ -77,7 +79,10 @@ namespace Sparrow.Textures
                 region = new Rectangle(0.0f, 0.0f, texture.Width, texture.Height);
 
             _parent = texture;
-            _frame = frame.Copy();
+			if (_frame != null) {
+				_frame = frame.Copy();
+			}
+            
 			_transformationMatrix = Matrix.Create();
             _width = rotated ? region.Height : region.Width;
             _height = rotated ? region.Width : region.Height;
