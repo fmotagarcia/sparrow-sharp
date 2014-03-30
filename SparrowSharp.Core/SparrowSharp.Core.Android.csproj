@@ -105,6 +105,7 @@
     <Compile Include="Utils\VAlign.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />
     <Compile Include="Filters\ColorMatrixFilter.cs" />
+    <Compile Include="Textures\RenderTexture.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
