@@ -5,17 +5,17 @@ using Sparrow.Display;
 
 namespace Sparrow.Textures
 {
-    public class Texture
+	public abstract class Texture
     {
-        virtual public uint Name { get { throw new Exception("Override 'Name' in subclasses."); } }
+		abstract public uint Name { get; }
 
-        virtual public float NativeWidth { get { throw new Exception("Override 'NativeWidth' in subclasses."); } }
+		abstract public float NativeWidth { get; }
 
-        virtual public float NativeHeight { get { throw new Exception("Override 'NativeHeight' in subclasses."); } }
+		abstract public float NativeHeight { get; }
 
-        virtual public float Height { get { throw new Exception("Override 'Height' in subclasses."); } }
+		abstract public float Height { get; }
 
-        virtual public float Width { get { throw new Exception("Override 'Width' in subclasses."); } }
+		abstract public float Width { get; }
 
         virtual public float Scale { get { return 1.0f; } }
 
@@ -27,16 +27,16 @@ namespace Sparrow.Textures
 
         virtual public bool MipMaps { get { return false; } }
 
-        virtual public bool Repeat
-        { 
-            get { throw new Exception("Override 'Repeat' in subclasses."); }
-            set { throw new Exception("Override 'Repeat' in subclasses."); }
+		virtual public TextureFormat Format { get { return TextureFormat.RGBA; } }
+
+		abstract public bool Repeat { 
+			get;
+			set;
         }
 
-        virtual public TextureSmoothing Smoothing
-        {
-            get { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
-            set { throw new Exception("Override 'TextureSmoothing' in subclasses."); }
+		abstract public TextureSmoothing Smoothing {
+			get;
+			set;
         }
 
         public enum TextureFormat
@@ -117,17 +117,17 @@ namespace Sparrow.Textures
 
         virtual public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
         {
-            // override in subclasses
+			// override in subclasses if needed
         }
 
         virtual public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
         {
-            // override in subclasses
+			// override in subclasses if needed
         }
 
         virtual public void AdjustPositions(VertexData vertexData, uint startIndex, uint count)
         {
-            // override in subclasses
+			// override in subclasses if needed
         }
     }
 }
