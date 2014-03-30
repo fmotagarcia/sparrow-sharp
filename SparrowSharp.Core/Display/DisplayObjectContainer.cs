@@ -93,7 +93,6 @@ namespace Sparrow.Display
 
         protected void BroadcastAddedToStageEvent()
         {
-            InvokeAddedToStage(this, this);
             foreach (var child in _children)
             {
                 child.InvokeAddedToStage(this, child);
