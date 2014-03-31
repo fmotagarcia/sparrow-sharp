@@ -99,6 +99,10 @@
     <Compile Include="Fonts\CharLocation.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />
     <Compile Include="Filters\ColorMatrixFilter.cs" />
+    <Compile Include="Touches\Touch.cs" />
+    <Compile Include="Touches\TouchEvent.cs" />
+    <Compile Include="Touches\TouchPhase.cs" />
+    <Compile Include="Touches\TouchProcessor.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

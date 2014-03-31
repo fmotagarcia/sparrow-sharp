@@ -5,6 +5,7 @@ using Sparrow.Utils;
 using Sparrow.Core;
 using SparrowSharp.Filters;
 using SparrowSharp.Core;
+using Sparrow.Touches;
 
 namespace Sparrow.Display
 {
@@ -63,14 +64,16 @@ namespace Sparrow.Display
 
 		public delegate void EventHandler(DisplayObject target,DisplayObject currentTarget);
 
-		public delegate void EnterFrameEventHandler(DisplayObject target,DisplayObject currentTarget,float passedTime);
+		public delegate void EnterFrameEventHandler(DisplayObject target, DisplayObject currentTarget, float passedTime);
+
+		public delegate void TouchHandler(TouchEvent touch);
 
 		public event EventHandler Added;
 		public event EventHandler AddedToStage;
 		public event EventHandler Removed;
 		public event EventHandler RemovedFromStage;
 		public event EnterFrameEventHandler EnterFrame;
-		public event EventHandler Touch;
+		public event TouchHandler Touch;
 		public event EventHandler KeyUp;
 		public event EventHandler KeyDown;
 
@@ -89,10 +92,8 @@ namespace Sparrow.Display
 		private float _alpha;
 		private bool _orientationChanged;
 		private DisplayObjectContainer _parent;
-		//		private float _lastTouchTimestamp;
-		/// The filter that is attached to the display object. Beware that you should NOT use the same
-		/// filter on more than one object (for performance reasons).
-		//		private SPFragmentFilter *_filter;
+		private double _lastTouchTimestamp;
+
 		private readonly Matrix _transformationMatrix;
 		/// The blend mode determines how the object is blended with the objects underneath. Default: AUTO
 		public uint BlendMode;
@@ -700,11 +701,16 @@ namespace Sparrow.Display
 			}
 		}
 
-		internal virtual void InvokeTouch(DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeTouch(TouchEvent touchEvent)
 		{
-			if (Touch != null)
+			if (this.Touch != null)
 			{
-				Touch(target, currentTarget);
+				if (touchEvent.Timestamp == _lastTouchTimestamp) {
+					return;
+				} else {
+					_lastTouchTimestamp = touchEvent.Timestamp;
+				}
+				this.Touch(touchEvent);
 			}
 		}
 
