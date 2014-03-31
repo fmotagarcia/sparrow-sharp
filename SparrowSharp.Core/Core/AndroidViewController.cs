@@ -75,10 +75,8 @@ namespace Sparrow.Core
             }
             GL.Disable(All.CullFace);
             GL.Disable(All.DepthTest);
-            GL.Disable(All.Alpha);
             GL.Disable(All.Dither);
             GL.Enable(All.Blend);
-
 
             if (_contextWasLost)
             {

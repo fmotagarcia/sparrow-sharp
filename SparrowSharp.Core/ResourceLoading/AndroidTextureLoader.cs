@@ -5,6 +5,7 @@ using OpenTK.Graphics.ES20;
 using Android.Opengl;
 using System.Threading.Tasks;
 using System.Net.Http;
+using Sparrow.Utils;
 
 namespace Sparrow.ResourceLoading
 {
@@ -76,12 +77,17 @@ namespace Sparrow.ResourceLoading
 
 		private void GenerateTexture(Bitmap bitmap)
 		{
+			GL.Hint (All.GenerateMipmapHint, All.Fastest);
+
 			uint name = (uint)GL.GenTexture();
+
 			GL.BindTexture(All.Texture2D, name);
-			GL.TexParameter(All.Texture2D, All.TextureMaxAnisotropyExt, 1);
+			if (GLExtensions.TextureMaxAnisotropySupported) 
+			{
+				GL.TexParameter(All.Texture2D, All.TextureMaxAnisotropyExt, 1);
+			}
 			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.NearestMipmapNearest);
 			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-			GL.TexParameter(All.Texture2D, All.GenerateMipmapHint, (int)All.False);
 
 			GLUtils.TexImage2D(GLES20.GlTexture2d, 0, bitmap, 0);
 
