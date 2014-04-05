@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 using SparrowSharp.Utils;
+using Sparrow.Touches;
 
 namespace Sparrow
 {
@@ -30,6 +31,8 @@ namespace Sparrow
         public static Juggler DefaultJuggler { get; set; }
 
         private static Stopwatch watch = new Stopwatch();
+
+		internal static TouchProcessor TouchProcessor;
         public static int cnt = 0;
 
         public static void Step(double time)
@@ -71,6 +74,7 @@ namespace Sparrow
             DefaultJuggler = new Juggler();
             Context = new Context();
             RenderSupport = new RenderSupport();
+			TouchProcessor = new TouchProcessor (_stage);
 
             Root = root;
             _stage.AddChild(Root);

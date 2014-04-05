@@ -33,7 +33,7 @@ namespace Sparrow.Touches
 	public class Touch
 	{
 
-		internal uint _touchID;
+		internal int _touchID;
 
 		/// Converts the current location of a touch to the local coordinate system of a display object.
 		public Point LocationInSpace(DisplayObject space)

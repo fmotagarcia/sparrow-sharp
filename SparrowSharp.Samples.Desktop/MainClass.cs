@@ -1,7 +1,7 @@
 ﻿using System;
 using Sparrow.Core;
-using Sparrow.Samples.Desktop;
 using Sparrow;
+using Sparrow.Samples;
 
 namespace SparrowSharp.Samples.Desktop
 {

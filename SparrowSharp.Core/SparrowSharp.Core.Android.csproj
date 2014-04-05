@@ -109,7 +109,6 @@
     <Compile Include="Touches\TouchPhase.cs" />
     <Compile Include="Touches\Touch.cs" />
     <Compile Include="Touches\TouchEvent.cs" />
-    <Compile Include="Touches\TouchProcessor.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
