@@ -1,5 +1,4 @@
-﻿using System;
-using Sparrow.Geom;
+﻿using Sparrow.Geom;
 using Sparrow.Display;
 
 namespace Sparrow.Touches

@@ -14,7 +14,7 @@ namespace SparrowSharp.Filters
 {
 	public abstract class FragmentFilter
 	{
-		public const int MIN_TEXTURE_SIZE = 64;
+	    protected const int MIN_TEXTURE_SIZE = 64;
 		private bool _cached;
 
 		/// Indicates if the filter is cached (via the "Cache()" method).
@@ -24,7 +24,7 @@ namespace SparrowSharp.Filters
 		/// resolution. A lower resolution saves memory and execution time(depending on the GPU), but
 		/// results in a lower output quality. Values greater than 1 are allowed; such values might make
 		/// sense for a cached filter when it is scaled up. default 1
-		public float Resolution;
+		public readonly float Resolution;
 		/// The filter mode, which is one of the constants defined in the 'FragmentFilterMode' enum.
 		/// (default: FragmentFilterMode.Replace)
 		public FragmentFilterMode Mode;
@@ -276,7 +276,7 @@ namespace SparrowSharp.Filters
 			// draw the original object into a texture
 			support.RenderTarget = _passTextures [0];
 			SparrowSharpApp.Context.ScissorBox = null; // we want the entire texture cleared
-			support.Clear ();
+			support.Clear();
 			support.BlendMode = BlendMode.NORMAL;
 			support.SetupOrthographicProjection (boundsPOT.Left, boundsPOT.Right, boundsPOT.Bottom, boundsPOT.Top);
 			obj.Render (support);
@@ -314,12 +314,12 @@ namespace SparrowSharp.Filters
 				if (i < NumPasses - 1) { // intermediate pass
 					// draw into pass texture
 					support.RenderTarget = PassTextureForPass (i + 1);
-					support.Clear ();
+                    support.Clear();
 				} else { // final pass
 					if (intoCache) {
 						// draw into cache texture
 						support.RenderTarget = cacheTexture;
-						support.Clear ();
+                        support.Clear();
 					} else {
 						// draw into back buffer, at original (stage) coordinates
 						support.RenderTarget = previousRenderTarget;

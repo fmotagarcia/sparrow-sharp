@@ -80,7 +80,7 @@ namespace Sparrow.Textures
 		{
             DrawBundled (delegate
             {
-                _renderSupport.ClearWithColor(color, alpha);
+                _renderSupport.Clear(color, alpha);
             });
 		}
 

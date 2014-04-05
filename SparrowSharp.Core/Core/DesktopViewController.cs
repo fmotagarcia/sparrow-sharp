@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace Sparrow.Core
 {
-	public class DesktopViewController : GameWindow, IViewController
+	public class DesktopViewController : GameWindow
     {
 		public delegate void OnLoadedAction(int viewWidth,int viewHeight);
 		private OnLoadedAction _onLoadedAction;

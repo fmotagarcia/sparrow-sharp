@@ -1,16 +1,14 @@
 using System;
-using Sparrow.Geom;
-using Sparrow.Core;
-using Sparrow.Textures;
-using OpenTK;
-using OpenTK.Graphics.ES20;
 using System.Collections.Generic;
+using OpenTK.Graphics.ES20;
+using Sparrow.Core;
+using Sparrow.Geom;
+using Sparrow.Textures;
 using Sparrow.Utils;
-using System.Runtime.InteropServices;
 
 namespace Sparrow.Display
 {
-	// TODO check if dealloc exists
+
 	public class QuadBatch : DisplayObject
 	{
 		private const int INDICES_PER_QUAD = 6;
@@ -20,10 +18,12 @@ namespace Sparrow.Display
 		private bool _premultipliedAlpha;
 		private bool _tinted;
 		private readonly BaseEffect _baseEffect;
-		private VertexData _vertexData;
+		private readonly VertexData _vertexData;
 		private int _vertexBufferName;
 		private int _vertexColorsBufferName;
 		private ushort[] _indexData;
+        private bool _bufferNeedsReInit = true;
+        private int _capacity;
 		private int _indexBufferName;
 
 		public Texture QuadTexture {
@@ -169,11 +169,10 @@ namespace Sparrow.Display
 				return _premultipliedAlpha != premultipliedAlpha || BlendMode != blendMode;
 			} else if (_texture != null && texture != null) {
 				return _tinted != (tinted || alpha != 1.0f) ||
-				_texture.Name != texture.Name ||
-				BlendMode != blendMode;
-			} else {
-				return true;
+				        _texture.Name != texture.Name ||
+				        BlendMode != blendMode;
 			}
+			return true;
 		}
 
 		override public Rectangle BoundsInSpace (DisplayObject targetSpace)
@@ -316,10 +315,9 @@ namespace Sparrow.Display
 				Texture texture = quad.Texture;
 				bool tinted = quad.Tinted;
 				bool pma = quad.PremultipliedAlpha;
-				int numQuads = 1;
 
 				QuadBatch currentBatch = quadBatches [quadBatchID];
-				if (currentBatch.IsStateChange (tinted, texture, alpha * objectAlpha, pma, blendMode, numQuads)) {
+				if (currentBatch.IsStateChange (tinted, texture, alpha * objectAlpha, pma, blendMode, 1)) {
 					quadBatchID++;
 
 					if (quadBatches.Count <= quadBatchID) {
@@ -354,14 +352,16 @@ namespace Sparrow.Display
 				throw new InvalidOperationException ("Unsupported display object");
 			}
 
-			if (isRootObject) {
-				// remove unused batches
-				for (int i = quadBatches.Count - 1; i > quadBatchID; --i) {
-					quadBatches.RemoveAt (quadBatches.Count - 1);
-				}
-			}
+		    if (!isRootObject)
+		    {
+		        return quadBatchID;
+		    }
 
-			return quadBatchID;
+		    // remove unused batches
+		    for (int i = quadBatches.Count - 1; i > quadBatchID; --i) {
+		        quadBatches.RemoveAt (quadBatches.Count - 1);
+		    }
+		    return quadBatchID;
 		}
 
 		private void Expand ()
@@ -422,7 +422,7 @@ namespace Sparrow.Display
 			}
 		}
 
-		void SyncBuffers (float alpha)
+		private void SyncBuffers (float alpha)
 		{
 			if (_vertexBufferName == 0) {
 				CreateBuffers ();
@@ -487,10 +487,6 @@ namespace Sparrow.Display
 			_bufferNeedsReInit = false;
 			_syncRequired = false;
 		}
-
-		private bool _bufferNeedsReInit = true;
-
-		private int _capacity;
 
 		private int Capacity {
 			get { return _capacity; }

@@ -46,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Core\BaseEffect.cs" />
     <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\IViewController.cs" />
     <Compile Include="Core\Program.cs" />
     <Compile Include="Core\RenderState.cs" />
     <Compile Include="Core\RenderSupport.cs" />
@@ -102,7 +101,6 @@
     <Compile Include="Touches\Touch.cs" />
     <Compile Include="Touches\TouchEvent.cs" />
     <Compile Include="Touches\TouchPhase.cs" />
-    <Compile Include="Touches\TouchProcessor.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

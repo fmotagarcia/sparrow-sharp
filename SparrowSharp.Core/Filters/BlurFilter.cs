@@ -43,9 +43,9 @@ namespace SparrowSharp.Filters
 			}
 		}
 		private bool _enableColorUniform;
-		private float[] _offsets = new float[4];
-		private float[] _weights = new float[4];
-		private float[] _color = new float[4];
+		private readonly float[] _offsets = new float[4];
+		private readonly float[] _weights = new float[4];
+		private readonly float[] _color = new float[4];
 		private BlurProgram _program;
 		private BlurProgram _tintedProgram;
 		/// Initializes a blur filter with the specified blur and a resolution.

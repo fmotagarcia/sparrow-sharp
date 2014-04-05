@@ -1,17 +1,18 @@
-﻿using System;
-using Sparrow.Core;
+﻿using Sparrow.Core;
 using System.Text;
 
 namespace SparrowSharp.Filters
 {
-	// TODO: implement remaining methods
 	internal class BlurProgram : Program
 	{
 
 		public static string GetProgramName(bool tinting)
 		{
-			if (tinting) return "SPBlurFilter#01";
-			else return "SPBlurFilter#00";
+		    if (tinting)
+		    {
+		        return "SPBlurFilter#01";
+		    }
+			return "SPBlurFilter#00";
 		}
 			
 		public readonly bool Tinted;

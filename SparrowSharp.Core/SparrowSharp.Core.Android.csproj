@@ -78,7 +78,6 @@
     <Compile Include="Utils\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
     <Compile Include="Utils\VertexData.cs" />
-    <Compile Include="Core\IViewController.cs" />
     <Compile Include="Textures\GLTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
@@ -112,9 +111,5 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Pool\" />
-    <Folder Include="Filters\" />
-    <Folder Include="Touches\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

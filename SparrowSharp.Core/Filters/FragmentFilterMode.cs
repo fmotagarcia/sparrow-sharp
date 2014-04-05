@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SparrowSharp.Filters
+﻿namespace SparrowSharp.Filters
 {
 	public enum FragmentFilterMode
 	{

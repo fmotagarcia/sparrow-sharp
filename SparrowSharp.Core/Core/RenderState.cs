@@ -1,15 +1,16 @@
-using System;
-using Sparrow.Display;
 using Sparrow.Geom;
 
 namespace Sparrow.Core
 {
-    public class RenderState
+    internal class RenderState
     {
-        public Matrix ModelViewMatrix;
+        public readonly Matrix ModelViewMatrix;
         public float Alpha;
         public uint BlendMode;
 
+        /// <summary>
+        /// Helper class used by RenderSupport
+        /// </summary>
         public RenderState()
         {
 			ModelViewMatrix = Matrix.Create();

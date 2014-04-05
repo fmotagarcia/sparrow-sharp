@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sparrow.Textures;
 using Sparrow.Display;
+using Sparrow.Textures;
 
 namespace SparrowSharp.Display
 {
@@ -43,7 +43,7 @@ namespace SparrowSharp.Display
 			_currentTime = 0.0f;
 			_currentFrame = 0;
 			_textures = new List<Texture> ();
-			//_sounds = [[NSMutableArray alloc] init];
+			//_sounds = new List<>;
 			_durations = new List<float> ();        
 			AddFrame (texture);
 		}
@@ -69,26 +69,14 @@ namespace SparrowSharp.Display
 			AddFrame (texture, NumFrames, duration);
 		}
 
-		/// Adds a frame with a certain texture, duration and sound.
-		public void AddFrame (Texture texture, float duration, object sound)
-		{
-			AddFrame (texture, NumFrames, duration, sound);
-		}
-
 		/// Inserts a frame at the specified position. The successors will move down.
 		public void AddFrame (Texture texture, int position)
 		{
 			AddFrame (texture, position, _defaultFrameDuration);
 		}
 
-		/// Adds a frame with a certain texture, duration and position.
-		public void AddFrame (Texture texture, int position, float duration)
-		{
-			AddFrame (texture, position, duration, null);
-		}
-
 		/// Adds a frame with a certain texture, duration and sound.
-		public void AddFrame (Texture texture, int position, float duration, object sound)
+		public void AddFrame (Texture texture, int position, float duration, object sound = null)
 		{
 			_totalTime += duration;
 			_textures.Insert (position, texture);
@@ -114,7 +102,7 @@ namespace SparrowSharp.Display
 		/// Sets the sound that will be played back when a certain frame is active.
 		public void SetSoundAt (object sound, int position)
 		{
-			//_sounds[frameID] = sound ? sound : [NSNull null];
+			//_sounds[frameID] = sound ? sound : null;
 		}
 
 		/// Sets the duration of a certain frame in seconds.
@@ -193,11 +181,12 @@ namespace SparrowSharp.Display
 
 		/// Indicates if the movie is currently playing. Returns 'false' when the end has been reached.
 		public bool Playing {
-			get { 
-				if (_playing)
-					return Loop || _currentTime < _totalTime;
-				else
-					return false; 
+			get {
+			    if (_playing)
+			    {
+			        return Loop || _currentTime < _totalTime;
+			    }
+				return false; 
 			}
 		}
 
@@ -213,19 +202,26 @@ namespace SparrowSharp.Display
 				_currentFrame = value;
 				_currentTime = 0.0f;
 
-				for (int i = 0; i < value; ++i)
-					_currentTime += _durations [i];
+			    for (int i = 0; i < value; ++i)
+			    {
+			        _currentTime += _durations [i];
+			    }
 				UpdateCurrentFrame ();
 			}
 		}
 
 		public void AdvanceTime (float seconds)
-		{    
-			if (Loop && _currentTime == _totalTime)
-				_currentTime = 0.0f;    
-			if (!_playing || seconds == 0.0f || _currentTime == _totalTime)
-				return;    
-    
+		{
+		    if (Loop && _currentTime == _totalTime)
+		    {
+		        _currentTime = 0.0f;  
+		    }
+
+		    if (!_playing || seconds == 0.0f || _currentTime == _totalTime)
+		    {
+		        return;
+		    }
+		
 			int i = 0;
 			float durationSum = 0.0f;
 			float previousTime = _currentTime;
@@ -246,7 +242,7 @@ namespace SparrowSharp.Display
 				durationSum += frameDuration;
 			}
 			if (previousTime < _totalTime && _currentTime == _totalTime) {
-				//[self dispatchEventWithType:SPEventTypeCompleted];   
+				//[self dispatchEventWithType:SPEventTypeCompleted];
 			}     
 			AdvanceTime (carryOverTime);
 		}
@@ -254,7 +250,6 @@ namespace SparrowSharp.Display
 		private void UpdateCurrentFrame ()
 		{
 			Texture = _textures [_currentFrame];
-			//ReadjustSize (); If we add this here, it will keep the size of the textures
 		}
 
 		private void PlayCurrentSound ()

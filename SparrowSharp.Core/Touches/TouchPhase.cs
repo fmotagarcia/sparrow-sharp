@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sparrow.Touches
+﻿namespace Sparrow.Touches
 {
 	public enum TouchPhase
 	{

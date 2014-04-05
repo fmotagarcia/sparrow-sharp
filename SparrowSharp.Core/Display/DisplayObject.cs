@@ -9,55 +9,55 @@ using Sparrow.Touches;
 
 namespace Sparrow.Display
 {
-	/** 
-     The DisplayObject class is the base class for all objects that are rendered on the screen.
+    /// <summary>
+    /// The DisplayObject class is the base class for all objects that are rendered on the screen.
  
-     In Sparrow, all displayable objects are organized in a display tree. Only objects that are part of
-     the display tree will be displayed (rendered). 
+    /// In Sparrow, all displayable objects are organized in a display tree. Only objects that are part of
+    /// the display tree will be displayed (rendered). 
  
-     The display tree consists of leaf nodes (Image, Quad) that will be rendered directly to
-     the screen, and of container nodes (subclasses of DisplayObjectContainer, like Sprite).
-     A container is simply a display object that has child nodes - which can, again, be either leaf
-     nodes or other containers. 
+    /// The display tree consists of leaf nodes (Image, Quad) that will be rendered directly to
+    /// the screen, and of container nodes (subclasses of DisplayObjectContainer, like Sprite).
+    /// A container is simply a display object that has child nodes - which can, again, be either leaf
+    /// nodes or other containers. 
  
-     A display object has properties that define its position in relation to its parent
-     (`X`, `Y`), as well as its rotation, skewing and scaling factors (`scaleX`, `scaleY`). Use the 
-     `Alpha` and `Visible` properties to make an object translucent or invisible.
+    /// A display object has properties that define its position in relation to its parent
+    /// ('X', 'Y'), as well as its rotation, skewing and scaling factors ('scaleX', 'scaleY'). Use the 
+    /// 'Alpha' and 'Visible' properties to make an object translucent or invisible.
  
-     Every display object may be the target of touch events. If you don't want an object to be
-     touchable, you can disable the `Touchable` property. When it's disabled, neither the object
-     nor its children will receive any more touch events.
+    /// Every display object may be the target of touch events. If you don't want an object to be
+    /// touchable, you can disable the `Touchable` property. When it's disabled, neither the object
+    /// nor its children will receive any more touch events.
  
-     **Points vs. Pixels**
+    /// **Points vs. Pixels**
  
-     All sizes and distances are measured in points. What this means in pixels depends on the 
-     contentScaleFactor of the device.
+    /// All sizes and distances are measured in points. What this means in pixels depends on the 
+    /// contentScaleFactor of the device.
  
-     **Transforming coordinates**
+    /// **Transforming coordinates**
  
-     Within the display tree, each object has its own local coordinate system. If you rotate a container,
-     you rotate that coordinate system - and thus all the children of the container.
+    /// Within the display tree, each object has its own local coordinate system. If you rotate a container,
+    /// you rotate that coordinate system - and thus all the children of the container.
  
-     Sometimes you need to know where a certain point lies relative to another coordinate system. 
-     That's the purpose of the method `TransformationMatrixToSpace:`. It will create a matrix that
-     represents the transformation of a point in one coordinate system to another. 
+    /// Sometimes you need to know where a certain point lies relative to another coordinate system. 
+    /// That's the purpose of the method 'TransformationMatrixToSpace:'. It will create a matrix that
+    /// represents the transformation of a point in one coordinate system to another. 
  
-     **Subclassing DisplayObject**
+    /// **Subclassing DisplayObject**
  
-     As DisplayObject is an abstract class, you can't instantiate it directly, but have to use one of 
-     its subclasses instead. There are already a lot of them available, and most of the time they will
-     suffice. 
+    /// As DisplayObject is an abstract class, you can't instantiate it directly, but have to use one of 
+    /// its subclasses instead. There are already a lot of them available, and most of the time they will
+    /// suffice. 
  
-     However, you can create custom display objects as well. That's especially useful when you want to
-     create an object with a custom render function.
+    /// However, you can create custom display objects as well. That's especially useful when you want to
+    /// create an object with a custom render function.
  
-     You will need to implement the following methods when you subclass DisplayObject:
+    /// You will need to implement the following methods when you subclass DisplayObject:
  
-	    - void Render ( RenderSupport support);
-	    - Rectangle BoundsInSpace ( DisplayObject targetSpace);
- 
-     Have a look at Quad for a sample implementation of those methods. 
-	*/
+    /// - void Render ( RenderSupport support);
+    /// - Rectangle BoundsInSpace ( DisplayObject targetSpace);
+
+    /// Have a look at Quad for a sample implementation of those methods.  
+    /// </summary>
 	public abstract class DisplayObject
 	{
 		#region Events
@@ -93,21 +93,37 @@ namespace Sparrow.Display
 		private bool _orientationChanged;
 		private DisplayObjectContainer _parent;
 		private double _lastTouchTimestamp;
-
 		private readonly Matrix _transformationMatrix;
-		/// The blend mode determines how the object is blended with the objects underneath. Default: AUTO
+
+		/// <summary>
+        ///  The blend mode determines how the object is blended with the objects underneath. Default: BlendMode.AUTO
+		/// </summary>
 		public uint BlendMode;
-		/// The visibility of the object. An invisible object will be untouchable.
-		public bool Visible;
-		/// Indicates if this object (and its children) will receive touch events.
+
+        /// <summary>
+        /// The visibility of the object. An invisible object will be untouchable.
+        /// </summary>
+        public bool Visible;
+
+        /// <summary>
+        /// Indicates if this object (and its children) will receive touch events.
+        /// </summary>
 		public bool Touchable;
-		/// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
+
+        /// <summary>
+        /// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
+        /// </summary>
 		public string Name;
-		/// The filter that is attached to the display object. Beware that you should NOT use the same
-		/// filter on more than one object (for performance reasons).
+
+        /// <summary>
+        /// The filter that is attached to the display object. Beware that you should NOT use the same
+        /// filter on more than one object (for performance reasons).
+        /// </summary>
 		public FragmentFilter Filter;
 
-		/// The width of the object in points.
+        /// <summary>
+        /// The width of the object in points.
+        /// </summary>
 		virtual public float Width
 		{
 			get { return BoundsInSpace(_parent).Width; }
@@ -122,7 +138,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The height of the object in points.
+        /// <summary>
+        /// The height of the object in points.
+        /// </summary>
 		virtual public float Height
 		{
 			get { return BoundsInSpace(_parent).Height; }
@@ -137,7 +155,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The x coordinate of the object relative to the local coordinates of the parent.
+        /// <summary>
+        /// The x coordinate of the object relative to the local coordinates of the parent.
+        /// </summary>
 		virtual public float X
 		{
 			get { return _x; }
@@ -151,7 +171,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The y coordinate of the object relative to the local coordinates of the parent.
+        /// <summary>
+        /// The y coordinate of the object relative to the local coordinates of the parent.
+        /// </summary>
 		virtual public float Y
 		{
 			get { return _y; }
@@ -165,7 +187,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The horizontal scale factor. "1" means no scale, negative values flip the object.
+        /// <summary>
+        /// The horizontal scale factor. "1" means no scale, negative values flip the object.
+        /// </summary>
 		virtual public float ScaleX
 		{
 			get { return _scaleX; }
@@ -179,7 +203,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The vertical scale factor. "1" means no scale, negative values flip the object.
+        /// <summary>
+        /// The vertical scale factor. "1" means no scale, negative values flip the object.
+        /// </summary>
 		virtual public float ScaleY
 		{
 			get { return _scaleY; }
@@ -193,7 +219,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The horizontal skew angle in radians.
+        /// <summary>
+        /// The horizontal skew angle in radians.
+        /// </summary>
 		virtual public float SkewX
 		{
 			get { return _skewX; }
@@ -207,7 +235,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The vertical skew angle in radians.
+        /// <summary>
+        /// The vertical skew angle in radians.
+        /// </summary>
 		virtual public float SkewY
 		{
 			get { return _skewY; }
@@ -221,7 +251,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The x coordinate of the object's origin in its own coordinate space (default: 0).
+        /// <summary>
+        /// The x coordinate of the object's origin in its own coordinate space (default: 0).
+        /// </summary>
 		virtual public float PivotX
 		{
 			get { return _pivotX; }
@@ -235,7 +267,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The y coordinate of the object's origin in its own coordinate space (default: 0).
+        /// <summary>
+        /// The y coordinate of the object's origin in its own coordinate space (default: 0).
+        /// </summary>
 		virtual public float PivotY
 		{
 			get { return _pivotY; }
@@ -249,7 +283,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The rotation of the object in radians. (In Sparrow, all angles are measured in radians.)
+        /// <summary>
+        /// The rotation of the object in radians. (In Sparrow, all angles are measured in radians.)
+        /// </summary>
 		virtual public float Rotation
 		{
 			get { return _rotation; }
@@ -258,17 +294,23 @@ namespace Sparrow.Display
 				// move to equivalent value in range [0 deg, 360 deg] without a loop
 				value = value % (2.0f * (float)Math.PI);
 				// move to [-180 deg, +180 deg]
-				if (value < -Math.PI)
-					value += 2.0f * (float)Math.PI;
+			    if (value < -Math.PI)
+			    {
+			        value += 2.0f * (float)Math.PI;
+			    }
 				else if (value > Math.PI)
-					value -= 2.0f * (float)Math.PI;
-
+			    {
+			        value -= 2.0f * (float)Math.PI;
+			    }
+				
 				_rotation = value;
 				_orientationChanged = true;
 			}
 		}
 
-		/// The opacity of the object. 0 = transparent, 1 = opaque.
+        /// <summary>
+        /// The opacity of the object. 0 = transparent, 1 = opaque.
+        /// </summary>
 		virtual public float Alpha
 		{
 			get { return _alpha; }
@@ -278,7 +320,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The topmost object in the display tree the object is part of.
+        /// <summary>
+        /// The topmost object in the display tree the object is part of.
+        /// </summary>
 		public DisplayObject Base
 		{
 			get
@@ -292,9 +336,11 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The root object the display object is connected to (i.e. an instance of the class
-		/// that was passed to 'ViewController.Start()'), or null if the object is not connected
-		/// to it.
+        /// <summary>
+        /// The root object the display object is connected to (i.e. an instance of the class
+        /// that was passed to 'SparrowSharpApp.Start()'), or null if the object is not connected
+        /// to it.
+        /// </summary>
 		public DisplayObject Root
 		{
 			get
@@ -312,7 +358,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The Stage the display object is connected to, or null if it is not connected to a Stage.
+        /// <summary>
+        /// The Stage the display object is connected to, or null if it is not connected to a Stage.
+        /// </summary>
 		public Stage Stage
 		{
 			get
@@ -325,8 +373,10 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The transformation matrix of the object relative to its parent.
-		/// @returns CAUTION: not a copy, but the actual object!
+        /// <summary>
+        /// The transformation matrix of the object relative to its parent.
+        /// @returns CAUTION: not a copy, but the actual object!
+        /// </summary>
 		public Matrix TransformationMatrix
 		{
 			get
@@ -420,8 +470,10 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// Indicates if an object occupies any visible area. (Which is the case when its 'Alpha',
-		/// 'ScaleX` and 'ScaleY' values are not zero, and its 'Visible' property is true.)
+        /// <summary>
+        /// Indicates if an object occupies any visible area. (Which is the case when its 'Alpha',
+        /// 'ScaleX' and 'ScaleY' values are not zero, and its 'Visible' property is true.)
+        /// </summary>
 		public bool HasVisibleArea
 		{
 			get
@@ -430,13 +482,17 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// The bounds of the object relative to the local coordinates of the parent.
+        /// <summary>
+        /// The bounds of the object relative to the local coordinates of the parent.
+        /// </summary>
 		public Rectangle Bounds
 		{
 			get { return BoundsInSpace(Parent); }
 		}
 
-		/// The DisplayObjectContainer that contains this display object.
+        /// <summary>
+        /// The DisplayObjectContainer that contains this display object.
+        /// </summary>
 		public DisplayObjectContainer Parent
 		{
 			get { return _parent; }
@@ -455,7 +511,7 @@ namespace Sparrow.Display
 			}	
 		}
 
-		public DisplayObject()
+		protected DisplayObject()
 		{
 			_alpha = 1.0f;
 			_scaleX = 1.0f;
@@ -467,10 +523,14 @@ namespace Sparrow.Display
 			BlendMode = Sparrow.Display.BlendMode.AUTO;
 		}
 
-		/// Renders the display object with the help of a support object. 
+        /// <summary>
+        /// Renders the display object with the help of a support object. 
+        /// </summary>
 		public abstract void Render(RenderSupport support);
 
-		/// Removes the object from its parent, if it has one.
+        /// <summary>
+        /// Removes the object from its parent, if it has one.
+        /// </summary>
 		public void RemoveFromParent()
 		{
 			if (Parent != null)
@@ -479,13 +539,17 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// Moves the pivot point to the center of the object.
+        /// <summary>
+        /// Moves the pivot point to the center of the object.
+        /// </summary>
 		public void AlignPivotToCenter()
 		{
 			Align(HAlign.Center, VAlign.Center);
 		}
 
-		/// Moves the pivot point to a certain position within the local coordinate system of the object.
+        /// <summary>
+        /// Moves the pivot point to a certain position within the local coordinate system of the object.
+        /// </summary>
 		public void Align(HAlign hAlign, VAlign vAlign)
 		{
 			Rectangle bounds = BoundsInSpace(this);
@@ -522,7 +586,9 @@ namespace Sparrow.Display
 			}
 		}
 
-		/// Creates a matrix that represents the transformation from the local coordinate system to another.
+        /// <summary>
+        /// Creates a matrix that represents the transformation from the local coordinate system to another.
+        /// </summary>
 		public Matrix TransformationMatrixToSpace(DisplayObject targetSpace)
 		{     
 			DisplayObject currentObject;
@@ -542,7 +608,7 @@ namespace Sparrow.Display
 				transformationMatrix.CopyFromMatrix(TransformationMatrix);
 				return transformationMatrix;
 			}
-			else if (targetSpace == null || targetSpace == this.Base)
+			else if (targetSpace == null || targetSpace == Base)
 			{
 				// targetSpace 'null' represents the target coordinate of the base object.
 				// -> move up from this to base
@@ -623,10 +689,14 @@ namespace Sparrow.Display
 			return selfMatrix;
 		}
 
-		/// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
+		/// <summary>
+        /// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
+		/// </summary>
 		public abstract Rectangle BoundsInSpace(DisplayObject targetSpace);
 
-		/// Returns the object that is found topmost on a point in local coordinates, or null if the test fails.
+		/// <summary>
+        ///  Returns the object that is found topmost on a point in local coordinates, or null if the test fails.
+		/// </summary>
 		virtual public DisplayObject HitTestPoint(Point localPoint)
 		{
 			// invisible or untouchable objects cause the test to fail
@@ -640,20 +710,21 @@ namespace Sparrow.Display
 			{
 				return this; 
 			}
-			else
-			{
-				return null;
-			}
+			return null;
 		}
 
-		/// Transforms a point from the local coordinate system to global (stage) coordinates.
+        /// <summary>
+        /// Transforms a point from the local coordinate system to global (stage) coordinates.
+        /// </summary>
 		public Point LocalToGlobal(Point localPoint)
 		{
 			Matrix matrix = TransformationMatrixToSpace(Base);
 			return matrix.TransformPoint(localPoint);
 		}
 
-		/// Transforms a point from global (stage) coordinates to the local coordinate system.
+        /// <summary>
+        /// Transforms a point from global (stage) coordinates to the local coordinate system.
+        /// </summary>
 		public Point GlobalToLocal(Point globalPoint)
 		{
 			Matrix matrix = TransformationMatrixToSpace(Base);
@@ -676,19 +747,19 @@ namespace Sparrow.Display
 			}
 		}
 
-		internal virtual void InvokeRemoved(DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeRemoved()
 		{
 			if (Removed != null)
 			{
-				Removed(target, currentTarget);
+				Removed(this, this);
 			}
 		}
 
-		internal virtual void InvokeRemovedFromStage(DisplayObject target, DisplayObject currentTarget)
+		internal virtual void InvokeRemovedFromStage()
 		{
 			if (RemovedFromStage != null)
 			{
-				RemovedFromStage(target, currentTarget);
+                RemovedFromStage(this, this);
 			}
 		}
 
@@ -702,14 +773,13 @@ namespace Sparrow.Display
 
 		internal virtual void InvokeTouch(TouchEvent touchEvent)
 		{
-			if (this.Touch != null)
+			if (Touch != null)
 			{
 				if (touchEvent.Timestamp == _lastTouchTimestamp) {
 					return;
-				} else {
-					_lastTouchTimestamp = touchEvent.Timestamp;
-				}
-				this.Touch(touchEvent);
+				} 
+				_lastTouchTimestamp = touchEvent.Timestamp;
+				Touch(touchEvent);
 			}
 		}
 

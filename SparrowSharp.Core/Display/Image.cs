@@ -1,19 +1,40 @@
 ﻿using System;
-using Sparrow.Utils;
 using Sparrow.Geom;
 using Sparrow.Textures;
+using Sparrow.Utils;
 
 namespace Sparrow.Display
 {
+    /// <summary>
+    /// An Image displays a quad with a texture mapped onto it.
+ 
+    /// Sparrow uses the Texture class to represent textures. To display a texture, you have to map
+    /// it on a quad - and that's what Image is for.
+ 
+    /// As Image inherits from Quad, you can give it a color. For each pixel, the resulting color will
+    /// be the result of the multiplication of the color of the texture with the color of the quad. That 
+    /// way, you can easily tint textures with a certain color. 
+ 
+    /// Furthermore, Image allows the manipulation of texture coordinates. That way, you can move a 
+    /// texture inside an image without changing any vertex coordinates of the quad. You can also use 
+    /// this feature as a very efficient way to create a rectangular mask.
+    /// </summary>
 	public class Image : Quad
 	{
-		private VertexData _vertexDataCache;
+		private readonly VertexData _vertexDataCache;
 		private bool _vertexDataCacheInvalid;
 		private Texture _texture;
 
+        /// <summary>
+        /// Initialize a quad with a texture mapped onto it
+        /// </summary>
+        /// <param name="texture">The texture to use. For example the TextureLoader class to load an image file</param>
 		public Image (Texture texture)
 		{
-			if (texture == null) throw new Exception(@"texture cannot be null!");
+		    if (texture == null)
+		    {
+		        throw new Exception("texture cannot be null!");
+		    }
 
 			Rectangle frame = texture.Frame;    
 			float width  = (frame != null) ? frame.Width  : texture.Width;
@@ -33,7 +54,7 @@ namespace Sparrow.Display
 		}
 
 		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
-		public void setTexCoords(Point coords, int vertexID)
+		public void SetTexCoords(Point coords, int vertexID)
 		{
 			_vertexData.SetTexCoords(coords, vertexID);
 			VertexDataDidChange();
@@ -67,12 +88,12 @@ namespace Sparrow.Display
 			VertexDataDidChange ();
 		}
 
-		override public void VertexDataDidChange()
+	    protected override void VertexDataDidChange()
 		{
 			_vertexDataCacheInvalid = true;
 		}
 
-		override public void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
+        override internal void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
 		{
 			copyColor = copyColor || Tinted || Alpha != 1.0f;
 
@@ -85,12 +106,15 @@ namespace Sparrow.Display
 			_vertexDataCache.CopyToVertexData(targetData, atIndex, 4, copyColor);
 		}
 
+        /// <summary>
+        /// The texture that is displayed on the quad.
+        /// </summary>
 		override public Texture Texture 
 		{ 
 			set {
 				if (value == null)
 				{
-					throw new Exception(@"texture cannot be null!");
+					throw new Exception("texture cannot be null!");
 				}
 				else if (value != _texture)
 				{

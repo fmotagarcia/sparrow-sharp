@@ -5,50 +5,51 @@ using System.Collections.Generic;
 
 namespace Sparrow.Display
 {
-	/** 
-	 A DisplayObjectContainer represents a collection of display objects.
-	 
-	 It is the base class of all display objects that act as a container for other objects. By 
-	 maintaining an ordered list of children, it defines the back-to-front positioning of the children
-	 within the display tree.
-	 
-	 A container does not have size in itself. The width and height properties represent the extents
-	 of its children. Changing those properties will scale all children accordingly.
-	 
-	 As this is an abstract class, you can't instantiate it directly, but have to 
-	 use a subclass instead. The most lightweight container class is Sprite.
-	 
-	 **Adding and removing children**
-	 
-	 The class defines methods that allow you to add or remove children. When you add a child, it will
-	 be added at the foremost position, possibly occluding a child that was added before. You can access
-	 the children via an index. The first child will have index 0, the second child index 1, etc. 
-	 
-	 Adding and removing objects from a container triggers non-bubbling events.
-	 
-	 - `EventTypeAdded`: the object was added to a parent.
-	 - `EventTypeAddedToStage`: the object was added to a parent that is connected to the stage,
-	                                   thus becoming visible now.
-	 - `EventTypeRemoved`: the object was removed from a parent.
-	 - `EventTypeRemovedFromStage`: the object was removed from a parent that is connected to 
-	                                       the stage, thus becoming invisible now.
-	 
-	 Especially the `ADDED_TO_STAGE` event is very helpful, as it allows you to automatically execute
-	 some logic (e.g. start an animation) when an object is rendered the first time.
-	 
-	 **Sorting children**
-	 
-	 The `sortChildren` method allows you to sort the children of a container by a custom criteria. 
-	 Below is an example how to depth-sort children by their y-coordinate; this will put objects that
-	 are lower on the screen in front of those higher on the screen.
-	 
-		container.SortChildren(DisplayObject child1, DisplayObject *child2) 
-		{
-		    if (child1.Y < child2.Y) return OrderedAscending;
-		    else if (child1.Y > child2.Y) return OrderedDescending;
-		    else return OrderedSame;
-		}];
-	 */
+
+    /// <summary>
+    /// A DisplayObjectContainer represents a collection of display objects.
+
+    /// It is the base class of all display objects that act as a container for other objects. By 
+    /// maintaining an ordered list of children, it defines the back-to-front positioning of the children
+    /// within the display tree.
+
+    /// A container does not have size in itself. The width and height properties represent the extents
+    /// of its children. Changing those properties will scale all children accordingly.
+
+    /// As this is an abstract class, you can't instantiate it directly, but have to 
+    /// use a subclass instead. The most lightweight container class is Sprite.
+
+    /// **Adding and removing children**
+
+    /// The class defines methods that allow you to add or remove children. When you add a child, it will
+    /// be added at the foremost position, possibly occluding a child that was added before. You can access
+    /// the children via an index. The first child will have index 0, the second child index 1, etc. 
+
+    /// Adding and removing objects from a container triggers non-bubbling events.
+
+    /// - 'EventTypeAdded': the object was added to a parent.
+    /// - 'EventTypeAddedToStage': the object was added to a parent that is connected to the stage,
+    /// thus becoming visible now.
+    /// - 'EventTypeRemoved': the object was removed from a parent.
+    /// - 'EventTypeRemovedFromStage': the object was removed from a parent that is connected to 
+    /// the stage, thus becoming invisible now.
+
+    /// Especially the ADDED_TO_STAGE event is very helpful, as it allows you to automatically execute
+    /// some logic (e.g. start an animation) when an object is rendered the first time.
+
+    /// **Sorting children**
+
+    /// The 'sortChildren' method allows you to sort the children of a container by a custom criteria. 
+    /// Below is an example how to depth-sort children by their y-coordinate; this will put objects that
+    /// are lower on the screen in front of those higher on the screen.
+
+    /// container.SortChildren(DisplayObject child1, DisplayObject *child2) 
+    /// {
+    ///     if (child1.Y < child2.Y) return OrderedAscending;
+    ///     else if (child1.Y > child2.Y) return OrderedDescending;
+    ///     else return OrderedSame;
+    /// }];
+    /// </summary>
 	public abstract class DisplayObjectContainer : DisplayObject
     {
 		/// The number of children of this container.
@@ -175,21 +176,25 @@ namespace Sparrow.Display
 		/// Removes a child at a certain index. Children above the child will move down.
         public void RemoveChildAt(int index)
         {
-            if (index >= 0 && index < _children.Count)
-            {
-                DisplayObject child = _children[index];
-                //[child dispatchEventWithType:SPEventTypeRemoved];
-                if (Stage != null)
-                {
-                    //[child broadcastEventWithType:SPEventTypeRemovedFromStage];
-                }
-                child.Parent = null; 
-                int newIndex = _children.IndexOf(child); // index might have changed in event handler
-                if (newIndex != -1)
-                    _children.RemoveAt(newIndex);
-            }
-            else
-                throw new IndexOutOfRangeException("Invalid child index");        
+		    if (index >= 0 && index < _children.Count)
+		    {
+		        DisplayObject child = _children[index];
+                child.InvokeRemoved();
+		        if (Stage != null)
+		        {
+                    child.InvokeRemovedFromStage();
+		        }
+		        child.Parent = null;
+		        int newIndex = _children.IndexOf(child); // index might have changed in event handler
+		        if (newIndex != -1)
+		        {
+		            _children.RemoveAt(newIndex);
+		        }
+		    }
+		    else
+		    {
+		        throw new IndexOutOfRangeException("Invalid child index");
+		    }
         }
 
 		/// Swaps the indexes of two children.
@@ -275,21 +280,26 @@ namespace Sparrow.Display
         override public DisplayObject HitTestPoint(Point localPoint)
         {
             if (!Visible || !Touchable)
+            {
                 return null;
+            }
 
             for (int i = _children.Count - 1; i >= 0; --i)
-            { // front to back!
+            { 
+                // front to back!
                 DisplayObject child = _children[i];
                 Matrix transformationMatrix = TransformationMatrixToSpace(child);
                 Point transformedPoint = transformationMatrix.TransformPoint(localPoint);
                 DisplayObject target = child.HitTestPoint(transformedPoint);
                 if (target != null)
+                {
                     return target;
+                }
             }
             return null;
         }
 
-		/// Sorts the children using the given NSComparator block.
+		// Sorts the children using the given Comparator block.
 		// TODO public void SortChildren(Comparator comparator);
     }
 }

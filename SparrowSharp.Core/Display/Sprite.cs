@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Sparrow.Geom;
-using Sparrow.Display;
 using Sparrow.Core;
 
 namespace Sparrow.Display
@@ -79,7 +77,7 @@ namespace Sparrow.Display
 				}
 			}
 
-			if (_flattenRequested == true)
+			if (_flattenRequested)
 			{
 				_flattenedContents = QuadBatch.Compile(this, _flattenedContents);
 				_flattenRequested = false;
@@ -104,26 +102,31 @@ namespace Sparrow.Display
 			}
 			else base.Render(support);
 
-			if (ClipRect != null)
-				support.PopClipRect();
+		    if (ClipRect != null)
+		    {
+		        support.PopClipRect();
+		    }
 		}
 
 		override public Rectangle BoundsInSpace(DisplayObject targetSpace)
 		{
 			Rectangle bounds = base.BoundsInSpace(targetSpace);
 			// if we have a scissor rect, intersect it with our bounds
-			if (ClipRect != null)
-				bounds = bounds.Intersection(ClipRectInSpace(targetSpace));
+		    if (ClipRect != null)
+		    {
+		        bounds = bounds.Intersection(ClipRectInSpace(targetSpace));
+		    }
 			return bounds;
 		}
 
 
 		override public DisplayObject HitTestPoint(Point localPoint)
 		{
-			if (ClipRect != null && !ClipRect.Contains(localPoint))
-				return null;
-			else
-				return base.HitTestPoint(localPoint);
+		    if (ClipRect != null && !ClipRect.Contains(localPoint))
+		    {
+		        return null;
+		    }
+			return base.HitTestPoint(localPoint);
 		}
 
 	}
