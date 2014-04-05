@@ -559,9 +559,8 @@ namespace Sparrow.Display
 			else if (targetSpace.Parent == this)
 			{
 				targetMatrix = Matrix.Create();
-				targetMatrix.CopyFromMatrix(_transformationMatrix);
+				targetMatrix.CopyFromMatrix(targetSpace.TransformationMatrix);
 				targetMatrix.Invert();
-
 				return targetMatrix;
 			}
 
@@ -627,7 +626,7 @@ namespace Sparrow.Display
 		/// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
 		public abstract Rectangle BoundsInSpace(DisplayObject targetSpace);
 
-		/// Returns the object that is found topmost on a point in local coordinates, or nil if the test fails.
+		/// Returns the object that is found topmost on a point in local coordinates, or null if the test fails.
 		virtual public DisplayObject HitTestPoint(Point localPoint)
 		{
 			// invisible or untouchable objects cause the test to fail
