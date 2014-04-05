@@ -114,14 +114,37 @@ namespace Sparrow.Touches
 			}
 		}
 
-		private int _tapCount;
-		/// The number of taps the finger made in a short amount of time. Use this to detect double-taps, etc.
-		public int TapCount {
+		private float _initialGlobalX;
+		/// The starting x-position of the touch in screen coordinates
+		public float InitialGlobalX {
 			get {
-				return _tapCount;
+				return _initialGlobalX;
 			}
 			internal set {
-				_tapCount = value;
+				_initialGlobalX = value;
+			}
+		}
+
+		private float _initialGlobalY;
+		/// The starting y-position of the touch in screen coordinates
+		public float InitialGlobalY {
+			get {
+				return _initialGlobalY;
+			}
+			internal set {
+				_initialGlobalY = value;
+			}
+		}
+
+		private bool _isTap = false;
+		/// Returns true if this touch is a tap. 
+		/// This happens if Phase = TouchPhase.Ended and the touch began a short while ago
+		public bool IsTap {
+			get {
+				return _isTap;
+			}
+			internal set {
+				_isTap = value;
 			}
 		}
 

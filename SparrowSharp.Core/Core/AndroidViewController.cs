@@ -44,11 +44,9 @@ namespace Sparrow.Core
 
 			// get pointer index from the event object
 			int pointerIndex = evt.ActionIndex;
-			Dictionary<int, Touch> processedTouches = new Dictionary<int, Touch> ();
-
+			Touch touchInFocus;
 			// get pointer ID
 			int pointerId = evt.GetPointerId (pointerIndex);
-
 			double now = DateTime.Now.Ticks; // TODO Use C# date
 
 			// get masked (not specific to a pointer) action
@@ -63,19 +61,20 @@ namespace Sparrow.Core
 				newTouch.TimeStamp = now;
 				newTouch.GlobalX = evt.GetX () * xConversion;
 				newTouch.GlobalY = evt.GetY () * yConversion;
+				newTouch.InitialGlobalX = newTouch.GlobalX;
+				newTouch.InitialGlobalY = newTouch.GlobalY;
 				newTouch.Phase = TouchPhase.Began;
 				Point touchPosition = Point.Create (newTouch.GlobalX, newTouch.GlobalY);
 				newTouch.Target = SparrowSharpApp.Root.HitTestPoint (touchPosition);
 
 				touches.Add (newTouch._touchID, newTouch);
-				processedTouches.Add (newTouch._touchID, newTouch);
 				break;
 			case MotionEventActions.Move: 
 				for (int size = evt.PointerCount, i = 0; i < size; i++) {
 					Touch movedTouch; 
 					touches.TryGetValue(evt.GetPointerId (i), out movedTouch); 
 					if (movedTouch != null) {
-						// TODO: what to do with historical pointer events?
+						// TODO: should we care about historical pointer events?
 						movedTouch.PreviousGlobalX = movedTouch.GlobalX;
 						movedTouch.PreviousGlobalY = movedTouch.GlobalY;
 
@@ -88,7 +87,6 @@ namespace Sparrow.Core
 							movedTouch.GlobalY = yc;
 							movedTouch.Phase = TouchPhase.Moved;
 						}
-						processedTouches.Add (movedTouch._touchID, movedTouch);
 
 						//touch.TapCount = (int)uiTouch.tapCount; TODO figure out how to do it in Android
 
@@ -102,24 +100,30 @@ namespace Sparrow.Core
 				break;
 			case MotionEventActions.Up:
 			case MotionEventActions.PointerUp:
-				touches [pointerId].Phase = TouchPhase.Ended;
-				processedTouches.Add (touches [pointerId]._touchID, touches [pointerId]);
+				touchInFocus = touches [pointerId];
+				touchInFocus.Phase = TouchPhase.Ended;
+				long downTime = Android.OS.SystemClock.UptimeMillis () - evt.DownTime;
+
+				double dist = Math.Sqrt (
+					(touchInFocus.GlobalX - touchInFocus.InitialGlobalX) * (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) +
+					(touchInFocus.GlobalY - touchInFocus.InitialGlobalY) * (touchInFocus.GlobalY - touchInFocus.InitialGlobalY));
+				// TODO: move the time out to a constant, make dist DPI dependent
+				if (downTime < 300 && dist < 50) {
+					touchInFocus.IsTap = true;
+				}
 				break;
 			case MotionEventActions.Cancel:
-				touches [pointerId].Phase = TouchPhase.Cancelled;
-				processedTouches.Add (touches [pointerId]._touchID, touches [pointerId]);
+				touchInFocus = touches [pointerId];
+				touchInFocus.Phase = TouchPhase.Cancelled;
 				break;
 			}
 
 			foreach (Touch tou in touches.Values) {
-				if (processedTouches.ContainsKey (tou._touchID) == false) {
-					tou.Phase = TouchPhase.Stationary;
-				}
 				TouchEvent touchEvent = new TouchEvent (new List<Touch>(touches.Values));
 				if (tou.Target != null) {
 					tou.Target.InvokeTouch (touchEvent);
 				}
-				Console.WriteLine ("PHASE: " + tou.Phase + " ID: " + tou._touchID + " target: " + tou.Target);
+			//Console.WriteLine ("PHASE: " + tou.Phase + " ID: " + tou._touchID + " target: " + tou.Target + " isTap: "+ tou.IsTap);
 			}
 
 			_lastTouchTimestamp = evt.EventTime;

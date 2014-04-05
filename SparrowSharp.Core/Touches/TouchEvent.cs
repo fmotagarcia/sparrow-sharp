@@ -65,7 +65,7 @@ namespace Sparrow.Touches
 			return touchesFound;
 		}
 
-		/// Gets a set of SPTouch objects that originated over a certain target and are in a certain phase.
+		/// Gets a set of Touch objects that originated over a certain target and are in a certain phase.
 		public List<Touch> TouchesWithTarget (DisplayObject target, TouchPhase phase)
 		{
 			List<Touch> touchesFound = new List<Touch> ();

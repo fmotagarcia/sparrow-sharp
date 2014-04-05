@@ -126,5 +126,9 @@ namespace Sparrow.Geom
 
 			return NumberUtil.Equals (_x, other.X) && NumberUtil.Equals (_y, other.Y);
 		}
+
+		public float Distance(Point p2) {
+			return (float)Math.Sqrt ((_x - p2.X) * (_x - p2.X) + (_y - p2.Y) * (_y - p2.Y));
+		}
 	}
 }
