@@ -140,7 +140,7 @@ namespace Sparrow.Core
                 case MotionEventActions.PointerDown:
                     // new pointer
                     Touch newTouch = new Touch();
-                    newTouch._touchID = pointerId;
+                    newTouch.TouchID = pointerId;
                     newTouch.TimeStamp = now;
                     newTouch.GlobalX = e.GetX() * xConversion;
                     newTouch.GlobalY = e.GetY() * yConversion;
@@ -150,7 +150,7 @@ namespace Sparrow.Core
                     Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
                     newTouch.Target = SparrowSharpApp.Root.HitTestPoint(touchPosition);
 
-                    _touches.Add(newTouch._touchID, newTouch);
+                    _touches.Add(newTouch.TouchID, newTouch);
                     break;
                 case MotionEventActions.Move:
                     for (int size = e.PointerCount, i = 0; i < size; i++) {
@@ -212,7 +212,7 @@ namespace Sparrow.Core
             var touchList = new List<Touch>(_touches.Values);
             foreach (Touch tou in touchList) {
                 if (tou.Phase == TouchPhase.Ended || tou.Phase == TouchPhase.Cancelled) {
-                    _touches.Remove(tou._touchID);
+                    _touches.Remove(tou.TouchID);
                 }
             }
             return true;

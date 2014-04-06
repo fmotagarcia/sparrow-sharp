@@ -31,9 +31,6 @@ namespace Sparrow.Touches
     /// </summary>
 	public class Touch
 	{
-
-		internal int _touchID;
-
         /// <summary>
         /// Converts the current location of a touch to the local coordinate system of a display object.
         /// </summary>
@@ -63,6 +60,15 @@ namespace Sparrow.Touches
             curLoc.SubtractPoint (preLoc);
             return curLoc;
 		}
+
+        /// <summary>
+        /// The ID of this touch
+        /// </summary>
+        public int TouchID
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// The moment the event occurred (in seconds since application start).

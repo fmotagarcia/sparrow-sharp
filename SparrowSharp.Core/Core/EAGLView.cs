@@ -8,12 +8,19 @@ using MonoTouch.ObjCRuntime;
 using MonoTouch.OpenGLES;
 using MonoTouch.UIKit;
 using Sparrow;
+using System.Drawing;
+using Sparrow.Touches;
+using System.Collections.Generic;
 
 namespace SparrowSharp.Core.iOS
 {
     [Register("EAGLView")]
     public class EAGLView : iPhoneOSGameView
     {
+        double _lastTouchTimestamp;
+
+        TouchProcessor _touchProcessor = new TouchProcessor();
+
         [Export("initWithCoder:")]
         public EAGLView(NSCoder coder) : base(coder)
         {
@@ -44,10 +51,10 @@ namespace SparrowSharp.Core.iOS
                 Console.WriteLine("Minimum supported OpenGL ES version is 2.0");
             }
 
-			GL.Disable(EnableCap.CullFace);
-			GL.Disable(EnableCap.DepthTest);
-			GL.Disable(EnableCap.Dither);
-			GL.Enable(EnableCap.Blend);
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Dither);
+            GL.Enable(EnableCap.Blend);
         }
 
         #region DisplayLink support
@@ -118,6 +125,78 @@ namespace SparrowSharp.Core.iOS
             SparrowSharpApp.Step(e.Time);
 
             SwapBuffers();
+        }
+
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            base.TouchesBegan(touches, evt);
+
+            processTouches(evt);
+        }
+
+        public override void TouchesMoved(NSSet touches, UIEvent evt)
+        {
+            base.TouchesMoved(touches, evt);
+
+            processTouches(evt);
+        }
+
+        public override void TouchesEnded(NSSet touches, UIEvent evt)
+        {
+            base.TouchesEnded(touches, evt);
+
+            processTouches(evt);
+        }
+
+        public override void TouchesCancelled(NSSet touches, UIEvent evt)
+        {
+            base.TouchesCancelled(touches, evt);
+
+            _lastTouchTimestamp -= 0.0001f; // cancelled touch events have an old timestamp -> workaround
+
+            processTouches(evt);
+        }
+
+        void processTouches(UIEvent evt)
+        {
+            if (_lastTouchTimestamp != evt.Timestamp)
+            {
+                SizeF size = Bounds.Size;
+
+                float xConversion = SparrowSharpApp.Stage.Width / size.Width;
+                float yConversion = SparrowSharpApp.Stage.Height / size.Height;
+
+                // convert to Touches and forward to stage
+                List<Touch> touches = new List<Touch>();
+
+                double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                foreach (UITouch uiTouch in evt.TouchesForView(this))
+                {
+                    PointF location = uiTouch.LocationInView(this);
+                    PointF previousLocation = uiTouch.PreviousLocationInView(this);
+
+                    Touch touch = new Touch();
+                    touch.TouchID = uiTouch.Handle.ToInt32();
+                    touch.TimeStamp = now;
+                    touch.GlobalX = location.X * xConversion;
+                    touch.GlobalY = location.Y * yConversion;
+                    touch.PreviousGlobalX = previousLocation.X * xConversion;
+                    touch.PreviousGlobalY = previousLocation.Y * yConversion;
+                    if (uiTouch.Phase == UITouchPhase.Began)
+                    {
+                        touch.InitialGlobalX = touch.GlobalX;
+                        touch.InitialGlobalY = touch.GlobalY;
+                    }
+                    touch.IsTap = (uiTouch.TapCount != 0);
+                    touch.Phase = (TouchPhase) uiTouch.Phase;
+
+                    touches.Add(touch);
+                }
+
+                _touchProcessor.ProcessTouches(touches);
+
+                _lastTouchTimestamp = evt.Timestamp;
+            }
         }
     }
 }

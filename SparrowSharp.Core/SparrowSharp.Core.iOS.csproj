@@ -68,7 +68,6 @@
     <Compile Include="Utils\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
     <Compile Include="Utils\VertexData.cs" />
-    <Compile Include="Core\IViewController.cs" />
     <Compile Include="Textures\GLTexture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
@@ -95,10 +94,15 @@
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />
     <Compile Include="Filters\ColorMatrixFilter.cs" />
+    <Compile Include="Touches\Touch.cs" />
+    <Compile Include="Touches\TouchEvent.cs" />
+    <Compile Include="Touches\TouchPhase.cs" />
+    <Compile Include="Touches\TouchProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ResourceLoading\" />
     <Folder Include="Pool\" />
+    <Folder Include="Touches\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Textures\.DS_Store" />
