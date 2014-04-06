@@ -1,6 +1,6 @@
 ﻿namespace Sparrow.Utils
 {
-    public class VertexColorHelper
+    public static class VertexColorHelper
     {
         public static VertexColor CreateVertexColor(byte r, byte g, byte b, byte a)
         {
@@ -40,7 +40,7 @@
                     (byte)(color.R * alpha),
                     (byte)(color.G * alpha),
                     (byte)(color.B * alpha),
-                    (byte)(color.A));
+                    color.A);
             }
         }
 
@@ -58,7 +58,7 @@
                     (byte)(color.R / alpha),
                     (byte)(color.G / alpha),
                     (byte)(color.B / alpha),
-                    (byte)(color.A));
+                    color.A);
             }
         }
 

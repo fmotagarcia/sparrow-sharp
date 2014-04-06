@@ -5,11 +5,11 @@ namespace Sparrow.Utils
     public static class NumberUtil
     {
         /// <summary>
-        /// Lookup table for fast sinus calulations
+        /// Lookup table for fast sine calulations
         /// </summary>
         public readonly static float[] SinLUT = new float[2048];
         /// <summary>
-        /// Lookup table for fast cosinus calulations
+        /// Lookup table for fast cosine calulations
         /// </summary>
         public readonly static float[] CosLUT = new float[2048];
 
@@ -37,7 +37,7 @@ namespace Sparrow.Utils
 
         /// <summary>
         /// Fast sinus calculation with a look up table.
-        /// Note that it is less accurate than Math.Sin
+        /// Note that it is less accurate than Math.Sin; the largest error is around 0.3 degrees
         /// </summary>
         public static float FastSin(float angle)
         {
@@ -46,7 +46,7 @@ namespace Sparrow.Utils
 
         /// <summary>
         /// Fast cosinus calculation with a look up table.
-        /// Note that it is less accurate than Math.Cos
+        /// Note that it is less accurate than Math.Cos; the largest error is around 0.3 degrees;
         /// </summary>
         public static float FastCos(float angle)
         {

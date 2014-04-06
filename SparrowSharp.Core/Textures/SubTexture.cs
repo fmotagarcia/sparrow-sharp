@@ -51,23 +51,23 @@ namespace Sparrow.Textures
 
         override public float Height { get { return _height; } }
 
-		override public float NativeWidth { get { return _width * Scale; } }
+        override public float NativeWidth { get { return _width * Scale; } }
 
-		override public float NativeHeight { get { return _height * Scale; } }
+        override public float NativeHeight { get { return _height * Scale; } }
 
-        override public GLTexture Root { get {return _parent.Root;} }
+        override public GLTexture Root { get { return _parent.Root; } }
 
         override public uint Name { get { return _parent.Name; } }
 
         override public bool PremultipliedAlpha { get { return _parent.PremultipliedAlpha; } }
 
-		override public TextureFormat Format { get { return _parent.Format; } }
+        override public TextureFormat Format { get { return _parent.Format; } }
 
         override public bool MipMaps { get { return _parent.MipMaps; } }
 
         override public float Scale { get { return _parent.Scale; } }
 
-		override public Rectangle Frame { get { return _frame; } }
+        override public Rectangle Frame { get { return _frame; } }
 
         override public bool Repeat
         { 
@@ -81,45 +81,46 @@ namespace Sparrow.Textures
             set { _parent.Smoothing = value; }
         }
 
-		protected SubTexture()
-		{
-			// for subclasses, that want to call Init() later
-		}
+        protected SubTexture()
+        {
+            // for subclasses, that want to call Init() later
+        }
 
         /// <summary>
         /// Initializes a subtexture with a region (in points) of another texture, using a frame rectangle
-        /// to place the texture within an image. If `rotated` is `true`, the subtexture will show the base
+        /// to place the texture within an image. If 'rotated' is 'true', the subtexture will show the base
         /// region rotated by 90 degrees (CCW). If frame is null, it will use the whole texture.
         /// </summary>
-		public SubTexture(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
+        public SubTexture(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
         {
-			Init (region, texture, frame, rotated);
+            Init(region, texture, frame, rotated);
         }
 
-		protected void Init(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
-		{
-			if (region == null)
-				region = new Rectangle(0.0f, 0.0f, texture.Width, texture.Height);
+        protected void Init(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
+        {
+            if (region == null)
+                region = new Rectangle(0.0f, 0.0f, texture.Width, texture.Height);
 
-			_parent = texture;
-			if (_frame != null) {
-				_frame = frame.Copy();
-			}
+            _parent = texture;
+            if (_frame != null)
+            {
+                _frame = frame.Copy();
+            }
 
-			_transformationMatrix = Matrix.Create();
-			_width = rotated ? region.Height : region.Width;
-			_height = rotated ? region.Width : region.Height;
+            _transformationMatrix = Matrix.Create();
+            _width = rotated ? region.Height : region.Width;
+            _height = rotated ? region.Width : region.Height;
 
-			if (rotated)
-			{
-				_transformationMatrix.Translate(0, -1);
-				_transformationMatrix.Rotate((float)Math.PI / 2.0f);
-			}
+            if (rotated)
+            {
+                _transformationMatrix.Translate(0, -1);
+                _transformationMatrix.Rotate((float)Math.PI / 2.0f);
+            }
 
-			_transformationMatrix.Scale(region.Width / texture.Width, region.Height / texture.Height);
+            _transformationMatrix.Scale(region.Width / texture.Width, region.Height / texture.Height);
 
-			_transformationMatrix.Translate(region.X / texture.Width, region.Top / texture.Height);
-		}
+            _transformationMatrix.Translate(region.X / texture.Width, region.Top / texture.Height);
+        }
 
         override public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
         {
@@ -130,7 +131,7 @@ namespace Sparrow.Textures
         override public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
         {
             Texture texture = this;
-			Matrix matrix = Matrix.Create();
+            Matrix matrix = Matrix.Create();
 
             do
             {

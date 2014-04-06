@@ -17,10 +17,10 @@ namespace SparrowSharp.Filters
 
     ///	For each blur direction, the number of required passes is ceil(blur).
     ///	blur = 0.5: 1 pass
-    ///		blur = 1.0: 1 pass
-    ///		blur = 1.5: 2 passes
-    ///		blur = 2.0: 2 passes
-    ///		etc.
+    ///	blur = 1.0: 1 pass
+    ///	blur = 1.5: 2 passes
+    ///	blur = 2.0: 2 passes
+    ///	etc.
     /// </summary>
     public class BlurFilter : FragmentFilter
     {

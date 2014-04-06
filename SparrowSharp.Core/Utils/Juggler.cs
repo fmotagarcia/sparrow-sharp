@@ -4,6 +4,34 @@ using SparrowSharp.Display;
 
 namespace SparrowSharp.Utils
 {
+    /// <summary>
+    /// The Juggler takes objects that implement Animatable (e.g. 'MovieClip's) and executes them.
+    /// 
+    /// A juggler is a simple object. It does no more than saving a list of objects implementing 
+    /// 'Animatable' and advancing their time if it is told to do so (by calling its own 'AdvanceTime'
+    /// method). Furthermore, an object can request to be removed from the juggler by dispatching an
+    /// 'RemoveFromJuggler' event.
+    /// 
+    /// There is a default juggler that you can access from anywhere with the following code:
+    /// 
+    /// Juggler juggler = SparrowSharpApp.DefaultJuggler;
+    /// 
+    /// You can, however, create juggler objects yourself, too. That way, you can group your game 
+    /// into logical components that handle their animations independently.
+    /// 
+    /// A cool feature of the juggler is to delay method calls. Say you want to remove an object from its
+    /// parent 2 seconds from now. Call:
+    /// 
+    /// juggler.DelayInvocationAtTarget(object, 2.0f).RemoveFromParent;
+    /// 
+    /// This line of code will execute the following method 2 seconds in the future:
+    /// 
+    /// object.RemoveFromParent();
+    /// 
+    /// Alternatively, you can use the block-based verson of the method:
+    /// 
+    /// juggler.DelayInvocationByTime(2.0 delegate{ object.RemoveFromParent(); };
+    /// </summary>
     public class Juggler
     {
         readonly List<IAnimatable> _objects = new List<IAnimatable>();
@@ -45,6 +73,7 @@ namespace SparrowSharp.Utils
         {
             foreach (IAnimatable animatable in _objects)
             {
+                // TODO
                 //if ([(id)object isKindOfClass:[SPEventDispatcher class]])
                 //     [(SPEventDispatcher *)object removeEventListenersAtObject:self
                 //                                  forType:SPEventTypeRemoveFromJuggler]; 
@@ -58,7 +87,7 @@ namespace SparrowSharp.Utils
         /// </summary>
         public void RemoveObjectsWithTarget(IAnimatable animatable)
         {
-            /* 
+            /* TODO
             SEL targetSel = @selector(target);
             NSMutableOrderedSet *remainingObjects = [[NSMutableOrderedSet alloc] init];
     
@@ -90,7 +119,7 @@ namespace SparrowSharp.Utils
         /// </summary>
         public object DelayInvocationOf(IAnimatable animatable, float time)
         {
-            //DelayedInvocation delayedInv = DelayedInvocation.InvocationWithTarget(target, time);
+            //TODO DelayedInvocation delayedInv = DelayedInvocation.InvocationWithTarget(target, time);
             //AddObject(delayedInv);
             //return delayedInv;
             return null;
@@ -137,7 +166,9 @@ namespace SparrowSharp.Utils
             set
             {
                 if (value < 0.0f)
+                {
                     throw new Exception("Speed can not be less than 0");
+                }
                 _speed = value;
             }
         }

@@ -113,9 +113,12 @@ namespace Sparrow.Utils
             get
             {
                 for (int i = 0; i < _numVertices; ++i)
+                {
                     if (!VertexColorHelper.IsOpaqueWhite(_vertexColors[i]))
+                    {
                         return true;
-
+                    }
+                }
                 return false;
             }
         }

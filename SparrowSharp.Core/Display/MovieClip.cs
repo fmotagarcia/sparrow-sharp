@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Sparrow.Display;
 using Sparrow.Textures;
 
@@ -25,7 +24,7 @@ namespace SparrowSharp.Display
     public class MovieClip : Image, IAnimatable
     {
         private readonly List<Texture> _textures;
-        //List _sounds;
+        //private readonly List<> _sounds;
         private readonly List<float> _durations;
         private float _defaultFrameDuration;
         private float _totalTime;
@@ -45,7 +44,7 @@ namespace SparrowSharp.Display
             _currentTime = 0.0f;
             _currentFrame = 0;
             _textures = new List<Texture>();
-            //_sounds = new List<>;
+            // TODO _sounds = new List<>;
             _durations = new List<float>();        
             AddFrame(texture);
         }
@@ -94,7 +93,7 @@ namespace SparrowSharp.Display
             _totalTime += duration;
             _textures.Insert(position, texture);
             _durations.Insert(position, duration);
-            //[_sounds insertObject:(sound ? sound : [NSNull null]) atIndex:position];
+            //TODO [_sounds insertObject:(sound ? sound : [NSNull null]) atIndex:position];
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace SparrowSharp.Display
             _totalTime -= GetDurationAt(position);
             _textures.RemoveAt(position);
             _durations.RemoveAt(position);
-            //_sounds removeObjectAtIndex:position];   
+            //TODO _sounds removeObjectAtIndex:position];   
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace SparrowSharp.Display
         /// </summary>
         public void SetSoundAt(object sound, int position)
         {
-            //_sounds[frameID] = sound ? sound : null;
+            //TODO _sounds[frameID] = sound ? sound : null;
         }
 
         /// <summary>
@@ -143,7 +142,7 @@ namespace SparrowSharp.Display
         }
 
         /// Returns the sound of a frame at a certain position.
-        //public SoundChannel GetSoundAt(int position) {}
+        // TODO public SoundChannel GetSoundAt(int position) {}
 
         /// <summary>
         /// Returns the duration (in seconds) of a frame at a certain position.
@@ -303,7 +302,7 @@ namespace SparrowSharp.Display
             }
             if (previousTime < _totalTime && _currentTime == _totalTime)
             {
-                //[self dispatchEventWithType:SPEventTypeCompleted];
+                // TODO [self dispatchEventWithType:SPEventTypeCompleted];
             }     
             AdvanceTime(carryOverTime);
         }
@@ -315,7 +314,7 @@ namespace SparrowSharp.Display
 
         private void PlayCurrentSound()
         {
-            //var sound = _sounds[_currentFrame];
+            // TODO var sound = _sounds[_currentFrame];
             //if ([NSNull class] != [sound class])
             //    [sound play];
         }
