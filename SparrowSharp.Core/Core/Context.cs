@@ -111,8 +111,10 @@ namespace Sparrow.Core
                 } else {
                     #if __ANDROID__
                     GL.BindFramebuffer(All.Framebuffer, 0);
-                    #elif __IOS__ || __WINDOWS__
+                    #elif __IOS__
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 1);
+                    #elif __WINDOWS__
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                     #endif
 
                     GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
