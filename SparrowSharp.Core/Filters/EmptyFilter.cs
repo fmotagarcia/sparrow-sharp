@@ -1,5 +1,4 @@
-﻿using System;
-using Sparrow.Textures;
+﻿using Sparrow.Textures;
 using Sparrow.Geom;
 using Sparrow;
 using Sparrow.Core;
@@ -8,6 +7,9 @@ using OpenTK;
 
 namespace SparrowSharp.Filters
 {
+    /// <summary>
+    /// Empty filter that does nothing. Used for testing; you can use its code to make custom filters.
+    /// </summary>
 	public class EmptyFilter : FragmentFilter
 	{
 		Program _program;
@@ -16,7 +18,7 @@ namespace SparrowSharp.Filters
 		{
 			if (_program == null)
 			{
-				string programName = "sparrow_emptyProgram";
+                string programName = "_test_emptyFilterProgram";
 				_program = SparrowSharpApp.GetProgram(programName);
 				if (_program == null)
 				{
@@ -28,10 +30,10 @@ namespace SparrowSharp.Filters
 			TexCoordsID = _program.Attributes["aTexCoords"];
 		}
 
-		override protected void ActivateWithPass (int pass, Texture texture, Matrix matrix)
+		override protected void ActivateWithPass (int pass, Texture texture, Matrix mvpMatrix)
 		{
 			GL.UseProgram(_program.Name);
-			Matrix4 mvp = matrix.ConvertToMatrix4();
+			Matrix4 mvp = mvpMatrix.ConvertToMatrix4();
 			GL.UniformMatrix4(_program.Uniforms["uMvpMatrix"], false, ref mvp);
 		}
 

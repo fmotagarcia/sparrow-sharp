@@ -28,7 +28,9 @@ namespace SparrowSharp.Filters
 	/// </summary>
 	public class ColorMatrixFilter : FragmentFilter
 	{
-		/// The color matrix object used to apply the filter.
+        /// <summary>
+        /// The color matrix object used to apply the filter.
+        /// </summary>
 		public ColorMatrix ColorMatrix;
 
 		private static readonly string ColorMatrixProgram = "ColorMatrixProgram";
@@ -50,46 +52,60 @@ namespace SparrowSharp.Filters
 			_colorMatrixDirty = true;
 		}
 			
-		/// Inverts the colors of the filtered objects.
+        /// <summary>
+        /// Inverts the colors of the filtered objects.
+        /// </summary>
 		public void Invert() {
 			this.ColorMatrix.Invert ();
 			_colorMatrixDirty = true;
 		}
 
-		/// Changes the saturation. Typical values are in the range(-1, 1). Values above zero will raise,
-		/// values below zero will reduce the saturation. '-1' will produce a grayscale image.
+        /// <summary>
+        /// Changes the saturation. Typical values are in the range(-1, 1). Values above zero will raise,
+        /// values below zero will reduce the saturation. '-1' will produce a grayscale image.
+        /// </summary>
 		public void AdjustSaturation(float saturation) {
 			this.ColorMatrix.AdjustSaturation (saturation);
 			_colorMatrixDirty = true;
 		}
 
-		/// Changes the contrast. Typical values are in the range(-1, 1). Values above zero will raise,
-		/// values below zero will reduce the contrast.
+        /// <summary>
+        /// Changes the contrast. Typical values are in the range(-1, 1). Values above zero will raise,
+        /// values below zero will reduce the contrast.
+        /// </summary>
 		public void AdjustContrast(float contrast) {
 			this.ColorMatrix.AdjustContrast (contrast);
 			_colorMatrixDirty = true;
 		}
 
-		/// Changes the brightness. Typical values are in the range(-1, 1). Values above zero will make the
-		/// image brighter, values below zero will make it darker.
+        /// <summary>
+        /// Changes the brightness. Typical values are in the range(-1, 1). Values above zero will make the
+        /// image brighter, values below zero will make it darker.
+        /// </summary>
 		public void AdjustBrightness(float brightness) {
 			this.ColorMatrix.AdjustBrightness (brightness);
 			_colorMatrixDirty = true;
 		}
 
-		/// Changes the hue of the image. Typical values are in the range(-1, 1).
+        /// <summary>
+        /// Changes the hue of the image. Typical values are in the range(-1, 1).
+        /// </summary>
 		public void AdjustHue(float hue) {
 			this.ColorMatrix.AdjustHue (hue);
 			_colorMatrixDirty = true;
 		}
 
-		/// Changes the filter matrix back to the identity matrix.
+        /// <summary>
+        /// Changes the filter matrix back to the identity matrix.
+        /// </summary>
 		public void Reset() {
 			this.ColorMatrix.Identity ();
 			_colorMatrixDirty = true;
 		}
 
-		/// Concatenates the current matrix with another one.
+        /// <summary>
+        /// Concatenates the current matrix with another one.
+        /// </summary>
 		public void ConcatColorMatrix(ColorMatrix colorMatrix) {
 			this.ColorMatrix.ConcatColorMatrix (colorMatrix);
 			_colorMatrixDirty = true;
@@ -137,7 +153,7 @@ namespace SparrowSharp.Filters
 		private void UpdateShaderMatrix() {
 			// the shader needs the matrix components in a different order,
 			// and it needs the offsets in the range 0-1.
-			float[] matrix = ColorMatrix.values;
+			float[] matrix = ColorMatrix.Values;
 
 			_shaderMatrix = new Matrix4(
 				matrix[ 0], matrix[ 1], matrix[ 2], matrix[ 3],

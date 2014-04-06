@@ -3,6 +3,9 @@ using System.Text;
 
 namespace SparrowSharp.Filters
 {
+    /// <summary>
+    /// Shader used by BlurFilter
+    /// </summary>
 	internal class BlurProgram : Program
 	{
 

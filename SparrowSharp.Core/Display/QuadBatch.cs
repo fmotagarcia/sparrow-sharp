@@ -8,7 +8,27 @@ using Sparrow.Utils;
 
 namespace Sparrow.Display
 {
+    /// <summary>
+    /// Optimizes rendering of a number of quads with an identical state.
 
+    /// The majority of all rendered objects in Sparrow are quads. In fact, all the default
+    /// leaf nodes of Sparrow are quads (the 'Image' and 'Quad' classes). The rendering of those
+    /// quads can be accelerated by a big factor if all quads with an identical state are sent
+    /// to the GPU in just one call. That's what the 'QuadBatch' class can do.
+    /// 
+    /// The 'Flatten' method of the 'Sprite' class uses this class internally to optimize its
+    /// rendering performance. In most situations, it is recommended to stick with flattened
+    /// sprites, because they are easier to use. Sometimes, however, it makes sense
+    /// to use the QuadBatch class directly: e.g. you can add one quad multiple times to
+    /// a quad batch, whereas you can only add it once to a sprite. Furthermore, this class
+    /// does not dispatch 'ADDED' or 'ADDED_TO_STAGE' events when a quad
+    /// is added, which makes it more lightweight.
+
+    /// One QuadBatch object is bound to a specific render state. The first object you add to a
+    /// batch will decide on the QuadBatch's state, that is: its texture, its settings for
+    /// smoothing and repetition, and if it's tinted (colored vertices and/or transparency).
+    /// When you reset the batch, it will accept a new state on the next added quad.
+    /// </summary>
 	public class QuadBatch : DisplayObject
 	{
 		private const int INDICES_PER_QUAD = 6;
@@ -26,18 +46,30 @@ namespace Sparrow.Display
         private int _capacity;
 		private int _indexBufferName;
 
+        /// <summary>
+        /// The current texture of the batch, if there is one.
+        /// </summary>
 		public Texture QuadTexture {
 			get { return _texture; }
 		}
 
+        /// <summary>
+        /// The number of quads that has been added to the batch.
+        /// </summary>
 		public int NumQuads {
 			get { return _numQuads; }
 		}
 
+        /// <summary>
+        /// Indicates if any vertices have a non-white color or are not fully opaque.
+        /// </summary>
 		public bool Tinted {
 			get { return _tinted; }
 		}
 
+        /// <summary>
+        /// Indicates if the rgb values are stored premultiplied with the alpha value.
+        /// </summary>
 		public bool PremultipliedAlpha {
 			get { return _premultipliedAlpha; }
 		}
@@ -54,6 +86,9 @@ namespace Sparrow.Display
 			_baseEffect = new BaseEffect ();
 		}
 
+        /// <summary>
+        /// Resets the batch. The vertex- and index-buffers keep their size, so that they can be reused.
+        /// </summary>
 		public void Reset ()
 		{
 			_numQuads = 0;
@@ -61,22 +96,29 @@ namespace Sparrow.Display
 			_texture = null;
 		}
 
+        /// <summary>
+        ///  Adds a quad or image. Make sure you only add quads with an equal state.
+        /// </summary>
 		public void AddQuad (Quad quad)
 		{
-			AddQuad (quad, quad.Alpha, Sparrow.Display.BlendMode.AUTO, null);
+            AddQuad (quad, quad.Alpha, quad.BlendMode);
 		}
 
+        /// <summary>
+        /// Adds a quad or image using a custom alpha value (ignoring the quad's original alpha).
+        /// Make sure you only add quads with an equal state.
+        /// </summary>
 		public void AddQuad (Quad quad, float alpha)
 		{
-			AddQuad (quad, alpha, quad.BlendMode, null);
+			AddQuad (quad, alpha, quad.BlendMode);
 		}
 
-		public void AddQuad (Quad quad, float alpha, uint blendMode)
-		{
-			AddQuad (quad, quad.Alpha, blendMode, null);
-		}
-
-		public void AddQuad (Quad quad, float alpha, uint blendMode, Matrix matrix)
+        /// <summary>
+        /// Adds a quad or image to the batch, using custom alpha and blend mode values (ignoring the
+        /// quad's original values) and transforming each vertex by a certain transformation matrix.
+        /// Make sure you only add quads with an equal state.
+        /// </summary>
+        public void AddQuad (Quad quad, float alpha, uint blendMode, Matrix matrix = null)
 		{
 			if (matrix == null) {
 				matrix = quad.TransformationMatrix;
@@ -110,22 +152,29 @@ namespace Sparrow.Display
 			_numQuads++;
 		}
 
+        /// <summary>
+        /// Adds another quad batch to this batch.
+        /// </summary>
 		public void AddQuadBatch (QuadBatch quadBatch)
 		{
-			AddQuadBatch (quadBatch, quadBatch.Alpha, quadBatch.BlendMode, null);
+			AddQuadBatch (quadBatch, quadBatch.Alpha, quadBatch.BlendMode);
 		}
 
+        /// <summary>
+        /// Adds another quad batch to this batch, using a custom alpha value (ignoring the batch's
+        /// original alpha).
+        /// </summary>
 		public void AddQuadBatch (QuadBatch quadBatch, float alpha)
 		{
-			AddQuadBatch (quadBatch, alpha, quadBatch.BlendMode, null);
+			AddQuadBatch (quadBatch, alpha, quadBatch.BlendMode);
 		}
 
-		public void AddQuadBatch (QuadBatch quadBatch, float alpha, uint blendMode)
-		{
-			AddQuadBatch (quadBatch, alpha, blendMode, null);
-		}
-
-		public void AddQuadBatch (QuadBatch quadBatch, float alpha, uint blendMode, Matrix matrix)
+        /// <summary>
+        /// Adds another quad batch to this batch, using custom alpha and blend mode values (ignoring the
+        /// batch's original values) and transforming each vertex by a certain transformation matrix. Just
+        /// like the 'AddQuad' method, you have to make sure that you only add batches with an equal state.
+        /// </summary>
+        public void AddQuadBatch (QuadBatch quadBatch, float alpha, uint blendMode, Matrix matrix = null)
 		{
 			int vertexID = _numQuads * 4;
 			int numQuads = quadBatch.NumQuads;
@@ -159,6 +208,11 @@ namespace Sparrow.Display
 			_numQuads += numQuads;
 		}
 
+        /// <summary>
+        /// Indicates if specific quads can be added to the batch without causing a state change.
+        /// A state change occurs if the quad uses a different base texture, has a different 'Smoothing',
+        /// 'Repeat' or 'Tinted' setting, or if the batch is full (one batch can contain up to 8192 quads).
+        /// </summary>
 		public bool IsStateChange (bool tinted, Texture texture, float alpha, bool premultipliedAlpha, uint blendMode, int numQuads)
 		{
 			if (_numQuads == 0) {
@@ -174,7 +228,7 @@ namespace Sparrow.Display
 			}
 			return true;
 		}
-
+            
 		override public Rectangle BoundsInSpace (DisplayObject targetSpace)
 		{
 			Matrix matrix = targetSpace == this ? null : TransformationMatrixToSpace (targetSpace);
@@ -190,12 +244,18 @@ namespace Sparrow.Display
 			}
 		}
 
+        /// <summary>
+        /// Renders the batch with a custom mvp matrix.
+        /// </summary>
 		public void Render (Matrix matrix)
 		{
 			Render (matrix, 1.0f, BlendMode);
 		}
 
-		public void Render (Matrix matrix, float alpha, uint blendMode)
+        /// <summary>
+        /// Renders the batch with custom alpha and blend mode values, as well as a custom mvp matrix.
+        /// </summary>
+        public void Render (Matrix matrix, float alpha, uint blendMode)
 		{
 			if (_numQuads == 0) {
 				return;
@@ -251,12 +311,11 @@ namespace Sparrow.Display
 //			GL.DrawElements (All.TriangleStrip, numIndices, All.UnsignedShort, IntPtr.Zero);
 		}
 
-		public static List<QuadBatch> Compile (DisplayObject displayObject)
-		{
-			return Compile (displayObject, null);
-		}
-
-		public static List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches)
+        /// <summary>
+        /// Analyses an object that is made up exclusively of quads (or other containers) and saves the
+        /// resulting quad batches into the specified an array; batches inside that array are reused.
+        /// </summary>
+        public static List<QuadBatch> Compile (DisplayObject displayObject, List<QuadBatch> quadBatches = null)
 		{
 			if (quadBatches == null) {
 				quadBatches = new List<QuadBatch> ();

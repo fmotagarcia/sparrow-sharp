@@ -48,7 +48,10 @@ namespace SparrowSharp.Filters
 		private readonly float[] _color = new float[4];
 		private BlurProgram _program;
 		private BlurProgram _tintedProgram;
-		/// Initializes a blur filter with the specified blur and a resolution.
+		
+        /// <summary>
+        /// Initializes a blur filter with the specified blur and a resolution.
+        /// </summary>
 		public BlurFilter (float blur = 1.0f, float resolution = 1.0f) : base(1, resolution)
 		{
 			_blurX = blur;
@@ -56,8 +59,10 @@ namespace SparrowSharp.Filters
 			UpdateMarginsAndPasses();
 		}
 
-		/// A uniform color will replace the RGB values of the input color, while the alpha value will be
-		/// multiplied with the given factor. Pass NO as the first parameter to deactivate the uniform color.
+        /// <summary>
+        /// A uniform color will replace the RGB values of the input color, while the alpha value will be
+        /// multiplied with the given factor. Pass false as the first parameter to deactivate the uniform color.
+        /// </summary>
 		public void SetUniformColor(bool enable, uint color = 0x000000, float alpha = 1.0f) {
 			_color[0] = ColorUtil.GetR(color) / 255.0f;
 			_color[1] = ColorUtil.GetG(color) / 255.0f;
@@ -182,7 +187,6 @@ namespace SparrowSharp.Filters
 				_offsets[3] = offset2;
 			}
 		}
-
 
 		private void UpdateMarginsAndPasses() {
 			if (_blurX == 0 && _blurY == 0) {

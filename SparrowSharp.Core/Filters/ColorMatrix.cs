@@ -3,40 +3,49 @@
 
 namespace SparrowSharp.Filters
 {
-	/// A color matrix class containing an array of 20 floats arranged as a 4x5 matrix.
+    /// <summary>
+    ///  A color matrix class containing an array of 20 floats arranged as a 4x5 matrix.
+    /// </summary>
 	public class ColorMatrix
 	{
-		/// Returns a point to the internal color matrix array.
-		public float[] values { get { return _m; }}
+        /// <summary>
+        /// Returns a point to the internal color matrix array.
+        /// </summary>
+		public float[] Values { get { return _m; }}
 
-		/// Returns the count of values (always 20).
-		public readonly int numValues = 20;
+        /// <summary>
+        /// Returns the count of values (always 20).
+        /// </summary>
+		public readonly int NumValues = 20;
 
 		protected float[] _m = new float[20];
-
-		private readonly float[] Matrix4x5Identity = {
+		private readonly float[] matrix4x5Identity = {
 			1,0,0,0,0,
 			0,1,0,0,0,
 			0,0,1,0,0,
 			0,0,0,1,0
 		};
-
 		private const float LUMA_R = 0.299f;
 		private const float LUMA_G = 0.587f;
 		private const float LUMA_B = 0.114f;
-		/// Initializes a color matrix with an array of 20 floats.
-		/// If no value is specified it initializes with an identity matrix.
+		
+        /// <summary>
+        /// Initializes a color matrix with an array of 20 floats.
+        /// If no value is specified it initializes with an identity matrix.
+        /// </summary>
 		public ColorMatrix (float[] values = null)
 		{
 			if (values != null) {
 				Array.Copy(values, _m, 20);
 			} else {
-				Array.Copy(Matrix4x5Identity, _m, 20);
+				Array.Copy(matrix4x5Identity, _m, 20);
 			}
 		}
 
 
-		/// Inverts the colors.
+        /// <summary>
+        /// Inverts the colors.
+        /// </summary>
 		public void Invert() {
 			float[] mtx = {
 				-1, 0,  0,  0, 255,
@@ -47,9 +56,11 @@ namespace SparrowSharp.Filters
 			ConcatMatrix(this, mtx);
 		}
 
-		/// Changes the saturation. Typical values are in the range [-1, 1].
-		/// Values above zero will raise, values below zero will reduce the saturation.
-		/// '-1' will produce a grayscale image.
+        /// <summary>
+        /// Changes the saturation. Typical values are in the range [-1, 1].
+        /// Values above zero will raise, values below zero will reduce the saturation.
+        /// '-1' will produce a grayscale image.
+        /// </summary>
 		public void AdjustSaturation(float saturation) {
 			saturation += 1.0f;
 
@@ -68,8 +79,10 @@ namespace SparrowSharp.Filters
 			ConcatMatrix(this, mtx);
 		}
 
-		/// Changes the contrast. Typical values are in the range [-1, 1].
-		/// Values above zero will raise, values below zero will reduce the contrast.
+        /// <summary>
+        /// Changes the contrast. Typical values are in the range [-1, 1].
+        /// Values above zero will raise, values below zero will reduce the contrast.
+        /// </summary>
 		public void AdjustContrast(float contrast) {
 			float s = contrast + 1.0f;
 			float o = 128 * (1.0f - s);
@@ -84,8 +97,10 @@ namespace SparrowSharp.Filters
 			ConcatMatrix(this, mtx);
 		}
 
-		/// Changes the brightness. Typical values are in the range [-1, 1].
-		/// Values above zero will make the image brighter, values below zero will make it darker.
+        /// <summary>
+        /// Changes the brightness. Typical values are in the range [-1, 1].
+        /// Values above zero will make the image brighter, values below zero will make it darker.
+        /// </summary>
 		public void AdjustBrightness(float brightness) { 
 			brightness *= 255;
 
@@ -99,7 +114,9 @@ namespace SparrowSharp.Filters
 			ConcatMatrix(this, mtx);
 		}
 
-		/// Changes the hue. Typical values are in the range [-1, 1].
+        /// <summary>
+        /// Changes the hue. Typical values are in the range [-1, 1].
+        /// </summary>
 		public void AdjustHue(float hue) {
 			hue *= (float)Math.PI;
 
@@ -139,12 +156,16 @@ namespace SparrowSharp.Filters
 			ConcatMatrix(this, mtx);
 		}
 
-		/// Changes the color matrix into an identity matrix.
+        /// <summary>
+        /// Changes the color matrix into an identity matrix.
+        /// </summary>
 		public void Identity() {
-			Array.Copy(Matrix4x5Identity, _m, 20);
+			Array.Copy(matrix4x5Identity, _m, 20);
 		}
 
-		/// Concatenates the receiving color matrix with another one.
+        /// <summary>
+        /// Concatenates the receiving color matrix with another one.
+        /// </summary>
 		public void ConcatColorMatrix(ColorMatrix colorMatrix) {
 			ConcatMatrix(this, colorMatrix._m);
 		}

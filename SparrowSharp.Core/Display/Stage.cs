@@ -4,40 +4,47 @@ using System;
 
 namespace Sparrow.Display
 {
+    /// <summary>
+    /// A Stage is the root of the display tree. It represents the rendering area of the application.
+
+    /// Sparrow will create the stage for you. The root object of your game will be the first child of
+    /// the stage. You can access 'root' and 'stage' from any display object using the respective 
+    /// properties. 
+
+    /// The stage's 'Width' and 'Height' values define the coordinate system of your game. The color
+    /// of the stage defines the background color of your game.
+    /// </summary>
     public class Stage : DisplayObjectContainer
     {
-        private float _width;
-        private float _height;
-        private uint _color;
 
-        override public float Width
+        /// <summary>
+        /// The height of the stage's coordinate system.
+        /// </summary>
+        override public float Width { get; set; }
+
+        /// <summary>
+        /// The width of the stage's coordinate system.
+        /// </summary>
+        override public float Height { get; set; }
+
+        /// <summary>
+        /// The background color of the stage. Default: black.
+        /// </summary>
+        public uint Color { get; set; }
+
+        /// <summary>
+        /// Initializes a stage with a certain size in points. Sparrow calls this automatically on startup.
+        /// </summary>
+        internal Stage(float initWidth, float initHeight)
         {
-            get { return _width; }
-            set { _width = value; }
-        }
-
-        override public float Height
-        {
-            get { return _height; }
-            set { _height = value; }
-        }
-
-        public uint Color
-        { 
-            get { return _color; }
-            set { _color = value; }
-        }
-
-        public Stage(float initWidth, float initHeight)
-        {
-            _width = initWidth;
-            _width = initHeight;
+            Width = initWidth;
+            Width = initHeight;
         }
 
         override public void Render(RenderSupport support)
         {
-			support.Clear(_color, 1.0f);
-			support.SetupOrthographicProjection(0, _width, 0, _height);
+			support.Clear(Color, 1.0f);
+			support.SetupOrthographicProjection(0, Width, 0, Height);
 
             base.Render(support);
         }
