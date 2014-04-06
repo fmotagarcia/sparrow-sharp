@@ -24,31 +24,35 @@ namespace Sparrow.Core
         private string _fragmentShader;
         public readonly Dictionary<String, int> Uniforms = new Dictionary<string, int>();
         public readonly Dictionary<String, int> Attributes = new Dictionary<string, int>();
-
         // Used by derived classes that need to manually call Init()
-        protected Program() {
+        protected Program()
+        {
         }
 
         /// <summary>
         /// Initializes a GLSL program by compiling vertex and fragment shaders from source. In debug
         /// mode, compilation erros are logged into the console.
         /// </summary>
-        public Program(string vertexShader, string fragmentShader) {
+        public Program(string vertexShader, string fragmentShader)
+        {
             Init(vertexShader, fragmentShader);
         }
 
-        protected void Init(string vertexShader, string fragmentShader) {
+        protected void Init(string vertexShader, string fragmentShader)
+        {
             _vertexShader = vertexShader;
             _fragmentShader = fragmentShader;
 
             Compile();
         }
 
-        public string Description() {
+        public string Description()
+        {
             return string.Format("[Program {0}\n## VERTEX SHADER: ##\n{1}\n## FRAGMENT SHADER: ##\n{2}]", Name, _vertexShader, _fragmentShader);
         }
 
-        private void Compile() {
+        private void Compile()
+        {
             int program = GL.CreateProgram();
             int vertexShader = CompileShader(_vertexShader, All.VertexShader);
             int fragmentShader = CompileShader(_fragmentShader, All.FragmentShader);
@@ -65,15 +69,17 @@ namespace Sparrow.Core
             #elif __IOS__ || __WINDOWS__
             GL.GetProgram(program, ProgramParameter.LinkStatus, out linked);
             #endif
-            if (linked == 0) {
-                int logLength = 0;
+            if (linked == 0)
+            {
+                int logLength;
                 #if __ANDROID__
                 GL.GetProgram(program, All.InfoLogLength, out logLength);
                 #elif __IOS__ || __WINDOWS__
                 GL.GetProgram(program, ProgramParameter.InfoLogLength, out logLength);
                 #endif
 
-                if (logLength != 0) {
+                if (logLength != 0)
+                {
                     String log;
                     GL.GetProgramInfoLog(program, out log);
                     Debug.WriteLine("Sparrow: Error linking program: " + log);
@@ -93,9 +99,11 @@ namespace Sparrow.Core
             GL.DeleteShader(fragmentShader);
         }
 
-        private int CompileShader(string source, All type) {
+        private int CompileShader(string source, All type)
+        {
             int shader = GL.CreateShader(type);
-            if (shader == 0) {
+            if (shader == 0)
+            {
                 return shader;
             }
 
@@ -103,22 +111,24 @@ namespace Sparrow.Core
             GL.CompileShader(shader);
 
             #if DEBUG
-            int compiled = 0;
+            int compiled;
             #if __ANDROID__
             GL.GetShader(shader, All.CompileStatus, out compiled);
             #elif __IOS__ || __WINDOWS__
             GL.GetShader(shader, ShaderParameter.CompileStatus, out compiled);
             #endif
 
-            if (compiled == 0) {
-                int logLength = 0;
+            if (compiled == 0)
+            {
+                int logLength;
                 #if __ANDROID__
                 GL.GetShader(shader, All.InfoLogLength, out logLength);
                 #elif __IOS__ || __WINDOWS__
                 GL.GetShader(shader, ShaderParameter.InfoLogLength, out logLength);
                 #endif
 
-                if (logLength != 0) {
+                if (logLength != 0)
+                {
                     string log;
                     GL.GetShaderInfoLog(shader, out log);
                     Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == All.VertexShader ? "vertex" : "fragment"), log));
@@ -131,8 +141,9 @@ namespace Sparrow.Core
             return shader;
         }
 
-        private void UpdateUniforms() {
-            int numUniforms = 0;
+        private void UpdateUniforms()
+        {
+            int numUniforms;
             #if __ANDROID__
             GL.GetProgram(Name, All.ActiveUniforms, out numUniforms);
             #elif __IOS__ || __WINDOWS__
@@ -140,7 +151,8 @@ namespace Sparrow.Core
             #endif
 
             Uniforms.Clear();
-            for (int i = 0; i < numUniforms; i++) {
+            for (int i = 0; i < numUniforms; i++)
+            {
                 int size;
                 #if __ANDROID__
                 All type;
@@ -154,8 +166,9 @@ namespace Sparrow.Core
             }
         }
 
-        private void UpdateAttributes() {
-            int numAttributes = 0;
+        private void UpdateAttributes()
+        {
+            int numAttributes;
             #if __ANDROID__
             GL.GetProgram(Name, All.ActiveAttributes, out numAttributes);
             #elif __IOS__ || __WINDOWS__
@@ -163,7 +176,8 @@ namespace Sparrow.Core
             #endif
 
             Attributes.Clear();
-            for (int i = 0; i < numAttributes; i++) {
+            for (int i = 0; i < numAttributes; i++)
+            {
                 int size;
                 #if __ANDROID__
                 All type;

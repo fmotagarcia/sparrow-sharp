@@ -1,10 +1,9 @@
-﻿using Sparrow.Core;
-using Sparrow.Display;
+﻿using System;
 using System.Collections.Generic;
-using System;
 using System.Diagnostics;
+using Sparrow.Core;
+using Sparrow.Display;
 using SparrowSharp.Utils;
-using Sparrow.Touches;
 
 namespace Sparrow
 {
@@ -17,28 +16,26 @@ namespace Sparrow
         public static Context Context { get; set; }
 
         public static Dictionary<string, Program> Programs = new Dictionary<string, Program>();
+        private static int _drawableWidth;
 
-		private static int _drawableWidth;
-		public static int DrawableWidth { get { return _drawableWidth; } }
-       
-		private static int _drawableHeight;
-		public static int DrawableHeight { get { return _drawableHeight; } }
-        
+        public static int DrawableWidth { get { return _drawableWidth; } }
+
+        private static int _drawableHeight;
+
+        public static int DrawableHeight { get { return _drawableHeight; } }
+
         private static RenderSupport RenderSupport { get; set; }
 
-		public static DisplayObject Root { get; set; }
+        public static DisplayObject Root { get; set; }
 
         public static Juggler DefaultJuggler { get; set; }
 
-        private static Stopwatch watch = new Stopwatch();
-
-        public static int cnt = 0;
+        private static readonly Stopwatch watch = new Stopwatch();
 
         public static void Step(double time)
         {
             long elapsed = watch.ElapsedMilliseconds;
             watch.Restart();
-            cnt++;
 
             RenderSupport.NextFrame();
             Stage.Render(RenderSupport);
@@ -65,8 +62,8 @@ namespace Sparrow
             {
                 throw new InvalidOperationException("App already initialized!");
             }
-			_drawableWidth = (int)width;
-			_drawableHeight = (int)height;
+            _drawableWidth = (int)width;
+            _drawableHeight = (int)height;
 
             _stage = new Stage(width, height);
             ReadjustStageSize(width, height); 
@@ -97,13 +94,14 @@ namespace Sparrow
 
         public static Program GetProgram(string name)
         {
-			if (Programs.ContainsKey (name)) {
-				return Programs[name];
-			}
-			return null;
+            if (Programs.ContainsKey(name))
+            {
+                return Programs[name];
+            }
+            return null;
         }
 
-		public static float ContentScaleFactor
+        public static float ContentScaleFactor
         {
             get { return 1.0f; }
         }

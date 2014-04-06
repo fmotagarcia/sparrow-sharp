@@ -7,125 +7,134 @@ namespace Sparrow.Geom
     /// <summary>
     /// The Point class describes a two dimensional point or vector. */
     /// </summary>
-	public class Point : PooledObject
-	{
-		private static readonly ObjectPool _pool = new ObjectPool (new CreateObject<PooledObject> (Init), 1000);
+    public class Point : PooledObject
+    {
+        private static readonly ObjectPool _pool = new ObjectPool(new CreateObject<PooledObject>(Init), 1000);
 
-		public static Point Create (float x = 0.0f, float y = 0.0f)
-		{
-			Point point = (Point)_pool.GetObject ();
-			point.X = x;
-			point.Y = y;
+        public static Point Create(float x = 0.0f, float y = 0.0f)
+        {
+            Point point = (Point)_pool.GetObject();
+            point.X = x;
+            point.Y = y;
+            return point;
+        }
 
-			return point;
-		}
-
-		private static Point Init ()
-		{
-			return new Point ();
-		}
+        private static Point Init()
+        {
+            return new Point();
+        }
 
         public float X;
-
         public float Y;
 
-        private Point (float x = 0.0f, float y = 0.0f)
+        private Point(float x = 0.0f, float y = 0.0f)
         {
             X = x;
             Y = y;
         }
 
-		public float Length {
-			get {
-                return (float)Math.Sqrt (X * X + Y * Y);
-			}
-            set {
+        public float Length
+        {
+            get
+            {
+                return (float)Math.Sqrt(X * X + Y * Y);
+            }
+            set
+            {
                 X = X * value;
                 Y = Y * value;
             }
-		}
+        }
 
-		public float Angle {
-			get {
-				return (float)Math.Atan2 (Y, X);
-			}
-		}
+        public float Angle
+        {
+            get
+            {
+                return (float)Math.Atan2(Y, X);
+            }
+        }
 
-		public bool IsOrigin {
-			get {
-				return X == 0.0f && Y == 0.0f;
-			}
-		}
+        public bool IsOrigin
+        {
+            get
+            {
+                return X == 0.0f && Y == 0.0f;
+            }
+        }
 
-        public void Invert ()
-		{
+        public void Invert()
+        {
             X = -X;
             Y = -Y;
-		}
+        }
 
-        public void AddPoint (Point point)
-		{
+        public void AddPoint(Point point)
+        {
             X = X + point.X;
             Y = Y + point.Y;
-		}
+        }
 
-        public void SubtractPoint (Point point)
-		{
+        public void SubtractPoint(Point point)
+        {
             X = X - point.X;
             Y = Y - point.Y;
-		}
+        }
 
         /// <summary>
         /// Rotates by the specified angle in Radians
         /// </summary>
-        public void RotateBy (float angle)
-		{
-			float sin = NumberUtil.FastSin (angle);
-			float cos = NumberUtil.FastCos (angle);
+        public void RotateBy(float angle)
+        {
+            float sin = NumberUtil.FastSin(angle);
+            float cos = NumberUtil.FastCos(angle);
             X = X * cos - Y * sin;
             Y = X * sin + Y * cos;
-		}
+        }
 
-        public void Normalize ()
-		{
-			if (IsOrigin) {
+        public void Normalize()
+        {
+            if (IsOrigin)
+            {
                 return;
-			}
-			float inverseLength = 1 / Length;
+            }
+            float inverseLength = 1 / Length;
             X = X * inverseLength;
             Y = Y * inverseLength;
-		}
+        }
 
-		public float Dot (Point other)
-		{
-			return X * other.X + Y * other.Y;
-		}
+        public float Dot(Point other)
+        {
+            return X * other.X + Y * other.Y;
+        }
 
-		public void CopyFromPoint (Point point)
-		{
-			X = point.X;
-			Y = point.Y;
-		}
+        public void CopyFromPoint(Point point)
+        {
+            X = point.X;
+            Y = point.Y;
+        }
 
         /// <summary>
         /// Determines whether the specified Point's X and Y values is equal to the current Point with
         /// with a small epsilon error margin.
         /// </summary>
-		public bool Equals (Point other)
-		{
-			if (other == this) {
-				return true;
-			} 
+        public bool Equals(Point other)
+        {
+            if (other == this)
+            {
+                return true;
+            } 
 
-			if (other == null) {
-				return false;
-			}
+            if (other == null)
+            {
+                return false;
+            }
 
-			return NumberUtil.Equals (X, other.X) && NumberUtil.Equals (Y, other.Y);
-		}
+            return NumberUtil.Equals(X, other.X) && NumberUtil.Equals(Y, other.Y);
+        }
 
-		public float Distance(Point p2) {
-			return (float)Math.Sqrt ((X - p2.X) * (X - p2.X) + (Y - p2.Y) * (Y - p2.Y));
-		}
-	}
+        public float Distance(Point p2)
+        {
+            return (float)Math.Sqrt((X - p2.X) * (X - p2.X) + (Y - p2.Y) * (Y - p2.Y));
+        }
+    }
 }

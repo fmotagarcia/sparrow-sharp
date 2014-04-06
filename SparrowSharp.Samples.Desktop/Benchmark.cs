@@ -43,18 +43,17 @@ namespace Sparrow.Samples
 			Random r = new Random();
 			for (int i = 0; i < numObjects; ++i)
 			{   
-				Image egg = new Image(textures[i%3]);
-				if (i < 49) {
+				Image egg = new Image(textures[0]);
+                if (i < 5) {
 					//ColorMatrixFilter cf = new ColorMatrixFilter ();
-
-					egg.Filter = new EmptyFilter ();//new BlurFilter (16, 0.5f);
-					//egg.Filter.Cache ();
+                    egg.Filter = new BlurFilter (4, 1.1f);
+                    egg.Filter.Cache ();
 				}
 				//MovieClip egg = new MovieClip (textures, 3);
 				//SP.DefaultJuggler.Add (egg);
-				egg.X = 200;//r.Next(border, (int)Stage.Width - border);
-				egg.Y = 200;//r.Next(border, (int)Stage.Height - border);
-				egg.Rotation = 0 * (float)Math.PI;//(float)(r.Next(0, 100) / 100.0f * Math.PI);
+				egg.X = r.Next(border, (int)Stage.Width - border);
+				egg.Y = r.Next(border, (int)Stage.Height - border);
+				egg.Rotation = (float)(r.Next(0, 100) / 100.0f * Math.PI);
 				_container.AddChild(egg);
 			}
 		}
@@ -72,7 +71,7 @@ namespace Sparrow.Samples
 		{
 			_started = true;
 			_waitFrames = 3;
-			AddTestObjects(12);
+			AddTestObjects(4000);
 		}
 
 		private void EnterFrameHandler(DisplayObject target, DisplayObject currentTarget, float passedTime)
@@ -82,7 +81,7 @@ namespace Sparrow.Samples
 
 			_elapsed += passedTime / 1000;
 			++_frameCount;
-			/*
+            /*
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;

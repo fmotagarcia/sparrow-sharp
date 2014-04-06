@@ -3,17 +3,17 @@ using Sparrow.Utils;
 
 namespace Sparrow.Textures
 {
-	public abstract class Texture
+    public abstract class Texture
     {
-		abstract public uint Name { get; }
+        abstract public uint Name { get; }
 
-		abstract public float NativeWidth { get; }
+        abstract public float NativeWidth { get; }
 
-		abstract public float NativeHeight { get; }
+        abstract public float NativeHeight { get; }
 
-		abstract public float Height { get; }
+        abstract public float Height { get; }
 
-		abstract public float Width { get; }
+        abstract public float Width { get; }
 
         virtual public float Scale { get { return 1.0f; } }
 
@@ -25,16 +25,18 @@ namespace Sparrow.Textures
 
         virtual public bool MipMaps { get { return false; } }
 
-		virtual public TextureFormat Format { get { return TextureFormat.RGBA; } }
+        virtual public TextureFormat Format { get { return TextureFormat.RGBA; } }
 
-		abstract public bool Repeat { 
-			get;
-			set;
+        abstract public bool Repeat
+        { 
+            get;
+            set;
         }
 
-		abstract public TextureSmoothing Smoothing {
-			get;
-			set;
+        abstract public TextureSmoothing Smoothing
+        {
+            get;
+            set;
         }
 
         public enum TextureFormat

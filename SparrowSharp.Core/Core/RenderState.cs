@@ -13,7 +13,7 @@ namespace Sparrow.Core
         /// </summary>
         public RenderState()
         {
-			ModelViewMatrix = Matrix.Create();
+            ModelViewMatrix = Matrix.Create();
             Alpha = 1.0f;
             BlendMode = Sparrow.Display.BlendMode.NORMAL;
         }

@@ -19,121 +19,121 @@ namespace Sparrow.Display
     /// texture inside an image without changing any vertex coordinates of the quad. You can also use 
     /// this feature as a very efficient way to create a rectangular mask.
     /// </summary>
-	public class Image : Quad
-	{
-		private readonly VertexData _vertexDataCache;
-		private bool _vertexDataCacheInvalid;
-		private Texture _texture;
+    public class Image : Quad
+    {
+        private readonly VertexData _vertexDataCache;
+        private bool _vertexDataCacheInvalid;
+        private Texture _texture;
 
         /// <summary>
         /// Initialize a quad with a texture mapped onto it
         /// </summary>
         /// <param name="texture">The texture to use. Use for example the TextureLoader class to load one.</param>
-		public Image (Texture texture)
-		{
-		    if (texture == null)
-		    {
-		        throw new Exception("texture cannot be null!");
-		    }
+        public Image(Texture texture)
+        {
+            if (texture == null)
+            {
+                throw new Exception("texture cannot be null!");
+            }
 
-			Rectangle frame = texture.Frame;    
-			float width  = (frame != null) ? frame.Width  : texture.Width;
-			float height = (frame != null) ? frame.Height : texture.Height;
-			bool pma = texture.PremultipliedAlpha;
+            Rectangle frame = texture.Frame;    
+            float width = (frame != null) ? frame.Width : texture.Width;
+            float height = (frame != null) ? frame.Height : texture.Height;
+            bool pma = texture.PremultipliedAlpha;
 
-			Init(width, height, 0xFFFFFF, pma);
+            Init(width, height, 0xFFFFFF, pma);
 
-			_vertexData.Vertices[1].TexCoords.X = 1.0f;
-			_vertexData.Vertices[2].TexCoords.Y = 1.0f;
-			_vertexData.Vertices[3].TexCoords.X = 1.0f;
-			_vertexData.Vertices[3].TexCoords.Y = 1.0f;
+            _vertexData.Vertices[1].TexCoords.X = 1.0f;
+            _vertexData.Vertices[2].TexCoords.Y = 1.0f;
+            _vertexData.Vertices[3].TexCoords.X = 1.0f;
+            _vertexData.Vertices[3].TexCoords.Y = 1.0f;
 
-			_texture = texture;
-			_vertexDataCache = new VertexData(4, pma);
-			_vertexDataCacheInvalid = true;
-		}
+            _texture = texture;
+            _vertexDataCache = new VertexData(4, pma);
+            _vertexDataCacheInvalid = true;
+        }
 
-		/// <summary>
+        /// <summary>
         /// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
-		/// </summary>
-		public void SetTexCoords(Point coords, int vertexID)
-		{
-			_vertexData.SetTexCoords(coords, vertexID);
-			VertexDataDidChange();
-		}
+        /// </summary>
+        public void SetTexCoords(Point coords, int vertexID)
+        {
+            _vertexData.SetTexCoords(coords, vertexID);
+            VertexDataDidChange();
+        }
 
-		/// <summary>
+        /// <summary>
         /// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
-		/// </summary>
-		public void SetTexCoords(float x, float y, int vertexID)
-		{
-			_vertexData.SetTexCoords(x, y, vertexID);
-			VertexDataDidChange ();
-		}
+        /// </summary>
+        public void SetTexCoords(float x, float y, int vertexID)
+        {
+            _vertexData.SetTexCoords(x, y, vertexID);
+            VertexDataDidChange();
+        }
 
-		/// <summary>
+        /// <summary>
         /// Gets the texture coordinates of a vertex.
-		/// </summary>
-		public Point TexCoordsOfVertex(int vertexID)
-		{
-			return _vertexData.TexCoordsAtIndex(vertexID);
-		}
+        /// </summary>
+        public Point TexCoordsOfVertex(int vertexID)
+        {
+            return _vertexData.TexCoordsAtIndex(vertexID);
+        }
 
-		/// <summary>
+        /// <summary>
         /// Readjusts the dimensions of the image according to its current texture. Call this method 
         /// to synchronize image and texture size after assigning a texture with a different size.
-		/// </summary>
-		public void ReadjustSize()
-		{
-			Rectangle frame = _texture.Frame;    
-			float width  = (frame != null) ? frame.Width  : Texture.Width;
-			float height = (frame != null) ? frame.Height : Texture.Height;
+        /// </summary>
+        public void ReadjustSize()
+        {
+            Rectangle frame = _texture.Frame;    
+            float width = (frame != null) ? frame.Width : Texture.Width;
+            float height = (frame != null) ? frame.Height : Texture.Height;
 
-			_vertexData.Vertices[1].Position.X = width;
-			_vertexData.Vertices[2].Position.Y = height;
-			_vertexData.Vertices[3].Position.X = width;
-			_vertexData.Vertices[3].Position.Y = height;
-			VertexDataDidChange ();
-		}
+            _vertexData.Vertices[1].Position.X = width;
+            _vertexData.Vertices[2].Position.Y = height;
+            _vertexData.Vertices[3].Position.X = width;
+            _vertexData.Vertices[3].Position.Y = height;
+            VertexDataDidChange();
+        }
 
-	    protected override void VertexDataDidChange()
-		{
-			_vertexDataCacheInvalid = true;
-		}
+        protected override void VertexDataDidChange()
+        {
+            _vertexDataCacheInvalid = true;
+        }
 
         override internal void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
-		{
-			copyColor = copyColor || Tinted || Alpha != 1.0f;
+        {
+            copyColor = copyColor || Tinted || Alpha != 1.0f;
 
-			if (_vertexDataCacheInvalid)
-			{
-				_vertexDataCacheInvalid = false;
-				_vertexData.CopyToVertexData(_vertexDataCache, copyColor);
-				_texture.AdjustVertexData(_vertexDataCache, 0, 4);
-			}
-			_vertexDataCache.CopyToVertexData(targetData, atIndex, 4, copyColor);
-		}
+            if (_vertexDataCacheInvalid)
+            {
+                _vertexDataCacheInvalid = false;
+                _vertexData.CopyToVertexData(_vertexDataCache, copyColor);
+                _texture.AdjustVertexData(_vertexDataCache, 0, 4);
+            }
+            _vertexDataCache.CopyToVertexData(targetData, atIndex, 4, copyColor);
+        }
 
         /// <summary>
         /// The texture that is displayed on the quad.
         /// </summary>
-		override public Texture Texture 
-		{ 
-			set {
-				if (value == null)
-				{
-					throw new Exception("texture cannot be null!");
-				}
-				else if (value != _texture)
-				{
-					_texture = value;
-					_vertexData.SetPremultipliedAlpha(_texture.PremultipliedAlpha, true);
-					_vertexDataCache.SetPremultipliedAlpha(_texture.PremultipliedAlpha, false);
-					VertexDataDidChange();
-				}
-			}
-			get { return _texture; }
-		}
-
-	}
+        override public Texture Texture
+        { 
+            set
+            {
+                if (value == null)
+                {
+                    throw new Exception("texture cannot be null!");
+                }
+                else if (value != _texture)
+                {
+                    _texture = value;
+                    _vertexData.SetPremultipliedAlpha(_texture.PremultipliedAlpha, true);
+                    _vertexDataCache.SetPremultipliedAlpha(_texture.PremultipliedAlpha, false);
+                    VertexDataDidChange();
+                }
+            }
+            get { return _texture; }
+        }
+    }
 }

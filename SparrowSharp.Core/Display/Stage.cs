@@ -16,7 +16,6 @@ namespace Sparrow.Display
     /// </summary>
     public class Stage : DisplayObjectContainer
     {
-
         /// <summary>
         /// The height of the stage's coordinate system.
         /// </summary>
@@ -43,8 +42,8 @@ namespace Sparrow.Display
 
         override public void Render(RenderSupport support)
         {
-			support.Clear(Color, 1.0f);
-			support.SetupOrthographicProjection(0, Width, 0, Height);
+            support.Clear(Color, 1.0f);
+            support.SetupOrthographicProjection(0, Width, 0, Height);
 
             base.Render(support);
         }

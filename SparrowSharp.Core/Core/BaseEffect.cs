@@ -15,21 +15,13 @@ namespace Sparrow.Core
     /// </summary>
     public class BaseEffect
     {
-        private static string GetProgramName(bool hasTexture, bool useTinting) {
-            if (hasTexture) {
-                if (useTinting) {
-                    return "SPQuad#11";
-                } else {
-                    return "SPQuad#10";
-                }
-            } else {
-                if (useTinting) {
-                    return "SPQuad#01";
-                } else {
-                    return "SPQuad#00";
-                }
-
+        private static string GetProgramName(bool hasTexture, bool useTinting)
+        {
+            if (hasTexture)
+            {
+                return useTinting ? "SPQuad#11" : "SPQuad#10";
             }
+            return useTinting ? "SPQuad#01" : "SPQuad#00";
         }
 
         private readonly Matrix _mvpMatrix;
@@ -47,30 +39,36 @@ namespace Sparrow.Core
         /// <summary>
         /// The index of the vertex attribute storing the position vector.
         /// </summary>
-        public int AttribPosition {
+        public int AttribPosition
+        {
             get { return _aPosition; }
         }
 
         /// <summary>
         /// The index of the vertex attribute storing the color vector.
         /// </summary>
-        public int AttribColor {
+        public int AttribColor
+        {
             get { return _aColor; }
         }
 
         /// <summary>
         /// The index of the vertex attribute storing the two texture coordinates.
         /// </summary>
-        public int AttribTexCoords {
+        public int AttribTexCoords
+        {
             get { return _aTexCoords; }
         }
 
         /// <summary>
         /// The texture that's projected onto the quad, or 'null' if there is none. (Default: 'null')
         /// </summary>
-        public Texture Texture {
-            set {
-                if ((_texture != null && value == null) || (_texture == null && value != null)) {
+        public Texture Texture
+        {
+            set
+            {
+                if ((_texture != null && value == null) || (_texture == null && value != null))
+                {
                     _program = null;
                 }
                 _texture = value;
@@ -80,7 +78,8 @@ namespace Sparrow.Core
         /// <summary>
         /// Indicates if the color values of texture and vertices use premultiplied alpha. (Default: 'false')
         /// </summary>
-        public bool PremultipliedAlpha {
+        public bool PremultipliedAlpha
+        {
             set { _premultipliedAlpha = value; }
         }
 
@@ -88,7 +87,8 @@ namespace Sparrow.Core
         /// The modelview-projection matrix used for rendering. Any vertex will be multiplied with this
         /// matrix. (Default: identity matrix)
         /// </summary>
-        public Matrix MvpMatrix {
+        public Matrix MvpMatrix
+        {
             set { _mvpMatrix.CopyFromMatrix(value); }
         }
 
@@ -97,10 +97,13 @@ namespace Sparrow.Core
         /// immensely from the very simple fragment shader that can be used when tinting is deactivated.
         /// Note that an alpha value different to "1" will still force tinting to be used. (Default: 'true')
         /// </summary>
-        public bool UseTinting {
+        public bool UseTinting
+        {
             get { return _useTinting; }
-            set {
-                if (value != _useTinting) {
+            set
+            {
+                if (value != _useTinting)
+                {
                     _useTinting = value;
                     _program = null;
                 }
@@ -110,16 +113,20 @@ namespace Sparrow.Core
         /// <summary>
         /// The alpha value with which every vertex color will be multiplied. (Default: 1)
         /// </summary>
-        public float Alpha {
-            set {
-                if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f)) {
+        public float Alpha
+        {
+            set
+            {
+                if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f))
+                {
                     _program = null;
                 }
                 _alpha = value;
             }
         }
 
-        public BaseEffect() {
+        public BaseEffect()
+        {
             _mvpMatrix = Matrix.Create();
             _premultipliedAlpha = false;
             _useTinting = true;
@@ -130,18 +137,22 @@ namespace Sparrow.Core
         /// Activates the optimal shader program for the current settings; alpha and matrix uniforms are
         /// passed to the program right away, and the texture (if available) is bound.
         /// </summary>
-        public void PrepareToDraw() {
+        public void PrepareToDraw()
+        {
             bool hasTexture = _texture != null;
             bool useTinting = _useTinting || _texture == null || _alpha != 1.0f;
 
-            if (_program == null) {
+            if (_program == null)
+            {
                 string programName = GetProgramName(hasTexture, useTinting);
 
-                if (SparrowSharpApp.Programs.ContainsKey(programName)) {
+                if (SparrowSharpApp.Programs.ContainsKey(programName))
+                {
                     _program = SparrowSharpApp.Programs[programName];
                 }
 
-                if (_program == null) {
+                if (_program == null)
+                {
                     string vertexShader = VertexShaderForTexture(_texture, useTinting);
                     string fragmentShader = FragmentShaderForTexture(_texture, useTinting);
                     _program = new Program(vertexShader, fragmentShader);
@@ -150,16 +161,19 @@ namespace Sparrow.Core
 
                 _aPosition = _program.Attributes["aPosition"];
 
-                if (_program.Attributes.ContainsKey("aColor")) {
+                if (_program.Attributes.ContainsKey("aColor"))
+                {
                     _aColor = _program.Attributes["aColor"];
                 }
-                if (_program.Attributes.ContainsKey("aTexCoords")) {
+                if (_program.Attributes.ContainsKey("aTexCoords"))
+                {
                     _aTexCoords = _program.Attributes["aTexCoords"];
                 }
 
                 _uMvpMatrix = _program.Uniforms["uMvpMatrix"];
 
-                if (_program.Uniforms.ContainsKey("uAlpha")) {
+                if (_program.Uniforms.ContainsKey("uAlpha"))
+                {
                     _uAlpha = _program.Uniforms["uAlpha"];
                 }
             }
@@ -168,15 +182,20 @@ namespace Sparrow.Core
             GL.UseProgram(_program.Name);
             GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix); // TODO check; was glUniformMatrix4fv(_uMvpMatrix, 1, NO, glkMvpMatrix.m);
 
-            if (useTinting) {
-                if (_premultipliedAlpha) {
+            if (useTinting)
+            {
+                if (_premultipliedAlpha)
+                {
                     GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
-                } else {
+                }
+                else
+                {
                     GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, _alpha);
                 }
             }
 
-            if (hasTexture) {
+            if (hasTexture)
+            {
                 #if __ANDROID__
                 GL.ActiveTexture(All.Texture0);
                 GL.BindTexture(All.Texture2D, _texture.Name);
@@ -187,37 +206,45 @@ namespace Sparrow.Core
             }
         }
 
-        private String VertexShaderForTexture(Texture texture, bool useTinting) {
+        private String VertexShaderForTexture(Texture texture, bool useTinting)
+        {
             bool hasTexture = (texture != null);
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
             // variables
             source.AppendLine("attribute vec4 aPosition;");
-            if (useTinting) {
+            if (useTinting)
+            {
                 source.AppendLine("attribute vec4 aColor;");
             }
-            if (hasTexture) {
+            if (hasTexture)
+            {
                 source.AppendLine("attribute vec2 aTexCoords;");
             }
             source.AppendLine("uniform mat4 uMvpMatrix;");
-            if (useTinting) {
+            if (useTinting)
+            {
                 source.AppendLine("uniform vec4 uAlpha;");
             }
-            if (useTinting) {
+            if (useTinting)
+            {
                 source.AppendLine("varying lowp vec4 vColor;");
             }
 
-            if (hasTexture) {
+            if (hasTexture)
+            {
                 source.AppendLine("varying lowp vec2 vTexCoords;");
             }
 
             // main
             source.AppendLine("void main() {");
             source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-            if (useTinting) {
+            if (useTinting)
+            {
                 source.AppendLine("  vColor = aColor * uAlpha;");
             }
-            if (hasTexture) {
+            if (hasTexture)
+            {
                 source.AppendLine("  vTexCoords  = aTexCoords;");
             }
             source.Append("}");
@@ -225,16 +252,19 @@ namespace Sparrow.Core
             return source.ToString();
         }
 
-        private String FragmentShaderForTexture(Texture texture, bool useTinting) {
+        private String FragmentShaderForTexture(Texture texture, bool useTinting)
+        {
             bool hasTexture = (texture != null);
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
             // variables
-            if (useTinting) {
+            if (useTinting)
+            {
                 source.AppendLine("varying lowp vec4 vColor;");
             }
 
-            if (hasTexture) {
+            if (hasTexture)
+            {
                 source.AppendLine("varying lowp vec2 vTexCoords;");
 #if __WINDOWS__
                 source.AppendLine("uniform sampler2D uTexture;");
@@ -245,13 +275,19 @@ namespace Sparrow.Core
 
             // main
             source.AppendLine("void main() {");
-            if (hasTexture) {
-                if (useTinting) {
+            if (hasTexture)
+            {
+                if (useTinting)
+                {
                     source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords) * vColor;");
-                } else {
+                }
+                else
+                {
                     source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords);");
                 }
-            } else {
+            }
+            else
+            {
                 source.AppendLine("  gl_FragColor = vColor;");
             }
             source.Append("}");

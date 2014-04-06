@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace Sparrow.Display
 {
-
     /// <summary>
     /// A DisplayObjectContainer represents a collection of display objects.
 
@@ -27,11 +26,11 @@ namespace Sparrow.Display
 
     /// Adding and removing objects from a container triggers non-bubbling events.
 
-    /// - 'EventTypeAdded': the object was added to a parent.
-    /// - 'EventTypeAddedToStage': the object was added to a parent that is connected to the stage,
-    /// thus becoming visible now.
-    /// - 'EventTypeRemoved': the object was removed from a parent.
-    /// - 'EventTypeRemovedFromStage': the object was removed from a parent that is connected to 
+    /// - 'Added': the object was added to a parent.
+    /// - 'AddedToStage': the object was added to a parent that is connected to the stage,
+    ///    thus becoming visible now.
+    /// - 'Removed': the object was removed from a parent.
+    /// - 'RemovedFromStage': the object was removed from a parent that is connected to 
     /// the stage, thus becoming invisible now.
 
     /// Especially the ADDED_TO_STAGE event is very helpful, as it allows you to automatically execute
@@ -52,26 +51,26 @@ namespace Sparrow.Display
     ///     }
     /// }
     /// </summary>
-	public abstract class DisplayObjectContainer : DisplayObject
+    public abstract class DisplayObjectContainer : DisplayObject
     {
-		/// <summary>
+        /// <summary>
         /// The number of children of this container.
-		/// </summary>
-		public int NumChildren { get {return _children.Count; } }
+        /// </summary>
+        public int NumChildren { get { return _children.Count; } }
 
-		private readonly List<DisplayObject> _children = new List<DisplayObject>();
+        private readonly List<DisplayObject> _children = new List<DisplayObject>();
 
-		/// <summary>
+        /// <summary>
         ///  Adds a child to the container. It will be at the topmost position.
-		/// </summary>
+        /// </summary>
         public void AddChild(DisplayObject child)
         {
             AddChild(child, _children.Count);
         }
 
-		/// <summary>
+        /// <summary>
         /// Adds a child to the container at a certain index.
-		/// </summary>
+        /// </summary>
         public void AddChild(DisplayObject child, int index)
         {
             if (index >= 0 && index <= _children.Count)
@@ -117,9 +116,9 @@ namespace Sparrow.Display
             }
         }
 
-		/// <summary>
+        /// <summary>
         /// Determines if a certain object is a child of the container (recursively).
-		/// </summary>
+        /// </summary>
         public bool ContainsChild(DisplayObject child)
         {
             while (child != null)
@@ -128,28 +127,28 @@ namespace Sparrow.Display
                     return true;
                 child = child.Parent;
             }
-		    return false;
+            return false;
         }
 
-		/// <summary>
+        /// <summary>
         /// Returns a child object at a certain index.
-		/// </summary>
+        /// </summary>
         public DisplayObject GetChild(uint index)
         {
             return _children[(int)index];
         }
 
-		/// <summary>
+        /// <summary>
         /// Returns a child object at a certain index.
-		/// </summary>
+        /// </summary>
         public DisplayObject GetChild(int index)
         {
             return _children[index];
         }
 
-		/// <summary>
+        /// <summary>
         /// Returns a child object with a certain name (non-recursively).
-		/// </summary>
+        /// </summary>
         public DisplayObject GetChild(String name)
         {
             foreach (DisplayObject currentChild in _children)
@@ -162,18 +161,18 @@ namespace Sparrow.Display
             return null;
         }
 
-		/// <summary>
+        /// <summary>
         /// Returns the index of a child within the container. Returns -1 if the child is not within this container
-		/// </summary>
+        /// </summary>
         public int GetChildIndex(DisplayObject child)
         {
-			return _children.IndexOf(child);
+            return _children.IndexOf(child);
         }
 
-		/// <summary>
+        /// <summary>
         /// Moves a child to a certain index. Children at and after the replaced position move up.
         /// @throws ArgumentException if the child is not found
-		/// </summary>
+        /// </summary>
         public void SetChildIndex(DisplayObject child, int index)
         {
             int oldIndex = _children.IndexOf(child); 
@@ -181,13 +180,13 @@ namespace Sparrow.Display
             {
                 throw new ArgumentException("child not found");
             }
-		    _children.RemoveAt(oldIndex);
-		    _children.Insert(index, child);
+            _children.RemoveAt(oldIndex);
+            _children.Insert(index, child);
         }
 
-		/// <summary>
+        /// <summary>
         /// Removes a child from the container. If the object is not a child, nothing happens.
-		/// </summary>
+        /// </summary>
         public void RemoveChild(DisplayObject child)
         {
             int index = _children.IndexOf(child);
@@ -197,35 +196,35 @@ namespace Sparrow.Display
             }
         }
 
-		/// <summary>
+        /// <summary>
         /// Removes a child at a certain index. Children above the child will move down.
-		/// </summary>
+        /// </summary>
         public void RemoveChildAt(int index)
         {
-		    if (index >= 0 && index < _children.Count)
-		    {
-		        DisplayObject child = _children[index];
+            if (index >= 0 && index < _children.Count)
+            {
+                DisplayObject child = _children[index];
                 child.InvokeRemoved();
-		        if (Stage != null)
-		        {
+                if (Stage != null)
+                {
                     child.InvokeRemovedFromStage();
-		        }
-		        child.Parent = null;
-		        int newIndex = _children.IndexOf(child); // index might have changed in event handler
-		        if (newIndex != -1)
-		        {
-		            _children.RemoveAt(newIndex);
-		        }
-		    }
-		    else
-		    {
-		        throw new IndexOutOfRangeException("Invalid child index");
-		    }
+                }
+                child.Parent = null;
+                int newIndex = _children.IndexOf(child); // index might have changed in event handler
+                if (newIndex != -1)
+                {
+                    _children.RemoveAt(newIndex);
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException("Invalid child index");
+            }
         }
 
-		/// <summary>
+        /// <summary>
         /// Swaps the indexes of two children.
-		/// </summary>
+        /// </summary>
         public void SwapChild(DisplayObject child1, DisplayObject child2)
         {
             int index1 = _children.IndexOf(child1);
@@ -233,9 +232,9 @@ namespace Sparrow.Display
             SwapChildrenAt(index1, index2);
         }
 
-		/// <summary>
+        /// <summary>
         /// Swaps the indexes of two children.
-		/// </summary>
+        /// </summary>
         public void SwapChildrenAt(int index1, int index2)
         {    
             int numChildren = _children.Count;
@@ -248,14 +247,14 @@ namespace Sparrow.Display
             _children[index2] = tmp;   
         }
 
-		/// <summary>
+        /// <summary>
         /// Removes all children from the container.
-		/// </summary>
+        /// </summary>
         public void RemoveAllChildren()
         {
             for (int i = _children.Count - 1; i >= 0; --i)
             {
-				RemoveChildAt(0);
+                RemoveChildAt(0);
             }
         }
 
@@ -267,13 +266,13 @@ namespace Sparrow.Display
                 {
                     support.PushState(child.TransformationMatrix, child.Alpha, child.BlendMode);
 
-					if (child.Filter != null) 
+                    if (child.Filter != null)
                     {
-						child.Filter.RenderObject(child, support);
+                        child.Filter.RenderObject(child, support);
                     }
                     else
                     {
-                    	child.Render(support);
+                        child.Render(support);
                     }
                     support.PopState();
                 }
@@ -288,7 +287,7 @@ namespace Sparrow.Display
             {
                 Matrix transformationMatrix = TransformationMatrixToSpace(targetSpace);
                 Point transformedPoint = transformationMatrix.TransformPoint(X, Y);
-                return new Rectangle(transformedPoint.X, transformedPoint.Y, 0.0f, 0.0f);
+                return new Rectangle(transformedPoint.X, transformedPoint.Y);
             }
             else if (numChildren == 1)
             {
@@ -302,8 +301,8 @@ namespace Sparrow.Display
                     Rectangle childBounds = child.BoundsInSpace(targetSpace);
                     minX = Math.Min(minX, childBounds.X);
                     maxX = Math.Max(maxX, childBounds.X + childBounds.Width);
-                    minY = Math.Min(minY, childBounds.Y);
-                    maxY = Math.Max(maxY, childBounds.Y + childBounds.Height);
+                    minY = Math.Min(minY, childBounds.Top);
+                    maxY = Math.Max(maxY, childBounds.Top + childBounds.Height);
                 }
                 return new Rectangle(minX, minY, maxX - minX, maxY - minY);
             }
@@ -331,9 +330,9 @@ namespace Sparrow.Display
             return null;
         }
 
-		/// <summary>
+        /// <summary>
         /// Sorts the children using the given IComparer.
-		/// </summary>
+        /// </summary>
         public void SortChildren(IComparer<DisplayObject> comparator)
         {
             _children.Sort(comparator);

@@ -15,7 +15,8 @@ namespace Sparrow.Core
         private static readonly HashSet<string> Extensions;
         private Texture _renderTarget;
 
-        static Context() {
+        static Context()
+        {
             Extensions = new HashSet<string>();
             FramebufferCache = new Dictionary<uint, uint>();
             #if __ANDROID__
@@ -24,9 +25,11 @@ namespace Sparrow.Core
 			string extensionsString = GL.GetString(StringName.Extensions);
             #endif
 
-            if (!string.IsNullOrEmpty(extensionsString)) {
+            if (!string.IsNullOrEmpty(extensionsString))
+            {
                 string[] extensions = extensionsString.Split(' ');
-                for (int i = 0; i < extensions.Length; i++) {
+                for (int i = 0; i < extensions.Length; i++)
+                {
                     Extensions.Add(extensions[i]);
                 }
             }
@@ -35,8 +38,10 @@ namespace Sparrow.Core
         /// <summary>
         /// The current OpenGL viewport rectangle.
         /// </summary>
-        public Rectangle Viewport {
-            get {
+        public Rectangle Viewport
+        {
+            get
+            {
                 int[] viewport = new int[4];
                 #if __ANDROID__
                 GL.GetInteger(All.Viewport, viewport);
@@ -47,10 +52,14 @@ namespace Sparrow.Core
                 return new Rectangle(viewport[0], viewport[1], viewport[2], viewport[3]);
             }
 
-            set {
-                if (value != null) {
-                    GL.Viewport((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
-                } else {
+            set
+            {
+                if (value != null)
+                {
+                    GL.Viewport((int)value.X, (int)value.Top, (int)value.Width, (int)value.Height);
+                }
+                else
+                {
                     GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
                 }
             }
@@ -59,8 +68,10 @@ namespace Sparrow.Core
         /// <summary>
         /// The current OpenGL scissor rectangle.
         /// </summary>
-        public Rectangle ScissorBox {
-            get {
+        public Rectangle ScissorBox
+        {
+            get
+            {
                 int[] scissorBox = new int[4];
                 #if __ANDROID__
                 GL.GetInteger(All.ScissorBox, scissorBox);
@@ -71,12 +82,16 @@ namespace Sparrow.Core
                 return new Rectangle(scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]);
             }
 
-            set {
+            set
+            {
                 #if __ANDROID__
-                if (value != null) {
+                if (value != null)
+                {
                     GL.Enable(All.ScissorTest);
                     GL.Scissor((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);
-                } else {
+                }
+                else
+                {
                     GL.Disable(All.ScissorTest);
                 }
                 #elif __IOS__ || __WINDOWS__
@@ -93,12 +108,16 @@ namespace Sparrow.Core
         /// <summary>
         /// The specified texture as the rendering target or nil if rendering to the default framebuffer.
         /// </summary>
-        public Texture RenderTarget {
-            set {
+        public Texture RenderTarget
+        {
+            set
+            {
                 _renderTarget = value;
-                if (value != null) {
+                if (value != null)
+                {
                     uint framebuffer;
-                    if (!FramebufferCache.TryGetValue(value.Name, out framebuffer)) {
+                    if (!FramebufferCache.TryGetValue(value.Name, out framebuffer))
+                    {
                         framebuffer = CreateFramebufferForTexture(value);
                         FramebufferCache.Add(value.Name, framebuffer);
                     }
@@ -108,7 +127,9 @@ namespace Sparrow.Core
 					GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
                     #endif
                     GL.Viewport(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
-                } else {
+                }
+                else
+                {
                     #if __ANDROID__
                     GL.BindFramebuffer(All.Framebuffer, 0);
                     #elif __IOS__
@@ -126,11 +147,13 @@ namespace Sparrow.Core
         /// <summary>
         /// Checks if the device supports the specified OpenGL ES extension
         /// </summary>
-        public static bool DeviceSupportsOpenGLExtension(string extensionName) {
+        public static bool DeviceSupportsOpenGLExtension(string extensionName)
+        {
             return Extensions.Contains(extensionName);
         }
 
-        private uint CreateFramebufferForTexture(Texture texture) {
+        private uint CreateFramebufferForTexture(Texture texture)
+        {
             uint framebuffer;
             GL.GenFramebuffers(1, out framebuffer);
             #if __ANDROID__
@@ -151,11 +174,12 @@ namespace Sparrow.Core
             }
             return framebuffer;
         }
-
         // TODO this is not used
-        private void DestroyFramebufferForTexture(Texture texture) {
+        private void DestroyFramebufferForTexture(Texture texture)
+        {
             uint framebuffer;
-            if (FramebufferCache.TryGetValue(texture.Name, out framebuffer)) {
+            if (FramebufferCache.TryGetValue(texture.Name, out framebuffer))
+            {
                 GL.DeleteFramebuffers(1, ref framebuffer);
                 FramebufferCache.Remove(texture.Name);
             }

@@ -66,7 +66,6 @@
     <Compile Include="Geom\Rectangle.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
-    <Compile Include="Utils\AssetManager.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\Juggler.cs" />

@@ -43,276 +43,303 @@ namespace Sparrow.Textures
     /// <SubTexture name='trimmed' x='0' y='0' height='10' width='10'
     ///             frameX='-10' frameY='-10' frameWidth='30' frameHeight='30'/>
     /// </summary>
-	public class TextureAtlas
-	{
-		private readonly Texture _atlasTexture;
-		private readonly Dictionary<string, TextureInfo> _textureInfos;
+    public class TextureAtlas
+    {
+        private readonly Texture _atlasTexture;
+        private readonly Dictionary<string, TextureInfo> _textureInfos;
 
-		/// <summary>
+        /// <summary>
         /// The number of available subtextures.
         /// </summary>
         /// <value>The number textures.</value>
-		public int NumTextures{ get { return _textureInfos.Count; } }
+        public int NumTextures{ get { return _textureInfos.Count; } }
 
         /// <summary>
         /// All texture names of the atlas, sorted alphabetically.
         /// </summary>
-		public List<string> Names { get { return GetNamesStartingWith (null); } }
+        public List<string> Names { get { return GetNamesStartingWith(null); } }
 
         /// <summary>
         /// All textures of the atlas, sorted alphabetically.
         /// </summary>
-		public List<Texture> Textures { get { return GetTexturesStartingWith (null); } }
+        public List<Texture> Textures { get { return GetTexturesStartingWith(null); } }
 
         /// <summary>
         /// The base texture that makes up the atlas.
         /// </summary>
-		public Texture Texture{ get { return _atlasTexture; } }
+        public Texture Texture{ get { return _atlasTexture; } }
 
         /// <summary>
         /// Initializes a texture atlas from an XML file and a custom texture.
         /// </summary>
-		public TextureAtlas (string xml, Texture texture)
-		{
-			_textureInfos = new Dictionary<string, TextureInfo> ();
-			_atlasTexture = texture;
-			ParseAtlasXml (xml);
-		}
+        public TextureAtlas(string xml, Texture texture)
+        {
+            _textureInfos = new Dictionary<string, TextureInfo>();
+            _atlasTexture = texture;
+            ParseAtlasXml(xml);
+        }
 
         /// <summary>
         /// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
         /// </summary>
-		public TextureAtlas (Texture texture) : this (null, texture)
-		{
-		}
+        public TextureAtlas(Texture texture) : this(null, texture)
+        {
+        }
 
         /// <summary>
         /// Retrieve a subtexture by name. Returns 'null' if it is not found.
         /// </summary>
-		public SubTexture GetTextureByName (string name)
-		{
-			TextureInfo info = _textureInfos [name];
-			if (info != null) {
-				return new SubTexture (info.Region, _atlasTexture, info.Frame, info.Rotated);
-			}
-			return null;
-		}
+        public SubTexture GetTextureByName(string name)
+        {
+            TextureInfo info = _textureInfos[name];
+            if (info != null)
+            {
+                return new SubTexture(info.Region, _atlasTexture, info.Frame, info.Rotated);
+            }
+            return null;
+        }
 
         /// <summary>
         /// The region rectangle associated with a specific name.
         /// </summary>
-		public Rectangle GetRegionByName (string name)
-		{
-			return _textureInfos [name].Region;
-		}
+        public Rectangle GetRegionByName(string name)
+        {
+            return _textureInfos[name].Region;
+        }
 
         /// <summary>
         /// The frame rectangle of a specific region, or 'null' if that region has no frame.
         /// </summary>
-		public Rectangle GetFrameByName (String name)
-		{
-			return _textureInfos [name].Frame;
-		}
+        public Rectangle GetFrameByName(String name)
+        {
+            return _textureInfos[name].Frame;
+        }
 
         /// <summary>
         /// Returns all textures that start with a certain string, sorted alphabetically
         /// (especially useful for 'MovieClip').
         /// </summary>
-		public List<Texture> GetTexturesStartingWith (string prefix)
-		{
-			List<string> names = GetNamesStartingWith (prefix);
-			List<Texture> textures = new List<Texture> ();
-			foreach (string name in names) {
-				textures.Add (GetTextureByName (name));
-			}
-			return textures;
-		}
+        public List<Texture> GetTexturesStartingWith(string prefix)
+        {
+            List<string> names = GetNamesStartingWith(prefix);
+            List<Texture> textures = new List<Texture>();
+            foreach (string name in names)
+            {
+                textures.Add(GetTextureByName(name));
+            }
+            return textures;
+        }
 
         /// <summary>
         /// Returns all texture names that start with a certain string, sorted alphabetically.
         /// </summary>
-		public List<string> GetNamesStartingWith (string prefix)
-		{
-			List<string> names = new List<string> ();
-			if (prefix != null) {
-				foreach (string name in _textureInfos.Keys) {
-					if (name.IndexOf (prefix) == 0) {
-						names.Add (name);
-					}
-				}
-			} else {
-				names.AddRange (_textureInfos.Keys);
-			}
+        public List<string> GetNamesStartingWith(string prefix)
+        {
+            List<string> names = new List<string>();
+            if (prefix != null)
+            {
+                foreach (string name in _textureInfos.Keys)
+                {
+                    if (name.IndexOf(prefix) == 0)
+                    {
+                        names.Add(name);
+                    }
+                }
+            }
+            else
+            {
+                names.AddRange(_textureInfos.Keys);
+            }
 
-			names.Sort (new AlphanumComparatorFast());
+            names.Sort(new AlphanumComparatorFast());
 
-			return names;
-		}
+            return names;
+        }
 
         /// <summary>
         /// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
         /// the subtexture will show the region rotated by 90 degrees (CCW).
         /// </summary>
-        public void AddRegion (Rectangle region, string name, Rectangle frame = null, bool rotated = false)
-		{
-			TextureInfo info = new TextureInfo (region, frame, rotated);
-			_textureInfos [name] = info;
-		}
+        public void AddRegion(Rectangle region, string name, Rectangle frame = null, bool rotated = false)
+        {
+            TextureInfo info = new TextureInfo(region, frame, rotated);
+            _textureInfos[name] = info;
+        }
 
         /// <summary>
         /// Removes a region with a certain name.
         /// </summary>
-		public void RemoveRegion (string name)
-		{
-			_textureInfos.Remove (name);
-		}
+        public void RemoveRegion(string name)
+        {
+            _textureInfos.Remove(name);
+        }
 
-		protected void ParseAtlasXml (string xmlString)
-		{
-			XmlDocument xml = new XmlDocument ();
-			xml.LoadXml (xmlString);
+        protected void ParseAtlasXml(string xmlString)
+        {
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(xmlString);
 
-			bool parsed = false;
+            bool parsed = false;
 
-			XmlNodeList subTextures = xml.SelectNodes ("TextureAtlas/SubTexture");
-			foreach (XmlNode subTexture in subTextures) {
-				float scale = _atlasTexture.Scale;
-				float x = GetFloat (subTexture, "x") / scale;
-				float y = GetFloat (subTexture, "y") / scale;
-				float width = GetFloat (subTexture, "width") / scale;
-				float height = GetFloat (subTexture, "height") / scale;
-				float frameX = GetFloat (subTexture, "frameX") / scale;
-				float frameY = GetFloat (subTexture, "frameY") / scale;
-				float frameWidth = GetFloat (subTexture, "frameWidth") / scale;
-				float frameHeight = GetFloat (subTexture, "frameHeight") / scale;
-				bool rotated = GetBool (subTexture, "rotated");
-				string name = GetString (subTexture, "name");
+            XmlNodeList subTextures = xml.SelectNodes("TextureAtlas/SubTexture");
+            foreach (XmlNode subTexture in subTextures)
+            {
+                float scale = _atlasTexture.Scale;
+                float x = GetFloat(subTexture, "x") / scale;
+                float y = GetFloat(subTexture, "y") / scale;
+                float width = GetFloat(subTexture, "width") / scale;
+                float height = GetFloat(subTexture, "height") / scale;
+                float frameX = GetFloat(subTexture, "frameX") / scale;
+                float frameY = GetFloat(subTexture, "frameY") / scale;
+                float frameWidth = GetFloat(subTexture, "frameWidth") / scale;
+                float frameHeight = GetFloat(subTexture, "frameHeight") / scale;
+                bool rotated = GetBool(subTexture, "rotated");
+                string name = GetString(subTexture, "name");
 
-				Rectangle region = new Rectangle (x, y, width, height);
-				Rectangle frame = null;
-				if (frameWidth > 0.0f && frameHeight > 0.0f) {
-					frame = new Rectangle (frameX, frameY, frameWidth, frameHeight);
-				}
-				AddRegion (region, name, frame, rotated);
-				parsed = true;
-			}
+                Rectangle region = new Rectangle(x, y, width, height);
+                Rectangle frame = null;
+                if (frameWidth > 0.0f && frameHeight > 0.0f)
+                {
+                    frame = new Rectangle(frameX, frameY, frameWidth, frameHeight);
+                }
+                AddRegion(region, name, frame, rotated);
+                parsed = true;
+            }
 
-			// TODO suppport texture atlases that specify the path to the image
-			//if (!parsed)  
-			//{
-			//    foreach (var subTexture in xml.Descendants("TextureAtlas"))
-			//    {
-			//        string name = subTexture.Element("imagePath").Value;
-			//        parsed = true;
-			//    }   
-			//}
-			if (!parsed) {
-				throw new Exception ("could not parse texture atlas");
-			}
-		}
+            // TODO suppport texture atlases that specify the path to the image
+            //if (!parsed)  
+            //{
+            //    foreach (var subTexture in xml.Descendants("TextureAtlas"))
+            //    {
+            //        string name = subTexture.Element("imagePath").Value;
+            //        parsed = true;
+            //    }   
+            //}
+            if (!parsed)
+            {
+                throw new Exception("could not parse texture atlas");
+            }
+        }
 
-		float GetFloat (XmlNode node, string attribute)
-		{
-			float result = 0;
-			if (node.Attributes.GetNamedItem (attribute) != null) {
-				result = float.Parse (node.Attributes.GetNamedItem (attribute).Value);
-			}
-			return result;
-		}
+        float GetFloat(XmlNode node, string attribute)
+        {
+            float result = 0;
+            if (node.Attributes.GetNamedItem(attribute) != null)
+            {
+                result = float.Parse(node.Attributes.GetNamedItem(attribute).Value);
+            }
+            return result;
+        }
 
-		bool GetBool (XmlNode node, string attribute)
-		{
-			bool result = false;
-			if (node.Attributes.GetNamedItem (attribute) != null) {
-				result = bool.Parse (node.Attributes.GetNamedItem (attribute).Value);
-			}
-			return result;
-		}
+        bool GetBool(XmlNode node, string attribute)
+        {
+            bool result = false;
+            if (node.Attributes.GetNamedItem(attribute) != null)
+            {
+                result = bool.Parse(node.Attributes.GetNamedItem(attribute).Value);
+            }
+            return result;
+        }
 
-		string GetString (XmlNode node, string attribute)
-		{
-			string result = "";
-			if (node.Attributes.GetNamedItem (attribute) != null) {
-				result = node.Attributes.GetNamedItem (attribute).Value;
-			}
-			return result;
-		}
-	}
+        string GetString(XmlNode node, string attribute)
+        {
+            string result = "";
+            if (node.Attributes.GetNamedItem(attribute) != null)
+            {
+                result = node.Attributes.GetNamedItem(attribute).Value;
+            }
+            return result;
+        }
+    }
 
+    public class AlphanumComparatorFast : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            if (x == null)
+            {
+                return 0;
+            }
 
-	public class AlphanumComparatorFast : IComparer<string>
-	{
-		public int Compare (string x, string y)
-		{
-			if (x == null) {
-				return 0;
-			}
+            if (y == null)
+            {
+                return 0;
+            }
 
-			if (y == null) {
-				return 0;
-			}
+            int len1 = x.Length;
+            int len2 = y.Length;
+            int marker1 = 0;
+            int marker2 = 0;
 
-			int len1 = x.Length;
-			int len2 = y.Length;
-			int marker1 = 0;
-			int marker2 = 0;
+            // Walk through two the strings with two markers.
+            while (marker1 < len1 && marker2 < len2)
+            {
+                char ch1 = x[marker1];
+                char ch2 = y[marker2];
 
-			// Walk through two the strings with two markers.
-			while (marker1 < len1 && marker2 < len2) {
-				char ch1 = x [marker1];
-				char ch2 = y [marker2];
+                // Some buffers we can build up characters in for each chunk.
+                char[] space1 = new char[len1];
+                int loc1 = 0;
+                char[] space2 = new char[len2];
+                int loc2 = 0;
 
-				// Some buffers we can build up characters in for each chunk.
-				char[] space1 = new char[len1];
-				int loc1 = 0;
-				char[] space2 = new char[len2];
-				int loc2 = 0;
+                // Walk through all following characters that are digits or
+                // characters in BOTH strings starting at the appropriate marker.
+                // Collect char arrays.
+                do
+                {
+                    space1[loc1++] = ch1;
+                    marker1++;
 
-				// Walk through all following characters that are digits or
-				// characters in BOTH strings starting at the appropriate marker.
-				// Collect char arrays.
-				do {
-					space1 [loc1++] = ch1;
-					marker1++;
+                    if (marker1 < len1)
+                    {
+                        ch1 = x[marker1];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (char.IsDigit(ch1) == char.IsDigit(space1[0]));
 
-					if (marker1 < len1) {
-						ch1 = x [marker1];
-					} else {
-						break;
-					}
-				} while (char.IsDigit (ch1) == char.IsDigit (space1 [0]));
+                do
+                {
+                    space2[loc2++] = ch2;
+                    marker2++;
 
-				do {
-					space2 [loc2++] = ch2;
-					marker2++;
+                    if (marker2 < len2)
+                    {
+                        ch2 = y[marker2];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (char.IsDigit(ch2) == char.IsDigit(space2[0]));
 
-					if (marker2 < len2) {
-						ch2 = y [marker2];
-					} else {
-						break;
-					}
-				} while (char.IsDigit (ch2) == char.IsDigit (space2 [0]));
+                // If we have collected numbers, compare them numerically.
+                // Otherwise, if we have strings, compare them alphabetically.
+                string str1 = new string(space1);
+                string str2 = new string(space2);
 
-				// If we have collected numbers, compare them numerically.
-				// Otherwise, if we have strings, compare them alphabetically.
-				string str1 = new string (space1);
-				string str2 = new string (space2);
+                int result;
 
-				int result;
+                if (char.IsDigit(space1[0]) && char.IsDigit(space2[0]))
+                {
+                    int thisNumericChunk = int.Parse(str1);
+                    int thatNumericChunk = int.Parse(str2);
+                    result = thisNumericChunk.CompareTo(thatNumericChunk);
+                }
+                else
+                {
+                    result = str1.CompareTo(str2);
+                }
 
-				if (char.IsDigit (space1 [0]) && char.IsDigit (space2 [0])) {
-					int thisNumericChunk = int.Parse (str1);
-					int thatNumericChunk = int.Parse (str2);
-					result = thisNumericChunk.CompareTo (thatNumericChunk);
-				} else {
-					result = str1.CompareTo (str2);
-				}
-
-				if (result != 0) {
-					return result;
-				}
-			}
-			return len1 - len2;
-		}
-	}
+                if (result != 0)
+                {
+                    return result;
+                }
+            }
+            return len1 - len2;
+        }
+    }
 }

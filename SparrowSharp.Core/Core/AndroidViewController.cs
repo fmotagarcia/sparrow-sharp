@@ -32,13 +32,13 @@ namespace Sparrow.Core
             Setup(context);
         }
 
-        private void Setup(Android.Content.Context context) {
+        private void Setup(Android.Content.Context context)
+        {
             AndroidContext = context;
             TextureLoader._context = context;
             RequestFocus();
             FocusableInTouchMode = true;
         }
-
         // This method is called everytime the context needs to be recreated.
         protected override void CreateFrameBuffer()
         {
@@ -69,7 +69,7 @@ namespace Sparrow.Core
                 }
                 Log.Verbose("Sparrow", "Created format {0}", GraphicsContext.GraphicsMode);
                 All status = GL.CheckFramebufferStatus(All.Framebuffer);
-                Log.Verbose("Sparrow", "Framebuffer Status: " + status.ToString());
+                Log.Verbose("Sparrow", "Framebuffer Status: " + status);
             }
             catch (Exception)
             {
@@ -120,7 +120,8 @@ namespace Sparrow.Core
         /// It is responsible for maintaining the currently active touch events and dispatching events.
         /// For details see http://developer.android.com/reference/android/view/View.html#onTouchEvent(android.view.MotionEvent)
         /// </summary>
-        override public bool OnTouchEvent(MotionEvent e) {
+        override public bool OnTouchEvent(MotionEvent e)
+        {
             float xConversion = SparrowSharpApp.Stage.Width / Size.Width;
             float yConversion = SparrowSharpApp.Stage.Height / Size.Height;
 
@@ -135,7 +136,8 @@ namespace Sparrow.Core
             // get masked (not specific to a pointer) action
             MotionEventActions maskedAction = e.ActionMasked;
 
-            switch (maskedAction) {
+            switch (maskedAction)
+            {
                 case MotionEventActions.Down:
                 case MotionEventActions.PointerDown:
                     // new pointer
@@ -153,27 +155,30 @@ namespace Sparrow.Core
                     _touches.Add(newTouch.TouchID, newTouch);
                     break;
                 case MotionEventActions.Move:
-                    for (int size = e.PointerCount, i = 0; i < size; i++) {
+                    for (int size = e.PointerCount, i = 0; i < size; i++)
+                    {
                         Touch movedTouch;
                         _touches.TryGetValue(e.GetPointerId(i), out movedTouch);
-                        if (movedTouch != null) {
+                        if (movedTouch != null)
+                        {
                             // TODO: should we care about historical pointer events?
                             movedTouch.PreviousGlobalX = movedTouch.GlobalX;
                             movedTouch.PreviousGlobalY = movedTouch.GlobalY;
 
                             float xc = e.GetX(i) * xConversion;
                             float yc = e.GetY(i) * yConversion;
-                            if (movedTouch.GlobalX == xc && movedTouch.GlobalY == yc) {
+                            if (movedTouch.GlobalX == xc && movedTouch.GlobalY == yc)
+                            {
                                 movedTouch.Phase = TouchPhase.Stationary;
-                            } else {
+                            }
+                            else
+                            {
                                 movedTouch.GlobalX = xc;
                                 movedTouch.GlobalY = yc;
                                 movedTouch.Phase = TouchPhase.Moved;
                             }
-
-                            //touch.TapCount = (int)uiTouch.tapCount; TODO figure out how to do it in Android
-
-                            if (movedTouch.Target == null || movedTouch.Target.Stage == null) {
+                            if (movedTouch.Target == null || movedTouch.Target.Stage == null)
+                            {
                                 // target could have been removed from stage -> find new target in that case
                                 Point updatedTouchPosition = Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
                                 movedTouch.Target = SparrowSharpApp.Root.HitTestPoint(updatedTouchPosition);
@@ -188,10 +193,11 @@ namespace Sparrow.Core
                     long downTime = Android.OS.SystemClock.UptimeMillis() - e.DownTime;
 
                     double dist = Math.Sqrt(
-                        (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) * (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) +
-                        (touchInFocus.GlobalY - touchInFocus.InitialGlobalY) * (touchInFocus.GlobalY - touchInFocus.InitialGlobalY));
+                                      (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) * (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) +
+                                      (touchInFocus.GlobalY - touchInFocus.InitialGlobalY) * (touchInFocus.GlobalY - touchInFocus.InitialGlobalY));
                     // TODO: move the time out to a constant, make dist DPI dependent
-                    if (downTime < 300 && dist < 50) {
+                    if (downTime < 300 && dist < 50)
+                    {
                         touchInFocus.IsTap = true;
                     }
                     break;
@@ -201,23 +207,26 @@ namespace Sparrow.Core
                     break;
             }
 
-            foreach (Touch tou in _touches.Values) {
+            foreach (Touch tou in _touches.Values)
+            {
                 TouchEvent touchEvent = new TouchEvent(new List<Touch>(_touches.Values));
-                if (tou.Target != null) {
+                if (tou.Target != null)
+                {
                     tou.Target.InvokeTouch(touchEvent);
                 }
                 //Console.WriteLine ("PHASE: " + tou.Phase + " ID: " + tou._touchID + " target: " + tou.Target + " isTap: "+ tou.IsTap);
             }
 
             var touchList = new List<Touch>(_touches.Values);
-            foreach (Touch tou in touchList) {
-                if (tou.Phase == TouchPhase.Ended || tou.Phase == TouchPhase.Cancelled) {
+            foreach (Touch tou in touchList)
+            {
+                if (tou.Phase == TouchPhase.Ended || tou.Phase == TouchPhase.Cancelled)
+                {
                     _touches.Remove(tou.TouchID);
                 }
             }
             return true;
         }
-
     }
 }
 

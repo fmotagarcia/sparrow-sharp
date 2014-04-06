@@ -118,7 +118,7 @@ namespace Sparrow.Textures
 
 			_transformationMatrix.Scale(region.Width / texture.Width, region.Height / texture.Height);
 
-			_transformationMatrix.Translate(region.X / texture.Width, region.Y / texture.Height);
+			_transformationMatrix.Translate(region.X / texture.Width, region.Top / texture.Height);
 		}
 
         override public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
@@ -155,15 +155,15 @@ namespace Sparrow.Textures
                     throw new InvalidOperationException(@"Textures with a frame can only be used on quads");
 
                 float deltaRight = _frame.Width + _frame.X - _width;
-                float deltaBottom = _frame.Height + _frame.Y - _height;
+                float deltaBottom = _frame.Height + _frame.Top - _height;
 
                 // top left
                 vertexData.Vertices[startIndex].Position.X -= _frame.X;
-                vertexData.Vertices[startIndex].Position.Y -= _frame.Y;
+                vertexData.Vertices[startIndex].Position.Y -= _frame.Top;
 
                 // top right
                 vertexData.Vertices[startIndex + 1].Position.X -= deltaRight;
-                vertexData.Vertices[startIndex + 1].Position.Y -= _frame.Y;
+                vertexData.Vertices[startIndex + 1].Position.Y -= _frame.Top;
 
                 // bottom left
                 vertexData.Vertices[startIndex + 2].Position.X -= _frame.X;

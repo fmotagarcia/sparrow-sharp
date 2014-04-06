@@ -1,13 +1,7 @@
-using System.Diagnostics;
 using Android.App;
 using Android.OS;
 using Android.Content.PM;
-using Android.Widget;
 using Sparrow.Core;
-using System;
-using Sparrow.Utils;
-using SparrowSharp.Samples.Android;
-using Sparrow.Textures;
 
 namespace Sparrow.Samples.Android
 {
@@ -19,13 +13,13 @@ namespace Sparrow.Samples.Android
         MainLauncher = true)]
     public class MainActivity : Activity
     {
-        AndroidViewController sparrowView;
+        private AndroidViewController sparrowView;
 
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
 
-            sparrowView = new AndroidViewController(this.BaseContext, (width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
+            sparrowView = new AndroidViewController(BaseContext, (width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
             SetContentView(sparrowView);
         }
 
