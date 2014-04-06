@@ -1,5 +1,4 @@
-﻿using System;
-using Sparrow.Textures;
+﻿using Sparrow.Textures;
 
 namespace Sparrow.ResourceLoading
 {
@@ -19,12 +18,12 @@ namespace Sparrow.ResourceLoading
 		{
 			return new TextureLoader ().LoadLocalImageAsync (pathToFile);
 		}
-#if __ANDROID__
+        #if __ANDROID__
 		public static GLTexture LoadAndroidResource(int AndroidResourceId)
 		{
 			return new TextureLoader ().LoadAndroidResource (AndroidResourceId);
 		}
-#endif
+        #endif
 
 	}
 }

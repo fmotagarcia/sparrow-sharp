@@ -1,24 +1,20 @@
-﻿using OpenTK;
+﻿using System;
+using OpenTK;
 using OpenTK.Graphics.ES20;
-using Sparrow.Display;
-using System;
-using OpenTK.Graphics;
-using SparrowSharp.Core;
-using Sparrow.Core;
 using OpenTK.Input;
 using Sparrow;
-using System.Diagnostics;
+using Sparrow.Core;
 
 namespace Sparrow.Core
 {
 	public class DesktopViewController : GameWindow
     {
 		public delegate void OnLoadedAction(int viewWidth,int viewHeight);
-		private OnLoadedAction _onLoadedAction;
+		private readonly OnLoadedAction _onLoadedAction;
 
 		public DesktopViewController(OnLoadedAction onLoadedAction) : base()
         {
-			this._onLoadedAction = onLoadedAction;
+			_onLoadedAction = onLoadedAction;
 
 			Load += HandleLoad;
 
@@ -63,6 +59,10 @@ namespace Sparrow.Core
 			GL.Enable(EnableCap.Blend);
 
 			FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+            if (status != FramebufferErrorCode.FramebufferComplete)
+            {
+                Console.WriteLine("Framebuffer error: " + status);
+            }
 			_onLoadedAction(Size.Width, Size.Height);
         }
 

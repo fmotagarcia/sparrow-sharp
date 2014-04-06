@@ -56,7 +56,7 @@ namespace SparrowSharp.Filters
 
 		/// Initializes a fragment filter with the specified number of passes and resolution.
 		/// This initializer must only be called by the initializer of a subclass.
-		public FragmentFilter (int numPasses = 1, float resolution = 1.0f)
+        protected FragmentFilter (int numPasses = 1, float resolution = 1.0f)
 		{
 			NumPasses = numPasses;
 			Resolution = resolution;
@@ -157,11 +157,11 @@ namespace SparrowSharp.Filters
 		protected static String StandardFragmentShader ()
 		{
 			StringBuilder source = new StringBuilder ("");
-#if __WINDOWS__
+            #if __WINDOWS__
 			source.AppendLine("uniform sampler2D uTexture;");
-#else
+            #else
 			source.AppendLine ("uniform lowp sampler2D uTexture;");
-#endif
+            #endif
 			source.AppendLine ("varying lowp vec2 vTexCoords;");
 			source.AppendLine ("void main() {");
 			source.AppendLine ("    gl_FragColor = texture2D(uTexture, vTexCoords);");
@@ -212,10 +212,14 @@ namespace SparrowSharp.Filters
 
 		private QuadBatch CompileWith (DisplayObject obj)
 		{
-			if (_cache != null)
-				return _cache;
-			if (obj.Stage == null)
-				throw new  InvalidOperationException (@"Filtered object must be on the stage.");
+            if (_cache != null)
+            {
+                return _cache;
+            }
+            if (obj.Stage == null)
+            {
+                throw new  InvalidOperationException ("Filtered object must be on the stage.");
+            }
 
 			RenderSupport support = new RenderSupport ();
 			support.PushState (obj.TransformationMatrixToSpace (obj.Stage), obj.Alpha, obj.BlendMode);
@@ -244,15 +248,17 @@ namespace SparrowSharp.Filters
 			Stage stage = obj.Stage;
 			float scale = SparrowSharpApp.ContentScaleFactor * Resolution;
 
-			if (stage == null)
-				throw new InvalidOperationException ("Filtered object must be on the stage.");
-
+            if (stage == null)
+            {
+                throw new InvalidOperationException("Filtered object must be on the stage.");
+            }
 			// the bounds of the object in stage coordinates
 			Rectangle boundsPOT;
 			Rectangle bounds;
 			CalcBounds (obj, stage, scale, !intoCache, out bounds, out boundsPOT);
 
-			if (bounds.IsEmpty ()) {
+			if (bounds.IsEmpty ()) 
+            {
 				DisposePassTextures ();
 				return intoCache ? new QuadBatch () : null;
 			}
@@ -269,7 +275,8 @@ namespace SparrowSharp.Filters
 			Texture previousRenderTarget = support.RenderTarget;
 
 			// use cache?
-			if (intoCache) {
+			if (intoCache) 
+            {
 				cacheTexture = CreateTexture ((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
 			}
 
@@ -306,7 +313,6 @@ namespace SparrowSharp.Filters
 
 			GL.EnableVertexAttribArray (TexCoordsID);
 			GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
-
 			#endif
 
 			// draw all passes
@@ -404,8 +410,8 @@ namespace SparrowSharp.Filters
 				GL.GenBuffers (1, out _vertexBufferName);
 				GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
 
-				GL.GenBuffers (1, out _indexBufferName);
-				GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
+                GL.GenBuffers (1, out _indexBufferName);
+                GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
 				GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)indexSize, _indexData, BufferUsage.StaticDraw);
 			}
 

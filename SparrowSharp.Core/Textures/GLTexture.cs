@@ -1,5 +1,4 @@
 ﻿using System;
-using Sparrow.Core;
 using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Textures
@@ -7,7 +6,6 @@ namespace Sparrow.Textures
 	public class GLTexture : Texture
 	{
 
-		private TextureFormat _format;
 		private TextureSmoothing _smoothing;
 		private uint _name;
 		private float _width;

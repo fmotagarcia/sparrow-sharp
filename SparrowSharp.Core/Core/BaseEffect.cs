@@ -177,13 +177,13 @@ namespace Sparrow.Core
             }
 
             if (hasTexture) {
-#if __ANDROID__
+                #if __ANDROID__
                 GL.ActiveTexture(All.Texture0);
                 GL.BindTexture(All.Texture2D, _texture.Name);
-#elif __IOS__ || __WINDOWS__
+                #elif __IOS__ || __WINDOWS__
 				GL.ActiveTexture (TextureUnit.Texture0);
 				GL.BindTexture (TextureTarget.Texture2D, _texture.Name);
-#endif
+                #endif
             }
         }
 
