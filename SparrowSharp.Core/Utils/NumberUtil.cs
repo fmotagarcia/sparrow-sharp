@@ -2,54 +2,75 @@ using System;
 
 namespace Sparrow.Utils
 {
-	public class NumberUtil
-	{
-
-		public readonly static float[] sinLUT = new float[2048];
-		public readonly static float[] cosLUT = new float[2048];
+    public static class NumberUtil
+    {
+        /// <summary>
+        /// Lookup table for fast sinus calulations
+        /// </summary>
+        public readonly static float[] SinLUT = new float[2048];
+        /// <summary>
+        /// Lookup table for fast cosinus calulations
+        /// </summary>
+        public readonly static float[] CosLUT = new float[2048];
 
         static NumberUtil()
         {
-			for (int i = 0; i < 2048; i++)
+            for (int i = 0; i < 2048; i++)
             {
-				sinLUT[i & 2047] = (float)Math.Sin(i * 0.00306796157577128245943617517898f); //0.003067 = 2PI/2048
-				cosLUT[i & 2047] = (float)Math.Cos(i * 0.00306796157577128245943617517898f);
+                SinLUT[i & 2047] = (float)Math.Sin(i * 0.00306796157577128245943617517898f); //0.003067 = 2PI/2048
+                CosLUT[i & 2047] = (float)Math.Cos(i * 0.00306796157577128245943617517898f);
             }
         }
 
-		public static bool Equals (float a, float b)
-		{
-			return Math.Abs (a - b) < 0.000001f;
-		}
+        /// <summary>
+        /// checks if two numbers are equal with a small margin of error
+        /// </summary>
+        public static bool Equals(float a, float b)
+        {
+            return Math.Abs(a - b) < 0.000001f;
+        }
 
-		public static float Clamp (float value, float min, float max)
-		{
-			return Math.Min (max, Math.Max (value, min));
-		}
-        
+        public static float Clamp(float value, float min, float max)
+        {
+            return Math.Min(max, Math.Max(value, min));
+        }
+
+        /// <summary>
+        /// Fast sinus calculation with a look up table.
+        /// Note that it is less accurate than Math.Sin
+        /// </summary>
         public static float FastSin(float angle)
         {
-			return sinLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; 
+            return SinLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; 
         }
 
-		public static float FastCos(float angle)
+        /// <summary>
+        /// Fast cosinus calculation with a look up table.
+        /// Note that it is less accurate than Math.Cos
+        /// </summary>
+        public static float FastCos(float angle)
         {
-			return cosLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; //325.949 is 2048/2PI    
+            return CosLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; //325.949 is 2048/2PI    
         }
 
-		public static int NextPowerOfTwo(int number)
-		{    
-			int result = 1; 
-			while (result < number) result *= 2;
-			return result;    
-		}
+        public static int NextPowerOfTwo(int number)
+        {    
+            int result = 1; 
+            while (result < number)
+            {
+                result *= 2;
+            }
+            return result;    
+        }
 
-		public static int NextPowerOfTwo(float number)
-		{    
-			int result = 1; 
-			while (result < number) result *= 2;
-			return result;    
-		}
-
-	}
+        public static int NextPowerOfTwo(float number)
+        {    
+            int result = 1; 
+            while (result < number)
+            {
+                result *= 2;
+            }
+            return result;    
+        }
+    }
 }

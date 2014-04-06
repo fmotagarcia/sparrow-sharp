@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sparrow.Utils
+﻿namespace Sparrow.Utils
 {
     public class VertexColorHelper
     {

@@ -1,11 +1,10 @@
-﻿
-namespace SparrowSharp.Core
+﻿namespace SparrowSharp.Core
 {
-	public enum HAlign
-	{
-		Left,
-		Center,
-		Right
-	}
+    public enum HAlign
+    {
+        Left,
+        Center,
+        Right
+    }
 }
 

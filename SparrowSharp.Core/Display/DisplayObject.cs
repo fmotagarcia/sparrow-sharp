@@ -400,8 +400,8 @@ namespace Sparrow.Display
 						else
 						{
 
-							float sin = NumberUtil.sinLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
-							float cos = NumberUtil.cosLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
+							float sin = NumberUtil.SinLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
+							float cos = NumberUtil.CosLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
 
 							float a = _scaleX * cos;
 							float b = _scaleX * sin;
