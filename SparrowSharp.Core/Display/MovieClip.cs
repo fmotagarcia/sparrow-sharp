@@ -6,22 +6,23 @@ using Sparrow.Textures;
 
 namespace SparrowSharp.Display
 {
-	/**
-     A MovieClip is a simple way to display an animation depicted by a list of textures.
+	
+    /// <summary>
+    /// A MovieClip is a simple way to display an animation depicted by a list of textures.
 
-     You can add the frames one by one or pass them all at once (in an array) at initialization time.
-     The movie clip will have the width and height of the first frame.
+    /// You can add the frames one by one or pass them all at once (in an array) at initialization time.
+    /// The movie clip will have the width and height of the first frame.
  
-     At initialization, you can specify the desired framerate. You can, however, manually give each
-     frame a custom duration. You can also play a sound whenever a certain frame appears.
+    /// At initialization, you can specify the desired framerate. You can, however, manually give each
+    /// frame a custom duration. You can also play a sound whenever a certain frame appears.
  
-     The methods 'Play' and 'Pause' control playback of the movie. You will receive an event of type
-     'EventTypeCompleted' when the movie finished playback. When the movie is looping,
-     the event is dispatched once per loop.
+    /// The methods 'Play' and 'Pause' control playback of the movie. You will receive an event of type
+    /// 'Completed' when the movie finished playback. When the movie is looping, the event is 
+    /// dispatched once per loop.
  
-     As any animated object, a movie clip has to be added to a Juggler (or have its 'AdvanceTime' 
-     method called regularly) to run.
-     */
+    /// As any animated object, a movie clip has to be added to a Juggler (or have its 'AdvanceTime' 
+    /// method called regularly) to run.
+    /// </summary>
 	public class MovieClip : Image, IAnimatable
 	{
 		readonly List<Texture> _textures;
@@ -33,7 +34,9 @@ namespace SparrowSharp.Display
 		private bool _playing;
 		private int _currentFrame;
 
-		/// Initializes a movie with the first frame and the default number of frames per second.
+		/// <summary>
+        /// Initializes a movie with the first frame and the default number of frames per second.
+		/// </summary>
 		public MovieClip (Texture texture, float fps) : base (texture)
 		{
 			_defaultFrameDuration = 1.0f / fps;
@@ -48,7 +51,9 @@ namespace SparrowSharp.Display
 			AddFrame (texture);
 		}
 
-		/// Initializes a MovieClip with an array of textures and the default number of frames per second.
+		/// <summary>
+        /// Initializes a MovieClip with an array of textures and the default number of frames per second.
+		/// </summary>
 		public MovieClip (IList<Texture> textures, float fps) : this (textures [0], fps)
 		{
 			if (textures.Count () > 1) {
@@ -57,25 +62,33 @@ namespace SparrowSharp.Display
 			}
 		}
 
-		/// Adds a frame to the end of the animation with a certain texture, using the default duration (1/fps).
+		/// <summary>
+        /// Adds a frame to the end of the animation with a certain texture, using the default duration (1/fps).
+		/// </summary>
 		public void AddFrame (Texture texture)
 		{
 			AddFrame (texture, NumFrames);   
 		}
 
-		/// Adds a frame with a certain texture and duration.
+		/// <summary>
+        /// Adds a frame with a certain texture and duration.
+		/// </summary>
 		public void AddFrame (Texture texture, float duration)
 		{
 			AddFrame (texture, NumFrames, duration);
 		}
 
-		/// Inserts a frame at the specified position. The successors will move down.
+		/// <summary>
+        /// Inserts a frame at the specified position. The successors will move down.
+		/// </summary>
 		public void AddFrame (Texture texture, int position)
 		{
 			AddFrame (texture, position, _defaultFrameDuration);
 		}
 
-		/// Adds a frame with a certain texture, duration and sound.
+		/// <summary>
+        /// Adds a frame with a certain texture, duration and sound.
+		/// </summary>
 		public void AddFrame (Texture texture, int position, float duration, object sound = null)
 		{
 			_totalTime += duration;
@@ -84,7 +97,9 @@ namespace SparrowSharp.Display
 			//[_sounds insertObject:(sound ? sound : [NSNull null]) atIndex:position];
 		}
 
-		/// Removes the frame at the specified position. The successors will move up.
+		/// <summary>
+        /// Removes the frame at the specified position. The successors will move up.
+		/// </summary>
 		public void RemoveFrameAt (int position)
 		{
 			_totalTime -= GetDurationAt (position);
@@ -93,19 +108,25 @@ namespace SparrowSharp.Display
 			//_sounds removeObjectAtIndex:position];   
 		}
 
-		/// Sets the texture of a certain frame.
+		/// <summary>
+        ///  Sets the texture of a certain frame.
+		/// </summary>
 		public void SetTexture (Texture texture, int position)
 		{
 			_textures [position] = texture;
 		}
 
-		/// Sets the sound that will be played back when a certain frame is active.
+		/// <summary>
+        /// Sets the sound that will be played back when a certain frame is active.
+		/// </summary>
 		public void SetSoundAt (object sound, int position)
 		{
 			//_sounds[frameID] = sound ? sound : null;
 		}
 
-		/// Sets the duration of a certain frame in seconds.
+		/// <summary>
+        /// Sets the duration of a certain frame in seconds.
+		/// </summary>
 		public void SetDuration (float duration, int position)
 		{
 			_totalTime -= GetDurationAt (position);
@@ -113,7 +134,9 @@ namespace SparrowSharp.Display
 			_totalTime += duration;
 		}
 
-		/// Returns the texture of a frame at a certain position.
+		/// <summary>
+        /// Returns the texture of a frame at a certain position.
+		/// </summary>
 		public Texture GetTextureAt (int position)
 		{
 			return _textures [position];
@@ -122,50 +145,68 @@ namespace SparrowSharp.Display
 		/// Returns the sound of a frame at a certain position.
 		//public SoundChannel GetSoundAt(int position) {}
 
-		/// Returns the duration (in seconds) of a frame at a certain position.
+		/// <summary>
+        /// Returns the duration (in seconds) of a frame at a certain position.
+		/// </summary>
 		public float GetDurationAt (int position)
 		{
 			return _durations [position];
 		}
 
-		/// Start playback. Beware that the clip has to be added to a juggler, too!
+		/// <summary>
+        ///  Start playback. Beware that the clip has to be added to a Juggler too!
+		/// </summary>
 		public void Play ()
 		{
 			_playing = true;
 		}
 
-		/// Pause playback.
+		/// <summary>
+        /// Pause playback.
+		/// </summary>
 		public void Pause ()
 		{
 			_playing = false;
 		}
 
-		/// Stop playback. Resets currentFrame to beginning.
+		/// <summary>
+        /// Stop playback. Resets currentFrame to beginning.
+		/// </summary>
 		public void Stop ()
 		{
 			_playing = false;
 			CurrentFrame = 0;
 		}
 
-		/// The total duration of the clip in seconds.
+		/// <summary>
+        /// The total duration of the clip in seconds.
+		/// </summary>
 		public float TotalTime {
 			get { return _totalTime; }
 		}
 
-		/// The time that has passed since the clip was started (each loop starts at zero).
+		/// <summary>
+        /// The time that has passed since the clip was started (each loop starts at zero).
+		/// </summary>
 		public float CurrentTime {
 			get { return _currentTime; }
 		}
 
-		/// Indicates if the movie is looping.
+		/// <summary>
+        /// Indicates if the movie is looping.
+		/// </summary>
 		public bool Loop;
 
-		/// The number of frames of the clip.
+		/// <summary>
+        /// The number of frames of the clip.
+		/// </summary>
 		public int NumFrames {
 			get { return _textures.Count (); }
 		}
 
-		/// The default frames per second. Used when you add a frame without specifying a duration.
+		/// <summary>
+        /// The default frames per second. Used when you add a frame without specifying a duration.
+		/// </summary>
 		public float Fps {
 			get { return (1.0f / _defaultFrameDuration); }
 			set {
@@ -179,7 +220,9 @@ namespace SparrowSharp.Display
 			}
 		}
 
-		/// Indicates if the movie is currently playing. Returns 'false' when the end has been reached.
+		/// <summary>
+        /// Indicates if the movie is currently playing. Returns 'false' when the end has been reached.
+		/// </summary>
 		public bool Playing {
 			get {
 			    if (_playing)
@@ -190,12 +233,16 @@ namespace SparrowSharp.Display
 			}
 		}
 
-		/// Indicates if a (non-looping) movie has come to its end.
+		/// <summary>
+        /// Indicates if a (non-looping) movie has come to its end.
+		/// </summary>
 		public bool Complete {
 			get { return !Loop && _currentTime >= _totalTime; }
 		}
 
-		/// The position of the frame that is currently displayed.
+		/// <summary>
+        /// The position of the frame that is currently displayed.
+		/// </summary>
 		public int CurrentFrame {
 			get { return _currentFrame; }
 			set { 

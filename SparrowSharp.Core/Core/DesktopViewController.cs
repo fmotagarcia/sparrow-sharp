@@ -31,7 +31,6 @@ namespace Sparrow.Core
 
 		private void HandleRenderFrame (object sender, FrameEventArgs e)
         {
-			//Console.WriteLine ("Number of draw calls: " + RenderSupport.NumDrawCalls);
 			SwapBuffers();
         }
 

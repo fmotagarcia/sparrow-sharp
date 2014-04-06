@@ -43,27 +43,35 @@ namespace Sparrow.Display
     /// Below is an example how to depth-sort children by their y-coordinate; this will put objects that
     /// are lower on the screen in front of those higher on the screen.
 
-    /// container.SortChildren(DisplayObject child1, DisplayObject *child2) 
-    /// {
-    ///     if (child1.Y < child2.Y) return OrderedAscending;
-    ///     else if (child1.Y > child2.Y) return OrderedDescending;
-    ///     else return OrderedSame;
-    /// }];
+    /// public class CompareExample : IComparator {
+    ///     public int Compare(DisplayObject child1, DisplayObject child2) 
+    ///     {
+    ///         if (child1.Y < child2.Y) return -1;
+    ///         else if (child1.Y > child2.Y) return 1;
+    ///         else return 0;
+    ///     }
+    /// }
     /// </summary>
 	public abstract class DisplayObjectContainer : DisplayObject
     {
-		/// The number of children of this container.
+		/// <summary>
+        /// The number of children of this container.
+		/// </summary>
 		public int NumChildren { get {return _children.Count; } }
 
 		private readonly List<DisplayObject> _children = new List<DisplayObject>();
 
-		/// Adds a child to the container. It will be at the topmost position.
+		/// <summary>
+        ///  Adds a child to the container. It will be at the topmost position.
+		/// </summary>
         public void AddChild(DisplayObject child)
         {
             AddChild(child, _children.Count);
         }
 
-		/// Adds a child to the container at a certain index.
+		/// <summary>
+        /// Adds a child to the container at a certain index.
+		/// </summary>
         public void AddChild(DisplayObject child, int index)
         {
             if (index >= 0 && index <= _children.Count)
@@ -109,7 +117,9 @@ namespace Sparrow.Display
             }
         }
 
-		/// Determines if a certain object is a child of the container (recursively).
+		/// <summary>
+        /// Determines if a certain object is a child of the container (recursively).
+		/// </summary>
         public bool ContainsChild(DisplayObject child)
         {
             while (child != null)
@@ -121,38 +131,50 @@ namespace Sparrow.Display
 		    return false;
         }
 
-		/// Returns a child object at a certain index.
+		/// <summary>
+        /// Returns a child object at a certain index.
+		/// </summary>
         public DisplayObject GetChild(uint index)
         {
             return _children[(int)index];
         }
 
-		/// Returns a child object at a certain index.
+		/// <summary>
+        /// Returns a child object at a certain index.
+		/// </summary>
         public DisplayObject GetChild(int index)
         {
             return _children[index];
         }
 
-		/// Returns a child object with a certain name (non-recursively).
+		/// <summary>
+        /// Returns a child object with a certain name (non-recursively).
+		/// </summary>
         public DisplayObject GetChild(String name)
         {
             foreach (DisplayObject currentChild in _children)
             {
                 if (currentChild.Name == name)
+                {
                     return currentChild;
+                }
             }
             return null;
         }
 
-		/// Returns the index of a child within the container. Returns -1 if the child is not within this container
+		/// <summary>
+        /// Returns the index of a child within the container. Returns -1 if the child is not within this container
+		/// </summary>
         public int GetChildIndex(DisplayObject child)
         {
 			return _children.IndexOf(child);
         }
 
-		/// Moves a child to a certain index. Children at and after the replaced position move up.
-		/// @throws ArgumentException if the child is not found
-        public void SetChildIndex(int index, DisplayObject child)
+		/// <summary>
+        /// Moves a child to a certain index. Children at and after the replaced position move up.
+        /// @throws ArgumentException if the child is not found
+		/// </summary>
+        public void SetChildIndex(DisplayObject child, int index)
         {
             int oldIndex = _children.IndexOf(child); 
             if (oldIndex == -1)
@@ -163,7 +185,9 @@ namespace Sparrow.Display
 		    _children.Insert(index, child);
         }
 
-		/// Removes a child from the container. If the object is not a child, nothing happens.
+		/// <summary>
+        /// Removes a child from the container. If the object is not a child, nothing happens.
+		/// </summary>
         public void RemoveChild(DisplayObject child)
         {
             int index = _children.IndexOf(child);
@@ -173,7 +197,9 @@ namespace Sparrow.Display
             }
         }
 
-		/// Removes a child at a certain index. Children above the child will move down.
+		/// <summary>
+        /// Removes a child at a certain index. Children above the child will move down.
+		/// </summary>
         public void RemoveChildAt(int index)
         {
 		    if (index >= 0 && index < _children.Count)
@@ -197,7 +223,9 @@ namespace Sparrow.Display
 		    }
         }
 
-		/// Swaps the indexes of two children.
+		/// <summary>
+        /// Swaps the indexes of two children.
+		/// </summary>
         public void SwapChild(DisplayObject child1, DisplayObject child2)
         {
             int index1 = _children.IndexOf(child1);
@@ -205,7 +233,9 @@ namespace Sparrow.Display
             SwapChildrenAt(index1, index2);
         }
 
-		/// Swaps the indexes of two children.
+		/// <summary>
+        /// Swaps the indexes of two children.
+		/// </summary>
         public void SwapChildrenAt(int index1, int index2)
         {    
             int numChildren = _children.Count;
@@ -218,7 +248,9 @@ namespace Sparrow.Display
             _children[index2] = tmp;   
         }
 
-		/// Removes all children from the container.
+		/// <summary>
+        /// Removes all children from the container.
+		/// </summary>
         public void RemoveAllChildren()
         {
             for (int i = _children.Count - 1; i >= 0; --i)
@@ -299,8 +331,13 @@ namespace Sparrow.Display
             return null;
         }
 
-		// Sorts the children using the given Comparator block.
-		// TODO public void SortChildren(Comparator comparator);
+		/// <summary>
+        /// Sorts the children using the given IComparer.
+		/// </summary>
+        public void SortChildren(IComparer<DisplayObject> comparator)
+        {
+            _children.Sort(comparator);
+        }
     }
 }
 

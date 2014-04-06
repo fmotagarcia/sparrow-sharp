@@ -28,7 +28,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Initialize a quad with a texture mapped onto it
         /// </summary>
-        /// <param name="texture">The texture to use. For example the TextureLoader class to load an image file</param>
+        /// <param name="texture">The texture to use. Use for example the TextureLoader class to load one.</param>
 		public Image (Texture texture)
 		{
 		    if (texture == null)
@@ -53,28 +53,36 @@ namespace Sparrow.Display
 			_vertexDataCacheInvalid = true;
 		}
 
-		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		/// <summary>
+        /// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		/// </summary>
 		public void SetTexCoords(Point coords, int vertexID)
 		{
 			_vertexData.SetTexCoords(coords, vertexID);
 			VertexDataDidChange();
 		}
 
-		/// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		/// <summary>
+        /// Sets the texture coordinates of a vertex. Coordinates are in the range [0, 1].
+		/// </summary>
 		public void SetTexCoords(float x, float y, int vertexID)
 		{
 			_vertexData.SetTexCoords(x, y, vertexID);
 			VertexDataDidChange ();
 		}
 
-		/// Gets the texture coordinates of a vertex.
+		/// <summary>
+        /// Gets the texture coordinates of a vertex.
+		/// </summary>
 		public Point TexCoordsOfVertex(int vertexID)
 		{
 			return _vertexData.TexCoordsAtIndex(vertexID);
 		}
 
-		/// Readjusts the dimensions of the image according to its current texture. Call this method 
-		/// to synchronize image and texture size after assigning a texture with a different size.
+		/// <summary>
+        /// Readjusts the dimensions of the image according to its current texture. Call this method 
+        /// to synchronize image and texture size after assigning a texture with a different size.
+		/// </summary>
 		public void ReadjustSize()
 		{
 			Rectangle frame = _texture.Frame;    
