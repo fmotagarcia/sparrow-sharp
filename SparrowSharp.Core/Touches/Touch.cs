@@ -3,171 +3,154 @@ using Sparrow.Display;
 
 namespace Sparrow.Touches
 {
-	/*
-	 A Touch contains information about the presence or movement of a finger on the screen.
-	 
-	 You receive objects of this type via an TouchEvent. When such an event is triggered, you can 
-	 query it for all touches that are currently present on the screen. One Touch object contains
-	 information about a single touch.
-	 
-	 **The phase of a touch**
-	 
-	 Each touch normally moves through the following phases in its life:
-	 
-	 'Began -> Moved -> Ended'
-	 
-	 Furthermore, a touch can enter a 'STATIONARY' phase. That phase does not
-	 trigger a touch event itself, and it can only occur when 'Multitouch' is activated. Picture a 
-	 situation where one finger is moving and the other is stationary. A touch event will
-	 be dispatched only to the object under the _moving_ finger. In the list of touches of
-	 that event, you will find the second touch in the stationary phase.
-	 
-	 **The position of a touch**
-	 
-	 You can get the current and last position on the screen with corresponding properties. However, 
-	 you'll want to have the position in a different coordinate system most of the time. 
-	 For this reason, there are methods that convert the current and previous touches into the local
-	 coordinate system of any object.
-	*/
+    /// <summary>
+    /// A Touch contains information about the presence or movement of a finger on the screen.
+
+    /// You receive objects of this type via an TouchEvent. When such an event is triggered, you can 
+    /// query it for all touches that are currently present on the screen. One Touch object contains
+    /// information about a single touch.
+    /// 
+    /// **The phase of a touch**
+    /// 
+    /// Each touch normally moves through the following phases in its life:
+    /// 
+    /// 'Began -> Moved -> Ended'
+    /// 
+    /// Furthermore, a touch can enter a 'STATIONARY' phase. That phase does not
+    /// trigger a touch event itself, and it can only occur when 'Multitouch' is activated. Picture a 
+    /// situation where one finger is moving and the other is stationary. A touch event will
+    /// be dispatched only to the object under the _moving_ finger. In the list of touches of
+    /// that event, you will find the second touch in the stationary phase.
+    /// 
+    /// **The position of a touch**
+    /// 
+    /// You can get the current and last position on the screen with corresponding properties. However, 
+    /// you'll want to have the position in a different coordinate system most of the time. 
+    /// For this reason, there are methods that convert the current and previous touches into the local
+    /// coordinate system of any object.
+    /// </summary>
 	public class Touch
 	{
 
 		internal int _touchID;
 
-		/// Converts the current location of a touch to the local coordinate system of a display object.
+        /// <summary>
+        /// Converts the current location of a touch to the local coordinate system of a display object.
+        /// </summary>
 		public Point LocationInSpace(DisplayObject space)
 		{
-			Matrix transformationMatrix = _target.Root.TransformationMatrixToSpace (space);
-			return transformationMatrix.TransformPoint (_globalX, _globalY);
+			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
+			return transformationMatrix.TransformPoint (GlobalX, GlobalY);
 		}
 
-		/// Converts the previous location of a touch to the local coordinate system of a display object.
+        /// <summary>
+        /// Converts the previous location of a touch to the local coordinate system of a display object.
+        /// </summary>
 		public Point PreviousLocationInSpace(DisplayObject space)
 		{
-			Matrix transformationMatrix = _target.Root.TransformationMatrixToSpace (space);
-			return transformationMatrix.TransformPoint (_previousGlobalX, _previousGlobalY);
+			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
+			return transformationMatrix.TransformPoint (PreviousGlobalX, PreviousGlobalY);
 		}
 
-		/// Returns the movement of the touch between the current and previous location.
+        /// <summary>
+        /// Returns the movement of the touch between the current and previous location.
+        /// </summary>
 		public Point MovementInSpace(DisplayObject space)
 		{
-			Matrix transformationMatrix = _target.Root.TransformationMatrixToSpace (space);
-			Point curLoc = transformationMatrix.TransformPoint (_globalX, _globalY);
-			Point preLoc = transformationMatrix.TransformPoint (_previousGlobalX, _previousGlobalY);
-			return curLoc.SubtractPoint (preLoc);
+			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
+			Point curLoc = transformationMatrix.TransformPoint (GlobalX, GlobalY);
+			Point preLoc = transformationMatrix.TransformPoint (PreviousGlobalX, PreviousGlobalY);
+            curLoc.SubtractPoint (preLoc);
+            return curLoc;
 		}
 
-		private double _timeStamp;
-		/// The moment the event occurred (in seconds since application start).
-		public double TimeStamp {
-			get {
-				return _timeStamp;
-			}
-			internal set {
-				_timeStamp = value;
-			}
-		}
+        /// <summary>
+        /// The moment the event occurred (in seconds since application start).
+        /// </summary>
+        public double TimeStamp
+        {
+            get;
+            internal set;
+        }
 
-		private float _globalX;
-		/// The x-position of the touch in screen coordinates
-		public float GlobalX {
-			get {
-				return _globalX;
-			}
-			internal set {
-				_globalX = value;
-			}
-		}
+        /// <summary>
+        /// he x-position of the touch in screen coordinates
+        /// </summary>
+        public float GlobalX
+        {
+            get;
+            internal set;
+        }
 
-		private float _globalY;
-		/// The y-position of the touch in screen coordinates
-		public float GlobalY {
-			get {
-				return _globalY;
-			}
-			internal set {
-				_globalY = value;
-			}
-		}
+        /// <summary>
+        /// The y-position of the touch in screen coordinates
+        /// </summary>
+        public float GlobalY
+        {
+            get;
+            internal set;
+        }
 
 
-		private float _previousGlobalX;
-		/// The previous x-position of the touch in screen coordinates
-		public float PreviousGlobalX {
-			get {
-				return _previousGlobalX;
-			}
-			internal set {
-				_previousGlobalX = value;
-			}
-		}
+        /// <summary>
+        /// The previous x-position of the touch in screen coordinates
+        /// </summary>
+        public float PreviousGlobalX
+        {
+            get;
+            internal set;
+        }
 
-		private float _previousGlobalY;
-		/// The previous y-position of the touch in screen coordinates
-		public float PreviousGlobalY {
-			get {
-				return _previousGlobalY;
-			}
-			internal set {
-				_previousGlobalY = value;
-			}
-		}
+        /// <summary>
+        /// The previous y-position of the touch in screen coordinates
+        /// </summary>
+        public float PreviousGlobalY
+        {
+            get;
+            internal set;
+        }
 
-		private float _initialGlobalX;
 		/// The starting x-position of the touch in screen coordinates
-		public float InitialGlobalX {
-			get {
-				return _initialGlobalX;
-			}
-			internal set {
-				_initialGlobalX = value;
-			}
-		}
+        public float InitialGlobalX
+        {
+            get;
+            internal set;
+        }
 
-		private float _initialGlobalY;
 		/// The starting y-position of the touch in screen coordinates
-		public float InitialGlobalY {
-			get {
-				return _initialGlobalY;
-			}
-			internal set {
-				_initialGlobalY = value;
-			}
-		}
+        public float InitialGlobalY
+        {
+            get;
+            internal set;
+        }
 
-		private bool _isTap = false;
-		/// Returns true if this touch is a tap. 
-		/// This happens if Phase = TouchPhase.Ended and the touch began a short while ago
-		public bool IsTap {
-			get {
-				return _isTap;
-			}
-			internal set {
-				_isTap = value;
-			}
-		}
+        /// <summary>
+        /// Returns true if this touch is a tap. 
+        /// This happens if Phase = TouchPhase.Ended and the touch began a short while ago
+        /// </summary>
+        public bool IsTap
+        {
+            get;
+            internal set;
+        }
 
-		private TouchPhase _phase;
-		/// The current phase the touch is in.
-		public TouchPhase Phase {
-			get {
-				return _phase;
-			}
-			internal set {
-				_phase = value;
-			}
-		}
+        /// <summary>
+        /// The current phase the touch is in.
+        /// </summary>
+        public TouchPhase Phase
+        {
+            get;
+            internal set;
+        }
 
-		private DisplayObject _target;
-		/// The display object at which the touch occurred.
-		public DisplayObject Target {
-			get {
-				return _target;
-			}
-			internal set {
-				_target = value;
-			}
-		}
+        /// <summary>
+        /// The display object at which the touch occurred.
+        /// </summary>
+        public DisplayObject Target
+        {
+            get;
+            internal set;
+        }
 	}
 }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK.Graphics.ES20;
-
-namespace Sparrow.Textures
+﻿namespace Sparrow.Textures
 {
 	public struct TextureProperties
 	{

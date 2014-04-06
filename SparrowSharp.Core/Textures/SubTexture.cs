@@ -1,21 +1,27 @@
 ﻿using System;
+using OpenTK;
 using Sparrow.Geom;
 using Sparrow.Utils;
-using OpenTK.Graphics.ES20;
-using OpenTK;
-using System.Runtime.InteropServices;
-using Sparrow.Display;
 
 namespace Sparrow.Textures
 {
+    /// <summary>
+    /// A SubTexture represents a section of another texture. This is achieved solely by 
+    /// manipulation of texture coordinates, making the class very efficient. 
+    /// Note that it is OK to create subtextures of subtextures.
+    /// </summary>
     public class SubTexture : Texture
     {
         private Texture _parent;
 
+        /// <summary>
         /// The texture which the subtexture is based on.
+        /// </summary>
         public Texture Parent { get { return _parent; } }
 
+        /// <summary>
         /// The clipping rectangle, which is the region provided on initialization, scaled into [0.0, 1.0].
+        /// </summary>
         public Rectangle Clipping
         {
             get
@@ -30,9 +36,11 @@ namespace Sparrow.Textures
 
         private Matrix _transformationMatrix;
 
+        /// <summary>
         /// The matrix that is used to transform the texture coordinates into the coordinate
         /// space of the parent texture (used internally by the "adjust..."-methods).
         /// CAUTION: Use with care! Each call returns the same instance.
+        /// </summary>
         public Matrix TransformationMatrix { get { return _transformationMatrix; } }
 
         private float _height;
@@ -73,16 +81,17 @@ namespace Sparrow.Textures
             set { _parent.Smoothing = value; }
         }
 
-		protected SubTexture() : base()
+		protected SubTexture()
 		{
 			// for subclasses, that want to call Init() later
 		}
 
+        /// <summary>
         /// Initializes a subtexture with a region (in points) of another texture, using a frame rectangle
         /// to place the texture within an image. If `rotated` is `true`, the subtexture will show the base
-		/// region rotated by 90 degrees (CCW). If frame is null, it will use the whole texture.
+        /// region rotated by 90 degrees (CCW). If frame is null, it will use the whole texture.
+        /// </summary>
 		public SubTexture(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
-			: base()
         {
 			Init (region, texture, frame, rotated);
         }
@@ -114,8 +123,6 @@ namespace Sparrow.Textures
 
         override public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
         {
-            Vertex[] vertices = vertexData.Vertices;
-
             AdjustPositions(vertexData, startIndex, count);
             AdjustTexCoords(vertexData, startIndex, count);
         }

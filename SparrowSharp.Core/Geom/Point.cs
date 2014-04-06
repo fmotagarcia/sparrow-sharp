@@ -4,6 +4,9 @@ using SparrowSharp.Pool;
 
 namespace Sparrow.Geom
 {
+    /// <summary>
+    /// The Point class describes a two dimensional point or vector. */
+    /// </summary>
 	public class Point : PooledObject
 	{
 		private static readonly ObjectPool _pool = new ObjectPool (new CreateObject<PooledObject> (Init), 1000);
@@ -22,98 +25,92 @@ namespace Sparrow.Geom
 			return new Point ();
 		}
 
-		private float _x;
-		private float _y;
+        public float X;
 
-		public float X {
-			get { return _x; }
-			set { _x = value; }
-		}
+        public float Y;
 
-		public float Y {
-			get { return _y; }
-			set { _y = value; }
-		}
+        private Point (float x = 0.0f, float y = 0.0f)
+        {
+            X = x;
+            Y = y;
+        }
 
 		public float Length {
 			get {
-				return (float)Math.Sqrt (Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
+                return (float)Math.Sqrt (X * X + Y * Y);
 			}
-		}
-
-		public float SquaredLength {
-			get {
-				return (float)(Math.Pow (_x, 2.0f) + Math.Pow (_y, 2.0f));
-			}
+            set {
+                X = X * value;
+                Y = Y * value;
+            }
 		}
 
 		public float Angle {
 			get {
-				return (float)Math.Atan2 (_y, _x);
+				return (float)Math.Atan2 (Y, X);
 			}
 		}
 
 		public bool IsOrigin {
 			get {
-				return _x == 0.0f && _y == 0.0f;
+				return X == 0.0f && Y == 0.0f;
 			}
 		}
 
-		private Point (float x = 0.0f, float y = 0.0f)
+        public void Invert ()
 		{
-			_x = x;
-			_y = y;
+            X = -X;
+            Y = -Y;
 		}
 
-		public Point Invert ()
+        public void AddPoint (Point point)
 		{
-			return Point.Create (-_x, -_y);
+            X = X + point.X;
+            Y = Y + point.Y;
 		}
 
-		public Point AddPoint (Point point)
+        public void SubtractPoint (Point point)
 		{
-			return Point.Create (_x + point.X, _y + point.Y);
+            X = X - point.X;
+            Y = Y - point.Y;
 		}
 
-		public Point SubtractPoint (Point point)
-		{
-			return Point.Create (_x - point.X, _y - point.Y);
-		}
-
-		public Point ScaleBy (float scalar)
-		{
-			return Point.Create (_x * scalar, _y * scalar);
-		}
-
-		public Point RotateBy (float angle)
+        /// <summary>
+        /// Rotates by the specified angle in Radians
+        /// </summary>
+        public void RotateBy (float angle)
 		{
 			float sin = NumberUtil.FastSin (angle);
 			float cos = NumberUtil.FastCos (angle);
-			return Point.Create (_x * cos - _y * sin, _x * sin + _y * cos);
+            X = X * cos - Y * sin;
+            Y = X * sin + Y * cos;
 		}
 
-		public Point Normalize ()
+        public void Normalize ()
 		{
 			if (IsOrigin) {
-				// TODO: throw exception "Cannot normalize point in the origin"
+                return;
 			}
-
 			float inverseLength = 1 / Length;
-			return Point.Create (_x * inverseLength, _y * inverseLength);
-
+            X = X * inverseLength;
+            Y = Y * inverseLength;
 		}
 
 		public float Dot (Point other)
 		{
-			return _x * other.X + _y * other.Y;
+			return X * other.X + Y * other.Y;
 		}
 
 		public void CopyFromPoint (Point point)
 		{
-			_x = point.X;
-			_y = point.Y;
+			X = point.X;
+			Y = point.Y;
 		}
 
+        /// <summary>
+        /// Determines whether the specified Point's X and Y values is equal to the current Point with
+        /// with a small epsilon error margin.
+        /// </summary>
 		public bool Equals (Point other)
 		{
 			if (other == this) {
@@ -124,11 +121,11 @@ namespace Sparrow.Geom
 				return false;
 			}
 
-			return NumberUtil.Equals (_x, other.X) && NumberUtil.Equals (_y, other.Y);
+			return NumberUtil.Equals (X, other.X) && NumberUtil.Equals (Y, other.Y);
 		}
 
 		public float Distance(Point p2) {
-			return (float)Math.Sqrt ((_x - p2.X) * (_x - p2.X) + (_y - p2.Y) * (_y - p2.Y));
+			return (float)Math.Sqrt ((X - p2.X) * (X - p2.X) + (Y - p2.Y) * (Y - p2.Y));
 		}
 	}
 }

@@ -33,10 +33,12 @@ namespace Sparrow.Textures
 	public class RenderTexture : SubTexture
 	{
 		private bool _framebufferIsActive;
-		private RenderSupport _renderSupport;
+		private readonly RenderSupport _renderSupport;
 
-		/// Initializes a render texture with a certain ARGB color (0xAARRGGBB) and a scale factor.
-		/// If scale is 0 or less, it will use SparrowSharpApp.ContentScaleFactor.
+        /// <summary>
+        /// Initializes a render texture with a certain ARGB color (0xAARRGGBB) and a scale factor.
+        /// If scale is 0 or less, it will use SparrowSharpApp.ContentScaleFactor.
+        /// </summary>
 		public RenderTexture (float width, float height, uint argbFillColor = 0x0, float scale = -1.0f)
 		{
 			if (scale <= 0) 
@@ -64,7 +66,9 @@ namespace Sparrow.Textures
 			Clear(argbFillColor, ColorUtil.GetA(argbFillColor) / 255.0f);
 		}
 
-		/// Draws an object onto the texture, adhering its properties for position, scale, rotation and alpha.
+        /// <summary>
+        /// Draws an object onto the texture, adhering its properties for position, scale, rotation and alpha.
+        /// </summary>
 		public void DrawObject(DisplayObject obj) 
 		{
 			DrawBundled (delegate
@@ -75,7 +79,9 @@ namespace Sparrow.Textures
 			});
 		}
 
-		/// Clears the texture with a certain color and alpha value.
+        /// <summary>
+        /// Clears the texture with a certain color and alpha value.
+        /// </summary>
 		public void Clear(uint color, float alpha)
 		{
             DrawBundled (delegate
@@ -84,7 +90,9 @@ namespace Sparrow.Textures
             });
 		}
 
+        /// <summary>
         /// Bundles several calls to 'drawObject' together in a block. This avoids framebuffer switches.
+        /// </summary>
         public void DrawBundled(Action block)
 		{
 			if (block == null)

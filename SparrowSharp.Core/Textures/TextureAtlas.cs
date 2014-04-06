@@ -1,68 +1,77 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using Sparrow.Geom;
-using System.Text.RegularExpressions;
 
 namespace Sparrow.Textures
 {
-	/**
-	 A texture atlas is a collection of many smaller textures in one big image. The class
-	 TextureAtlas is used to access textures from such an atlas.
-	 
-	 Using a texture atlas for your textures solves two problems:
-	 
-	 - Whenever you switch between textures, the batching of image objects is disrupted.
-	 - Some OpenGL textures need to have side lengths that are powers of two. Sparrow hides this
-	   limitation from you, but you will nevertheless use more memory if you do not follow that rule.
-	 
-	 By using a texture atlas, you avoid both texture switches and the power-of-two limitation. All 
-	 textures are within one big "super-texture", and Sparrow takes care that the correct part of this 
-	 texture is displayed.
-	 
-	 There are several ways to create a texture atlas. One is to use the atlas generator script that
-	 is provided with Sparrow-objective C. Here is a sample on how to use it:
-	 
-		# creates "atlas.xml" and "atlas.png" from the	provided images 
-		./generate_atlas.rb *.png output/atlas.xml
-	 
-	 The atlas generator can be found in the 'utils' directory in the Sparrow package. A README file
-	 shows you how to install and use it. If you want to have more control over your atlas, you will
-	 find great alternative tools on the Internet, like [Texture Packer](http://www.texturepacker.com).
-	 
-	 Whatever tool you use, Sparrow expects the following file format:
-
-		<TextureAtlas imagePath='atlas.png'>
-		  <SubTexture name='texture_1' x='0'  y='0' width='50' height='50'/>
-		  <SubTexture name='texture_2' x='50' y='0' width='20' height='30'/> 
-		</TextureAtlas>
-	 
-	 If your images have transparent areas at their edges, you can make use of the 'frame' property
-	 of 'Texture'. Trim the texture by removing the transparent edges and specify the original 
-	 texture size like this:
-
-		<SubTexture name='trimmed' x='0' y='0' height='10' width='10'
-		            frameX='-10' frameY='-10' frameWidth='30' frameHeight='30'/>
-	*/
+    /// <summary>
+    /// A texture atlas is a collection of many smaller textures in one big image. The class
+    /// TextureAtlas is used to access textures from such an atlas.
+    /// 
+    /// Using a texture atlas for your textures solves two problems:
+    /// 
+    /// - Whenever you switch between textures, the batching of image objects is disrupted.
+    /// - Some OpenGL textures need to have side lengths that are powers of two. Sparrow hides this
+    /// limitation from you, but you will nevertheless use more memory if you do not follow that rule.
+    /// 
+    /// By using a texture atlas, you avoid both texture switches and the power-of-two limitation. All 
+    /// textures are within one big "super-texture", and Sparrow takes care that the correct part of this 
+    /// texture is displayed.
+    /// 
+    /// There are several ways to create a texture atlas. One is to use the atlas generator script that
+    /// is provided with Sparrow-objective C. Here is a sample on how to use it:
+    /// 
+    /// # creates "atlas.xml" and "atlas.png" from the  provided images 
+    /// ./generate_atlas.rb *.png output/atlas.xml
+    /// 
+    /// The atlas generator can be found in the 'utils' directory in the Sparrow package. A README file
+    /// shows you how to install and use it. If you want to have more control over your atlas, you will
+    /// find great alternative tools on the Internet, like Texture Packer(http://www.texturepacker.com).
+    /// 
+    /// Whatever tool you use, Sparrow expects the following file format:
+    /// 
+    /// <TextureAtlas imagePath='atlas.png'>
+    ///     <SubTexture name='texture_1' x='0'  y='0' width='50' height='50'/>
+    ///     <SubTexture name='texture_2' x='50' y='0' width='20' height='30'/> 
+    /// </TextureAtlas>
+    /// 
+    /// If your images have transparent areas at their edges, you can make use of the 'frame' property
+    /// of 'Texture'. Trim the texture by removing the transparent edges and specify the original 
+    /// texture size like this:
+    /// 
+    /// <SubTexture name='trimmed' x='0' y='0' height='10' width='10'
+    ///             frameX='-10' frameY='-10' frameWidth='30' frameHeight='30'/>
+    /// </summary>
 	public class TextureAtlas
 	{
 		private readonly Texture _atlasTexture;
 		private readonly Dictionary<string, TextureInfo> _textureInfos;
 
-		/// The number of available subtextures.
+		/// <summary>
+        /// The number of available subtextures.
+        /// </summary>
+        /// <value>The number textures.</value>
 		public int NumTextures{ get { return _textureInfos.Count; } }
 
-		/// All texture names of the atlas, sorted alphabetically.
+        /// <summary>
+        /// All texture names of the atlas, sorted alphabetically.
+        /// </summary>
 		public List<string> Names { get { return GetNamesStartingWith (null); } }
 
-		/// All textures of the atlas, sorted alphabetically.
+        /// <summary>
+        /// All textures of the atlas, sorted alphabetically.
+        /// </summary>
 		public List<Texture> Textures { get { return GetTexturesStartingWith (null); } }
 
-		/// The base texture that makes up the atlas.
+        /// <summary>
+        /// The base texture that makes up the atlas.
+        /// </summary>
 		public Texture Texture{ get { return _atlasTexture; } }
 
-		/// Initializes a texture atlas from an XML file and a custom texture.
+        /// <summary>
+        /// Initializes a texture atlas from an XML file and a custom texture.
+        /// </summary>
 		public TextureAtlas (string xml, Texture texture)
 		{
 			_textureInfos = new Dictionary<string, TextureInfo> ();
@@ -70,12 +79,16 @@ namespace Sparrow.Textures
 			ParseAtlasXml (xml);
 		}
 
-		/// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
+        /// <summary>
+        /// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
+        /// </summary>
 		public TextureAtlas (Texture texture) : this (null, texture)
 		{
 		}
 
-		/// Retrieve a subtexture by name. Returns 'null' if it is not found.
+        /// <summary>
+        /// Retrieve a subtexture by name. Returns 'null' if it is not found.
+        /// </summary>
 		public SubTexture GetTextureByName (string name)
 		{
 			TextureInfo info = _textureInfos [name];
@@ -85,20 +98,26 @@ namespace Sparrow.Textures
 			return null;
 		}
 
-		/// The region rectangle associated with a specific name.
+        /// <summary>
+        /// The region rectangle associated with a specific name.
+        /// </summary>
 		public Rectangle GetRegionByName (string name)
 		{
 			return _textureInfos [name].Region;
 		}
 
-		/// The frame rectangle of a specific region, or 'null' if that region has no frame.
+        /// <summary>
+        /// The frame rectangle of a specific region, or 'null' if that region has no frame.
+        /// </summary>
 		public Rectangle GetFrameByName (String name)
 		{
 			return _textureInfos [name].Frame;
 		}
 
-		/// Returns all textures that start with a certain string, sorted alphabetically
-		/// (especially useful for 'MovieClip').
+        /// <summary>
+        /// Returns all textures that start with a certain string, sorted alphabetically
+        /// (especially useful for 'MovieClip').
+        /// </summary>
 		public List<Texture> GetTexturesStartingWith (string prefix)
 		{
 			List<string> names = GetNamesStartingWith (prefix);
@@ -109,7 +128,9 @@ namespace Sparrow.Textures
 			return textures;
 		}
 
-		/// Returns all texture names that start with a certain string, sorted alphabetically.
+        /// <summary>
+        /// Returns all texture names that start with a certain string, sorted alphabetically.
+        /// </summary>
 		public List<string> GetNamesStartingWith (string prefix)
 		{
 			List<string> names = new List<string> ();
@@ -123,33 +144,24 @@ namespace Sparrow.Textures
 				names.AddRange (_textureInfos.Keys);
 			}
 
-			// TODO: alphanumeric sort
 			names.Sort (new AlphanumComparatorFast());
 
 			return names;
 		}
 
-		/// Creates a region for a subtexture and gives it a name.
-		public void AddRegion (Rectangle region, string name)
-		{
-			AddRegion (region, name, null, false);
-		}
-
-		/// Creates a region for a subtexture with a frame and gives it a name.
-		public void AddRegion (Rectangle region, string name, Rectangle frame)
-		{
-			AddRegion (region, name, frame, false);
-		}
-
-		/// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
-		/// the subtexture will show the region rotated by 90 degrees (CCW).
-		public void AddRegion (Rectangle region, string name, Rectangle frame, bool rotated)
+        /// <summary>
+        /// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
+        /// the subtexture will show the region rotated by 90 degrees (CCW).
+        /// </summary>
+        public void AddRegion (Rectangle region, string name, Rectangle frame = null, bool rotated = false)
 		{
 			TextureInfo info = new TextureInfo (region, frame, rotated);
 			_textureInfos [name] = info;
 		}
 
-		/// Removes a region with a certain name.
+        /// <summary>
+        /// Removes a region with a certain name.
+        /// </summary>
 		public void RemoveRegion (string name)
 		{
 			_textureInfos.Remove (name);
@@ -226,6 +238,7 @@ namespace Sparrow.Textures
 			return result;
 		}
 	}
+
 
 	public class AlphanumComparatorFast : IComparer<string>
 	{

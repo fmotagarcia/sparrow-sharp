@@ -1,10 +1,9 @@
 ﻿using System;
-using Sparrow.Textures;
-using Android.Graphics;
-using OpenTK.Graphics.ES20;
-using Android.Opengl;
-using System.Threading.Tasks;
 using System.Net.Http;
+using Android.Graphics;
+using Android.Opengl;
+using OpenTK.Graphics.ES20;
+using Sparrow.Textures;
 using Sparrow.Utils;
 
 namespace Sparrow.ResourceLoading
@@ -17,6 +16,7 @@ namespace Sparrow.ResourceLoading
 		public bool IsLoaded { get { return _isLoaded;}	}
 		public GLTexture Texture { get { return _glTexture;} }
 		public event EventHandler<GLTexture> ResourceLoaded;
+        public event EventHandler<string> LoadingError;
 
 		public TextureLoader LoadRemoteImage (string remoteURL)
 		{
@@ -37,7 +37,10 @@ namespace Sparrow.ResourceLoading
 					GenerateTexture( bitmap );
 				}
 			}
-			// TODO dispatch some error
+            else if (LoadingError != null)
+            {
+                LoadingError(this, msg.Content + msg.StatusCode.ToString());
+            }
 		}
 
 		public GLTexture LoadLocalImage (string pathToFile)
@@ -63,7 +66,7 @@ namespace Sparrow.ResourceLoading
 		}
 
 		/// <summary>
-		/// Loads an image based on resource ID, only avaiable on Andoid. 
+        /// Loads an image based on resource ID; only avaiable on Andoid. 
 		/// Note that the resource will be scaled based on screen DPI if you put it into the drawable folder.
 		/// If you want to avoid this, put it into the drawable-nodpi folder.
 		/// </summary>
@@ -75,7 +78,7 @@ namespace Sparrow.ResourceLoading
 			return _glTexture;
 		}
 
-		private void GenerateTexture(Bitmap bitmap)
+        protected void GenerateTexture(Bitmap bitmap)
 		{
 			GL.Hint (All.GenerateMipmapHint, All.Fastest);
 

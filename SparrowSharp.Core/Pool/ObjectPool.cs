@@ -5,18 +5,19 @@ namespace SparrowSharp.Pool
 {
 	public delegate T CreateObject<T>() where T : PooledObject;
 	public delegate void ReturnObject<PooledObject>(PooledObject pooledObject);
+
 	public class ObjectPool
 	{
-		private ConcurrentQueue<PooledObject> _objects;
-		private CreateObject<PooledObject> _createObject;
-		private int _initialSize;
-		private int _maxBuffer;
+		private readonly ConcurrentQueue<PooledObject> _objects;
+		private readonly CreateObject<PooledObject> _createObject;
+		private readonly int _initialSize;
+		private readonly int _maxBuffer;
 
 		public ObjectPool(CreateObject<PooledObject> createObject, int initalSize = 0, int maxBuffer = 0)
 		{
 			if (createObject == null)
 			{
-				throw new ArgumentNullException("createObject");
+                throw new ArgumentNullException("createObject");
 			}
 
 			_initialSize = initalSize;
@@ -45,7 +46,7 @@ namespace SparrowSharp.Pool
 			return item;
 		}
 
-		void PutObject(PooledObject item)
+        private void PutObject(PooledObject item)
 		{
 			if (_maxBuffer == 0 || _maxBuffer > 0 && _objects.Count < _maxBuffer)
 			{

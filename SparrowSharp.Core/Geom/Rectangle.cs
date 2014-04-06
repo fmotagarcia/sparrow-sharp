@@ -5,61 +5,45 @@ namespace Sparrow.Geom
 {
 	public class Rectangle
 	{
-		private float _x;
-		private float _y;
-		private float _width;
-		private float _height;
 
-		public float X {
-			get { return _x;}
-			set { _x = value;}
-		}
+        public float X;
 
-		public float Y {
-			get { return _y;}
-			set { _y = value;}
-		}
+        public float Y;
 
-		public float Width {
-			get { return _width;}
-			set { _width = value;}
-		}
+        public float Width;
 
-		public float Height {
-			get { return _height;}
-			set { _height = value;}
-		}
+        public float Height;
 
 		public float Top {
-			get { return _y;}
-			set { _y = value;}
+			get { return Y;}
+			set { Y = value;}
 		}
 
 		public float Bottom {
-			get { return _y + _height;}
-			set { _height = value - _y;}
+			get { return Y + Height;}
+			set { Height = value - Y;}
 		}
 
 		public float Left {
-			get { return _x;}
-			set { _x = value;}
+			get { return X;}
+			set { X = value;}
 		}
 
 		public float Right {
-			get { return _x + _width;}
-			set { _width = value - _x;}
+			get { return X + Width;}
+			set { Width = value - X;}
 		}
 
 		public Point TopLeft {
-			get { return Point.Create (_x, _y);}
+			get { return Point.Create (X, Y);}
 			set { 
-				_x = value.X;
-				_y = value.Y;
+				X = value.X;
+				Y = value.Y;
 			}
 		}
 
 		public Point BottomRight {
-			get { return Point.Create (_x + _width, _y + _height);}
+			get { return Point.Create (X + Width, Y + Height);}
 			set { 
 				Right = value.X;
 				Bottom = value.Y;
@@ -67,24 +51,24 @@ namespace Sparrow.Geom
 		}
 
 		public Point Size {
-			get { return Point.Create (_width, _height);}
+			get { return Point.Create (Width, Height);}
 			set {
-				_width = value.X;
-				_height = value.Y;
+				Width = value.X;
+				Height = value.Y;
 			}
 		}
 
 		public Rectangle (float x = 0.0f, float y = 0.0f, float width = 0.0f, float height = 0.0f)
 		{ 
-			_x = x;
-			_y = y;
-			_width = width;
-			_height = height;
+			X = x;
+			Y = y;
+			Width = width;
+			Height = height;
 		}
 
 		public bool Contains (float x, float y)
 		{
-			return x >= _x && y >= _y && x <= _x + _width && y <= _y + _height;
+			return x >= X && y >= Y && x <= X + Width && y <= Y + Height;
 		}
 
 		public bool Contains (Point point)
@@ -103,8 +87,8 @@ namespace Sparrow.Geom
 			float rWidth = rectangle.Width;
 			float rHeight = rectangle.Height;
 
-			return rX >= _x && rX + rWidth <= _x + _width &&
-				rY >= _y && rY + rHeight <= _y + _height;
+			return rX >= X && rX + rWidth <= X + Width &&
+				rY >= Y && rY + rHeight <= Y + Height;
 		}
 
 		public bool Intersects (Rectangle rectangle)
@@ -119,21 +103,24 @@ namespace Sparrow.Geom
 			float rHeight = rectangle.Height;
 
 			bool outside = 
-				(rX <= _x && rX + rWidth <= _x) || (rX >= _x + _width && rX + rWidth >= _x + _width) ||
-				(rY <= _y && rY + rHeight <= _y) || (rY >= _y + _height && rY + rHeight >= _y + _height);
+				(rX <= X && rX + rWidth <= X) || (rX >= X + Width && rX + rWidth >= X + Width) ||
+				(rY <= Y && rY + rHeight <= Y) || (rY >= Y + Height && rY + rHeight >= Y + Height);
 			return !outside;
 		}
 
+        /// <summary>
+        /// Returns the intersecting rectangle
+        /// </summary>
 		public Rectangle Intersection (Rectangle rectangle)
 		{
 			if (rectangle == null) {
 				return null;
 			}
 
-			float left = Math.Max (_x, rectangle.X);
-			float right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
-			float top = Math.Max (_y, rectangle.Y);
-			float bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
+			float left = Math.Max (X, rectangle.X);
+			float right = Math.Min (X + Width, rectangle.X + rectangle.Width);
+			float top = Math.Max (Y, rectangle.Y);
+			float bottom = Math.Min (Y + Height, rectangle.Y + rectangle.Height);
 
 			if (left > right || top > bottom) {
 				return new Rectangle ();
@@ -142,60 +129,69 @@ namespace Sparrow.Geom
 			}
 		}
 
+        /// <summary>
+        /// Returns a rectangle that encompasses both rectangles
+        /// </summary>
 		public Rectangle Union (Rectangle rectangle)
 		{
 			if (rectangle == null) {
 				return null;
 			}
 
-			float left = Math.Max (_x, rectangle.X);
-			float right = Math.Min (_x + _width, rectangle.X + rectangle.Width);
-			float top = Math.Max (_y, rectangle.Y);
-			float bottom = Math.Min (_y + _height, rectangle.Y + rectangle.Height);
+			float left = Math.Max (X, rectangle.X);
+			float right = Math.Min (X + Width, rectangle.X + rectangle.Width);
+			float top = Math.Max (Y, rectangle.Y);
+			float bottom = Math.Min (Y + Height, rectangle.Y + rectangle.Height);
 
 			return new Rectangle (left, top, right - left, bottom - top);
 		}
 
 		public void Inflate (float dx, float dy)
 		{
-			_x -= dx;
-			_y -= dy;
-			_width += 2.0f * dx;
-			_height += 2.0f * dy;
+			X -= dx;
+			Y -= dy;
+			Width += 2.0f * dx;
+			Height += 2.0f * dy;
 		}
 
 		public void Empty ()
 		{
-			_x = _y = _width = _height = 0.0f;
+			X = Y = Width = Height = 0.0f;
 		}
 
 		public void CopyFromRectangle (Rectangle rectangle)
 		{
-			_x = rectangle.X;
-			_y = rectangle.Y;
-			_width = rectangle.Width;
-			_height = rectangle.Height;
+			X = rectangle.X;
+			Y = rectangle.Y;
+			Width = rectangle.Width;
+			Height = rectangle.Height;
 		}
 
+        /// <summary>
+        /// Inverts X or Y if they are negative
+        /// </summary>
 		public void Normalize ()
 		{
-			if (_width < 0.0f) {
-				_width = -_width;
-				_x -= _width;
+			if (Width < 0.0f) {
+				Width = -Width;
+				X -= Width;
 			}
 
-			if (_height < 0.0f) {
-				_height = -_height;
-				_y -= _height;
+			if (Height < 0.0f) {
+				Height = -Height;
+				Y -= Height;
 			}
 		}
 
 		public bool IsEmpty ()
 		{
-			return _width == 0.0f || _height == 0.0f;
+			return Width == 0.0f || Height == 0.0f;
 		}
 
-		public bool isEqual (Rectangle other)
+        /// <summary>
+        /// Determines whether this instance is equal the specified other with a small Epsilon error margin.
+        /// </summary>
+		public bool IsEqual (Rectangle other)
 		{
 			if (other == this) {
 				return true;
@@ -204,15 +200,15 @@ namespace Sparrow.Geom
 				return false;
 			}
 
-			return NumberUtil.Equals (_x, other.X) &&
-				NumberUtil.Equals (_y, other.Y) &&
-				NumberUtil.Equals (_width, other.Width) &&
-				NumberUtil.Equals (_height, other.Height);
+			return NumberUtil.Equals (X, other.X) &&
+				NumberUtil.Equals (Y, other.Y) &&
+				NumberUtil.Equals (Width, other.Width) &&
+				NumberUtil.Equals (Height, other.Height);
 		}
 
 		public Rectangle Copy() 
 		{
-			return new Rectangle (_x, _y, _width, _height);
+			return new Rectangle (X, Y, Width, Height);
 		}
 	}
 }

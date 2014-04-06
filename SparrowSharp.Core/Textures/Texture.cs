@@ -1,7 +1,5 @@
-using System;
 using Sparrow.Geom;
 using Sparrow.Utils;
-using Sparrow.Display;
 
 namespace Sparrow.Textures
 {
@@ -55,79 +53,30 @@ namespace Sparrow.Textures
             I8
         }
 
-        public Texture()
-        {
-        }
-
-        public Texture(string path) : this(path, false)
-        {
-        }
-
-        public Texture(string path, bool generateMipmaps)
-        {
-            // TODO
-//            if (cachingEnabled)
-//            {
-//                SPTexture *cachedTexture = [textureCache textureForKey:path];
-//                if (cachedTexture)
-//                {
-//                    [self release]; // return the cached texture
-//                    return [cachedTexture retain];
-//                }
-//            }
-//
-//            NSString *fullPath = [SPUtils absolutePathToFile:path];
-//            if (!fullPath)
-//                [NSException raise:SPExceptionFileNotFound format:@"File '%@' not found", path];
-//
-//            if ([SPTexture isPVRFile:fullPath])
-//            {
-//                BOOL isCompressed = [SPTexture isCompressedFile:fullPath];
-//                float scale = [fullPath contentScaleFactor];
-//
-//                NSData *rawData = [[NSData alloc] initWithContentsOfFile:fullPath];
-//                SPPVRData *pvrData = [[SPPVRData alloc] initWithData:rawData compressed:isCompressed];
-//
-//                [self release]; // we'll return a subclass!
-//                self = [[SPGLTexture alloc] initWithPVRData:pvrData scale:scale];
-//
-//                [rawData release];
-//                [pvrData release];
-//            }
-//            else
-//            {
-//                // load image via this crazy workaround to be sure that path is not extended with scale
-//                NSData *data = [[NSData alloc] initWithContentsOfFile:fullPath];
-//                UIImage *image1 = [[UIImage alloc] initWithData:data];
-//                UIImage *image2 = [[UIImage alloc] initWithCGImage:image1.CGImage
-//                    scale:[fullPath contentScaleFactor] orientation:UIImageOrientationUp];
-//
-//                self = [self initWithContentsOfImage:image2 generateMipmaps:mipmaps];
-//
-//                [image2 release];
-//                [image1 release];
-//                [data release];
-//            }
-//
-//            if (cachingEnabled)
-//                [textureCache setTexture:self forKey:path];
-//
-//            return self;
-        }
-
+        /// <summary>
+        /// Converts texture coordinates and vertex positions of raw vertex data into the format
+        /// required for rendering.
+        /// </summary>
         virtual public void AdjustVertexData(VertexData vertexData, uint startIndex, uint count)
         {
-			// override in subclasses if needed
         }
 
+        /// <summary>
+        /// Converts texture coordinates stored at the given memory region into the format required for
+        /// rendering. While the texture coordinates of an image always use the range [0, 1], the actual
+        /// coordinates could be different: you might be working with a SubTexture. This method adjusts
+        /// the coordinates accordingly.
+        /// </summary>
         virtual public void AdjustTexCoords(VertexData vertexData, uint startIndex, uint count)
         {
-			// override in subclasses if needed
         }
 
+        /// <summary>
+        /// Moves the position coordinates stored at the given memory region into the format required for
+        /// rendering. This happens for SubTextures that contain a 'frame'.
+        /// </summary>
         virtual public void AdjustPositions(VertexData vertexData, uint startIndex, uint count)
         {
-			// override in subclasses if needed
         }
     }
 }

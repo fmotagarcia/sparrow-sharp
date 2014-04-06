@@ -3,6 +3,10 @@ using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Textures
 {
+    /// <summary>
+    /// The GLTexture class is a concrete implementation of the abstract class Texture,
+    /// containing a standard 2D OpenGL texture. 
+    /// </summary>
 	public class GLTexture : Texture
 	{
 
@@ -67,7 +71,9 @@ namespace Sparrow.Textures
 			}
 		}
 
-		/// Initializes a texture with the given properties. Width and height are expected pixel dimensions.
+        /// <summary>
+        /// Initializes a texture with the given properties. Width and height are expected pixels.
+        /// </summary>
 		public GLTexture (uint name, float width, float height, bool hasMipMaps, float scale, bool premultipliedAlpha)
 		{
 			Init (name, width, height, hasMipMaps, scale, premultipliedAlpha);
@@ -90,8 +96,10 @@ namespace Sparrow.Textures
 			Smoothing = TextureSmoothing.Bilinear;
 		}
 
-		/// Initializes an uncompressed texture with with raw pixel data and a set of properties.
-		/// Width and Height are expected pixel dimensions.
+        /// <summary>
+        /// Initializes an uncompressed texture with with raw pixel data and a set of properties.
+        /// Width and Height are expected pixel dimensions.
+        /// </summary>
 		public GLTexture (IntPtr imgData, TextureProperties properties)
 		{
 			uint glTexName;

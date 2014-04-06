@@ -1,5 +1,4 @@
-﻿using System;
-using OpenTK.Graphics.ES20;
+﻿using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Textures
 {
@@ -18,7 +17,7 @@ namespace Sparrow.Textures
 		public static readonly TextureFormat AI88 = new TextureFormat(All.LuminanceAlpha, 16, false, All.UnsignedByte);
 		public static readonly TextureFormat I8 = new TextureFormat(All.Luminance, 8, false, All.UnsignedByte);
 
-		private All _format;
+		private readonly All _format;
 
 		public All Format {
 			get {
@@ -26,7 +25,7 @@ namespace Sparrow.Textures
 			}
 		}
 
-		private int _bitsPerPixel;
+		private readonly int _bitsPerPixel;
 
 		public int BitsPerPixel {
 			get {
@@ -34,7 +33,7 @@ namespace Sparrow.Textures
 			}
 		}
 
-		private bool _compressed;
+		private readonly bool _compressed;
 
 		public bool Compressed {
 			get {
@@ -42,7 +41,7 @@ namespace Sparrow.Textures
 			}
 		}
 
-		private All _texType;
+		private readonly All _texType;
 
 		public All TexType {
 			get {

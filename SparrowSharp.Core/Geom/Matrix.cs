@@ -1,10 +1,20 @@
 using System;
-using Sparrow.Utils;
 using OpenTK;
+using Sparrow.Utils;
 using SparrowSharp.Pool;
 
 namespace Sparrow.Geom
 {
+    /// <summary>
+    /// The Matrix class describes an affine, 2D transformation Matrix. It provides methods to
+    /// manipulate the matrix in convenient ways, and can be used to transform points.
+    /// 
+    /// The matrix has the following form:
+    /// 
+    /// |a c tx|
+    /// |b d ty|
+    /// |0 0  1| 
+    /// </summary>
 	public class Matrix : PooledObject
 	{
 		private static readonly ObjectPool _pool = new ObjectPool (new CreateObject<PooledObject> (Init), 1000);
@@ -27,12 +37,6 @@ namespace Sparrow.Geom
 			return new Matrix ();
 		}
 
-		private Matrix4 _matrix4 = new Matrix4 () {
-			Row0 = new OpenTK.Vector4 (1, 0, 0, 0),
-			Row1 = new OpenTK.Vector4 (0, 1, 0, 0),
-			Row2 = new OpenTK.Vector4 (0, 0, 1, 0),
-			Row3 = new OpenTK.Vector4 (0, 0, 0, 1),
-		};
 		public float A;
 		public float B;
 		public float C;
@@ -135,13 +139,16 @@ namespace Sparrow.Geom
 			}
 		}
 
-		public void Rotate (float angle)
+        /// <summary>
+        /// Applies a rotation on the matrix (angle in radians).
+        /// </summary>
+		public void Rotate (float angleInRadians)
 		{
-			if (angle == 0.0f) {
+			if (angleInRadians == 0.0f) {
 				return;
 			}
-			float sin = NumberUtil.FastSin(angle);
-			float cos = NumberUtil.FastCos(angle);
+			float sin = NumberUtil.FastSin(angleInRadians);
+			float cos = NumberUtil.FastCos(angleInRadians);
 
 			float a = A * cos - B * sin;
 			float b = A * sin + B * cos;
@@ -158,6 +165,14 @@ namespace Sparrow.Geom
 			Ty = ty;
 		}
 
+        /// <summary>
+        /// Appends a skew transformation to a matrix (angles in radians).
+        /// The skew matrix has the following form:
+        ///
+        ///     | cos(skewY)  -sin(skewX)  0 |
+        ///     | sin(skewY)   cos(skewX)  0 |
+        ///     |     0            0       1 |
+        /// </summary>
 		public void Skew (float sx, float sy)
 		{
 			// TODO: optimize sin / cos
@@ -181,6 +196,9 @@ namespace Sparrow.Geom
 			Ty = ty;
 		}
 
+        /// <summary>
+        /// Converts the matrix to an Identity matrix
+        /// </summary>
 		public void Identity ()
 		{
 			A = 1.0f;
@@ -191,6 +209,9 @@ namespace Sparrow.Geom
 			Ty = 0.0f;
 		}
 
+        /// <summary>
+        /// Returns a point that is transformed by this matrix
+        /// </summary>
 		public Point TransformPoint (Point point)
 		{
 			return Point.Create (A * point.X + C * point.Y + Tx, B * point.X + D * point.Y + Ty);
@@ -246,30 +267,32 @@ namespace Sparrow.Geom
 			}
 		}
 
+        /// <summary>
+        /// Creates and returns an OpenGL Matrix4d object based on this Matrix
+        /// </summary>
 		public Matrix4d ConvertToMatrix4d ()
 		{
-			Matrix4d matrix = new Matrix4d ();
-
-			matrix.M11 = A;
-			matrix.M12 = B;
-			matrix.M21 = C;
-			matrix.M22 = D;
-			matrix.M41 = Tx;
-			matrix.M42 = Ty;
-
+            Matrix4d matrix = new Matrix4d (
+                A,  B,  0,  0,
+                C,  D,  0,  0,
+                0,  0,  1,  0,
+                Tx, Ty, 0,  1
+            ); 
 			return matrix;
 		}
 
+        /// <summary>
+        /// Creates and returns an OpenGL Matrix4 object based on this Matrix
+        /// </summary>
 		public Matrix4 ConvertToMatrix4 ()
 		{
-			_matrix4.M11 = A;
-			_matrix4.M12 = B;
-			_matrix4.M21 = C;
-			_matrix4.M22 = D;
-			_matrix4.M41 = Tx;
-			_matrix4.M42 = Ty;
-
-			return _matrix4;
+            Matrix4 matrix = new Matrix4 (
+                A,  B,  0,  0,
+                C,  D,  0,  0,
+                0,  0,  1,  0,
+                Tx, Ty, 0,  1
+            ); 
+            return matrix;
 		}
 	}
 }
