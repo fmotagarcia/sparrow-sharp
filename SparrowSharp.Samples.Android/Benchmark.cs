@@ -11,6 +11,7 @@ using Android.Widget;
 using SparrowSharp.Display;
 using Sparrow.ResourceLoading;
 using Sparrow.Core;
+using SparrowSharp.Filters;
 
 namespace Sparrow.Samples.Android
 {
@@ -26,17 +27,18 @@ namespace Sparrow.Samples.Android
 
         public Benchmark()
         {
-			GLTexture star = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
-			GLTexture bird = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
-			GLTexture bigstar = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.bigstar);
-			textures = new Texture[] { bird, star, bigstar };
+            GLTexture star = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
+            GLTexture bird = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
+            GLTexture bigstar = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.bigstar);
+            textures = new Texture[] { bird, bigstar, star };
 
-			// the container will hold all test objects
-			_container = new Sprite();
-			AddChild(_container);
 
-			EnterFrame += EnterFrameHandler;
-			AddedToStage += AddedToStageHandler;
+            // the container will hold all test objects
+            _container = new Sprite();
+            AddChild(_container);
+
+            EnterFrame += EnterFrameHandler;
+            AddedToStage += AddedToStageHandler;
         }
 
         private void AddTestObjects(int numObjects)
@@ -46,9 +48,9 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-				Image egg = new Image(textures[2]);
+                Image egg = new Image(textures[1]);
                 //MovieClip egg = new MovieClip (textures, 3);
-                //SP.DefaultJuggler.Add (egg);
+                //SparrowSharpApp.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
                 egg.Y = r.Next(border, (int)Stage.Height - border);
                 egg.Rotation = (float)(r.Next(0, 100) / 100.0f * Math.PI);
@@ -69,19 +71,32 @@ namespace Sparrow.Samples.Android
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
+            /*
+			RenderTexture tex = new RenderTexture (400, 300, 0xf1ff00ff);
+			tex.DrawBundled(delegate
+				{
+					for (int i=0; i<12; ++i)
+					{
+						Image img = new Image(textures[i%3]);
+						//img.Rotation = (2 * (float)Math.PI / 12) * i;
+						img.X = i * 30;
+						tex.DrawObject(img);            
+					}             
+				});
+			AddChild (new Image(tex));*/
             _started = true;
             _waitFrames = 3;
-			AddTestObjects(50);
+            AddTestObjects(1);
         }
 
-        private void EnterFrameHandler(DisplayObject target, DisplayObject currentTarget, float passedTime)
+        private void EnterFrameHandler(DisplayObject target, float passedTime)
         {
             if (!_started)
                 return;
 
             _elapsed += passedTime / 1000;
             ++_frameCount;
-			/*
+
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
@@ -107,12 +122,12 @@ namespace Sparrow.Samples.Android
 
                 _elapsed = _frameCount = 0;
             }
-            */
+
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
                 child.Rotation += 0.05f;    
-            }
+            } 
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Sparrow.Display
 
         public delegate void EventHandler(DisplayObject target,DisplayObject currentTarget);
 
-        public delegate void EnterFrameEventHandler(DisplayObject target,DisplayObject currentTarget,float passedTime);
+        public delegate void EnterFrameEventHandler(DisplayObject target,float passedTime);
 
         public delegate void TouchHandler(TouchEvent touch);
 
@@ -734,11 +734,35 @@ namespace Sparrow.Display
             }
         }
 
-        internal virtual void InvokeAddedToStage(DisplayObject target, DisplayObject currentTarget)
+        internal void BroadcastAddedToStageEvent(DisplayObjectContainer currentTarget)
         {
             if (AddedToStage != null)
             {
-                AddedToStage(target, currentTarget);
+                AddedToStage(this, currentTarget);
+            }
+            var displayObjectContainer = this as DisplayObjectContainer;
+            if (displayObjectContainer != null)
+            {
+                foreach (var child in displayObjectContainer.Children)
+                {
+                    child.BroadcastAddedToStageEvent(currentTarget);
+                }
+            }
+        }
+
+        internal void BroadcastRemovedFromStageEvent(DisplayObjectContainer currentTarget)
+        {
+            if (RemovedFromStage != null)
+            {
+                RemovedFromStage(this, currentTarget);
+            }
+            var displayObjectContainer = this as DisplayObjectContainer;
+            if (displayObjectContainer != null)
+            {
+                foreach (var child in displayObjectContainer.Children)
+                {
+                    child.BroadcastRemovedFromStageEvent(currentTarget);
+                }
             }
         }
 
@@ -749,20 +773,20 @@ namespace Sparrow.Display
                 Removed(this, this);
             }
         }
-
-        internal virtual void InvokeRemovedFromStage()
-        {
-            if (RemovedFromStage != null)
-            {
-                RemovedFromStage(this, this);
-            }
-        }
-
-        internal virtual void InvokeEnterFrame(DisplayObject target, DisplayObject currentTarget, float passedTime)
+        // TODO this is optmized in Sparrow-s; it maintains an array of things on the Stage
+        internal void BroadcastEnterFrameEvent(float passedTime)
         {
             if (EnterFrame != null)
             {
-                EnterFrame(target, currentTarget, passedTime);
+                EnterFrame(this, passedTime);
+            }
+            var displayObjectContainer = this as DisplayObjectContainer;
+            if (displayObjectContainer != null)
+            {
+                foreach (var child in displayObjectContainer.Children)
+                {
+                    child.BroadcastEnterFrameEvent(passedTime);
+                }
             }
         }
 

@@ -61,6 +61,15 @@ namespace Sparrow.Display
         private readonly List<DisplayObject> _children = new List<DisplayObject>();
 
         /// <summary>
+        /// Returns the children of this container 
+        /// </summary>
+        /// <value>The children.</value>
+        public IReadOnlyList<DisplayObject> Children
+        {
+            get { return _children; }
+        }
+
+        /// <summary>
         ///  Adds a child to the container. It will be at the topmost position.
         /// </summary>
         public void AddChild(DisplayObject child)
@@ -79,52 +88,29 @@ namespace Sparrow.Display
                 _children.Insert(index, child);
                 child.Parent = this;
 
-                DispatchAddedEventWithBubbling();
+                child.InvokeAdded(child, this);
                 if (Stage != null)
                 {
-                    BroadcastAddedToStageEvent();
+                    child.BroadcastAddedToStageEvent(this);
                 }
             }
             else
+            {
                 throw new IndexOutOfRangeException("Invalid child index"); 
-        }
-
-        protected void DispatchAddedEventWithBubbling()
-        {
-            DisplayObject node = this;
-            while (node != null)
-            {
-                node.InvokeAdded(this, node);
-                node = node.Parent;
-            }
-        }
-
-        protected void BroadcastAddedToStageEvent()
-        {
-            foreach (var child in _children)
-            {
-                child.InvokeAddedToStage(this, child);
-            }
-        }
-
-        protected void BroadcastEnterFrameEvent(float passedTime)
-        {
-            InvokeEnterFrame(this, this, passedTime);
-            foreach (var child in _children)
-            {
-                child.InvokeEnterFrame(this, child, passedTime);
             }
         }
 
         /// <summary>
-        /// Determines if a certain object is a child of the container (recursively).
+        /// Determines if a certain object is a child of this container (recursively).
         /// </summary>
         public bool ContainsChild(DisplayObject child)
         {
             while (child != null)
             {
                 if (child == this)
+                {
                     return true;
+                }
                 child = child.Parent;
             }
             return false;
@@ -171,7 +157,7 @@ namespace Sparrow.Display
 
         /// <summary>
         /// Moves a child to a certain index. Children at and after the replaced position move up.
-        /// @throws ArgumentException if the child is not found
+        /// throws ArgumentException if the child is not found
         /// </summary>
         public void SetChildIndex(DisplayObject child, int index)
         {
@@ -207,7 +193,7 @@ namespace Sparrow.Display
                 child.InvokeRemoved();
                 if (Stage != null)
                 {
-                    child.InvokeRemovedFromStage();
+                    BroadcastRemovedFromStageEvent(this);
                 }
                 child.Parent = null;
                 int newIndex = _children.IndexOf(child); // index might have changed in event handler

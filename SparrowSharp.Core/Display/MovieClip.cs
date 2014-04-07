@@ -23,6 +23,14 @@ namespace SparrowSharp.Display
     /// </summary>
     public class MovieClip : Image, IAnimatable
     {
+        #region Events
+
+        public delegate void EventHandler(DisplayObject target);
+
+        public event EventHandler Completed;
+
+        #endregion
+
         private readonly List<Texture> _textures;
         //private readonly List<> _sounds;
         private readonly List<float> _durations;
@@ -220,7 +228,9 @@ namespace SparrowSharp.Display
                 _defaultFrameDuration = newFrameDuration;
 
                 for (int i = 0; i < NumFrames; ++i)
+                {
                     SetDuration(_durations[i] * acceleration, i);
+                }
             }
         }
 
@@ -302,7 +312,10 @@ namespace SparrowSharp.Display
             }
             if (previousTime < _totalTime && _currentTime == _totalTime)
             {
-                // TODO [self dispatchEventWithType:SPEventTypeCompleted];
+                if (Completed != null)
+                {
+                    Completed(this);
+                }
             }     
             AdvanceTime(carryOverTime);
         }
