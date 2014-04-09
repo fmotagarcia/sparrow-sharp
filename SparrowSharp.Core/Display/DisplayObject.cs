@@ -11,51 +11,49 @@ namespace Sparrow.Display
 {
     /// <summary>
     /// The DisplayObject class is the base class for all objects that are rendered on the screen.
- 
+    /// 
     /// In Sparrow, all displayable objects are organized in a display tree. Only objects that are part of
     /// the display tree will be displayed (rendered). 
- 
+    /// 
     /// The display tree consists of leaf nodes (Image, Quad) that will be rendered directly to
     /// the screen, and of container nodes (subclasses of DisplayObjectContainer, like Sprite).
     /// A container is simply a display object that has child nodes - which can, again, be either leaf
     /// nodes or other containers. 
- 
+    /// 
     /// A display object has properties that define its position in relation to its parent
-    /// ('X', 'Y'), as well as its rotation, skewing and scaling factors ('scaleX', 'scaleY'). Use the 
+    /// ('X', 'Y'), as well as its rotation, skewing and scaling factors. Use the 
     /// 'Alpha' and 'Visible' properties to make an object translucent or invisible.
- 
+    /// 
     /// Every display object may be the target of touch events. If you don't want an object to be
     /// touchable, you can disable the `Touchable` property. When it's disabled, neither the object
     /// nor its children will receive any more touch events.
- 
+    /// 
     /// **Points vs. Pixels**
- 
+    /// 
     /// All sizes and distances are measured in points. What this means in pixels depends on the 
     /// contentScaleFactor of the device.
- 
+    /// 
     /// **Transforming coordinates**
- 
+    /// 
     /// Within the display tree, each object has its own local coordinate system. If you rotate a container,
     /// you rotate that coordinate system - and thus all the children of the container.
- 
+    /// 
     /// Sometimes you need to know where a certain point lies relative to another coordinate system. 
-    /// That's the purpose of the method 'TransformationMatrixToSpace:'. It will create a matrix that
+    /// That's the purpose of the method 'TransformationMatrixToSpace'. It will create a matrix that
     /// represents the transformation of a point in one coordinate system to another. 
- 
+    /// 
     /// **Subclassing DisplayObject**
- 
+    /// 
     /// As DisplayObject is an abstract class, you can't instantiate it directly, but have to use one of 
-    /// its subclasses instead. There are already a lot of them available, and most of the time they will
-    /// suffice. 
- 
+    /// its subclasses instead.
     /// However, you can create custom display objects as well. That's especially useful when you want to
     /// create an object with a custom render function.
- 
+    /// 
     /// You will need to implement the following methods when you subclass DisplayObject:
- 
+    /// 
     /// - void Render ( RenderSupport support);
     /// - Rectangle BoundsInSpace ( DisplayObject targetSpace);
-
+    /// 
     /// Have a look at Quad for a sample implementation of those methods.  
     /// </summary>
     public abstract class DisplayObject
@@ -318,7 +316,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The topmost object in the display tree the object is part of.
         /// </summary>
-        public DisplayObject Base
+        public DisplayObject Root
         {
             get
             {
@@ -332,40 +330,11 @@ namespace Sparrow.Display
         }
 
         /// <summary>
-        /// The root object the display object is connected to (i.e. an instance of the class
-        /// that was passed to 'SparrowSharpApp.Start()'), or null if the object is not connected
-        /// to it.
-        /// </summary>
-        public DisplayObject Root
-        {
-            get
-            {
-                DisplayObject currentObject = this;
-                while (currentObject.Parent != null)
-                {
-                    if (currentObject.Parent is Stage)
-                    {
-                        return currentObject;
-                    }
-                    currentObject = currentObject.Parent;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
         /// The Stage the display object is connected to, or null if it is not connected to a Stage.
         /// </summary>
         public Stage Stage
         {
-            get
-            {
-                if (Base is Stage)
-                {
-                    return (Stage)Base;
-                }
-                return null;
-            }
+            get{ return Root as Stage; }
         }
 
         /// <summary>
@@ -603,7 +572,7 @@ namespace Sparrow.Display
                 transformationMatrix.CopyFromMatrix(TransformationMatrix);
                 return transformationMatrix;
             }
-            else if (targetSpace == null || targetSpace == Base)
+            else if (targetSpace == null || targetSpace == Root)
             {
                 // targetSpace 'null' represents the target coordinate of the base object.
                 // -> move up from this to base
@@ -694,6 +663,7 @@ namespace Sparrow.Display
         /// </summary>
         virtual public DisplayObject HitTestPoint(Point localPoint)
         {
+            // TODO its kinda stupid that this functions fails if the object is not touchable
             // invisible or untouchable objects cause the test to fail
             if (!Visible || !Touchable)
             {
@@ -713,7 +683,7 @@ namespace Sparrow.Display
         /// </summary>
         public Point LocalToGlobal(Point localPoint)
         {
-            Matrix matrix = TransformationMatrixToSpace(Base);
+            Matrix matrix = TransformationMatrixToSpace(Root);
             return matrix.TransformPoint(localPoint);
         }
 
@@ -722,7 +692,7 @@ namespace Sparrow.Display
         /// </summary>
         public Point GlobalToLocal(Point globalPoint)
         {
-            Matrix matrix = TransformationMatrixToSpace(Base);
+            Matrix matrix = TransformationMatrixToSpace(Root);
             return matrix.TransformPoint(globalPoint);
         }
 

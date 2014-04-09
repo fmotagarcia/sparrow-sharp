@@ -25,8 +25,6 @@ namespace SparrowSharp.Display
     {
         #region Events
 
-        public delegate void EventHandler(DisplayObject target);
-
         public event EventHandler Completed;
 
         #endregion
@@ -314,7 +312,7 @@ namespace SparrowSharp.Display
             {
                 if (Completed != null)
                 {
-                    Completed(this);
+                    Completed(this, this);
                 }
             }     
             AdvanceTime(carryOverTime);

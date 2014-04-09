@@ -6,9 +6,9 @@ namespace Sparrow.Display
 {
     /// <summary>
     /// A Sprite is the most lightweight, non-abstract container class. 
-
+    /// 
     /// Use it as a simple means of grouping objects together in one coordinate system.
-
+    /// 
     /// Sprite sprite = new Sprite();
     /// // create children
     /// Image venus = TextureLoader.LoadLocalImage("../venus.png");
@@ -23,11 +23,11 @@ namespace Sparrow.Display
     /// float totalWidth = sprite.Width;
     /// // rotate the whole group
     /// sprite.Rotation = Math.PI;
-
+    /// 
     /// **Flattened Sprites**
-
+    /// 
     /// The 'Flatten' method allows you to optimize the rendering of static parts of your display list.
-
+    /// 
     /// It analyzes the tree of children attached to the sprite and optimizes the rendering calls
     /// in a way that makes rendering extremely fast. The speed-up comes at a price, though: you will
     /// no longer see any changes in the properties of the children (position, rotation, alpha, etc).
@@ -54,7 +54,7 @@ namespace Sparrow.Display
         public void Flatten()
         {
             _flattenRequested = true;
-            //[self broadcastEventWithType:SPEventTypeFlatten];
+            // TODO [self broadcastEventWithType:SPEventTypeFlatten];
         }
 
         /// <summary>

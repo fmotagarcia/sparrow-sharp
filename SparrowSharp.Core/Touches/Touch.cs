@@ -29,37 +29,37 @@ namespace Sparrow.Touches
     /// For this reason, there are methods that convert the current and previous touches into the local
     /// coordinate system of any object.
     /// </summary>
-	public class Touch
-	{
+    public class Touch
+    {
         /// <summary>
         /// Converts the current location of a touch to the local coordinate system of a display object.
         /// </summary>
-		public Point LocationInSpace(DisplayObject space)
-		{
-			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
-			return transformationMatrix.TransformPoint (GlobalX, GlobalY);
-		}
+        public Point LocationInSpace(DisplayObject space)
+        {
+            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            return transformationMatrix.TransformPoint(GlobalX, GlobalY);
+        }
 
         /// <summary>
         /// Converts the previous location of a touch to the local coordinate system of a display object.
         /// </summary>
-		public Point PreviousLocationInSpace(DisplayObject space)
-		{
-			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
-			return transformationMatrix.TransformPoint (PreviousGlobalX, PreviousGlobalY);
-		}
+        public Point PreviousLocationInSpace(DisplayObject space)
+        {
+            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            return transformationMatrix.TransformPoint(PreviousGlobalX, PreviousGlobalY);
+        }
 
         /// <summary>
         /// Returns the movement of the touch between the current and previous location.
         /// </summary>
-		public Point MovementInSpace(DisplayObject space)
-		{
-			Matrix transformationMatrix = Target.Root.TransformationMatrixToSpace (space);
-			Point curLoc = transformationMatrix.TransformPoint (GlobalX, GlobalY);
-			Point preLoc = transformationMatrix.TransformPoint (PreviousGlobalX, PreviousGlobalY);
-            curLoc.SubtractPoint (preLoc);
+        public Point MovementInSpace(DisplayObject space)
+        {
+            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            Point curLoc = transformationMatrix.TransformPoint(GlobalX, GlobalY);
+            Point preLoc = transformationMatrix.TransformPoint(PreviousGlobalX, PreviousGlobalY);
+            curLoc.SubtractPoint(preLoc);
             return curLoc;
-		}
+        }
 
         /// <summary>
         /// The ID of this touch
@@ -97,7 +97,6 @@ namespace Sparrow.Touches
             internal set;
         }
 
-
         /// <summary>
         /// The previous x-position of the touch in screen coordinates
         /// </summary>
@@ -116,14 +115,14 @@ namespace Sparrow.Touches
             internal set;
         }
 
-		/// The starting x-position of the touch in screen coordinates
+        /// The starting x-position of the touch in screen coordinates
         public float InitialGlobalX
         {
             get;
             internal set;
         }
 
-		/// The starting y-position of the touch in screen coordinates
+        /// The starting y-position of the touch in screen coordinates
         public float InitialGlobalY
         {
             get;
@@ -157,6 +156,6 @@ namespace Sparrow.Touches
             get;
             internal set;
         }
-	}
+    }
 }
 

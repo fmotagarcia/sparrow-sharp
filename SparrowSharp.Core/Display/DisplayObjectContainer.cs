@@ -1,47 +1,45 @@
-using Sparrow.Core;
-using Sparrow.Geom;
 using System;
 using System.Collections.Generic;
+using Sparrow.Core;
+using Sparrow.Geom;
 
 namespace Sparrow.Display
 {
     /// <summary>
     /// A DisplayObjectContainer represents a collection of display objects.
-
+    /// 
     /// It is the base class of all display objects that act as a container for other objects. By 
     /// maintaining an ordered list of children, it defines the back-to-front positioning of the children
     /// within the display tree.
-
+    /// 
     /// A container does not have size in itself. The width and height properties represent the extents
     /// of its children. Changing those properties will scale all children accordingly.
-
+    /// 
     /// As this is an abstract class, you can't instantiate it directly, but have to 
     /// use a subclass instead. The most lightweight container class is Sprite.
-
+    /// 
     /// **Adding and removing children**
-
+    /// 
     /// The class defines methods that allow you to add or remove children. When you add a child, it will
     /// be added at the foremost position, possibly occluding a child that was added before. You can access
     /// the children via an index. The first child will have index 0, the second child index 1, etc. 
-
-    /// Adding and removing objects from a container triggers non-bubbling events.
-
-    /// - 'Added': the object was added to a parent.
-    /// - 'AddedToStage': the object was added to a parent that is connected to the stage,
-    ///    thus becoming visible now.
-    /// - 'Removed': the object was removed from a parent.
-    /// - 'RemovedFromStage': the object was removed from a parent that is connected to 
-    /// the stage, thus becoming invisible now.
-
-    /// Especially the ADDED_TO_STAGE event is very helpful, as it allows you to automatically execute
+    /// 
+    /// Adding and removing objects from a container triggers events.
+    /// 
+    /// - 'Added': the object was added to a DisplayObjectContainer.
+    /// - 'AddedToStage': the object was added to a DisplayObjectContainer that is connected to the stage.
+    /// - 'Removed': the object was removed from a DisplayObjectContainer.
+    /// - 'RemovedFromStage': the object was removed from a DisplayObjectContainer that is connected to the stage.
+    /// 
+    /// Especially the AddedToStage event is very helpful, as it allows you to automatically execute
     /// some logic (e.g. start an animation) when an object is rendered the first time.
-
+    /// 
     /// **Sorting children**
-
+    /// 
     /// The 'sortChildren' method allows you to sort the children of a container by a custom criteria. 
     /// Below is an example how to depth-sort children by their y-coordinate; this will put objects that
     /// are lower on the screen in front of those higher on the screen.
-
+    /// 
     /// public class CompareExample : IComparator {
     ///     public int Compare(DisplayObject child1, DisplayObject child2) 
     ///     {
