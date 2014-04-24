@@ -91,12 +91,12 @@ namespace Sparrow.Textures
         /// to place the texture within an image. If 'rotated' is 'true', the subtexture will show the base
         /// region rotated by 90 degrees (CCW). If frame is null, it will use the whole texture.
         /// </summary>
-        public SubTexture(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
+        public SubTexture(Texture texture, Rectangle region = null, Rectangle frame = null, bool rotated = false)
         {
-            Init(region, texture, frame, rotated);
+            Init(texture, region, frame, rotated);
         }
 
-        protected void Init(Rectangle region, Texture texture, Rectangle frame = null, bool rotated = false)
+        protected void Init(Texture texture, Rectangle region = null, Rectangle frame = null, bool rotated = false)
         {
             if (region == null)
                 region = new Rectangle(0.0f, 0.0f, texture.Width, texture.Height);

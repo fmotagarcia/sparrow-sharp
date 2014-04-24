@@ -41,9 +41,9 @@ namespace SparrowSharp.Filters
             fontXmlData.Seek(0, SeekOrigin.Begin);
 
             Stream stream = new MemoryStream(fontTextureData);
-
             TextureLoader texLoader = new TextureLoader();
-            _fontTexture = texLoader.LoadFromStream(stream);
+            GLTexture tex = texLoader.LoadFromStream(stream);
+            _fontTexture = new SubTexture(tex);
 
             _name = @"unknown";
             _lineHeight = _size = _baseline = 10f; // FIXME
@@ -159,9 +159,19 @@ namespace SparrowSharp.Filters
                 float y = Convert.ToSingle(attributes["y"].Value);
                 float width = Convert.ToSingle(attributes["width"].Value);
                 float height = Convert.ToSingle(attributes["height"].Value);
+                float frameX = 0;
+                if (_fontTexture.Frame != null)
+                {
+                    frameX = _fontTexture.Frame.X;
+                }
+                float frameY = 0;
+                if (_fontTexture.Frame != null)
+                {
+                    frameY = _fontTexture.Frame.Y;
+                }
 
-                Rectangle region = new Rectangle(x / scale + _fontTexture.Frame.X, y / scale + _fontTexture.Frame.X, width / scale, height / scale);
-                SubTexture texture = new SubTexture(region, _fontTexture);
+                Rectangle region = new Rectangle(x / scale + frameX, y / scale + frameY, width / scale, height / scale);
+                SubTexture texture = new SubTexture(_fontTexture, region);
 
                 int charId = Convert.ToInt32(attributes["id"].Value);
                 float xOffset = Convert.ToSingle(attributes["xoffset"].Value);
@@ -211,8 +221,8 @@ namespace SparrowSharp.Filters
             if (commonNode.Count > 0)
             {
                 XmlAttributeCollection attributes = commonNode[0].Attributes;
-                _lineHeight = Convert.ToSingle(attributes["lineHeight"]);
-                _baseline = Convert.ToSingle(attributes["base"]);
+                _lineHeight = Convert.ToSingle(attributes["lineHeight"].Value);
+                _baseline = Convert.ToSingle(attributes["base"].Value);
             }
         }
 

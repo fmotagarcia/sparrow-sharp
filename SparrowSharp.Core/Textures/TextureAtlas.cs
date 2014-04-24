@@ -94,7 +94,7 @@ namespace Sparrow.Textures
             TextureInfo info = _textureInfos[name];
             if (info != null)
             {
-                return new SubTexture(info.Region, _atlasTexture, info.Frame, info.Rotated);
+                return new SubTexture(_atlasTexture, info.Region, info.Frame, info.Rotated);
             }
             return null;
         }
