@@ -38,23 +38,13 @@ namespace SparrowSharp.Filters
         {
             byte[] fontTextureData = Convert.FromBase64String(MiniFontImageDataBase64);
             MemoryStream fontXmlData = DecompressGZip(Convert.FromBase64String(MiniFontXmlDataBase64));
-            // TODO: decode .png file
-            //PngBitmapDecoder decoder = new PngBitmapDecoder(fontXmlData, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-            //BitmapSource bitmapSource = decoder.Frames[0];
-            /*
-            TextureProperties texProps = new TextureProperties
-            {
-                TextureFormat = TextureFormat.Rgba8888,
-                Scale = 1,
-                Width = 128,
-                Height = 64,
-                NumMipmaps = 0,
-                GenerateMipmaps = false,
-                PremultipliedAlpha = true
-            };
+            fontXmlData.Seek(0, SeekOrigin.Begin);
 
-            _fontTexture = new GLTexture(fontTextureData, texProps);
-            */
+            Stream stream = new MemoryStream(fontTextureData);
+
+            TextureLoader texLoader = new TextureLoader();
+            _fontTexture = texLoader.LoadFromStream(stream);
+
             _name = @"unknown";
             _lineHeight = _size = _baseline = 10f; // FIXME
             _chars = new Dictionary<int,BitmapChar>();
@@ -69,20 +59,17 @@ namespace SparrowSharp.Filters
             {
                 const int size = 4096;
                 byte[] buffer = new byte[size];
-                using (MemoryStream memory = new MemoryStream())
+                MemoryStream memory = new MemoryStream();
+                int count = 0;
+                do
                 {
-                    int count = 0;
-                    do
+                    count = stream.Read(buffer, 0, size);
+                    if (count > 0)
                     {
-                        count = stream.Read(buffer, 0, size);
-                        if (count > 0)
-                        {
-                            memory.Write(buffer, 0, count);
-                        }
+                        memory.Write(buffer, 0, count);
                     }
-                    while (count > 0);
-                    return memory;
-                }
+                } while (count > 0);
+                return memory;
             }
         }
 

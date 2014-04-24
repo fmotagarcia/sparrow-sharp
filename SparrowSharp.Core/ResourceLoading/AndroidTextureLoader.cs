@@ -5,6 +5,7 @@ using Android.Opengl;
 using OpenTK.Graphics.ES20;
 using Sparrow.Textures;
 using Sparrow.Utils;
+using System.IO;
 
 namespace Sparrow.ResourceLoading
 {
@@ -78,6 +79,14 @@ namespace Sparrow.ResourceLoading
         {
             _isLoaded = false;
             Bitmap bitmap = BitmapFactory.DecodeResource(_context.Resources, AndroidResourceId);
+            GenerateTexture(bitmap);
+            return _glTexture;
+        }
+
+        public GLTexture LoadFromStream(Stream stream)
+        {
+            _isLoaded = false;
+            Bitmap bitmap = BitmapFactory.DecodeStream(stream);
             GenerateTexture(bitmap);
             return _glTexture;
         }
