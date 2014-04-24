@@ -1,12 +1,20 @@
 using System.Collections.Generic;
 using Sparrow.Textures;
 
-namespace SparrowSharp.Filters
+namespace SparrowSharp.Fonts
 {
+    /// <summary>
+    /// A BitmapChar contains the information about one char of a bitmap font.
+    ///
+    /// _You don't have to use this class directly in most cases._
+    /// </summary>
     public class BitmapChar
     {
-        public readonly int CharId;
         private Dictionary<int, float> _kernings;
+        /// <summary>
+        ///  The unicode ID of the char.
+        /// </summary>
+        public readonly int CharId;
         /// <summary>
         /// The texture of the character.
         /// </summary>

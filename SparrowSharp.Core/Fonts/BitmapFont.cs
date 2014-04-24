@@ -9,8 +9,32 @@ using SparrowSharp.Core;
 using Sparrow.ResourceLoading;
 using System.IO.Compression;
 
-namespace SparrowSharp.Filters
+namespace SparrowSharp.Fonts
 {
+    /// <summary>
+    /// The BitmapFont class parses bitmap font files and arranges the glyphs in the form of a text.
+    /// 
+    /// The class parses the XML format as it is used in the AngelCode Bitmap Font Generator. This is what
+    /// the file format looks like:
+    /// 
+    /// <font>
+    /// <info face="BranchingMouse" size="40" />
+    ///    <common lineHeight="40" />
+    ///    <pages>  <!-- currently, only one page is supported -->
+    ///     <page id="0" file="texture.png" />
+    ///    </pages>
+    ///    <chars>
+    ///       <char id="32" x="60" y="29" width="1" height="1" xoffset="0" yoffset="27" xadvance="8" />
+    ///       <char id="33" x="155" y="144" width="9" height="21" xoffset="0" yoffset="6" xadvance="9" />
+    ///    </chars>
+    ///    <kernings> <!-- Kerning is optional -->
+    ///       <kerning first="83" second="83" amount="-4"/>
+    ///    </kernings>
+    /// </font>
+    /// 
+    ///     _You don't have to use this class directly in most cases. TextField contains methods that
+    ///    handle bitmap fonts for you._
+    /// </summary>
     public class BitmapFont
     {
         private const uint MAX_TEXT_CHAR_COUNT = 8192;
@@ -230,7 +254,7 @@ namespace SparrowSharp.Filters
         /// <summary>
         /// Returns a single bitmap char with a certain character ID.
         /// </summary>
-        private BitmapChar CharById(int charId)
+        public BitmapChar CharById(int charId)
         {
             BitmapChar ret;
             _chars.TryGetValue(charId, out ret);
