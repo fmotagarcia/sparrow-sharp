@@ -8,11 +8,9 @@ namespace SparrowSharp.Filters
 
         public BitmapChar BitmapChar { get; private set; }
 
-        public float Scale { get; set; }
-
-        public float X { get; set; }
-
-        public float Y { get; set; }
+        public float Scale;
+        public float X;
+        public float Y;
 
         private CharLocation()
         {

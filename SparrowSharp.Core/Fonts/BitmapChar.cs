@@ -59,7 +59,6 @@ namespace SparrowSharp.Filters
         {
             CharId = 0;
             XAdvance = texture.Width;
-            ;
             Texture = texture;
             XOffset = 0;
             YOffset = 0;
@@ -84,7 +83,12 @@ namespace SparrowSharp.Filters
         /// </summary>
         public float KerningToChar(int charId)
         {
-            return _kernings[charId];
+            float kerning = 1.0f;
+            if (_kernings != null)
+            {
+                _kernings.TryGetValue(charId, out kerning);
+            }
+            return kerning;
         }
     }
 }

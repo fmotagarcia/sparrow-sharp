@@ -32,9 +32,10 @@ namespace SparrowSharp.Filters
         }
 
         /// <summary>
-        /// Initializes a new instance with an embedded mini font.
+        /// Initializes a new instance with an embedded mini font. This font's characters have a height of 5 pixels and a maximum
+        /// width of 5 pixels.
         /// </summary>
-        public BitmapFont(TextureLoader textureLoader)
+        public BitmapFont()
         {
             byte[] fontTextureData = Convert.FromBase64String(MiniFontImageDataBase64);
             MemoryStream fontXmlData = DecompressGZip(Convert.FromBase64String(MiniFontXmlDataBase64));
@@ -60,7 +61,7 @@ namespace SparrowSharp.Filters
                 const int size = 4096;
                 byte[] buffer = new byte[size];
                 MemoryStream memory = new MemoryStream();
-                int count = 0;
+                int count;
                 do
                 {
                     count = stream.Read(buffer, 0, size);
@@ -231,7 +232,9 @@ namespace SparrowSharp.Filters
         /// </summary>
         private BitmapChar CharById(int charId)
         {
-            return _chars[charId];
+            BitmapChar ret;
+            _chars.TryGetValue(charId, out ret);
+            return ret;
         }
 
         private List<CharLocation> ArrangeCharsInArea(float width, float height, string text, float size, HAlign hAlign, VAlign vAlign, bool autoScale, bool kerning)
@@ -265,8 +268,8 @@ namespace SparrowSharp.Filters
                     int numChars = text.Length;
                     float currentX = 0;
                     float currentY = 0;
-
                     List<CharLocation> currentLine = new List<CharLocation>();
+
                     for (int i = 0; i < numChars; i++)
                     {
                         bool isLineFull = false;
@@ -279,7 +282,7 @@ namespace SparrowSharp.Filters
                         }
                         else if (bitmapChar == null)
                         {
-                            Console.WriteLine(@"Missing character: %d", charId);
+                            Console.WriteLine(@"Missing character: {0}", charId);
                         }
                         else
                         {
@@ -292,8 +295,7 @@ namespace SparrowSharp.Filters
                             {
                                 currentX += bitmapChar.KerningToChar(lastCharId);
                             }
-
-                            CharLocation charLocation = CharLocation.Create(bitmapChar, currentX + bitmapChar.XOffset, currentY + bitmapChar.YOffset);
+                            CharLocation charLocation = CharLocation.Create(bitmapChar, 1.0f, currentX + bitmapChar.XOffset, currentY + bitmapChar.YOffset);
                             currentLine.Add(charLocation);
                             currentX += bitmapChar.XAdvance;
                             lastCharId = charId;
@@ -380,7 +382,7 @@ namespace SparrowSharp.Filters
                 }
 
                 int xOffset = 0;
-                CharLocation lastLocation = line[lines.Count - 1];
+                CharLocation lastLocation = line[line.Count - 1];
                 float right = lastLocation.X - lastLocation.BitmapChar.XOffset + lastLocation.BitmapChar.XAdvance;
 
                 if (hAlign == HAlign.Right)
@@ -395,7 +397,7 @@ namespace SparrowSharp.Filters
                 CharLocation charLocation;
                 for (int j = 0; j < line.Count; j++)
                 {
-                    charLocation = line[i];
+                    charLocation = line[j];
                     charLocation.X = scale * (charLocation.X + xOffset);
                     charLocation.Y = scale * (charLocation.Y + yOffset);
                     charLocation.Scale = scale;
@@ -437,7 +439,7 @@ namespace SparrowSharp.Filters
             "RhKV61DxHXWVRm6C1LFp4T0plyWWfXhOMJRDzgVM7mInbJPeP82mRTvwscV3myqCyA2wocm1ubLSvUKLywHuIPSthrE5+W" +
             "6C61+sHO5r2qs1VlFBL2trgn1BmOi0Lu2ooVw2cnZ1E5LGgW8hl403JoYgdaHipzbFMZKoSLFD6LygK4qsDx3CSWWvOBHn" +
             "6ihxk0idIEur8b2ccvn+7vzn/v5X/zg7A/9kUAAA==";
-        // 128 x 64 png image
+        // 128 x 64 png image, characters are max. is 5x5 pixels
         private const string MiniFontImageDataBase64 = 
             "iVBORw0KGgoAAAANSUhEUgAAAIAAAABABAMAAAAg+GJMAAAAJFBMVEUAAAD///////////////////////////////////" +
             "////////+0CY3pAAAAC3RSTlMAAgQGCg4QFNn5/aulndcAAANHSURBVFhH7ZYxrhtHEESf4J+9RLGu4NCRoHQBBZv5EEp8" +
