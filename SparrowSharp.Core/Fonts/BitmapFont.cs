@@ -4,12 +4,12 @@ using Sparrow.Textures;
 using System.Xml;
 using System.IO;
 using Sparrow.Geom;
-using Sparrow.Utils;
 using Sparrow.Display;
 using SparrowSharp.Core;
 using Sparrow.ResourceLoading;
+using System.IO.Compression;
 
-namespace Sparrow.Fonts
+namespace SparrowSharp.Filters
 {
     public class BitmapFont
     {
@@ -22,26 +22,73 @@ namespace Sparrow.Fonts
         private float _lineHeight;
         private float _baseline;
 
+        /// <summary>
+        /// The smoothing filter used for the texture.
+        /// </summary>
         public TextureSmoothing Smoothing
         {
             get { return _fontTexture.Smoothing; }
             private set { _fontTexture.Smoothing = value; }
         }
 
+        /// <summary>
+        /// Initializes a new instance with an embedded mini font.
+        /// </summary>
         public BitmapFont(TextureLoader textureLoader)
         {
-            // TODO: load external font
             byte[] fontTextureData = Convert.FromBase64String(MiniFontImageDataBase64);
-            byte[] fontXmlData = Convert.FromBase64String(MiniFontXmlDataBase64);
+            MemoryStream fontXmlData = DecompressGZip(Convert.FromBase64String(MiniFontXmlDataBase64));
+            // TODO: decode .png file
+            //PngBitmapDecoder decoder = new PngBitmapDecoder(fontXmlData, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            //BitmapSource bitmapSource = decoder.Frames[0];
+            /*
+            TextureProperties texProps = new TextureProperties
+            {
+                TextureFormat = TextureFormat.Rgba8888,
+                Scale = 1,
+                Width = 128,
+                Height = 64,
+                NumMipmaps = 0,
+                GenerateMipmaps = false,
+                PremultipliedAlpha = true
+            };
 
+            _fontTexture = new GLTexture(fontTextureData, texProps);
+            */
             _name = @"unknown";
             _lineHeight = _size = _baseline = 10f; // FIXME
             _chars = new Dictionary<int,BitmapChar>();
-
-            _fontTexture = TextureReferencedByXmlData(textureLoader, new MemoryStream(fontXmlData));
             _helperImage = new Image(_fontTexture);
+
+            ParseFontData(fontXmlData);
         }
 
+        private static MemoryStream DecompressGZip(byte[] gzip)
+        {
+            using (GZipStream stream = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress))
+            {
+                const int size = 4096;
+                byte[] buffer = new byte[size];
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    int count = 0;
+                    do
+                    {
+                        count = stream.Read(buffer, 0, size);
+                        if (count > 0)
+                        {
+                            memory.Write(buffer, 0, count);
+                        }
+                    }
+                    while (count > 0);
+                    return memory;
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Draws text into a quad batch.
+        /// </summary>
         public void FillQuadBatch(QuadBatch quadBatch, float width, float height, string text, float size, uint color, HAlign hAlign, VAlign vAlign, bool autoScale, bool kerning)
         {
             List<CharLocation> charLocations = ArrangeCharsInArea(width, height, text, size, hAlign, vAlign, autoScale, kerning);
@@ -182,6 +229,9 @@ namespace Sparrow.Fonts
             }
         }
 
+        /// <summary>
+        /// Returns a single bitmap char with a certain character ID.
+        /// </summary>
         private BitmapChar CharById(int charId)
         {
             return _chars[charId];
@@ -390,6 +440,7 @@ namespace Sparrow.Fonts
             "RhKV61DxHXWVRm6C1LFp4T0plyWWfXhOMJRDzgVM7mInbJPeP82mRTvwscV3myqCyA2wocm1ubLSvUKLywHuIPSthrE5+W" +
             "6C61+sHO5r2qs1VlFBL2trgn1BmOi0Lu2ooVw2cnZ1E5LGgW8hl403JoYgdaHipzbFMZKoSLFD6LygK4qsDx3CSWWvOBHn" +
             "6ihxk0idIEur8b2ccvn+7vzn/v5X/zg7A/9kUAAA==";
+        // 128 x 64 png image
         private const string MiniFontImageDataBase64 = 
             "iVBORw0KGgoAAAANSUhEUgAAAIAAAABABAMAAAAg+GJMAAAAJFBMVEUAAAD///////////////////////////////////" +
             "////////+0CY3pAAAAC3RSTlMAAgQGCg4QFNn5/aulndcAAANHSURBVFhH7ZYxrhtHEESf4J+9RLGu4NCRoHQBBZv5EEp8" +
