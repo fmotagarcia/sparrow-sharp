@@ -42,6 +42,15 @@ namespace SparrowSharp.Fonts
         private readonly Texture _fontTexture;
         private readonly Dictionary<int, BitmapChar> _chars;
         private string _name;
+
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+        }
+
         private float _size;
         private float _lineHeight;
         private float _baseline;
@@ -70,7 +79,7 @@ namespace SparrowSharp.Fonts
             GLTexture tex = texLoader.LoadFromStream(stream);
             _fontTexture = new SubTexture(tex);
 
-            _name = @"unknown";
+            _name = TextField.MiniFontName;
             _lineHeight = _size = _baseline = 10f; // FIXME
             _chars = new Dictionary<int,BitmapChar>();
             _helperImage = new Image(_fontTexture);
