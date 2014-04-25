@@ -5,13 +5,15 @@ using System.Collections.Generic;
 using System;
 using Sparrow.Textures;
 using Sparrow.Utils;
+using Sparrow.Core;
 
 namespace SparrowSharp.Fonts
 {
     public class TextField : DisplayObjectContainer
     {
         private static readonly Dictionary<string, BitmapFont> bitmapFonts = new Dictionary<string, BitmapFont>();
-        public static readonly string MiniFontName = "_miniFont";
+        // its actually read from the font XML
+        public static readonly string MiniFontName = "mini";
         public string _text;
 
         /// <summary>
@@ -42,6 +44,10 @@ namespace SparrowSharp.Fonts
                 fontName = bitmapFont.Name;
             }
             bitmapFonts[fontName] = bitmapFont;
+            if (_fontName != null)
+            {
+                _isRenderedText = !bitmapFonts.ContainsKey(_fontName); 
+            }
             return fontName;
         }
 
@@ -60,7 +66,7 @@ namespace SparrowSharp.Fonts
                     }
                     _fontName = value;
                     _requiresRedraw = true;        
-                    _isRenderedText = !bitmapFonts.ContainsKey(_fontName); // ??
+                    _isRenderedText = !bitmapFonts.ContainsKey(_fontName);
                 }
             }
             get
@@ -254,7 +260,7 @@ namespace SparrowSharp.Fonts
         private Rectangle _textBounds;
         private Quad _hitArea;
 
-        public TextField(float width, float height, string text = "", string fontName = "_miniFont", float fontSize = 14, uint color = 0x0)
+        public TextField(float width, float height, string text = "", string fontName = "mini", float fontSize = 14, uint color = 0x0)
         {
             _text = text;
             _fontSize = fontSize;
@@ -326,9 +332,12 @@ namespace SparrowSharp.Fonts
 
         private void CreateRenderedContents()
         {
+            throw new Exception("Can not render with non registered font " + _fontName);
+            // TODO: render text with built in font
+            /*
             float width = _hitArea.Width;
             float height = _hitArea.Height; 
-            /*
+
             float fontSize = _fontSize == NativeFontSize ? DefaultFontSize : _fontSize;
          
             CGSize textSize;
@@ -364,8 +373,7 @@ namespace SparrowSharp.Fonts
                 yOffset = height - textSize.height;
 
             if (_textBounds == null)
-                _textBounds = new Rectangle(xOffset, yOffset, textSize.width, textSize.height);
-            */
+                _textBounds = new Rectangle(xOffset, yOffset, textSize.width, textSize.height)
 
             RenderTexture texture = new RenderTexture(width, height);
             texture.DrawBundled(delegate
@@ -373,17 +381,17 @@ namespace SparrowSharp.Fonts
                 float red = ColorUtil.GetR(_color) / 255.0f;
                 float green = ColorUtil.GetG(_color) / 255.0f;
                 float blue = ColorUtil.GetB(_color) / 255.0f;
-                /*
+
                 CGContextSetRGBFillColor(context, red, green, blue, 1.0f);
 
                 [_text drawInRect:CGRectMake(0, yOffset, width, height)
                     withFont:[UIFont fontWithName:_fontName size:fontSize] 
-                    lineBreakMode:lbm alignment:(NSTextAlignment)_hAlign];*/
+                    lineBreakMode:lbm alignment:(NSTextAlignment)_hAlign];
             });
 
             Image image = new Image(texture);
            
-            _contents.AddQuad(image);
+            _contents.AddQuad(image);*/
         }
 
         private void CreateComposedContents()
@@ -399,6 +407,44 @@ namespace SparrowSharp.Fonts
                 _fontSize, _color, _hAlign, _vAlign, _autoScale, _kerning);
 
             _textBounds = null; // will be created on demand
+        }
+
+        override public void Render(RenderSupport support)
+        {
+            if (_requiresRedraw)
+            {
+                Redraw();
+            }
+            base.Render(support);
+        }
+
+        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        {
+            return _hitArea.BoundsInSpace(targetSpace);
+        }
+
+        override public float Width
+        {
+            set
+            {
+                // other than in SPDisplayObject, changing the size of the object should not change the scaling;
+                // changing the size should just make the texture bigger/smaller,
+                // keeping the size of the text/font unchanged. (this applies to setHeight:, as well.)
+                _hitArea.Width = value;
+                _requiresRedraw = true;
+                UpdateBorder();
+            }
+        }
+
+        override public float Height
+        {
+            set
+            {
+                _hitArea.Height = value;
+                _requiresRedraw = true;
+                UpdateBorder();
+            }
+
         }
     }
 }

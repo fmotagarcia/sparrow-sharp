@@ -62,7 +62,7 @@ namespace Sparrow.Textures
             Rectangle region = new Rectangle(0, 0, width, height);
             GLTexture glTexture = new GLTexture(IntPtr.Zero, properties);
 
-            Init(region, glTexture);
+            Init(glTexture, region);
             _renderSupport = new RenderSupport();
             Clear(argbFillColor, ColorUtil.GetA(argbFillColor) / 255.0f);
         }
