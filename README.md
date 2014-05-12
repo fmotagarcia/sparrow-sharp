@@ -21,5 +21,11 @@ Sparrow-Sharp borrows display concepts from Flash's display tree representation.
 
 Apache 2.0 license.
 
+How to use
+----------
+
+Just include the iOS/Android/Windows project in you app and you are ready to go. For an example project see the SparrowSwarp.Samples directories.
+
+
 [Sparrow]:http://gamua.com/sparrow/
 [Starling]:http://gamua.com/starling/
