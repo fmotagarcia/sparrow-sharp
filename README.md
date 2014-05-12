@@ -1,0 +1,1 @@
+Sparrow-sharp: A C# implementation of the Sparrow/Starling library for Mono/Xamarin

@@ -3,8 +3,6 @@ using Sparrow.Geom;
 using Sparrow.Display;
 using System.Collections.Generic;
 using System;
-using Sparrow.Textures;
-using Sparrow.Utils;
 using Sparrow.Core;
 
 namespace SparrowSharp.Fonts
@@ -427,9 +425,9 @@ namespace SparrowSharp.Fonts
         {
             set
             {
-                // other than in SPDisplayObject, changing the size of the object should not change the scaling;
+                // other than in DisplayObject, changing the size of the object should not change the scaling;
                 // changing the size should just make the texture bigger/smaller,
-                // keeping the size of the text/font unchanged. (this applies to setHeight:, as well.)
+                // keeping the size of the text/font unchanged. (this applies to SetHeight as well.)
                 _hitArea.Width = value;
                 _requiresRedraw = true;
                 UpdateBorder();
