@@ -56,6 +56,7 @@
     <Compile Include="Display\Stage.cs" />
     <Compile Include="Fonts\BitmapChar.cs" />
     <Compile Include="Fonts\BitmapFont.cs" />
+    <Compile Include="Fonts\TextField.cs" />
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
@@ -99,11 +100,7 @@
     <Compile Include="Touches\TouchPhase.cs" />
     <Compile Include="Touches\TouchProcessor.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ResourceLoading\" />
-    <Folder Include="Pool\" />
-    <Folder Include="Touches\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Textures\.DS_Store" />
   </ItemGroup>
