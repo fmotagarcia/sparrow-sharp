@@ -369,17 +369,6 @@ namespace SparrowSharp.Filters
             support.ModelViewMatrix.Identity();
             support.PushClipRect(bounds);
 
-            #if __ANDROID__
-            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
-            GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
-
-            GL.EnableVertexAttribArray(VertexPosID);
-            GL.VertexAttribPointer(VertexPosID, 2, All.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
-
-            GL.EnableVertexAttribArray(TexCoordsID);
-            GL.VertexAttribPointer(TexCoordsID, 2, All.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
-
-            #elif __IOS__ || __WINDOWS__
 			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
 			GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
 
@@ -388,7 +377,6 @@ namespace SparrowSharp.Filters
 
 			GL.EnableVertexAttribArray (TexCoordsID);
 			GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
-            #endif
 
             // draw all passes
             for (int i = 0; i < NumPasses; ++i)
@@ -420,19 +408,11 @@ namespace SparrowSharp.Filters
 
                 Texture passTexture = PassTextureForPass(i);
 
-                #if __ANDROID__
-                GL.ActiveTexture(All.Texture0);
-                GL.BindTexture(All.Texture2D, passTexture.Name);
-
-                ActivateWithPass(i, passTexture, support.MvpMatrix);
-                GL.DrawElements(All.Triangles, 6, All.UnsignedShort, IntPtr.Zero);
-                #elif __IOS__ || __WINDOWS__
 				GL.ActiveTexture (TextureUnit.Texture0);
 				GL.BindTexture (TextureTarget.Texture2D, passTexture.Name);
 
 				ActivateWithPass (i, passTexture, support.MvpMatrix);
 				GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
-                #endif
 
                 DeactivateWithPass(i, passTexture);
             }
@@ -475,20 +455,6 @@ namespace SparrowSharp.Filters
             const int indexSize = sizeof(ushort) * 6;
             const int vertexSize = Vertex.SIZE * 4;
 
-            #if __ANDROID__
-            if (_vertexBufferName == 0)
-            {
-                GL.GenBuffers(1, out _vertexBufferName);
-                GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
-
-                GL.GenBuffers(1, out _indexBufferName);
-                GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
-                GL.BufferData(All.ElementArrayBuffer, (IntPtr)indexSize, _indexData, All.StaticDraw);
-            }
-
-            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
-            GL.BufferData(All.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, All.StaticDraw);
-            #elif __IOS__ || __WINDOWS__
 			if (_vertexBufferName == 0) {
 				GL.GenBuffers (1, out _vertexBufferName);
 				GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
@@ -500,7 +466,6 @@ namespace SparrowSharp.Filters
 
 			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
 			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, BufferUsage.StaticDraw);
-            #endif
         }
 
         private void UpdatePassTextures(int width, int height, float scale)

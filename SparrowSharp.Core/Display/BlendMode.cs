@@ -42,11 +42,7 @@ namespace Sparrow.Display
 
             if (blendMode == NONE)
             {
-                #if __ANDROID__
-                GL.Disable(All.Blend);
-                #elif __IOS__ || __WINDOWS__
 				GL.Disable (EnableCap.Blend);
-                #endif
                 return;
             }
 
