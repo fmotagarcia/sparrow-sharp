@@ -31,8 +31,11 @@ namespace Tests
 			Assert.AreEqual(numVertices, vertexData.NumVertices, "wrong number of vertices");
 			Assert.True(vertexData.Vertices != null, "vertex array not accessible");
 
-			for (int i=0; i<numVertices; ++i)
-				CompareVertex(defaultVertex, vertexData.Vertices[i]);
+            for (int i = 0; i < numVertices; ++i)
+            {
+                CompareVertex(defaultVertex, vertexData.Vertices[i]);
+            }
+				
             /*
 			vertexData.SetVertex(vertex, 1);
 
@@ -50,7 +53,7 @@ namespace Tests
 			vertexData.SetColor(color);
 
 			for (int i=0; i<vertexData.NumVertices; ++i)
-				Assert.AreEqual(color, vertexData.ColorAtIndex(i), "wrong color");
+				Assert.AreEqual(color, vertexData.ColorAt(i), "wrong color");
 		}
 
 		[Test]
@@ -59,8 +62,10 @@ namespace Tests
 			VertexData vertexData = new VertexData(4);
 			vertexData.SetAlpha(0.5f);
 
-			for (int i=0; i<vertexData.NumVertices; ++i)
-				AssertEqualsWithSmallError(0.5f, vertexData.AlphaAtIndex(i), "wrong alpha");
+            for (int i = 0; i < vertexData.NumVertices; ++i)
+            {
+                AssertEqualsWithSmallError(0.5f, vertexData.AlphaAt(i), "wrong alpha", 0.005f);
+            }
 		}
 
 		[Test]
@@ -74,8 +79,8 @@ namespace Tests
 
 			for (int i=0; i<vertexData.NumVertices; ++i)
 			{
-				Assert.AreEqual(color, vertexData.ColorAtIndex(i), "wrong color");
-				AssertEqualsWithSmallError(alpha, vertexData.AlphaAtIndex(i), "wrong alpha");
+				Assert.AreEqual(color, vertexData.ColorAt(i), "wrong color");
+				AssertEqualsWithSmallError(alpha, vertexData.AlphaAt(i), "wrong alpha", 0.005f);
 			}
 		}
 
@@ -102,19 +107,6 @@ namespace Tests
 
 			CompareVertex(defaultVertex, vertexData.VertexAtIndex(2));
 			CompareVertex(defaultVertex, vertexData.VertexAtIndex(3));*/
-		}
-
-		public void TestAppend()
-		{
-			Vertex vertex = AnyVertex();
-			VertexData vertexData = new VertexData();
-
-			Assert.AreEqual(0, vertexData.NumVertices, "wrong number of vertices");
-
-			vertexData.AppendVertex(vertex);
-
-			Assert.AreEqual(1, vertexData.NumVertices, "wrong number of vertices");
-			//CompareVertex(vertex, vertexData.VertexAtIndex(0));
 		}
 
 		private Vertex AnyVertex() {

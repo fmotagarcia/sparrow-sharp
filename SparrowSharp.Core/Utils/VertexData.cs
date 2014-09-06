@@ -5,7 +5,7 @@ using OpenTK;
 namespace Sparrow.Utils
 {
     /// <summary>
-    /// The SPVertexData class manages a raw list of vertex information, allowing direct upload
+    /// The VertexData class manages a raw list of vertex information, allowing direct upload
     /// to OpenGL vertex buffers. 
     /// 
     /// _You only have to work with this class if you create display objects with a custom render 
@@ -25,10 +25,10 @@ namespace Sparrow.Utils
     /// **Premultiplied Alpha**
     /// 
     /// The color values of texture files may contain premultiplied alpha values, which
-    /// means that the `RGB` values were multiplied with the `alpha` value
+    /// means that the 'RGB' values were multiplied with the 'alpha' value
     /// before saving them. On rendering, it makes a difference in which way the alpha value is saved;
     /// for that reason, the VertexData class mimics this behavior. You can choose how the alpha
-    /// values should be handled via the `premultipliedAlpha` property.
+    /// values should be handled via the 'premultipliedAlpha' property.
     /// </summary>
     public class VertexData
     {
@@ -149,25 +149,17 @@ namespace Sparrow.Utils
         }
 
         /// <summary>
-        /// Copies the vertex data of this instance to another vertex data object, starting at element 0.
-        /// </summary>
-        public void CopyToVertexData(VertexData target, bool copyColor)
-        {
-            CopyToVertexData(target, 0, _numVertices, copyColor);
-        }
-
-        /// <summary>
         /// Copies the vertex data of this instance to another vertex data object, starting at a certain index.
         /// </summary>
-        public void CopyToVertexData(VertexData target, int atIndex, bool copyColor)
+        public void CopyToVertexData(VertexData target, bool copyColor, int atIndex = 0)
         {
-            CopyToVertexData(target, atIndex, _numVertices, copyColor);
+            CopyToVertexData(target, copyColor, atIndex, _numVertices);
         }
 
         /// <summary>
         /// Copies a range of vertices of this instance to another vertex data object.
         /// </summary>
-        public void CopyToVertexData(VertexData target, int atIndex, int numVertices, bool copyColor)
+        public void CopyToVertexData(VertexData target, bool copyColor, int atIndex, int numVertices)
         {
             Vertex.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
 
@@ -180,7 +172,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Returns the position of a vertex.
         /// </summary>
-        public Point PositionAtIndex(int index)
+        public Point PositionAt(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -221,7 +213,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Returns the texture coordinates of a vertex.
         /// </summary>
-        public Point TexCoordsAtIndex(int index)
+        public Point TexCoordsAt(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -290,7 +282,7 @@ namespace Sparrow.Utils
         /// </summary>
         public void SetColor(uint color, int atIndex)
         {
-            float alpha = AlphaAtIndex(atIndex);
+            float alpha = AlphaAt(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
@@ -308,7 +300,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Returns the RGB color of a vertex (without premultiplied alpha).
         /// </summary>
-        public uint ColorAtIndex(int index)
+        public uint ColorAt(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -329,7 +321,7 @@ namespace Sparrow.Utils
         /// </summary>
         public void SetAlpha(float alpha, int atIndex)
         {
-            uint color = ColorAtIndex(atIndex);
+            uint color = ColorAt(atIndex);
             SetColor(color, alpha, atIndex);
         }
 
@@ -347,15 +339,13 @@ namespace Sparrow.Utils
         /// <summary>
         /// Returns the alpha value of a vertex.
         /// </summary>
-        public float AlphaAtIndex(int index)
+        public float AlphaAt(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
-
-            //            return _vertices[index].Color.A / 255.0f;
-            return 1.0f;
+            return _vertexColors[index].A / 255.0f;
         }
 
         /// <summary>
@@ -404,7 +394,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Transforms the positions of subsequent vertices by multiplication with a transformation matrix
         /// </summary>
-        public void TransformVerticesWithMatrix(Matrix matrix, int atIndex, int numVertices)
+        public void TransformVertices(Matrix matrix, int atIndex, int numVertices)
         {
             if (matrix == null)
             {

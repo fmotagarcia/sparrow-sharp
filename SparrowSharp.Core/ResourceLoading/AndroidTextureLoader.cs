@@ -93,17 +93,19 @@ namespace Sparrow.ResourceLoading
 
         protected void GenerateTexture(Bitmap bitmap)
         {
-            GL.Hint(All.GenerateMipmapHint, All.Fastest);
-
+            GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Fastest);
             uint name = (uint)GL.GenTexture();
 
-            GL.BindTexture(All.Texture2D, name);
+            GL.BindTexture(TextureTarget.Texture2D, name);
             if (GLExtensions.TextureMaxAnisotropySupported)
             {
-                GL.TexParameter(All.Texture2D, All.TextureMaxAnisotropyExt, 1);
+                float maxAniso;
+                GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
+                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
             }
-            GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.NearestMipmapNearest);
-            GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapNearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
             GLUtils.TexImage2D(GLES20.GlTexture2d, 0, bitmap, 0);
 

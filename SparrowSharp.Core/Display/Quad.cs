@@ -165,7 +165,7 @@ namespace Sparrow.Display
             if (targetSpace == this)
             { 
                 // optimization
-                bottomRight = _vertexData.PositionAtIndex(3);
+                bottomRight = _vertexData.PositionAt(3);
                 return new Rectangle(0.0f, 0.0f, bottomRight.X, bottomRight.Y);
             }
             else if (targetSpace == Parent && Rotation == 0.0f)
@@ -174,7 +174,7 @@ namespace Sparrow.Display
                 float scaleX = ScaleX;
                 float scaleY = ScaleY;
 
-                bottomRight = _vertexData.PositionAtIndex(3);
+                bottomRight = _vertexData.PositionAt(3);
                 Rectangle resultRect = new Rectangle(X - PivotX * scaleX, 
                                            Y - PivotY * scaleY,
                                            bottomRight.X * ScaleX,
@@ -224,7 +224,7 @@ namespace Sparrow.Display
         /// </summary>
         public uint ColorOfVertex(int vertexID)
         {
-            return _vertexData.ColorAtIndex(vertexID);
+            return _vertexData.ColorAt(vertexID);
         }
 
         override public void Render(RenderSupport support)
@@ -255,7 +255,7 @@ namespace Sparrow.Display
         /// </summary>
         public float AlphaOfVertex(int vertexID)
         {
-            return _vertexData.AlphaAtIndex(vertexID);
+            return _vertexData.AlphaAt(vertexID);
         }
 
         protected virtual void VertexDataDidChange()
@@ -267,7 +267,7 @@ namespace Sparrow.Display
         {
             copyColor = copyColor || Tinted || Alpha != 1.0f;
 
-            _vertexData.CopyToVertexData(targetData, atIndex, copyColor);
+            _vertexData.CopyToVertexData(targetData, copyColor, atIndex);
         }
     }
 }

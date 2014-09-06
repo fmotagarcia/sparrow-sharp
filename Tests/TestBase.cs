@@ -20,8 +20,11 @@ namespace Tests
 			AssertEqualsWithSmallError(v1.Y, v2.Y, "wrong vector.y");
 		}
 
-		public void AssertEqualsWithSmallError(float a, float b, string message = "") {
-			Assert.True (Math.Abs (a - b) < 0.0001f, message);	
+		public void AssertEqualsWithSmallError(float a, float b, string message = "", float epsilon = 0.0001f) {
+            if (Math.Abs(a - b) > epsilon)
+            {
+                Assert.Fail(message + " Difference " + Math.Abs(a - b) + " is greater than " + epsilon);
+            }
 		}
 	}
 }

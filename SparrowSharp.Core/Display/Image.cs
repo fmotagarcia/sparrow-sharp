@@ -76,7 +76,7 @@ namespace Sparrow.Display
         /// </summary>
         public Point TexCoordsOfVertex(int vertexID)
         {
-            return _vertexData.TexCoordsAtIndex(vertexID);
+            return _vertexData.TexCoordsAt(vertexID);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Sparrow.Display
                 _vertexData.CopyToVertexData(_vertexDataCache, copyColor);
                 _texture.AdjustVertexData(_vertexDataCache, 0, 4);
             }
-            _vertexDataCache.CopyToVertexData(targetData, atIndex, 4, copyColor);
+            _vertexDataCache.CopyToVertexData(targetData, copyColor, atIndex, 4);
         }
 
         /// <summary>

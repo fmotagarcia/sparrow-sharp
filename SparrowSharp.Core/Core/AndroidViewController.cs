@@ -68,17 +68,17 @@ namespace Sparrow.Core
                     }
                 }
                 Log.Verbose("Sparrow", "Created format {0}", GraphicsContext.GraphicsMode);
-                All status = GL.CheckFramebufferStatus(All.Framebuffer);
+                FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
                 Log.Verbose("Sparrow", "Framebuffer Status: " + status);
             }
             catch (Exception)
             {
                 throw new NotSupportedException("Could not create OpenGLES 2.0 frame buffer");
             }
-            GL.Disable(All.CullFace);
-            GL.Disable(All.DepthTest);
-            GL.Disable(All.Dither);
-            GL.Enable(All.Blend);
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Dither);
+            GL.Enable(EnableCap.Blend);
 
             if (_contextWasLost)
             {
