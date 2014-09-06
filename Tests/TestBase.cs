@@ -1,7 +1,6 @@
 ﻿using System;
 using Sparrow.Utils;
 using OpenTK;
-using OpenTK.Graphics.ES20;
 using NUnit.Framework;
 
 namespace Tests
@@ -16,16 +15,25 @@ namespace Tests
 
 		public void CompareVector(Vector2 v1, Vector2 v2)
 		{
-			AssertEqualsWithSmallError(v1.X, v2.X, "wrong vector.x");
-			AssertEqualsWithSmallError(v1.Y, v2.Y, "wrong vector.y");
+			AssertAreEqualWithSmallError(v1.X, v2.X, "wrong vector.x");
+			AssertAreEqualWithSmallError(v1.Y, v2.Y, "wrong vector.y");
 		}
 
-		public void AssertEqualsWithSmallError(float a, float b, string message = "", float epsilon = 0.0001f) {
+		public void AssertAreEqualWithSmallError(float a, float b, string message = "", float epsilon = 0.0001f) {
             if (Math.Abs(a - b) > epsilon)
             {
                 Assert.Fail(message + " Difference " + Math.Abs(a - b) + " is greater than " + epsilon);
             }
 		}
+
+        public void CompareVertexColor (VertexColor expected, VertexColor v2)
+        {
+            if (expected.R != v2.R || expected.B != v2.B || expected.G != v2.G || expected.A != v2.A)
+            {
+                Assert.Fail("Excepted: " + expected.R + " " + expected.G + " " + expected.B + " " + expected.A + " " +
+                    " actual: " + v2.R + " " + v2.G + " " + v2.B + " " + v2.A);
+            }
+        }
 	}
 }
 

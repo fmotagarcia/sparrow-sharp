@@ -5,11 +5,11 @@ namespace Sparrow.Utils
     public static class NumberUtil
     {
         /// <summary>
-        /// Lookup table for fast sine calulations
+        /// Lookup table for fast sine calculations
         /// </summary>
         public readonly static float[] SinLUT = new float[2048];
         /// <summary>
-        /// Lookup table for fast cosine calulations
+        /// Lookup table for fast cosine calculations
         /// </summary>
         public readonly static float[] CosLUT = new float[2048];
 
@@ -41,7 +41,7 @@ namespace Sparrow.Utils
         /// </summary>
         public static float FastSin(float angle)
         {
-            return SinLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; 
+            return SinLUT[(int)(angle * 325.94932345220164765467394738691f + 0.5f) & 2047]; 
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Sparrow.Utils
         /// </summary>
         public static float FastCos(float angle)
         {
-            return CosLUT[(int)(angle * 325.94932345220164765467394738691f) & 2047]; //325.949 is 2048/2PI    
+            return CosLUT[(int)(angle * 325.94932345220164765467394738691f + 0.5f) & 2047]; //325.949 is 2048/2PI    
         }
 
         public static int NextPowerOfTwo(int number)

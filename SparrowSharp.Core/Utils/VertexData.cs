@@ -371,7 +371,7 @@ namespace Sparrow.Utils
                 return;
             }
 
-            int minAlpha = _premultipliedAlpha ? (int)(MIN_ALPHA * 255.0) : 0;
+            int minAlpha = _premultipliedAlpha ? (int)(MIN_ALPHA * 255.0f) : 0;
 
             for (int i = index; i < index + numVertices; ++i)
             {

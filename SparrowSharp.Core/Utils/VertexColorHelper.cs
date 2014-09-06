@@ -21,7 +21,8 @@
             vertexColor.R = ColorUtil.GetR(color);
             vertexColor.G = ColorUtil.GetG(color);
             vertexColor.B = ColorUtil.GetB(color);
-            vertexColor.A = (byte)(alpha * 255.0f);
+
+            vertexColor.A = (byte)(alpha * 255.0f + 0.5f);
 
             return vertexColor;
         }
@@ -37,9 +38,9 @@
             else
             {
                 return VertexColorHelper.CreateVertexColor(
-                    (byte)(color.R * alpha),
-                    (byte)(color.G * alpha),
-                    (byte)(color.B * alpha),
+                    (byte)(color.R * alpha + 0.5f),
+                    (byte)(color.G * alpha + 0.5f),
+                    (byte)(color.B * alpha + 0.5f),
                     color.A);
             }
         }
@@ -54,10 +55,12 @@
             }
             else
             {
+                // 0.5f is added to prevent rounding issues, see 
+                // http://stackoverflow.com/questions/25703304/why-does-a-division-result-differ-based-on-the-cast-type
                 return VertexColorHelper.CreateVertexColor(
-                    (byte)(color.R / alpha),
-                    (byte)(color.G / alpha),
-                    (byte)(color.B / alpha),
+                    (byte)(color.R / alpha + 0.5f),
+                    (byte)(color.G / alpha + 0.5f),
+                    (byte)(color.B / alpha + 0.5f),
                     color.A);
             }
         }
