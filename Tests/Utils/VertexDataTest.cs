@@ -2,6 +2,8 @@
 using NUnit.Framework;
 using Sparrow.Utils;
 using OpenTK;
+using Sparrow.Geom;
+using System;
 
 namespace Tests
 {
@@ -148,6 +150,56 @@ namespace Tests
                 (byte)(204 * 0.8f + 0.5f)), vertexData.VertexColors[0]);
         }
 
+        [Test]
+        public void TestTransformVertices()
+        {
+            VertexData vertexData = new VertexData(3, true);
+
+            Vertex defaultVertex = DefaultVertex();
+            Vertex secondVertex = DefaultVertex();
+            secondVertex.Position.X = 1.0f;
+            secondVertex.Position.Y = 2.0f;
+
+            vertexData.Vertices[0] = defaultVertex;
+            vertexData.Vertices[1] = secondVertex;
+            vertexData.Vertices[2] = defaultVertex;
+
+            Matrix matrix = Matrix.Create();
+            matrix.Rotate((float)Math.PI);
+           
+            vertexData.TransformVertices(matrix, 1, 1);
+
+            Vertex expected = DefaultVertex();
+            expected.Position.X = -1.0f;
+            expected.Position.Y = -2.0f;
+
+            CompareVertex(vertexData.Vertices[0], DefaultVertex());
+            CompareVertex(vertexData.Vertices[1], expected);
+            CompareVertex(vertexData.Vertices[2], DefaultVertex());
+        }
+
+        [Test]
+        public void TestCopy()
+        {
+            VertexData sourceData = new VertexData(3);
+
+            Vertex defaultVertex = DefaultVertex();
+            Vertex vertex = AnyVertex();
+
+            sourceData.Vertices[0] = vertex;
+            sourceData.Vertices[1] = defaultVertex;
+            sourceData.Vertices[2] = vertex;
+
+            VertexData targetData = new VertexData(5, false);
+
+            sourceData.CopyToVertexData(targetData, true, 2);
+
+            CompareVertex(defaultVertex, targetData.Vertices[0]);
+            CompareVertex(defaultVertex, targetData.Vertices[1]);
+            CompareVertex(vertex, targetData.Vertices[2]);
+            CompareVertex(defaultVertex, targetData.Vertices[3]);
+            CompareVertex(vertex, targetData.Vertices[4]);
+        }
 
 		private Vertex AnyVertex() {
 			Vertex vertex = new Vertex();
