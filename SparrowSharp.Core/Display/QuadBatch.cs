@@ -585,7 +585,7 @@ namespace Sparrow.Display
 
                 if (GLExtensions.MapBufferSupported)
                 {
-                    GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), IntPtr.Zero, All.StaticDraw);
+                    GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), IntPtr.Zero, All.StaticDraw);
                     IntPtr colorBuffer = GL.Oes.MapBuffer(All.ArrayBuffer, All.WriteOnlyOes);
                     unsafe
                     {
@@ -608,11 +608,11 @@ namespace Sparrow.Display
                 {
                     if (_bufferNeedsReInit)
                     {
-                        GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(float)), _vertexData.VertexColors, All.StaticDraw);
+                        GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4 ), _vertexData.VertexColors, All.StaticDraw);
                     }
                     else
                     {
-                        GL.BufferSubData(All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.VertexColors);
+                        GL.BufferSubData(All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), _vertexData.VertexColors);
                     }
                 }
             }
