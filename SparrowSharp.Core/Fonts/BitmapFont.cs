@@ -42,15 +42,7 @@ namespace SparrowSharp.Fonts
         private readonly Texture _fontTexture;
         private readonly Dictionary<int, BitmapChar> _chars;
         private string _name;
-
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-        }
-
+        public string Name { get { return _name; } }
         private float _size;
         private float _lineHeight;
         private float _baseline;
@@ -315,7 +307,7 @@ namespace SparrowSharp.Fonts
                         }
                         else if (bitmapChar == null)
                         {
-                            Console.WriteLine(@"Missing character: {0}", charId);
+                            Console.WriteLine("Missing character: " + charId);
                         }
                         else
                         {
