@@ -51,7 +51,8 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBase.cs" />
-    <Compile Include="Utils\VertexDataTest.cs" />
+    <Compile Include="Tests\VertexDataTest.cs" />
+    <Compile Include="Tests\MatrixTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -69,6 +70,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Utils\" />
+    <Folder Include="Tests\" />
   </ItemGroup>
 </Project>

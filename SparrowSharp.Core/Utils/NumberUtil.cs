@@ -27,7 +27,7 @@ namespace Sparrow.Utils
         /// </summary>
         public static bool Equals(float a, float b)
         {
-            return Math.Abs(a - b) < 0.000001f;
+            return Math.Abs(a - b) < 0.000005f;
         }
 
         public static float Clamp(float value, float min, float max)

@@ -308,5 +308,10 @@ namespace Sparrow.Geom
                              ); 
             return matrix;
         }
+
+        public override string ToString() 
+        {
+            return "A: " + A + " B: " + B + " C: " + C + " D: " + D + " Tx: " + Tx + " Ty: " + Ty;
+        }
     }
 }
