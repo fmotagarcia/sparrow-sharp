@@ -87,6 +87,8 @@ namespace Sparrow.Samples.Android
             _started = true;
             _waitFrames = 3;
             AddTestObjects(1);
+
+            SparrowSharpApp.ShowStats = true;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)

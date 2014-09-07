@@ -100,6 +100,7 @@
     <Compile Include="Touches\TouchPhase.cs" />
     <Compile Include="Fonts\TextField.cs" />
     <Compile Include="Textures\RenderTexture.cs" />
+    <Compile Include="Utils\StatsDisplay.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

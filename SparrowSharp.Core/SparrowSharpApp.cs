@@ -41,6 +41,11 @@ namespace Sparrow
             Stage.Render(RenderSupport);
             RenderSupport.FinishQuadBatch();
 
+            if (stats != null)
+            {
+                stats.NumDrawCalls = RenderSupport.NumDrawCalls - 2; // stats display requires 2 itself
+            }
+                
             #if DEBUG
             RenderSupport.CheckForOpenGLError();
             #endif
@@ -109,6 +114,19 @@ namespace Sparrow
         private static float ViewScaleFactor
         {
             get { return 1.0f; }
+        }
+
+        private static StatsDisplay stats;
+
+        public static bool ShowStats
+        {
+            set {
+                if (stats == null) {
+                    stats = new StatsDisplay();
+                    Stage.AddChild(stats);
+                }
+                stats.Visible = value;
+            }
         }
     }
 }

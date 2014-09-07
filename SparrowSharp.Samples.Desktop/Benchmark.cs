@@ -44,7 +44,7 @@ namespace Sparrow.Samples
             for (int i = 0; i < numObjects; ++i)
             {   
                 Image egg = new Image(textures[0]);
-                if (i < 5)
+                if (i < -5)
                 {
                     //ColorMatrixFilter cf = new ColorMatrixFilter ();
                     egg.Filter = new BlurFilter(4, 1.1f);
@@ -72,7 +72,9 @@ namespace Sparrow.Samples
         {
             _started = true;
             _waitFrames = 3;
-            AddTestObjects(4000);
+            AddTestObjects(4);
+
+            SparrowSharpApp.ShowStats = true;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)
