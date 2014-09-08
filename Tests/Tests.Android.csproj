@@ -53,6 +53,7 @@
     <Compile Include="TestBase.cs" />
     <Compile Include="Tests\VertexDataTest.cs" />
     <Compile Include="Tests\MatrixTest.cs" />
+    <Compile Include="Tests\DisplayObjectContainerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

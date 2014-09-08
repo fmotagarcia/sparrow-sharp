@@ -54,8 +54,6 @@ namespace Sparrow
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
         }
 
-        public delegate Sprite RootCreator();
-
         public static void Start(float width, float height, Sprite root)
         {
             if (root == null)
@@ -127,6 +125,14 @@ namespace Sparrow
                 }
                 stats.Visible = value;
             }
+        }
+
+        public static void Destroy()
+        {
+            stats = null;
+            _stage.RemoveAllChildren();
+            _stage = null;
+            Programs.Clear();
         }
     }
 }
