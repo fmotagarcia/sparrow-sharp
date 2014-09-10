@@ -42,7 +42,8 @@ namespace Sparrow.Display
         private int _vertexBufferName;
         private int _vertexColorsBufferName;
         private ushort[] _indexData;
-        private bool _bufferNeedsReInit = true;
+        private bool _vertexBufferNeedsReInit = true;
+        private bool _colorBufferNeedsReInit = true;
         private int _capacity;
         private int _indexBufferName;
 
@@ -132,7 +133,7 @@ namespace Sparrow.Display
 
             if (_numQuads + 1 > _capacity)
             {
-                Expand();
+                Capacity = _capacity < 8 ? 16 : _capacity * 2;
             }
 
             if (_numQuads == 0)
@@ -473,11 +474,6 @@ namespace Sparrow.Display
             return quadBatchID;
         }
 
-        private void Expand()
-        {
-            Capacity = _capacity < 8 ? 16 : _capacity * 2;
-        }
-
         private void CreateBuffers()
         {
             DestroyBuffers();
@@ -569,8 +565,10 @@ namespace Sparrow.Display
             }
             else
             {
-                if (_bufferNeedsReInit)
+                // this optimization does not seem to increase framerate (although openGL docs state it should)
+                if (_vertexBufferNeedsReInit)
                 {
+                    _vertexBufferNeedsReInit = false;
                     GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
                 }
                 else
@@ -606,8 +604,10 @@ namespace Sparrow.Display
                 }
                 else
                 {
-                    if (_bufferNeedsReInit)
+                    // this optimization does not seem to increase framerate on (although openGL docs state it should)
+                    if (_colorBufferNeedsReInit)
                     {
+                        _colorBufferNeedsReInit = false;
                         GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4 ), _vertexData.VertexColors, All.StaticDraw);
                     }
                     else
@@ -616,7 +616,6 @@ namespace Sparrow.Display
                     }
                 }
             }
-            _bufferNeedsReInit = false;
             _syncRequired = false;
         }
 
@@ -629,7 +628,8 @@ namespace Sparrow.Display
                 {
                     throw new Exception("Capacity must not be zero");
                 }
-                _bufferNeedsReInit = true;
+                _vertexBufferNeedsReInit = true;
+                _colorBufferNeedsReInit = true;
                 uint oldCapacity = (uint)_capacity;
                 _capacity = value;
                 int numVertices = value * 4;
