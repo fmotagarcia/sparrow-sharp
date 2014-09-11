@@ -170,6 +170,8 @@ namespace Sparrow.Core
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
+        public static bool HasOpenGLError { get; internal set; }
+
         /// <summary>
         /// Checks for an OpenGL error. If there is one, it is logged an the error code is returned.
         /// </summary>
@@ -183,6 +185,7 @@ namespace Sparrow.Core
             string errstr = "";
             while (err != ErrorCode.NoError)
             {
+                HasOpenGLError = true;
                 errstr += "There was an OpenGL error: " + err;
                 #if __ANDROID__
                 err = GL.GetErrorCode(); // TODO: check if this works on iOS

@@ -1,4 +1,4 @@
-﻿using OpenTK.Graphics.ES20;
+﻿using Sparrow.Core;
 
 namespace Sparrow.Utils
 {
@@ -9,11 +9,9 @@ namespace Sparrow.Utils
 
         static GLExtensions()
         {
-            string extensions = GL.GetString(All.Extensions);
+            MapBufferSupported = Context.DeviceSupportsOpenGLExtension("GL_OES_mapbuffer");
 
-            MapBufferSupported = extensions.IndexOf("GL_OES_mapbuffer") >= 0;
-
-            TextureMaxAnisotropySupported = extensions.IndexOf("GL_EXT_texture_filter_anisotropic") >= 0;
+            TextureMaxAnisotropySupported = Context.DeviceSupportsOpenGLExtension("GL_EXT_texture_filter_anisotropic");
         }
     }
 }

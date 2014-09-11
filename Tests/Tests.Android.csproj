@@ -54,6 +54,7 @@
     <Compile Include="Tests\VertexDataTest.cs" />
     <Compile Include="Tests\MatrixTest.cs" />
     <Compile Include="Tests\DisplayObjectContainerTest.cs" />
+    <Compile Include="Tests\RenderSupportTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
