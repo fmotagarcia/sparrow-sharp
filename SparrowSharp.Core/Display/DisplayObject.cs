@@ -713,7 +713,9 @@ namespace Sparrow.Display
             var displayObjectContainer = this as DisplayObjectContainer;
             if (displayObjectContainer != null)
             {
-                foreach (var child in displayObjectContainer.Children)
+                // We need to make a copy here because the Children list might be modified in an AddedToStage event handler
+                List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
+                foreach (var child in copy)
                 {
                     child.BroadcastAddedToStageEvent(currentTarget);
                 }
@@ -729,7 +731,9 @@ namespace Sparrow.Display
             var displayObjectContainer = this as DisplayObjectContainer;
             if (displayObjectContainer != null)
             {
-                foreach (var child in displayObjectContainer.Children)
+                // We need to make a copy here because the Children list might be modified in an RemovedFromStage event handler
+                List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
+                foreach (var child in copy)
                 {
                     child.BroadcastRemovedFromStageEvent(currentTarget);
                 }
@@ -753,7 +757,9 @@ namespace Sparrow.Display
             var displayObjectContainer = this as DisplayObjectContainer;
             if (displayObjectContainer != null)
             {
-                foreach (var child in displayObjectContainer.Children)
+                // We need to make a copy here because the Children list might be modified in an EnterFrame event handler
+                List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
+                foreach (var child in copy)
                 {
                     child.BroadcastEnterFrameEvent(passedTime);
                 }
