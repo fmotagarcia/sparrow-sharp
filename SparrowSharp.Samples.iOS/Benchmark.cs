@@ -6,6 +6,8 @@ using MonoTouch.UIKit;
 
 namespace Sparrow.Samples.iOS
 {
+    // see http://forums.xamarin.com/discussion/204/is-there-a-simple-workaround-for-system-activator-createinstance-being-not-supported
+    [Preserve (AllMembers = true)]
 	public class Benchmark : Sprite
 	{
 		private Sprite _container;

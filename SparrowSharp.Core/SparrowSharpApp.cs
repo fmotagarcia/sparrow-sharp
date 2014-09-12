@@ -52,9 +52,9 @@ namespace Sparrow
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
         }
 
-        public static void Start(float width, float height, Sprite root)
+        public static void Start(float width, float height, Type rootType)
         {
-            if (root == null)
+            if (rootType == null)
             {
                 throw new InvalidOperationException("Root cannot be null!");
             }
@@ -73,7 +73,7 @@ namespace Sparrow
             Context = new Context();
             renderSupport = new RenderSupport();
 
-            Root = root;
+            Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
         }
 

@@ -15,7 +15,7 @@ namespace SparrowSharp.Sample.iOS
 
 		public OpenGLViewController(string nibName, NSBundle bundle) : base(nibName, bundle)
 		{
-			_onLoadedAction = (width, height) => SparrowSharpApp.Start(width, height, new Benchmark());
+            _onLoadedAction = (width, height) => SparrowSharpApp.Start(width, height, typeof(Benchmark));
 		}
 
 		new EAGLView View { get { return (EAGLView)base.View; } }

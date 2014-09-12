@@ -9,6 +9,7 @@ using OpenTK.Platform.Android;
 using Sparrow.Geom;
 using Sparrow.ResourceLoading;
 using Sparrow.Touches;
+using Sparrow.Display;
 
 namespace Sparrow.Core
 {
@@ -21,14 +22,16 @@ namespace Sparrow.Core
     {
         public delegate void OnLoadedAction(int viewWidth,int viewHeight);
 
+        // TODO this should dispatch a resize event on the Stage
         private readonly OnLoadedAction _onLoadedAction;
-        private bool _contextWasLost;
+
+        private Type _rootClass;
         public static Android.Content.Context AndroidContext;
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
 
-        public AndroidViewController(Android.Content.Context context, OnLoadedAction onLoadedAction) : base(context)
+        public AndroidViewController(Android.Content.Context context, Type rootClass) : base(context)
         {
-            _onLoadedAction = onLoadedAction;
+            _rootClass = rootClass;
             Setup(context);
         }
 
@@ -80,21 +83,24 @@ namespace Sparrow.Core
             GL.Disable(EnableCap.Dither);
             GL.Enable(EnableCap.Blend);
 
-            if (_contextWasLost)
-            {
-                // todo reload context, ReadjustStageSize, ...
-            }
-
             MakeCurrent();
         }
-        // This gets called when the drawing surface is ready
+
+        // This gets called when the drawing surface is ready (=on startup and when the app regains focus)
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             MakeCurrent();
 
-            _onLoadedAction(Size.Width, Size.Height);
+            if (SparrowSharpApp.Root == null)
+            {
+                SparrowSharpApp.Start(Size.Width, Size.Height, _rootClass);
+            }
 
+            if (_onLoadedAction != null)
+            {
+                _onLoadedAction(Size.Width, Size.Height);
+            }
             // Run the render loop
             Run();
         }
@@ -111,8 +117,6 @@ namespace Sparrow.Core
         protected override void DestroyFrameBuffer()
         {
             base.DestroyFrameBuffer();
-
-            _contextWasLost = GraphicsContext == null || GraphicsContext.IsDisposed;
         }
 
         /// <summary>
