@@ -9,7 +9,6 @@ using OpenTK.Platform.Android;
 using Sparrow.Geom;
 using Sparrow.ResourceLoading;
 using Sparrow.Touches;
-using Sparrow.Display;
 
 namespace Sparrow.Core
 {
@@ -160,7 +159,7 @@ namespace Sparrow.Core
                     newTouch.InitialGlobalY = newTouch.GlobalY;
                     newTouch.Phase = TouchPhase.Began;
                     Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
-                    newTouch.Target = SparrowSharpApp.Root.HitTestPoint(touchPosition);
+                    newTouch.Target = SparrowSharpApp.Stage.HitTestPoint(touchPosition);
 
                     _touches.Add(newTouch.TouchID, newTouch);
                     break;
@@ -201,7 +200,7 @@ namespace Sparrow.Core
                     touchInFocus = _touches[pointerId];
                     touchInFocus.Phase = TouchPhase.Ended;
                     long downTime = Android.OS.SystemClock.UptimeMillis() - e.DownTime;
-
+                    touchInFocus.TimeStamp = now;
                     double dist = Math.Sqrt(
                                       (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) * (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) +
                                       (touchInFocus.GlobalY - touchInFocus.InitialGlobalY) * (touchInFocus.GlobalY - touchInFocus.InitialGlobalY));
