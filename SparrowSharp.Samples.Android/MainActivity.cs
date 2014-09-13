@@ -21,6 +21,8 @@ namespace Sparrow.Samples.Android
         {
             base.OnCreate(savedInstanceState);
 
+            RequestWindowFeature(WindowFeatures.NoTitle);
+
             if (sparrowView == null)
             {
                 sparrowView = new AndroidViewController(BaseContext, typeof(Benchmark));  

@@ -114,6 +114,12 @@ namespace Sparrow.Core
             SwapBuffers();
         }
 
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            SparrowSharpApp.ReadjustStageSize(Size.Width, Size.Height);
+        }
+
         protected override void DestroyFrameBuffer()
         {
             base.DestroyFrameBuffer();
