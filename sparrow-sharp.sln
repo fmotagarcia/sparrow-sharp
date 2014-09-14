@@ -11,9 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Core.Desktop",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Desktop", "SparrowSharp.Samples.Desktop\SparrowSharp.Samples.Desktop.csproj", "{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Android", "Tests\Tests.Android.csproj", "{EE0AF766-1015-47E9-9EF5-50DAD0ECC094}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.iOS", "SparrowSharp.Samples.iOS\SparrowSharp.Samples.iOS.csproj", "{49846257-890D-49D0-98D4-A315A55289ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Android", "UnitTests\Android\UnitTests.Android.csproj", "{EE0AF766-1015-47E9-9EF5-50DAD0ECC094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Windows", "UnitTests\Windows\UnitTests.Windows.csproj", "{3928A083-B019-436A-8497-6E5D731A1B85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,30 @@ Global
 		{2223B789-0378-4BCE-82F0-F1B059DC4B01}.Release|iPhone.Build.0 = Release|Any CPU
 		{2223B789-0378-4BCE-82F0-F1B059DC4B01}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{2223B789-0378-4BCE-82F0-F1B059DC4B01}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|iPhone.Build.0 = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{3928A083-B019-436A-8497-6E5D731A1B85}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{49846257-890D-49D0-98D4-A315A55289ED}.Ad-Hoc|Any CPU.ActiveCfg = Ad-Hoc|iPhone
 		{49846257-890D-49D0-98D4-A315A55289ED}.Ad-Hoc|Any CPU.Build.0 = Ad-Hoc|iPhone
 		{49846257-890D-49D0-98D4-A315A55289ED}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
@@ -188,7 +214,7 @@ Global
 		{EE0AF766-1015-47E9-9EF5-50DAD0ECC094}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj
+		StartupItem = UnitTests\Windows\UnitTests.Windows.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None

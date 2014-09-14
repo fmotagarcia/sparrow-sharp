@@ -9,7 +9,7 @@ namespace Tests
 	{
 		public void CompareVertex (Vertex v1, Vertex v2)
 		{
-			CompareVector(v1.Position, v2.Position);
+            CompareVector(v1.Position, v2.Position);;
 			CompareVector(v1.TexCoords, v2.TexCoords);
 		}
 

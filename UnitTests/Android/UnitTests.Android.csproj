@@ -43,22 +43,21 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="Xamarin.Android.NUnitLite" />
     <Reference Include="OpenTK-1.0" />
+    <Reference Include="Xamarin.Android.NUnitLite" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestBase.cs" />
-    <Compile Include="Tests\VertexDataTest.cs" />
-    <Compile Include="Tests\MatrixTest.cs" />
-    <Compile Include="Tests\DisplayObjectContainerTest.cs" />
-    <Compile Include="Tests\RenderSupportTest.cs" />
-    <Compile Include="Tests\DisplayObjectTest.cs" />
+    <Compile Include="..\Shared\DisplayObjectContainerTest.cs" />
+    <Compile Include="..\Shared\DisplayObjectTest.cs" />
+    <Compile Include="..\Shared\MatrixTest.cs" />
+    <Compile Include="..\Shared\RenderSupportTest.cs" />
+    <Compile Include="..\Shared\TestBase.cs" />
+    <Compile Include="..\Shared\VertexDataTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
@@ -67,12 +66,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
+    <ProjectReference Include="..\..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
       <Project>{175877F9-051C-4E18-8479-4E15335D683B}</Project>
       <Name>SparrowSharp.Core.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Tests\" />
+    <Folder Include="..\Shared\" />
   </ItemGroup>
 </Project>
