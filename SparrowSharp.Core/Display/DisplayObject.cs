@@ -285,7 +285,7 @@ namespace Sparrow.Display
             set
             {
                 // move to equivalent value in range [0 deg, 360 deg] without a loop
-                value = value % (2.0f * (float)Math.PI);
+                value = value % (float)(2.0f * Math.PI);
                 // move to [-180 deg, +180 deg]
                 if (value < -Math.PI)
                 {
@@ -363,9 +363,9 @@ namespace Sparrow.Display
                         }
                         else
                         {
-
-                            float sin = NumberUtil.SinLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
-                            float cos = NumberUtil.CosLUT[(int)(_rotation * 325.94932345220164765467394738691f) & 2047];
+                            // inline for fast calculation
+                            float sin = NumberUtil.SinLUT[(int)(_rotation * 325.94932345220164765467394738691f + 0.5f) & 2047];
+                            float cos = NumberUtil.CosLUT[(int)(_rotation * 325.94932345220164765467394738691f + 0.5f) & 2047];
 
                             float a = _scaleX * cos;
                             float b = _scaleX * sin;
@@ -409,18 +409,25 @@ namespace Sparrow.Display
                 _orientationChanged = false;
                 _transformationMatrix.CopyFromMatrix(value);
 
-
                 _pivotX = 0.0f;
                 _pivotY = 0.0f;
 
                 _x = value.Tx;
                 _y = value.Ty;
 
-                _skewX = (float)Math.Atan(-value.C / value.D);
-                _skewY = (float)Math.Atan(value.B / value.A);
+                _skewX = (value.D == 0.0f) ? 
+                    NumberUtil.PIHALF * Math.Sign(-value.C)
+                    : (float)Math.Atan(-value.C / value.D);
+                _skewY = (value.A == 0.0f) ? 
+                    NumberUtil.PIHALF * Math.Sign(value.B)
+                    : (float)Math.Atan( value.B / value.A);
 
-                _scaleX = value.A / (float)Math.Cos(_skewY);
-                _scaleY = value.D / (float)Math.Cos(_skewX);
+                _scaleY = (_skewX > -NumberUtil.PIQUARTER && _skewX < NumberUtil.PIQUARTER) ?  
+                    value.D / NumberUtil.FastCos(_skewX)
+                    : -value.C / NumberUtil.FastSin(_skewX);
+                _scaleX = (_skewY > -NumberUtil.PIQUARTER && _skewY < NumberUtil.PIQUARTER) ? 
+                    value.A / NumberUtil.FastCos(_skewY)
+                    :  value.B / NumberUtil.FastSin(_skewY);
 
                 if (NumberUtil.Equals(_skewX, _skewY))
                 {

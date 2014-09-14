@@ -27,7 +27,7 @@ namespace SparrowSharp.Samples.Android
             for (int i = 0; i < NUMTRIES; i++)
             {
                 angle += 0.01f;
-                ret1 = NumberUtil.SinLUT[(int)(angle * 159.154943092f) & 1000];
+                ret1 = NumberUtil.SinLUT[(int)(angle * 159.154943092f + 0.5f) & 1000];
             }
             var res1 = watch.ElapsedMilliseconds;
 

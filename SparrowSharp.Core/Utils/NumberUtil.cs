@@ -13,6 +13,9 @@ namespace Sparrow.Utils
         /// </summary>
         public readonly static float[] CosLUT = new float[2048];
 
+        public readonly static float PIQUARTER = (float)(Math.PI / 4.0f);
+        public readonly static float PIHALF = (float)(Math.PI / 2.0f);
+
         static NumberUtil()
         {
             for (int i = 0; i < 2048; i++)

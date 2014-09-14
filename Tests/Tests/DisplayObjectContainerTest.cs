@@ -15,7 +15,7 @@ namespace Tests
         [SetUp]
         protected void SetUp()
         {
-            SparrowSharpApp.Start(12, 12, new Sprite());
+            SparrowSharpApp.Start(12, 12, typeof(Sprite));
             testRoot = new Sprite();
             SparrowSharpApp.Stage.AddChild(testRoot);
         }
