@@ -8,17 +8,13 @@ namespace Sparrow.Core
 {
     public class DesktopViewController : GameWindow
     {
-        private Type _rootClass;
+        private readonly Type _rootClass;
 
         public DesktopViewController(Type rootClass)
         {
             _rootClass = rootClass;
 
             Load += HandleLoad;
-
-            Resize += HandleResize;
-
-            UpdateFrame += HandleUpdateFrame;
 
             RenderFrame += HandleRenderFrame;
 
@@ -27,31 +23,29 @@ namespace Sparrow.Core
         }
 
         private void HandleRenderFrame(object sender, FrameEventArgs e)
-        {
-            SwapBuffers();
-        }
-
-        private void HandleUpdateFrame(object sender, FrameEventArgs e)
-        {
+        { 
             SparrowSharpApp.Step(e.Time);
             // add game logic, input handling
             if (Keyboard[Key.Escape])
             {
                 Exit();
             }
+            SwapBuffers();
         }
 
-        private void HandleResize(object sender, EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
             GL.Viewport(0, 0, Width, Height);
+            SparrowSharpApp.ReadjustStageSize(Size.Width, Size.Height);
         }
 
         private void HandleLoad(object sender, EventArgs e)
         {
             // setup settings, load textures, sounds
-            VSync = VSyncMode.On;
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Dither);
             GL.Enable(EnableCap.Blend);
 
             FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
