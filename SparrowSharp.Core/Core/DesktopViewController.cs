@@ -3,19 +3,16 @@ using OpenTK;
 using OpenTK.Graphics.ES20;
 using OpenTK.Input;
 using Sparrow;
-using Sparrow.Core;
 
 namespace Sparrow.Core
 {
     public class DesktopViewController : GameWindow
     {
-        public delegate void OnLoadedAction(int viewWidth,int viewHeight);
+        private Type _rootClass;
 
-        private readonly OnLoadedAction _onLoadedAction;
-
-        public DesktopViewController(OnLoadedAction onLoadedAction)
+        public DesktopViewController(Type rootClass)
         {
-            _onLoadedAction = onLoadedAction;
+            _rootClass = rootClass;
 
             Load += HandleLoad;
 
@@ -62,7 +59,7 @@ namespace Sparrow.Core
             {
                 Console.WriteLine("Framebuffer error: " + status);
             }
-            _onLoadedAction(Size.Width, Size.Height);
+            SparrowSharpApp.Start(Size.Width, Size.Height, _rootClass);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Sparrow.Core;
-using Sparrow;
 using Sparrow.Samples;
 
 namespace SparrowSharp.Samples.Desktop
@@ -10,7 +9,7 @@ namespace SparrowSharp.Samples.Desktop
 		[STAThread]
 		public static void Main()
 		{
-			new DesktopViewController ((width, height) => SparrowSharpApp.Start(width, height, new Benchmark()));
+			new DesktopViewController (typeof(Benchmark));
 		}
 	}
 }
