@@ -94,7 +94,7 @@ namespace Sparrow.Display
             }
             else
             {
-                throw new IndexOutOfRangeException("Invalid child index"); 
+                throw new IndexOutOfRangeException("Invalid child index " + index); 
             }
         }
 

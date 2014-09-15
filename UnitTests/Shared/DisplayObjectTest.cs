@@ -12,22 +12,11 @@ namespace Tests
     public class DisplayObjectTest : TestBase
     {
 
-        [SetUp]
-        protected void SetUp()
-        {
-            SparrowSharpApp.Start(12, 12, typeof(Sprite));
-        }
-
-        [TearDown]
-        protected void TearDown()
-        {
-            SparrowSharpApp.Stage.RemoveAllChildren();
-            SparrowSharpApp.Destroy();
-        }
-
         [Test]
         public void TestRoot()
         {
+            SparrowSharpApp.Start(12, 12, typeof(Sprite));
+
             Sprite root = new Sprite();
             Sprite child = new Sprite();
             Sprite grandChild = new Sprite();
@@ -39,6 +28,9 @@ namespace Tests
             SparrowSharpApp.Stage.AddChild(root);
 
             Assert.AreEqual(SparrowSharpApp.Stage, grandChild.Root, "Wrong root " + grandChild.Root);
+
+            SparrowSharpApp.Stage.RemoveAllChildren();
+            SparrowSharpApp.Destroy();
         }
 
         [Test]
@@ -168,6 +160,78 @@ namespace Tests
             Assert.IsTrue(NumberUtil.Equals(0, bounds.Y), "wrong inner bounds.y: " + bounds.Y);
             Assert.IsTrue(NumberUtil.Equals(10, bounds.Width), "wrong inner bounds.width: " + bounds.Width);
             Assert.IsTrue(NumberUtil.Equals(20, bounds.Height), "wrong innter bounds.height: " + bounds.Height);
+        }
+
+        [Test]
+        public void TestZeroSize()
+        {
+            Sprite sprite = new Sprite();
+
+            AssertAreEqualWithSmallError(1.0f, sprite.ScaleX);
+            AssertAreEqualWithSmallError(1.0f, sprite.ScaleY);
+
+            // sprite is empty, scaling should thus have no effect!
+            sprite.Width = 100;
+            sprite.Height = 200;
+            AssertAreEqualWithSmallError(1.0f, sprite.ScaleX, "wrong scaleX value");
+            AssertAreEqualWithSmallError(1.0f, sprite.ScaleY, "wrong scaleY value");
+            AssertAreEqualWithSmallError(0.0f, sprite.Width, "wrong width");
+            AssertAreEqualWithSmallError(0.0f, sprite.Height, "wrong height");
+
+            // setting a value to zero should be no problem -- and the original size should be remembered.
+            Quad quad = new Quad(100, 200);
+            quad.ScaleX = 0.0f;
+            quad.ScaleY = 0.0f;
+            AssertAreEqualWithSmallError(0.0f, quad.Width, "wrong width");
+            AssertAreEqualWithSmallError(0.0f, quad.Height, "wrong height");
+
+            quad.ScaleX = 1.0f;
+            quad.ScaleY = 1.0f;
+            AssertAreEqualWithSmallError(100.0f, quad.Width, "wrong width");
+            AssertAreEqualWithSmallError(200.0f, quad.Height, "wrong height");
+            AssertAreEqualWithSmallError(1.0f, quad.ScaleX, "wrong scaleX value");
+            AssertAreEqualWithSmallError(1.0f, quad.ScaleY, "wrong scaleY value");
+        }
+
+        [Test]
+        public void TestLocalToGlobal()
+        {
+            Sprite root = new Sprite();
+            Sprite sprite = new Sprite();
+            sprite.X = 10;
+            sprite.Y = 20;
+            root.AddChild(sprite);
+            Sprite sprite2 = new Sprite();
+            sprite2.X = 150;
+            sprite2.Y = 200;    
+            sprite.AddChild(sprite2);
+
+            Point localPoint = Point.Create(0, 0);
+            Point globalPoint = sprite2.LocalToGlobal(localPoint);
+            Point expectedPoint = Point.Create(160, 220);
+            Assert.IsTrue(globalPoint.Equals(expectedPoint));
+            // the position of the root object should be irrelevant -- we want the coordinates
+            // *within* the root coordinate system!
+            root.X = 50;
+            globalPoint = sprite2.LocalToGlobal(localPoint);
+            Assert.IsTrue(globalPoint.Equals(expectedPoint));
+        }
+
+        [Test]
+        public void TestLocalToGlobalWithPivot()
+        {
+            Sprite sprite = new Sprite();
+            Quad quad = new Quad(40, 30);
+            quad.X = 10;
+            quad.Y = 20;
+            quad.PivotX = quad.Width;
+            quad.PivotY = quad.Height;
+            sprite.AddChild(quad);
+
+            Point point = Point.Create(0, 0);
+            Point globalPoint = quad.LocalToGlobal(point);
+            AssertAreEqualWithSmallError(-30.0f, globalPoint.X, "wrong global point with pivot");
+            AssertAreEqualWithSmallError(-10.0f, globalPoint.Y, "wrong global point with pivot");
         }
     }
 }

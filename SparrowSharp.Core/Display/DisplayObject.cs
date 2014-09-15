@@ -711,6 +711,14 @@ namespace Sparrow.Display
             }
         }
 
+        internal virtual void InvokeRemoved()
+        {
+            if (Removed != null)
+            {
+                Removed(this, this);
+            }
+        }
+
         internal void BroadcastAddedToStageEvent(DisplayObjectContainer currentTarget)
         {
             if (AddedToStage != null)
@@ -747,13 +755,6 @@ namespace Sparrow.Display
             }
         }
 
-        internal virtual void InvokeRemoved()
-        {
-            if (Removed != null)
-            {
-                Removed(this, this);
-            }
-        }
         // TODO this is optmized in Sparrow-s; it maintains an array of things on the Stage
         internal void BroadcastEnterFrameEvent(float passedTime)
         {
