@@ -3,6 +3,7 @@ using Sparrow.Display;
 using Sparrow.Textures;
 using Sparrow.ResourceLoading;
 using MonoTouch.UIKit;
+using MonoTouch.Foundation;
 
 namespace Sparrow.Samples.iOS
 {
@@ -71,7 +72,7 @@ namespace Sparrow.Samples.iOS
 			AddTestObjects(100);
 		}
 
-		private void EnterFrameHandler(DisplayObject target, DisplayObject currentTarget, float passedTime)
+		private void EnterFrameHandler(DisplayObject target, float passedTime)
 		{
 			if (!_started)
 				return;
