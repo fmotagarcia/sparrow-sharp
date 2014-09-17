@@ -7,7 +7,6 @@ using Sparrow.Geom;
 using Sparrow.Display;
 using SparrowSharp.Core;
 using Sparrow.ResourceLoading;
-using System.IO.Compression;
 
 namespace SparrowSharp.Fonts
 {
@@ -38,9 +37,9 @@ namespace SparrowSharp.Fonts
     public class BitmapFont
     {
         private const uint MAX_TEXT_CHAR_COUNT = 8192;
-        private readonly Image _helperImage;
-        private readonly Texture _fontTexture;
-        private readonly Dictionary<int, BitmapChar> _chars;
+        private Image _helperImage;
+        private Texture _fontTexture;
+        private Dictionary<int, BitmapChar> _chars;
         private string _name;
         public string Name { get { return _name; } }
         private float _size;
@@ -62,41 +61,38 @@ namespace SparrowSharp.Fonts
         /// </summary>
         public BitmapFont()
         {
-            byte[] fontTextureData = Convert.FromBase64String(MiniFontImageDataBase64);
-            MemoryStream fontXmlData = DecompressGZip(Convert.FromBase64String(MiniFontXmlDataBase64));
-            fontXmlData.Seek(0, SeekOrigin.Begin);
+            Stream fontTextureData = new MemoryStream(Convert.FromBase64String(MiniFont.MiniFontImageDataBase64));
+            MemoryStream fontXmlData = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(MiniFont.FontXML));
 
-            Stream stream = new MemoryStream(fontTextureData);
+            ParseFontData(fontTextureData, fontXmlData);
+        }
+
+        public BitmapFont(Stream fontTextureData, Stream fontXmlData)
+        {
+            ParseFontData(fontTextureData, fontXmlData);
+        }
+
+        private void ParseFontData(Stream fontTextureData, Stream fontXmlData)
+        {
+            if (fontTextureData == null || fontXmlData == null)
+            {
+                throw new InvalidOperationException("Font parsing requires texture and font XML to be set");
+            }
             TextureLoader texLoader = new TextureLoader();
-            GLTexture tex = texLoader.LoadFromStream(stream);
+            GLTexture tex = texLoader.LoadFromStream(fontTextureData);
             _fontTexture = new SubTexture(tex);
 
-            _name = TextField.MiniFontName;
-            _lineHeight = _size = _baseline = 10f; // FIXME
             _chars = new Dictionary<int,BitmapChar>();
             _helperImage = new Image(_fontTexture);
 
-            ParseFontData(fontXmlData);
-        }
+            XmlDocument xml = new XmlDocument();
+            xml.Load(fontXmlData);
 
-        private static MemoryStream DecompressGZip(byte[] gzip)
-        {
-            using (GZipStream stream = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress))
-            {
-                const int size = 4096;
-                byte[] buffer = new byte[size];
-                MemoryStream memory = new MemoryStream();
-                int count;
-                do
-                {
-                    count = stream.Read(buffer, 0, size);
-                    if (count > 0)
-                    {
-                        memory.Write(buffer, 0, count);
-                    }
-                } while (count > 0);
-                return memory;
-            }
+            float scale = _fontTexture.Scale;
+            ParseAndLoadChars(xml, scale);
+            ParseAndLoadKerning(xml, scale);
+            ParseAndLoadInfo(xml);
+            ParseAndLoadCommon(xml);
         }
 
         /// <summary>
@@ -153,25 +149,6 @@ namespace SparrowSharp.Fonts
             }
 
             return texture;
-        }
-
-        private bool ParseFontData(Stream data)
-        {
-            if (_fontTexture == null)
-            {
-                throw new InvalidOperationException("Font parsing requires texture to be set");
-            }
-
-            XmlDocument xml = new XmlDocument();
-            xml.Load(data);
-
-            float scale = _fontTexture.Scale;
-            ParseAndLoadChars(xml, scale);
-            ParseAndLoadKerning(xml, scale);
-            ParseAndLoadInfo(xml);
-            ParseAndLoadCommon(xml);
-
-            return false;
         }
 
         private void ParseAndLoadChars(XmlDocument xml, float scale)
@@ -436,52 +413,6 @@ namespace SparrowSharp.Fonts
 				
             return finalLocations;
         }
-
-        #region Embedded Mini Font
-
-        private const string MiniFontXmlDataBase64 = 
-            "H4sIAAAAAAAAA7Wc3XIbKRCF7/MUKt2nPM0/VXau8wZ7rbXlWLW2lFp5f7JPvxpxxgHBiEGhb1yyYn0+6Qb60DC+fz7s37" +
-            "98Wq3ud/vnw+p587h9WL/t9rv16rj77/TarVe/H16fHtbDerV737zuHs8vj2+Hw/vL+PLu/OnHw9vbYb963e23X7e7by/v" +
-            "4ZOb4wlhTz/+uHnd/vawJuHwzdeHtVHr1ffNt+3x9P746vGP7VNEfNn8eVw9Hv7an1jkaT2+i/dXu6fxPb1e/Xv+7I/z13" +
-            "92T6Ok07svkOBPP3B4fj5u38+if0yvP4vTP2ye/t7sx/+uCb8xZovBn9mWg00y6JYccA24v4CrOnyI2brEDgEXqj+bvAjs" +
-            "S91RUNxcUKgSFPIhKFKzwNUZrq6Mw1+A2wC/MhBvhothOMP1lYH4C3AKcI6EiiGMFsORUEEhLJYjoYJCWCxLQimExbEklM" +
-            "JQdCwJJXeGe56EhsWcBpaMCgKdZ46aQM+qhSzTR+IMXpTwCvhL8aIPHiVaDMvw87Ep0OUpNJEBKAbezsDrC6+JDUATe6iy" +
-            "fWIAmuB155IagK7KBYXhIjQHXIR1V96Szzo8KJdZQlUjvGSMRBjmSrDATWIBOsPDoq5ZlMtQjjSLchnGueFRHkaL4VEeRo" +
-            "tlUa5Sf9EZDn/Bozwk1PEoDwn1PMpDQj2P8sm8sEjXQ2peOtNhjYhH+4V3aaKLCp0E6qjItMtGe6FK9KR34buyDdZ0BrYY" +
-            "AtsvZCd2MUlowc/R5HXlJV005lPmcIWBbm5gU41NieXqyvaBPY3CvmyZuLmubILhGht+KZzKcGoYhi4ERQ6X7MgpmhsNNB" +
-            "k0i7KRsgBe3VZYmzjFvsoRFpWFfAFc1uDYV2h1CVeN8NJii8aFzmZQFzicIoty7P4Ni3ITwmJvUV4rcEKElou9RTlV4cG1" +
-            "uFuUV+EyxNxxxFygUHgW5SpUOM8Scy3g5XiC7kC/Vvtj+ufZFb1Q+zVc7tXavyinJdcipybatep/s3YhLfDXDMCiwJdckX" +
-            "eRVRz362D7n2y9ZA2goQSHLcrorpHuC1U6hAW9v4htG9muVOtcbC96w31sAfrCMY+UumSbRrYtFYxgunSWzg5wMQTlOgt5" +
-            "B7iTkI4jnb50k3RcIrZuZBeMkUGjOItKD7aNq2hnNk5cstnZgx3mj8/mTwe2nToWHMm001kORzYt6jNxpNOmJy2d4TYqQW" +
-            "PjtSMaLpQDnRyz9GU7jELPwcZVCM3BxuaWI5UuOWLpzMYJC0succDCkkvUTJZchvFtOHIJX2g4comes+XIJTrOliOX2F85" +
-            "jlzi2pbnyCX65J4ll9hZDSzJtMmWsy9cYVtFHOlUUC448gmnDHSxy3fztBdxNe6KnjbJkoGtkjsPnXXrpBr31S2SatyVTd" +
-            "j0SI5kEhy+4sgmWZUU5L5wuCvNkU9BJinJfeFYVAxHQhFym+VTNbILrUOb7JD7stEccxy6CfdjHYdwws07z6Mcx7QcynEL" +
-            "/KPkd4Xj8G3agHcOi5/uI3BIF2La33NoFx/3EVgGDBausG6N91ny3v4idqH7bsIs0hzoEHHPgKapzyQ54Nhy4uZKX7iQoT" +
-            "aLpclMDjsSevGSRtKdiOiiUXrpIgWUOwa2TTofEZsa2cWgwGtlg6ULPNQ4mUW8Axy3KGU2EGfYs0OldAXE4JpGNj9bhRfh" +
-            "6Nrw5DOxtxE8OgBSM/DkNLJ0uoTHEXSmvANcSKy2Wcw7wH1iQCO2amSXjBweuBMMbBqSS7Gd4XhcyLEox+NCjkd5WLU8j3" +
-            "JYUB7l02UEFuliOmJi0f5hEzm0C+SUcmvRgz41zQTPkIkbW7p44XYRu2jnXORC29h1q+gjG9qZjYMP2NAITo3wQplDfaYs" +
-            "KFFDQS4JeLGJQ7EL7Q2HCbU3wFUNjnsrMgt5F+Um9kTlwTIHrw0WPOSgMuGizjYVv6VxbcVcGYcxmxom5/QEtbtkR4uKWL" +
-            "RhKV61DxHXWVRm6C1LFp4T0plyWWfXhOMJRDzgVM7mInbJPeP82mRTvwscV3myqCyA2wocm1ubLSvUKLywHuIPSthrE5+W" +
-            "6C61+sHO5r2qs1VlFBL2trgn1BmOi0Lu2ooVw2cnZ1E5LGgW8hl403JoYgdaHipzbFMZKoSLFD6LygK4qsDx3CSWWvOBHn" +
-            "6ihxk0idIEur8b2ccvn+7vzn/v5X/zg7A/9kUAAA==";
-        // 128 x 64 png image, characters are max. is 5x5 pixels
-        private const string MiniFontImageDataBase64 = 
-            "iVBORw0KGgoAAAANSUhEUgAAAIAAAABABAMAAAAg+GJMAAAAJFBMVEUAAAD///////////////////////////////////" +
-            "////////+0CY3pAAAAC3RSTlMAAgQGCg4QFNn5/aulndcAAANHSURBVFhH7ZYxrhtHEESf4J+9RLGu4NCRoHQBBZv5EEp8" +
-            "AAVMfAQf4R+hAgIK6nIOenZJSt+GjW/IiRrN4XA4XV1dPcshvNrevFkubyFAELybfzshRATg3bvl4dkjNHw5YV6eKAkAz8" +
-            "/LH23Q/41JIs3ptuO3FTydHAwakUYS3fabsyjfrZzROQHcdieQxDOrrc3yu8QLQG4ArbpI9HHjXzO4B0Cp2w75KtM3Gtz8" +
-            "a4ARD0eV721zMhpyOoSix+wtJIKY20wgQAsjyw1SJMkxe9YpmtzPwCFAI4xaD0h/b3b2NkeD8NNv4qg5Q+y0926NOGfmad" +
-            "qAK/d5YrZc9xk+5nqZgXNtywEwDCYOEfzlwyPAzjUzvAQw9a/gLA3GF/G7EsithHNtuvBakxFFqYlluh8xFut8yog69Mk6" +
-            "MECmb7OS6xan03JUTSzw5XIjrfNakUc0SYjQ5gEg0Dl7lh45l+mHO4DrlgZCs9pfmuCW605z1W2V8DIDi2tpkRRiB0BeBD" +
-            "gkCQmkpU1Yz4sUVm8zJVjiocGh2OrCgH5fa1szNDLVBwsWm3mjx9imjV01g7/+DFQGYCTjy+cFuRNy3ZKnhBk5PKNR22CS" +
-            "SJL8npCVvdltJiuBPI3EpGnTALKORyKReThXaxaDI/c9g5wMcKGbeZ+WreKDJeReg8CdBq82UZykU6/tLC4/LznWb9fNEU" +
-            "yNbruMjyzKdDWwNorO7PPFz5d1meEYHgxyA1j7oaU5qTBEZ8Ps7XGbZ+U/0wvBqRXBSQ+67eRBg5k3yMkDOe7YMN/euSPj" +
-            "a+3IjRynwyNHhwqrGJyKmgYJdELDVGo7MOv/xK5bYQEUa8kpSyNhXTATnQyGVkurF9sBeMpVSQJzSWRffYWQA0No3Hb3ol" +
-            "53wHuAOtUcDBh5uWkw39GgS4PSTglLI6EJyn9ggxMy/MZqJFJ7XIYNJwdJKzFgCfHiBcTDM6/tenFL8GOiW8oUUQjlWiCC" +
-            "DEyOB+MGkAHYiW5hqTBi053pQKYYmXAX/dD1GNEJmxOc+xJGg+OILAlOgb6HqTHaEm2dmvLTHyRJiM7T2Kr9hp5BOmcrjH" +
-            "wXwvv3ujr2dcijOSoMA1BCXLL+E5M5NT/sh/2v9idsZLc1sYX4WAAAAABJRU5ErkJggg==";
-
-        #endregion
 
         #region ASCII Codes
 

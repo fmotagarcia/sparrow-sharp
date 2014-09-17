@@ -101,6 +101,7 @@
     <Compile Include="Fonts\TextField.cs" />
     <Compile Include="Textures\RenderTexture.cs" />
     <Compile Include="Utils\StatsDisplay.cs" />
+    <Compile Include="Fonts\MiniFont.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
