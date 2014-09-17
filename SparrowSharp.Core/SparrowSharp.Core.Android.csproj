@@ -107,6 +107,7 @@
     <Compile Include="Touches\TouchEvent.cs" />
     <Compile Include="Fonts\TextField.cs" />
     <Compile Include="Utils\StatsDisplay.cs" />
+    <Compile Include="Fonts\MiniFont.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
