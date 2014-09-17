@@ -97,6 +97,7 @@
     <Compile Include="Touches\TouchPhase.cs" />
     <Compile Include="Touches\TouchProcessor.cs" />
     <Compile Include="Utils\StatsDisplay.cs" />
+    <Compile Include="Fonts\MiniFont.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
