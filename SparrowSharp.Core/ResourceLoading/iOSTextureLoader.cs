@@ -5,6 +5,8 @@ using MonoTouch.UIKit;
 using MonoTouch.CoreGraphics;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.IO;
+using MonoTouch.Foundation;
 
 namespace Sparrow.ResourceLoading
 {
@@ -50,6 +52,15 @@ namespace Sparrow.ResourceLoading
 		private async void LoadLocalBitmapAsync(string path)
 		{
 		}
+
+        public GLTexture LoadFromStream(Stream stream)
+        {
+            _isLoaded = false;
+            var data = NSData.FromStream(stream);
+            UIImage img = UIImage.LoadFromData (data);
+            GenerateTexture(img);
+            return _glTexture;
+        }
 
 		private void GenerateTexture(UIImage image)
 		{

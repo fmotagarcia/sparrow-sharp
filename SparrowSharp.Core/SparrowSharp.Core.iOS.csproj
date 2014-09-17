@@ -96,6 +96,7 @@
     <Compile Include="Touches\TouchEvent.cs" />
     <Compile Include="Touches\TouchPhase.cs" />
     <Compile Include="Touches\TouchProcessor.cs" />
+    <Compile Include="Utils\StatsDisplay.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
