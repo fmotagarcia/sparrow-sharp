@@ -42,9 +42,9 @@ namespace Sparrow.Textures
                 if (value != _repeat)
                 {
                     _repeat = value;
-                    GL.BindTexture(All.Texture2D, _name);
-                    GL.TexParameter(All.Texture2D, All.TextureWrapS, _repeat ? (int)All.Repeat : (int)All.ClampToEdge);
-                    GL.TexParameter(All.Texture2D, All.TextureWrapT, _repeat ? (int)All.Repeat : (int)All.ClampToEdge);
+                    GL.BindTexture(TextureTarget.Texture2D, _name);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, _repeat ? (int)All.Repeat : (int)All.ClampToEdge);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, _repeat ? (int)All.Repeat : (int)All.ClampToEdge);
                 }
             }
         }
@@ -57,7 +57,7 @@ namespace Sparrow.Textures
                 if (value != _smoothing)
                 {
                     _smoothing = value;
-                    GL.BindTexture(All.Texture2D, _name);
+                    GL.BindTexture(TextureTarget.Texture2D, _name);
 
                     All magFilter; 
                     All minFilter;
@@ -77,8 +77,8 @@ namespace Sparrow.Textures
                         magFilter = All.Linear;
                         minFilter = _mipmaps ? All.LinearMipmapLinear : All.Linear;
                     }
-                    GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)magFilter);
-                    GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)minFilter);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace Sparrow.Textures
             uint glTexName;
             bool compressed = properties.TextureFormat.Compressed;
             GL.GenTextures(1, out glTexName);
-            GL.BindTexture(All.Texture2D, glTexName);
+            GL.BindTexture(TextureTarget.Texture2D, glTexName);
 
             if (!compressed)
             {
@@ -144,9 +144,9 @@ namespace Sparrow.Textures
 						imgData);
                     #else
                     GL.TexImage2D(
-                        All.Texture2D, 
+                        TextureTarget.Texture2D, 
                         level, 
-                        (int)properties.TextureFormat.Format, 
+                        properties.TextureFormat.InternalFormat, 
                         levelWidth, 
                         levelHeight, 
                         0, 
@@ -161,7 +161,7 @@ namespace Sparrow.Textures
 
                 if (properties.NumMipmaps == 0 && properties.GenerateMipmaps)
                 {
-                    GL.GenerateMipmap(All.Texture2D);
+                    GL.GenerateMipmap(TextureTarget.Texture2D);
                 }
             }
             else
@@ -173,9 +173,9 @@ namespace Sparrow.Textures
                 {
                     int size = Math.Max(32, levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8);
                     GL.CompressedTexImage2D(
-                        All.Texture2D,
+                        TextureTarget.Texture2D,
                         level, 
-                        properties.TextureFormat.Format,
+                        properties.TextureFormat.InternalFormat,
                         levelWidth, 
                         levelHeight,
                         0,
@@ -187,7 +187,7 @@ namespace Sparrow.Textures
                 }
             }
 
-            GL.BindTexture(All.Texture2D, 0);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
 
             bool containsMipmaps = properties.NumMipmaps > 0 || (properties.GenerateMipmaps && !compressed);
 

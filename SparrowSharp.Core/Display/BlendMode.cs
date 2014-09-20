@@ -37,12 +37,12 @@ namespace Sparrow.Display
         /// </summary>
         public static void ApplyBlendFactors(uint blendMode, bool premultipliedAlpha)
         {
-            All srcFactor;
-            All dstFactor;
+            BlendingFactorSrc srcFactor;
+            BlendingFactorDest dstFactor;
 
             if (blendMode == NONE)
             {
-				GL.Disable (EnableCap.Blend);
+				GL.Disable(EnableCap.Blend);
                 return;
             }
 
@@ -51,24 +51,24 @@ namespace Sparrow.Display
                 switch (blendMode)
                 {
                     case NORMAL:
-                        srcFactor = All.One;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.One;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     case ADD:
-                        srcFactor = All.SrcAlpha;
-                        dstFactor = All.One;
+                        srcFactor = BlendingFactorSrc.SrcAlpha;
+                        dstFactor = BlendingFactorDest.One;
                         break;
                     case MULTIPLY:
-                        srcFactor = All.DstColor;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.DstColor;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     case SCREEN:
-                        srcFactor = All.One;
-                        dstFactor = All.OneMinusSrcColor;
+                        srcFactor = BlendingFactorSrc.One;
+                        dstFactor = BlendingFactorDest.OneMinusSrcColor;
                         break;
                     case ERASE:
-                        srcFactor = All.Zero;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.Zero;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     default:
                         throw new ArgumentException("Invalid blend mode " + blendMode);
@@ -79,31 +79,31 @@ namespace Sparrow.Display
                 switch (blendMode)
                 {
                     case NORMAL:
-                        srcFactor = All.SrcAlpha;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.SrcAlpha;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     case ADD:
-                        srcFactor = All.SrcAlpha;
-                        dstFactor = All.DstAlpha;
+                        srcFactor = BlendingFactorSrc.SrcAlpha;
+                        dstFactor = BlendingFactorDest.DstAlpha;
                         break;
                     case MULTIPLY:
-                        srcFactor = All.DstColor;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.DstColor;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     case SCREEN:
-                        srcFactor = All.SrcAlpha;
-                        dstFactor = All.One;
+                        srcFactor = BlendingFactorSrc.SrcAlpha;
+                        dstFactor = BlendingFactorDest.One;
                         break;
                     case ERASE:
-                        srcFactor = All.Zero;
-                        dstFactor = All.OneMinusSrcAlpha;
+                        srcFactor = BlendingFactorSrc.Zero;
+                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
                         break;
                     default:
                         throw new ArgumentException("Invalid blend mode " + blendMode);
                 }
             }
 
-            GL.Enable(All.Blend);
+            GL.Enable(EnableCap.Blend);
             GL.BlendFunc(srcFactor, dstFactor);
         }
     }

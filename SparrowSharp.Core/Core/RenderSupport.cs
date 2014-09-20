@@ -177,21 +177,13 @@ namespace Sparrow.Core
         /// </summary>
         public static uint CheckForOpenGLError()
         {
-            #if __ANDROID__
-            ErrorCode err = GL.GetErrorCode(); // TODO: check if this works on iOS
-            #else
-            ErrorCode err = (ErrorCode)GL.GetError(); 
-            #endif
+            ErrorCode err = GL.GetErrorCode();
             string errstr = "";
             while (err != ErrorCode.NoError)
             {
                 HasOpenGLError = true;
                 errstr += "There was an OpenGL error: " + err;
-                #if __ANDROID__
-                err = GL.GetErrorCode(); // TODO: check if this works on iOS
-                #else
-                err = (ErrorCode)GL.GetError();
-                #endif
+                err = GL.GetErrorCode();
             }
             if (errstr != "")
             {

@@ -321,24 +321,24 @@ namespace Sparrow.Display
                 GL.EnableVertexAttribArray(attribTexCoords);
             }
 
-            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
-            GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
 
-            GL.VertexAttribPointer(attribPosition, 2, All.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
+            GL.VertexAttribPointer(attribPosition, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
 
             if (_texture != null)
             {
-                GL.VertexAttribPointer(attribTexCoords, 2, All.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
+                GL.VertexAttribPointer(attribTexCoords, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
             }
 
             if (useTinting)
             {
-                GL.BindBuffer(All.ArrayBuffer, _vertexColorsBufferName);
-                GL.VertexAttribPointer(attribColor, 4, All.UnsignedByte, true, sizeof(float), (IntPtr)0);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
+                GL.VertexAttribPointer(attribColor, 4, VertexAttribPointerType.UnsignedByte, true, sizeof(float), (IntPtr)0);
             }
 
             int numIndices = _numQuads * INDICES_PER_QUAD;
-            GL.DrawElements(All.Triangles, numIndices, All.UnsignedShort, IntPtr.Zero);
+            GL.DrawElements(BeginMode.Triangles, numIndices, DrawElementsType.UnsignedShort, IntPtr.Zero);
 //			GL.DrawElements (All.TriangleStrip, numIndices, All.UnsignedShort, IntPtr.Zero);
         }
 
@@ -494,8 +494,8 @@ namespace Sparrow.Display
                 throw new InvalidOperationException("Could not create vertex buffers");
             }
 
-            GL.BindBuffer(All.ElementArrayBuffer, _indexBufferName);
-            GL.BufferData(All.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), _indexData, All.StaticDraw);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), _indexData, BufferUsage.StaticDraw);
 
 //			GL.BufferData (All.ElementArrayBuffer, (IntPtr)(sizeof(ushort) * numIndices), IntPtr.Zero, All.StaticDraw);
 //			IntPtr videoMemoryPtr = GL.Oes.MapBuffer( All.ElementArrayBuffer, All.WriteOnlyOes );
@@ -539,11 +539,11 @@ namespace Sparrow.Display
                 CreateBuffers();
             }
 
-            GL.BindBuffer(All.ArrayBuffer, _vertexBufferName);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
 
             if (GLExtensions.MapBufferSupported)
             {
-                GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, All.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), IntPtr.Zero, BufferUsage.StaticDraw);
                 IntPtr vertexBuffer = GL.Oes.MapBuffer(All.ArrayBuffer, All.WriteOnlyOes);
 
                 unsafe
@@ -569,21 +569,21 @@ namespace Sparrow.Display
                 if (_vertexBufferNeedsReInit)
                 {
                     _vertexBufferNeedsReInit = false;
-                    GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, All.StaticDraw);
+                    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices, BufferUsage.StaticDraw);
                 }
                 else
                 {
-                    GL.BufferSubData(All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices);
+                    GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * 4 * sizeof(float)), _vertexData.Vertices);
                 }
             }
 
             if (_tinted || alpha != 1.0f)
             {
-                GL.BindBuffer(All.ArrayBuffer, _vertexColorsBufferName);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
 
                 if (GLExtensions.MapBufferSupported)
                 {
-                    GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), IntPtr.Zero, All.StaticDraw);
+                    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), IntPtr.Zero, BufferUsage.StaticDraw);
                     IntPtr colorBuffer = GL.Oes.MapBuffer(All.ArrayBuffer, All.WriteOnlyOes);
                     unsafe
                     {
@@ -608,11 +608,11 @@ namespace Sparrow.Display
                     if (_colorBufferNeedsReInit)
                     {
                         _colorBufferNeedsReInit = false;
-                        GL.BufferData(All.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4 ), _vertexData.VertexColors, All.StaticDraw);
+                        GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4 ), _vertexData.VertexColors, BufferUsage.StaticDraw);
                     }
                     else
                     {
-                        GL.BufferSubData(All.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), _vertexData.VertexColors);
+                        GL.BufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr)(_vertexData.NumVertices * sizeof(byte) * 4), _vertexData.VertexColors);
                     }
                 }
             }

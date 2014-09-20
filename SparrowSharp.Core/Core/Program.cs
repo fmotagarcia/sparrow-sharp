@@ -54,8 +54,8 @@ namespace Sparrow.Core
         private void Compile()
         {
             int program = GL.CreateProgram();
-            int vertexShader = CompileShader(_vertexShader, All.VertexShader);
-            int fragmentShader = CompileShader(_fragmentShader, All.FragmentShader);
+            int vertexShader = CompileShader(_vertexShader, ShaderType.VertexShader);
+            int fragmentShader = CompileShader(_fragmentShader, ShaderType.FragmentShader);
 
             GL.AttachShader(program, vertexShader);
             GL.AttachShader(program, fragmentShader);
@@ -91,7 +91,7 @@ namespace Sparrow.Core
             GL.DeleteShader(fragmentShader);
         }
 
-        private int CompileShader(string source, All type)
+        private int CompileShader(string source, ShaderType type)
         {
             int shader = GL.CreateShader(type);
             if (shader == 0)
@@ -115,7 +115,7 @@ namespace Sparrow.Core
                 {
                     string log;
                     GL.GetShaderInfoLog(shader, out log);
-                    Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == All.VertexShader ? "vertex" : "fragment"), log));
+                    Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == ShaderType.VertexShader ? "vertex" : "fragment"), log));
                 }
                 GL.DeleteShader(shader);
                 return 0;

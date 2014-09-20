@@ -56,7 +56,7 @@ namespace Sparrow.ResourceLoading
         public GLTexture LoadFromStream(Stream stream)
         {
             _isLoaded = false;
-            var data = NSData.FromStream(stream);
+            NSData data = NSData.FromStream(stream);
             UIImage img = UIImage.LoadFromData (data);
             GenerateTexture(img);
             return _glTexture;
@@ -94,14 +94,14 @@ namespace Sparrow.ResourceLoading
 			var bitmapBytesPerRow = pixelsWide * 4;
 			var bitmapByteCount = bitmapBytesPerRow * pixelsHigh;
 
-			var bitmapData = Marshal.AllocHGlobal(bitmapByteCount);
+            var bitmapData = Marshal.AllocHGlobal(bitmapByteCount);
 			if (bitmapData == IntPtr.Zero)
 			{
 				throw new Exception("Memory not allocated.");
 			}
 
 			var context = new CGBitmapContext(bitmapData, pixelsWide, pixelsHigh, 8, bitmapBytesPerRow, 
-				              inImage.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast);
+                            CGColorSpace.CreateDeviceRGB()/*inImage.CGImage.ColorSpace*/, CGImageAlphaInfo.PremultipliedLast);
 
 			if (context == null)
 			{
