@@ -177,13 +177,21 @@ namespace Sparrow.Core
         /// </summary>
         public static uint CheckForOpenGLError()
         {
+            #if __WINDOWS__
+            ErrorCode err = GL.GetError();
+            #else
             ErrorCode err = GL.GetErrorCode();
+            #endif
             string errstr = "";
             while (err != ErrorCode.NoError)
             {
                 HasOpenGLError = true;
                 errstr += "There was an OpenGL error: " + err;
+                #if __WINDOWS__
+                err = GL.GetError();
+                #else
                 err = GL.GetErrorCode();
+                #endif
             }
             if (errstr != "")
             {

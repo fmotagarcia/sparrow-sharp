@@ -109,7 +109,7 @@ namespace Sparrow.ResourceLoading
 
             GLUtils.TexImage2D(GLES20.GlTexture2d, 0, bitmap, 0);
 
-            // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.cs
+            // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.OpenGL.cs
             // for how MonoGame does it
             _glTexture = new GLTexture(name, bitmap.Width, bitmap.Height, false, 1.0f, false);
             _isLoaded = true;

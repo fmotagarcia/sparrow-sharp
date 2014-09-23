@@ -131,18 +131,6 @@ namespace Sparrow.Textures
                 for (int level = 0; level <= properties.NumMipmaps; ++level)
                 {
                     int size = levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8;
-                    #if __WINDOWS__
-					GL.TexImage2D (
-						All.Texture2D,
-						level,
-						properties.TextureFormat.Format, 
-						levelWidth, 
-						levelHeight, 
-						0, 
-						properties.TextureFormat.Format,
-						properties.TextureFormat.TexType,
-						imgData);
-                    #else
                     GL.TexImage2D(
                         TextureTarget.Texture2D, 
                         level, 
@@ -153,7 +141,6 @@ namespace Sparrow.Textures
                         properties.TextureFormat.Format,
                         properties.TextureFormat.TexType,
                         imgData);
-                    #endif
                     imgData += size;
                     levelWidth /= 2;
                     levelHeight /= 2;
