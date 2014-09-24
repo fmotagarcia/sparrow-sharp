@@ -59,23 +59,23 @@ namespace Sparrow.Textures
                     _smoothing = value;
                     GL.BindTexture(TextureTarget.Texture2D, _name);
 
-                    All magFilter; 
-                    All minFilter;
+                    TextureMagFilter magFilter; 
+                    TextureMinFilter minFilter;
 
                     if (value == TextureSmoothing.None)
                     {
-                        magFilter = All.Nearest;
-                        minFilter = _mipmaps ? All.NearestMipmapNearest : All.Nearest;
+                        magFilter = TextureMagFilter.Nearest;
+                        minFilter = _mipmaps ? TextureMinFilter.NearestMipmapNearest : TextureMinFilter.Nearest;
                     }
                     else if (value == TextureSmoothing.Bilinear)
                     {
-                        magFilter = All.Linear;
-                        minFilter = _mipmaps ? All.LinearMipmapNearest : All.Linear;
+                        magFilter = TextureMagFilter.Linear;
+                        minFilter = _mipmaps ? TextureMinFilter.LinearMipmapNearest : TextureMinFilter.Linear;
                     }
                     else
                     {
-                        magFilter = All.Linear;
-                        minFilter = _mipmaps ? All.LinearMipmapLinear : All.Linear;
+                        magFilter = TextureMagFilter.Linear;
+                        minFilter = _mipmaps ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear;
                     }
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
@@ -109,6 +109,7 @@ namespace Sparrow.Textures
 
             _repeat = true; // force first update
             Repeat = false;
+            _smoothing = (TextureSmoothing)9999999; // force first update
             Smoothing = TextureSmoothing.Bilinear;
         }
 

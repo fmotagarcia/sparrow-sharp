@@ -59,10 +59,13 @@ namespace Sparrow.ResourceLoading
             uint name = (uint)GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, name);
 
+            // Fix up the Image to match the expected format
+            bitmap = RGBToBGR(bitmap);
+
             BitmapData bitmapData = bitmap.LockBits(
-                               new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
-                               ImageLockMode.ReadOnly, 
-                               System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
+                ImageLockMode.ReadOnly, 
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TexImage2D(
                 TextureTarget2d.Texture2D, 
@@ -89,6 +92,52 @@ namespace Sparrow.ResourceLoading
                 handler(this, _glTexture);
             }
         }
+
+        // from https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/ImageEx.cs
+        // RGB to BGR convert Matrix
+        private static float[][] rgbtobgr = new float[][]
+        {
+            new float[] {0, 0, 1, 0, 0},
+            new float[] {0, 1, 0, 0, 0},
+            new float[] {1, 0, 0, 0, 0},
+            new float[] {0, 0, 0, 1, 0},
+            new float[] {0, 0, 0, 0, 1}
+        };
+
+        private static Bitmap RGBToBGR(Bitmap bmp)
+        {
+            Bitmap newBmp;
+            if ((bmp.PixelFormat & System.Drawing.Imaging.PixelFormat.Indexed) != 0)
+            {
+                newBmp = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            }
+            else
+            {
+                newBmp = bmp;
+            }
+
+            try
+            {
+                System.Drawing.Imaging.ImageAttributes ia = new System.Drawing.Imaging.ImageAttributes();
+                System.Drawing.Imaging.ColorMatrix cm = new System.Drawing.Imaging.ColorMatrix(rgbtobgr);
+
+                ia.SetColorMatrix(cm);
+                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(newBmp))
+                {
+                    g.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, System.Drawing.GraphicsUnit.Pixel, ia);
+                }
+            }
+            finally
+            {
+                if (newBmp != bmp)
+                {
+                    bmp.Dispose();
+                }
+            }
+
+            return newBmp;
+        }
+
     }
 }
 
