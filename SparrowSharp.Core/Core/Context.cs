@@ -104,6 +104,7 @@ namespace Sparrow.Core
                 }
                 else
                 {
+                    // TODO: double check these on a device, the ifdef seems to be unneeded
                     #if __IOS__
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 1);
                     #else

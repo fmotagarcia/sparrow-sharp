@@ -104,9 +104,6 @@ namespace Sparrow.ResourceLoading
                 GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
             }
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapNearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
             GLUtils.TexImage2D(GLES20.GlTexture2d, 0, bitmap, 0);
 
             // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.OpenGL.cs

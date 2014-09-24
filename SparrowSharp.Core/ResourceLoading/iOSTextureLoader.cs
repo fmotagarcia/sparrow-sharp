@@ -67,8 +67,6 @@ namespace Sparrow.ResourceLoading
 			uint name = (uint)GL.GenTexture();
 			GL.BindTexture(TextureTarget.Texture2D, name);
 //			GL.TexParameter(TextureTarget.Texture2D, All.TextureMaxAnisotropyExt, 1);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 //			GL.TexParameter(TextureTarget.Texture2D, All.GenerateMipmapHint, (int)All.False);
 			LoadTexture(image);
 
@@ -101,7 +99,7 @@ namespace Sparrow.ResourceLoading
 			}
 
 			var context = new CGBitmapContext(bitmapData, pixelsWide, pixelsHigh, 8, bitmapBytesPerRow, 
-                            CGColorSpace.CreateDeviceRGB()/*inImage.CGImage.ColorSpace*/, CGImageAlphaInfo.PremultipliedLast);
+                inImage.CGImage.ColorSpace, CGBitmapFlags.PremultipliedLast | CGBitmapFlags.ByteOrder32Big);
 
 			if (context == null)
 			{
@@ -114,7 +112,7 @@ namespace Sparrow.ResourceLoading
 			var data = context.Data;
 
 			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, (int)imageSize.Width,
-				(int)imageSize.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+                (int)imageSize.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
 
 			Marshal.FreeHGlobal(data);
 		}
