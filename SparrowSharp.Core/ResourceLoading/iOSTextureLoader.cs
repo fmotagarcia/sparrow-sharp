@@ -108,6 +108,7 @@ namespace Sparrow.ResourceLoading
 
 			var imageSize = inImage.Size;
 			var rect = new RectangleF(0.0f, 0.0f, imageSize.Width, imageSize.Height);
+            context.ClearRect(rect);
 			context.DrawImage(rect, inImage.CGImage);
 			var data = context.Data;
 
