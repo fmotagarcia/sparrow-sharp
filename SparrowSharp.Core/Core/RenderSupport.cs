@@ -160,7 +160,7 @@ namespace Sparrow.Core
         /// <summary>
         /// Clears OpenGL's color buffer with a specified color.
         /// </summary>
-        public void Clear(uint color = 0, float alpha = 1.0f)
+        public void Clear(uint color = 0, float alpha = 0.0f)
         {
             float red = ColorUtil.GetR(color) / 255.0f;
             float green = ColorUtil.GetG(color) / 255.0f;
