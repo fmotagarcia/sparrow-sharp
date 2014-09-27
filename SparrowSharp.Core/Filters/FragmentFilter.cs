@@ -14,24 +14,24 @@ namespace SparrowSharp.Filters
 {
     /// <summary>
     /// The FragmentFilter class is the base class for all filter effects in Sparrow.
-
+    /// <para></para> 
     /// All other filters of this package extend this class. You can attach them to any display object
     /// through the 'filter' property.
-    /// 
-    /// A fragment filter works in the following way:
-    /// * The object that is filtered is rendered into a texture (in stage coordinates).
-    /// * That texture is passed to the first filter pass.
-    /// * Each pass processes the texture using a fragment shader (and optionally a vertex shader) to
-    ///   achieve a certain effect.
-    /// * The output of each pass is used as the input for the next pass; if it's the final pass, it will
-    ///   be rendered directly to the back buffer.
-    /// 
+    /// <para></para> 
+    /// <para>A fragment filter works in the following way:</para> 
+    /// <para>* The object that is filtered is rendered into a texture (in stage coordinates).</para>
+    /// <para>* That texture is passed to the first filter pass.</para>
+    /// <para>* Each pass processes the texture using a fragment shader (and optionally a vertex shader) to
+    ///   achieve a certain effect.</para>
+    /// <para>* The output of each pass is used as the input for the next pass; if it's the final pass, it will
+    ///   be rendered directly to the back buffer.</para>
+    /// <para></para>
     /// All of this is set up by the abstract FragmentFilter class. Concrete subclasses just need to 
     /// override the protected methods 'createPrograms', 'activateWithPass' and (optionally) 
     /// 'deactivateWithPass' to create and execute its custom shader code. Each filter can be configured to 
     /// either replace the original object, or be drawn below or above it. This can be done through the 
     /// 'mode' property, which accepts one of the enums defined in the 'SPFragmentFilterMode' enum.
-    /// 
+    /// <para></para>
     /// Beware that each filter should be used only on one object at a time. Otherwise, it will get slower
     /// and require more resources; and caching will lead to undefined results.
     /// </summary>
@@ -285,23 +285,6 @@ namespace SparrowSharp.Filters
             }
         }
 
-        private QuadBatch CompileWith(DisplayObject obj)
-        {
-            if (_cache != null)
-            {
-                return _cache;
-            }
-            if (obj.Stage == null)
-            {
-                throw new  InvalidOperationException("Filtered object must be on the stage.");
-            }
-
-            RenderSupport support = new RenderSupport();
-            support.PushState(obj.TransformationMatrixToSpace(obj.Stage), obj.Alpha, obj.BlendMode);
-
-            return RenderPasses(obj, support, true);
-        }
-
         private void DisposeCache()
         {
             _cache = null;
@@ -413,9 +396,12 @@ namespace SparrowSharp.Filters
 
 				ActivateWithPass (i, passTexture, support.MvpMatrix);
 				GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
-
+                
                 DeactivateWithPass(i, passTexture);
             }
+
+            GL.DisableVertexAttribArray(VertexPosID);
+            GL.DisableVertexAttribArray(TexCoordsID);
 
             support.PopState();
             support.PopClipRect();

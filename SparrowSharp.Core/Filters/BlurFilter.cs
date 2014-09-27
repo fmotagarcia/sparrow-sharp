@@ -9,18 +9,18 @@ using Sparrow.Utils;
 namespace SparrowSharp.Filters
 {
     /// <summary>
-    /// The BlurFilter applies a gaussian blur to an object. The strength of the blur can be
-    /// set for x- and y-axis separately (always relative to the stage).
-
-    ///	A blur filter can also be set up as a drop shadow or glow filter. Use the respective
-    ///	static methods to create such a filter.
-
-    ///	For each blur direction, the number of required passes is ceil(blur).
-    ///	blur = 0.5: 1 pass
-    ///	blur = 1.0: 1 pass
-    ///	blur = 1.5: 2 passes
-    ///	blur = 2.0: 2 passes
-    ///	etc.
+    /// <para>The BlurFilter applies a gaussian blur to an object. The strength of the blur can be
+    /// set for x- and y-axis separately (always relative to the stage).</para> 
+    /// <para></para> 
+    ///	<para>A blur filter can also be set up as a drop shadow or glow filter. Use FilterFactory to
+    /// create such a filter.</para> 
+    /// <para></para> 
+    ///	<para>For each blur direction, the number of required passes is ceil(blur).</para> 
+    ///	<para>blur = 0.5: 1 pass</para> 
+    ///	<para>blur = 1.0: 1 pass</para> 
+    ///	<para>blur = 1.5: 2 passes</para> 
+    ///	<para>blur = 2.0: 2 passes</para> 
+    ///	<para>etc.</para> 
     /// </summary>
     public class BlurFilter : FragmentFilter
     {

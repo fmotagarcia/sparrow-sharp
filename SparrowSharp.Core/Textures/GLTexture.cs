@@ -175,8 +175,6 @@ namespace Sparrow.Textures
                 }
             }
 
-            GL.BindTexture(TextureTarget.Texture2D, 0); // TODO: this should be glTexName ?
-
             bool containsMipmaps = properties.NumMipmaps > 0 || (properties.GenerateMipmaps && !compressed);
 
             Init(glTexName, properties.Width, properties.Height, containsMipmaps, properties.Scale, properties.PremultipliedAlpha);
