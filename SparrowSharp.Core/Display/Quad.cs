@@ -6,37 +6,31 @@ using Sparrow.Utils;
 namespace Sparrow.Display
 {
     /// <summary>
-    /// An SPQuad represents a rectangle with a uniform color or a color gradient. 
- 
+    /// An Quad represents a rectangle with a uniform color or a color gradient. 
+    ///<para></para>
     /// You can set one color per vertex. The colors will smoothly fade into each other over the area
     /// of the quad. To display a simple linear color gradient, assign one color to vertices 0 and 1 and 
     /// another color to vertices 2 and 3.
- 
+    ///<para></para>
     /// The indices of the vertices are arranged like this:
- 
-    ///    0 - 1
-    ///    | / |
-    ///    2 - 3
- 
+    ///<para></para>
+    ///<para>    0 - 1</para>
+    /// <para>   | / |</para>
+    /// <para>   2 - 3</para>
+    ///<para></para>
     /// **Colors**
- 
+    ///<para></para>
     /// Colors in Sparrow are defined as unsigned integers, that's exactly 8 bit per color. The easiest
     /// way to define a color is by writing it as a hexadecimal number. A color has the following
     /// structure:
- 
+    ///<para></para>
     /// 0xRRGGBB
- 
+    ///<para></para>
     /// That means that you can create the base colors like this:
- 
-    ///   0xFF0000 -> red
-    ///   0x00FF00 -> green
-    ///   0x0000FF -> blue
- 
-    /// Other simple colors:
- 
-    ///   0x000000 or 0x0 -> black
-    ///   0xFFFFFF        -> white
-    ///   0x808080        -> 50% gray
+    ///<para></para>
+    ///   <para>0xFF0000 -> red</para>
+    ///   <para>0x00FF00 -> green</para>
+    ///   <para>0x0000FF -> blue</para>
     /// </summary>
     public class Quad : DisplayObject
     {
@@ -64,7 +58,7 @@ namespace Sparrow.Display
         {
             get
             {
-                return ColorOfVertex(0);
+                return _vertexData.ColorAt(0);
             }
             set
             {
@@ -74,35 +68,6 @@ namespace Sparrow.Display
                 }
 
                 VertexDataDidChange();
-
-                if (value != 0xffffff)
-                { // TODO this is not so good. How to display white quads?
-                    Tinted = true;
-                }
-                else
-                {
-                    Tinted = Alpha != 1.0f || _vertexData.Tinted;
-                }
-            }
-        }
-
-        public override float Alpha
-        {
-            get
-            {
-                return base.Alpha;
-            }
-            set
-            {
-                base.Alpha = value;
-                if (Alpha != 1.0f)
-                {
-                    Tinted = true;
-                }
-                else
-                {
-                    Tinted = _vertexData.Tinted;
-                }
             }
         }
 
@@ -125,11 +90,12 @@ namespace Sparrow.Display
             }
         }
 
-        /// <summary>
-        /// Indicates if any vertices have a non-white color or are not fully opaque. Any alpha value
-        /// other than '1' will also cause tinting.
-        /// </summary>
-        public bool Tinted { get; private set; }
+        public virtual bool Tinted 
+        { 
+            get  { 
+                return true;
+            }
+        }
 
         protected void Init(float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
         {
@@ -141,8 +107,6 @@ namespace Sparrow.Display
             {
                 height = MIN_SIZE;
             }
-
-            Tinted = color != 0xffffff; // TODO this is not so nice
 
             _vertexData = new VertexData(4, premultipliedAlpha);
             _vertexData.Vertices[1].Position.X = width;
@@ -208,15 +172,6 @@ namespace Sparrow.Display
         {
             _vertexData.SetColor(color, vertexID);
             VertexDataDidChange();
-
-            if (color != 0xFFFFFF)
-            {
-                Tinted = true;	
-            }
-            else
-            {
-                Tinted = Alpha != 1.0f || _vertexData.Tinted;
-            }
         }
 
         /// <summary>
@@ -232,32 +187,6 @@ namespace Sparrow.Display
             support.BatchQuad(this);
         }
 
-        /// <summary>
-        /// Sets the alpha value of a vertex.
-        /// </summary>
-        public void SetAlpha(float alpha, int vertexID)
-        {
-            _vertexData.SetAlpha(alpha, vertexID);
-            VertexDataDidChange();
-
-            if (alpha != 1.0f)
-            {
-                Tinted = true;
-            }
-            else
-            {
-                Tinted = Alpha != 1.0f || _vertexData.Tinted;
-            }
-        }
-
-        /// <summary>
-        /// Returns the alpha value of a vertex.
-        /// </summary>
-        public float AlphaOfVertex(int vertexID)
-        {
-            return _vertexData.AlphaAt(vertexID);
-        }
-
         protected virtual void VertexDataDidChange()
         {
             // override in subclass
@@ -265,7 +194,7 @@ namespace Sparrow.Display
 
         virtual internal void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
         {
-            copyColor = copyColor || Tinted || Alpha != 1.0f;
+            copyColor = copyColor || Tinted;
 
             _vertexData.CopyToVertexData(targetData, copyColor, atIndex);
         }

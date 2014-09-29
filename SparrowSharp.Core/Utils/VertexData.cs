@@ -106,24 +106,6 @@ namespace Sparrow.Utils
         }
 
         /// <summary>
-        /// Indicates if any vertices have a non-white color or are not fully opaque.
-        /// </summary>
-        public bool Tinted
-        {
-            get
-            {
-                for (int i = 0; i < _numVertices; ++i)
-                {
-                    if (!VertexColorHelper.IsOpaqueWhite(_vertexColors[i]))
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Indicates if the rgb values are stored premultiplied with the alpha value. If you change
         /// this property, all color data will be updated accordingly.
         /// </summary>

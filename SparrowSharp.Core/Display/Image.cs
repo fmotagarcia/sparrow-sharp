@@ -103,7 +103,7 @@ namespace Sparrow.Display
 
         override internal void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
         {
-            copyColor = copyColor || Tinted || Alpha != 1.0f;
+            copyColor = copyColor || Tinted;
 
             if (_vertexDataCacheInvalid)
             {
@@ -134,6 +134,13 @@ namespace Sparrow.Display
                 }
             }
             get { return _texture; }
+        }
+
+        override public bool Tinted 
+        { 
+            get { 
+                return Alpha != 1.0f;
+            } 
         }
     }
 }
