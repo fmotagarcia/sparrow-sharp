@@ -146,10 +146,7 @@ namespace Sparrow.Display
 
             int vertexID = _numQuads * 4;
 
-            if (!_tinted)
-            {
-                _tinted = alpha != 1.0f || quad.Tinted;
-            }
+            _tinted = alpha != 1.0f || quad.Tinted;
 
             quad.CopyVertexDataTo(_vertexData, vertexID, _tinted);
             _vertexData.TransformVertices(matrix, vertexID, 4);
@@ -206,11 +203,8 @@ namespace Sparrow.Display
                 BlendMode = blendMode;
                 _vertexData.SetPremultipliedAlpha(_premultipliedAlpha, false);
             }
-
-            if (!_tinted)
-            {
-                _tinted = alpha != 1.0f || quadBatch.Tinted;
-            }
+                
+            _tinted = alpha != 1.0f || quadBatch.Tinted;
 
             quadBatch.VertexData.CopyToVertexData(_vertexData, _tinted, vertexID, numVertices);
             _vertexData.TransformVertices(matrix, vertexID, numVertices);

@@ -7,7 +7,7 @@ namespace SparrowSharp.Utils
 {
     /// <summary>
     /// The statistics display is used internally by Sparrow to display statistical information.
-    /// Use the 'showStats()' method of 'ViewController' to show it.
+    /// Use the 'ShowStats()' method of 'ViewController' to show it.
     ///
     /// _This is an internal class. You do not have to use it manually._
     /// </summary>
@@ -30,7 +30,7 @@ namespace SparrowSharp.Utils
 
         public StatsDisplay()
         {
-            Quad background = new Quad(200, 18, 0x0);
+            Quad background = new Quad(220, 18, 0x0);
 
             AddChild(background);
 
@@ -68,7 +68,7 @@ namespace SparrowSharp.Utils
         {
             if (textField == null)
             {
-                textField = new TextField(200, 18, "", "mini", 15, 0xFFFFFF);
+                textField = new TextField(220, 18, "", "mini", 15, 0xFFFFFF);
                 textField.HAlign = HAlign.Left;
                 textField.VAlign = VAlign.Top;
                 textField.X = 2;
