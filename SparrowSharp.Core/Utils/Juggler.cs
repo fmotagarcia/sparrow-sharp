@@ -5,7 +5,7 @@ using SparrowSharp.Display;
 namespace SparrowSharp.Utils
 {
     /// <summary>
-    /// The Juggler takes objects that implement Animatable (e.g. 'MovieClip's) and executes them.
+    /// The Juggler takes objects that implement IAnimatable (e.g. 'MovieClip's) and executes them.
     /// 
     /// A juggler is a simple object. It does no more than saving a list of objects implementing 
     /// 'Animatable' and advancing their time if it is told to do so (by calling its own 'AdvanceTime'
@@ -22,7 +22,7 @@ namespace SparrowSharp.Utils
     /// A cool feature of the juggler is to delay method calls. Say you want to remove an object from its
     /// parent 2 seconds from now. Call:
     /// 
-    /// juggler.DelayInvocationAtTarget(object, 2.0f).RemoveFromParent;
+    /// juggler.DelayInvocationAtTarget(object.RemoveFromParent, 2.0f);
     /// 
     /// This line of code will execute the following method 2 seconds in the future:
     /// 
@@ -30,13 +30,17 @@ namespace SparrowSharp.Utils
     /// 
     /// Alternatively, you can use the block-based verson of the method:
     /// 
-    /// juggler.DelayInvocationByTime(2.0 delegate{ object.RemoveFromParent(); };
+    /// juggler.DelayInvocationByTime(delegate{ object.RemoveFromParent(); }, 2.0f);
     /// </summary>
-    public class Juggler
+    public class Juggler :IAnimatable
     {
         readonly List<IAnimatable> _objects = new List<IAnimatable>();
         private double _elapsedTime;
         private float _speed = 1.0f;
+
+        public event RemoveFromJugglerHandler RemoveFromJugglerEvent;
+
+        public delegate void RemoveFromJugglerHandler(IAnimatable objectToRemove);
 
         /// <summary>
         /// Adds an object to the juggler.
@@ -46,24 +50,17 @@ namespace SparrowSharp.Utils
             if (animatable != null && !_objects.Contains(animatable))
             {
                 _objects.Add(animatable);
-                //if ([(id)object isKindOfClass:[SPEventDispatcher class]])
-                //    [(SPEventDispatcher *)object addEventListener:@selector(onRemove:) atObject:self
-                //                                          forType:SPEventTypeRemoveFromJuggler];
+                animatable.RemoveFromJugglerEvent += Remove;
             }
         }
-        //private void OnRemove:(Event event)
-        //{
-        //    RemoveObject(event.target);
-        //}
+
         /// <summary>
         /// Removes an object from the juggler.
         /// </summary>
         public void Remove(IAnimatable animatable)
         {
             _objects.Remove(animatable);
-            //if ([(id)object isKindOfClass:[SPEventDispatcher class]])
-            //    [(SPEventDispatcher *)object removeEventListenersAtObject:self
-            //                                forType:SPEventTypeRemoveFromJuggler];
+            animatable.RemoveFromJugglerEvent -= Remove;
         }
 
         /// <summary>
@@ -73,36 +70,8 @@ namespace SparrowSharp.Utils
         {
             foreach (IAnimatable animatable in _objects)
             {
-                // TODO
-                //if ([(id)object isKindOfClass:[SPEventDispatcher class]])
-                //     [(SPEventDispatcher *)object removeEventListenersAtObject:self
-                //                                  forType:SPEventTypeRemoveFromJuggler]; 
+                Remove(animatable); 
             }
-            _objects.Clear();
-        }
-
-        /// <summary>
-        /// Removes all objects with a 'target' property referencing a certain object (e.g. tweens or
-        /// delayed invocations).
-        /// </summary>
-        public void RemoveObjectsWithTarget(IAnimatable animatable)
-        {
-            /* TODO
-            SEL targetSel = @selector(target);
-            NSMutableOrderedSet *remainingObjects = [[NSMutableOrderedSet alloc] init];
-    
-            for (id currentObject in _objects)
-            {
-                if (![currentObject respondsToSelector:targetSel] || ![[currentObject target] isEqual:object])
-                    [remainingObjects addObject:currentObject];
-                else if ([(id)currentObject isKindOfClass:[SPEventDispatcher class]])
-                    [(SPEventDispatcher *)currentObject removeEventListenersAtObject:self
-                                                        forType:SPEventTypeRemoveFromJuggler];
-            }
-
-            SP_RELEASE_AND_RETAIN(_objects, remainingObjects);
-            [remainingObjects release];
-            */
         }
 
         /// <summary>

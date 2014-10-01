@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using Sparrow.Display;
 using Sparrow.Textures;
+using SparrowSharp.Utils;
 
 namespace SparrowSharp.Display
 {
     /// <summary>
     /// A MovieClip is a simple way to display an animation depicted by a list of textures.
-
+    ///
     /// You can add the frames one by one or pass them all at once (in an array) at initialization time.
     /// The movie clip will have the width and height of the first frame.
- 
+    ///
     /// At initialization, you can specify the desired framerate. You can, however, manually give each
     /// frame a custom duration. You can also play a sound whenever a certain frame appears.
  
@@ -23,9 +24,14 @@ namespace SparrowSharp.Display
     /// </summary>
     public class MovieClip : Image, IAnimatable
     {
+
         #region Events
 
-        public event EventHandler Completed;
+        public delegate void CompletedHandler(MovieClip sender);
+
+        public event CompletedHandler Completed;
+
+        public event Juggler.RemoveFromJugglerHandler RemoveFromJugglerEvent;
 
         #endregion
 
@@ -37,6 +43,17 @@ namespace SparrowSharp.Display
         private float _currentTime;
         private bool _playing;
         private int _currentFrame;
+
+        /// <summary>
+        /// Removes this object from its juggler(s) (if it has one)
+        /// </summary>
+        public void RemoveFromJuggler()
+        {
+            if (RemoveFromJugglerEvent != null)
+            {
+                RemoveFromJugglerEvent(this);
+            }
+        }
 
         /// <summary>
         /// Initializes a movie with the first frame and the default number of frames per second.
@@ -312,7 +329,7 @@ namespace SparrowSharp.Display
             {
                 if (Completed != null)
                 {
-                    Completed(this, this);
+                    Completed(this);
                 }
             }     
             AdvanceTime(carryOverTime);
@@ -329,5 +346,6 @@ namespace SparrowSharp.Display
             //if ([NSNull class] != [sound class])
             //    [sound play];
         }
+
     }
 }
