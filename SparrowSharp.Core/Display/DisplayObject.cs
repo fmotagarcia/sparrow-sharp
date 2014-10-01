@@ -87,7 +87,7 @@ namespace Sparrow.Display
         private float _skewX;
         private float _skewY;
         private float _rotation;
-        private float _alpha;
+        protected float _alpha;
         private bool _orientationChanged;
         private DisplayObjectContainer _parent;
         private double _lastTouchTimestamp;

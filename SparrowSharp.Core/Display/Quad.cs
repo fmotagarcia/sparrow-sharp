@@ -51,17 +51,19 @@ namespace Sparrow.Display
         /// </summary>
         virtual public Texture Texture { get { return null; } set { } }
 
+        protected uint _color;
         /// <summary>
-        /// Sets the colors of all vertices simultaneously. Returns the color of vertex '0'.
+        /// Sets the colors of all vertices simultaneously.
         /// </summary>
         public uint Color
         {
             get
             {
-                return _vertexData.ColorAt(0);
+                return _color;
             }
             set
             {
+                _color = value;
                 for (int i = 0; i < 4; ++i)
                 {
                     _vertexData.SetColor(value, i);
@@ -107,7 +109,7 @@ namespace Sparrow.Display
             {
                 height = MIN_SIZE;
             }
-
+            _color = color;
             _vertexData = new VertexData(4, premultipliedAlpha);
             _vertexData.Vertices[1].Position.X = width;
             _vertexData.Vertices[2].Position.Y = height;
@@ -163,23 +165,6 @@ namespace Sparrow.Display
                 Matrix transformationMatrix = TransformationMatrixToSpace(targetSpace);
                 return _vertexData.BoundsAfterTransformation(transformationMatrix, 0, 4);
             }
-        }
-
-        /// <summary>
-        /// Sets the color of a vertex.
-        /// </summary>
-        public void SetColor(uint color, int vertexID)
-        {
-            _vertexData.SetColor(color, vertexID);
-            VertexDataDidChange();
-        }
-
-        /// <summary>
-        /// Returns the color of a vertex.
-        /// </summary>
-        public uint ColorOfVertex(int vertexID)
-        {
-            return _vertexData.ColorAt(vertexID);
         }
 
         override public void Render(RenderSupport support)
