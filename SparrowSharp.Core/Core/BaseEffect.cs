@@ -15,21 +15,8 @@ namespace Sparrow.Core
     /// </summary>
     public class BaseEffect
     {
-        private static string GetProgramName(bool hasTexture, bool useTinting)
-        {
-            if (hasTexture)
-            {
-                return useTinting ? "SPQuad#11" : "SPQuad#10";
-            }
-            return useTinting ? "SPQuad#01" : "SPQuad#00";
-        }
 
-        private readonly Matrix _mvpMatrix;
-        private Texture _texture;
-        private float _alpha;
-        private bool _useTinting;
-        private bool _premultipliedAlpha;
-        private Program _program;
+        private Program _currentProgram;
         private int _aPosition;
         private int _aColor;
         private int _aTexCoords;
@@ -61,149 +48,87 @@ namespace Sparrow.Core
         }
 
         /// <summary>
-        /// The texture that's projected onto the quad, or 'null' if there is none. (Default: 'null')
-        /// </summary>
-        public Texture Texture
-        {
-            set
-            {
-                if ((_texture != null && value == null) || (_texture == null && value != null))
-                {
-                    _program = null;
-                }
-                _texture = value;
-            }
-        }
-
-        /// <summary>
-        /// Indicates if the color values of texture and vertices use premultiplied alpha. (Default: 'false')
-        /// </summary>
-        public bool PremultipliedAlpha
-        {
-            set { _premultipliedAlpha = value; }
-        }
-
-        /// <summary>
-        /// The modelview-projection matrix used for rendering. Any vertex will be multiplied with this
-        /// matrix. (Default: identity matrix)
-        /// </summary>
-        public Matrix MvpMatrix
-        {
-            set { _mvpMatrix.CopyFromMatrix(value); }
-        }
-
-        /// <summary>
-        /// Indicates if the colors of the vertices should tint the texture colors. The iPad 1 profits
-        /// immensely from the very simple fragment shader that can be used when tinting is deactivated.
-        /// Note that an alpha value different to "1" will still force tinting to be used. (Default: 'true')
-        /// </summary>
-        public bool UseTinting
-        {
-            get { return _useTinting; }
-            set
-            {
-                if (value != _useTinting)
-                {
-                    _useTinting = value;
-                    _program = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// The alpha value with which every vertex color will be multiplied. (Default: 1)
-        /// </summary>
-        public float Alpha
-        {
-            set
-            {
-                if ((value >= 1.0f && _alpha < 1.0f) || (value < 1.0f && _alpha >= 1.0f))
-                {
-                    _program = null;
-                }
-                _alpha = value;
-            }
-        }
-
-        public BaseEffect()
-        {
-            _mvpMatrix = Matrix.Create();
-            _premultipliedAlpha = false;
-            _useTinting = true;
-            _alpha = 1.0f;
-        }
-
-        /// <summary>
         /// Activates the optimal shader program for the current settings; alpha and matrix uniforms are
         /// passed to the program right away, and the texture (if available) is bound.
+        /// Parameters:
+        /// mvpMatrix: The modelview-projection matrix used for rendering. Any vertex will be multiplied with this matrix.
+        /// premultipliedAlpha:  Indicates if the color values of texture and vertices use premultiplied alpha.
+        /// alpha: The alpha value with which every vertex color will be multiplied.
+        /// useTinting: Set to true if you dont use textures or want to use alpha.
+        /// texture: The texture that's projected onto the quad, or 'null' if there is none.
         /// </summary>
-        public void PrepareToDraw()
+        public void PrepareToDraw(Matrix mvpMatrix, bool premultipliedAlpha, float alpha, bool useTinting, Texture texture = null)
         {
-            bool hasTexture = _texture != null;
-            bool useTinting = _useTinting || _texture == null || _alpha != 1.0f;
+            bool hasTexture = texture != null;
 
-            if (_program == null)
+            string programName;
+            if (hasTexture)
             {
-                string programName = GetProgramName(hasTexture, useTinting);
+                programName = useTinting ? "SparrowAlphaTextureProgram" : "SparrowTextureProgram";
+            }
+            else
+            {
+                programName = "SparrowQuadProgram";
+            }
 
+            if (_currentProgram == null || _currentProgram != SparrowSharpApp.GetProgram(programName))
+            {
                 if (SparrowSharpApp.Programs.ContainsKey(programName))
                 {
-                    _program = SparrowSharpApp.Programs[programName];
+                    _currentProgram = SparrowSharpApp.GetProgram(programName);
+                }
+                else
+                {
+                    string vertexShader = VertexShaderString(hasTexture, useTinting);
+                    string fragmentShader = FragmentShaderString(hasTexture, useTinting);
+                    _currentProgram = new Program(vertexShader, fragmentShader);
+                    SparrowSharpApp.RegisterProgram(programName, _currentProgram);
                 }
 
-                if (_program == null)
+                _aPosition = _currentProgram.Attributes["aPosition"];
+
+                if (_currentProgram.Attributes.ContainsKey("aColor"))
                 {
-                    string vertexShader = VertexShaderForTexture(_texture, useTinting);
-                    string fragmentShader = FragmentShaderForTexture(_texture, useTinting);
-                    _program = new Program(vertexShader, fragmentShader);
-                    SparrowSharpApp.RegisterProgram(programName, _program);
+                    _aColor = _currentProgram.Attributes["aColor"];
+                }
+                if (_currentProgram.Attributes.ContainsKey("aTexCoords"))
+                {
+                    _aTexCoords = _currentProgram.Attributes["aTexCoords"];
                 }
 
-                _aPosition = _program.Attributes["aPosition"];
+                _uMvpMatrix = _currentProgram.Uniforms["uMvpMatrix"];
 
-                if (_program.Attributes.ContainsKey("aColor"))
+                if (_currentProgram.Uniforms.ContainsKey("uAlpha"))
                 {
-                    _aColor = _program.Attributes["aColor"];
-                }
-                if (_program.Attributes.ContainsKey("aTexCoords"))
-                {
-                    _aTexCoords = _program.Attributes["aTexCoords"];
-                }
-
-                _uMvpMatrix = _program.Uniforms["uMvpMatrix"];
-
-                if (_program.Uniforms.ContainsKey("uAlpha"))
-                {
-                    _uAlpha = _program.Uniforms["uAlpha"];
+                    _uAlpha = _currentProgram.Uniforms["uAlpha"];
                 }
             }
 
-            Matrix4 glkMvpMatrix = _mvpMatrix.ConvertToMatrix4();
-            GL.UseProgram(_program.Name);
+            Matrix4 glkMvpMatrix = mvpMatrix.ConvertToMatrix4();
+            GL.UseProgram(_currentProgram.Name);
             GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix); // TODO check; was glUniformMatrix4fv(_uMvpMatrix, 1, NO, glkMvpMatrix.m);
 
             if (useTinting)
             {
-                if (_premultipliedAlpha)
+                if (premultipliedAlpha)
                 {
-                    GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
+                    GL.Uniform4(_uAlpha, alpha, alpha, alpha, alpha);
                 }
                 else
                 {
-                    GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, _alpha);
+                    GL.Uniform4(_uAlpha, 1.0f, 1.0f, 1.0f, alpha);
                 }
             }
 
             if (hasTexture)
             {
             	GL.ActiveTexture (TextureUnit.Texture0);
-				GL.BindTexture (TextureTarget.Texture2D, _texture.Name);
+				GL.BindTexture (TextureTarget.Texture2D, texture.Name);
             }
         }
 
-        private String VertexShaderForTexture(Texture texture, bool useTinting)
+        private String VertexShaderString(bool hasTexture, bool useTinting)
         {
-            bool hasTexture = (texture != null);
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
             // variables
@@ -220,9 +145,6 @@ namespace Sparrow.Core
             if (useTinting)
             {
                 source.AppendLine("uniform vec4 uAlpha;");
-            }
-            if (useTinting)
-            {
                 source.AppendLine("varying lowp vec4 vColor;");
             }
 
@@ -247,9 +169,8 @@ namespace Sparrow.Core
             return source.ToString();
         }
 
-        private String FragmentShaderForTexture(Texture texture, bool useTinting)
+        private String FragmentShaderString(bool hasTexture, bool useTinting)
         {
-            bool hasTexture = (texture != null);
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
             // variables

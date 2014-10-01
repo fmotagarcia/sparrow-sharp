@@ -139,7 +139,7 @@ namespace Sparrow.Display
         override public bool Tinted 
         { 
             get { 
-                return Alpha != 1.0f;
+                return Alpha != 1.0f || Color != 0xFFFFFF;
             } 
         }
     }

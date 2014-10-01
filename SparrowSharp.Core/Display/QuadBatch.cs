@@ -64,7 +64,7 @@ namespace Sparrow.Display
         }
 
         /// <summary>
-        /// Indicates if any vertices have a non-white color or are not fully opaque.
+        /// Indicates if any vertices have are not fully opaque or have no texture.
         /// </summary>
         public bool Tinted
         {
@@ -290,13 +290,8 @@ namespace Sparrow.Display
                 throw new InvalidOperationException("Cannot render object with blend mode AUTO");
             }
             bool useTinting = _tinted || alpha != 1.0f;
-            _baseEffect.Texture = _texture;
-            _baseEffect.PremultipliedAlpha = _premultipliedAlpha;
-            _baseEffect.MvpMatrix = matrix;
-            _baseEffect.UseTinting = useTinting;
-            _baseEffect.Alpha = alpha;
 
-            _baseEffect.PrepareToDraw();
+            _baseEffect.PrepareToDraw(matrix, _premultipliedAlpha, alpha, useTinting, _texture);
 
             Sparrow.Display.BlendMode.ApplyBlendFactors(blendMode, _premultipliedAlpha);
 
