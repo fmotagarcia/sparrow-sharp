@@ -50,7 +50,7 @@ namespace Sparrow.ResourceLoading
 
         private async void LoadLocalBitmapAsync(string path)
         {
-
+            // TODO
         }
 
         private void GenerateTexture(Bitmap bitmap)
@@ -68,14 +68,14 @@ namespace Sparrow.ResourceLoading
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TexImage2D(
-                TextureTarget2d.Texture2D, 
+                TextureTarget.Texture2D,
                 0,
-                TextureComponentCount.Rgba, 
-                bitmapData.Width, 
-                bitmapData.Height, 
+                PixelInternalFormat.Rgba,
+                bitmapData.Width,
+                bitmapData.Height,
                 0,
-                OpenTK.Graphics.ES20.PixelFormat.Rgba, 
-                PixelType.UnsignedByte, 
+                OpenTK.Graphics.ES20.PixelFormat.Rgba,
+                PixelType.UnsignedByte,
                 bitmapData.Scan0);
             // was brga
             bitmap.UnlockBits(bitmapData);

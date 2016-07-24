@@ -80,6 +80,8 @@ namespace Sparrow
         public static void ReadjustStageSize(float width, float height)
         {
             // TODO check if Width/Height are not 0 here
+            DrawableWidth = (int)width;
+            DrawableHeight = (int)height;
             Stage.Width = width * ViewScaleFactor / ContentScaleFactor;
             Stage.Height = height * ViewScaleFactor / ContentScaleFactor;
         }

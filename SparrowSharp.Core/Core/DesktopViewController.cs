@@ -2,7 +2,6 @@
 using OpenTK;
 using OpenTK.Graphics.ES20;
 using OpenTK.Input;
-using Sparrow;
 
 namespace Sparrow.Core
 {
@@ -37,7 +36,7 @@ namespace Sparrow.Core
         {
             base.OnResize(e);
             GL.Viewport(0, 0, Width, Height);
-            SparrowSharpApp.ReadjustStageSize(Size.Width, Size.Height);
+            SparrowSharpApp.ReadjustStageSize(Width, Height);
         }
 
         private void HandleLoad(object sender, EventArgs e)
@@ -53,7 +52,7 @@ namespace Sparrow.Core
             {
                 Console.WriteLine("Framebuffer error: " + status);
             }
-            SparrowSharpApp.Start(Size.Width, Size.Height, _rootClass);
+            SparrowSharpApp.Start(Width, Height, _rootClass);
         }
     }
 }
