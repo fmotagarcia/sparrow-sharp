@@ -19,7 +19,7 @@ namespace Sparrow.Core
         {
             Extensions = new HashSet<string>();
             FramebufferCache = new Dictionary<uint, uint>();
-			string extensionsString = GL.GetString(StringName.Extensions);
+            string extensionsString = GL.GetString(StringName.Extensions);
 
             if (!string.IsNullOrEmpty(extensionsString))
             {
@@ -39,7 +39,7 @@ namespace Sparrow.Core
             get
             {
                 int[] viewport = new int[4];
-				GL.GetInteger(GetPName.Viewport, viewport);
+                GL.GetInteger(GetPName.Viewport, viewport);
                 return new Rectangle(viewport[0], viewport[1], viewport[2], viewport[3]);
             }
 
@@ -64,19 +64,19 @@ namespace Sparrow.Core
             get
             {
                 int[] scissorBox = new int[4];
-				GL.GetInteger(GetPName.ScissorBox, scissorBox);
+                GL.GetInteger(GetPName.ScissorBox, scissorBox);
 
                 return new Rectangle(scissorBox[0], scissorBox[1], scissorBox[2], scissorBox[3]);
             }
 
             set
             {
-				if (value != null) {
-					GL.Enable (EnableCap.ScissorTest);
-					GL.Scissor ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
-				} else {
-					GL.Disable (EnableCap.ScissorTest);
-				}
+                if (value != null) {
+                    GL.Enable (EnableCap.ScissorTest);
+                    GL.Scissor ((int)value.X, (int)value.Y, (int)value.Width, (int)value.Height);                
+                } else {
+                    GL.Disable (EnableCap.ScissorTest);
+                }
                
             }
         }
@@ -98,7 +98,7 @@ namespace Sparrow.Core
                         FramebufferCache.Add(value.Name, framebuffer);
                     }
 
-					GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 
                     GL.Viewport(0, 0, (int)value.NativeWidth, (int)value.NativeHeight);
                 }
@@ -128,10 +128,10 @@ namespace Sparrow.Core
         {
             uint framebuffer;
             GL.GenFramebuffers(1, out framebuffer);
-			GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
-			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0, TextureTarget.Texture2D, texture.Name, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+            GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0, TextureTarget.Texture2D, texture.Name, 0);
 
-			if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+            if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
             {
                 Debug.WriteLine("Failed to create framebuffer for render texture");
             }

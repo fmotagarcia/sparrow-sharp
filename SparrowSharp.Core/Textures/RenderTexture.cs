@@ -122,6 +122,7 @@ namespace Sparrow.Textures
 
                 // prepare clipping and OpenGL matrices
                 _renderSupport.PushClipRect(new Rectangle(0, 0, width, height));
+                // NOTE: this modifies the render matrix, changes must be reverted!
                 _renderSupport.SetupOrthographicProjection(0, width, height, 0);
             }
 

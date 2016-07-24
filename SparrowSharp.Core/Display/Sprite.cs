@@ -82,7 +82,7 @@ namespace Sparrow.Display
             {
                 return null;
             }
-				
+                
             float minX = float.MaxValue;
             float maxX = -float.MaxValue;
             float minY = float.MaxValue;

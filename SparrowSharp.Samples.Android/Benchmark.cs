@@ -48,7 +48,7 @@ namespace Sparrow.Samples.Android
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
-                Image egg = new Image(textures[1]);
+                Image egg = new Image(textures[0]);
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SparrowSharpApp.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -72,23 +72,23 @@ namespace Sparrow.Samples.Android
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
             /*
-			RenderTexture tex = new RenderTexture (400, 300, 0xf1ff00ff);
-			tex.DrawBundled(delegate
-				{
-					for (int i=0; i<12; ++i)
-					{
-						Image img = new Image(textures[i%3]);
-						//img.Rotation = (2 * (float)Math.PI / 12) * i;
-						img.X = i * 30;
-						tex.DrawObject(img);            
-					}             
-				});
-			AddChild (new Image(tex));*/
+            RenderTexture tex = new RenderTexture (400, 300, 0xf1ff00ff);
+            tex.DrawBundled(delegate
+                {
+                    for (int i=0; i<12; ++i)
+                    {
+                        Image img = new Image(textures[i%3]);
+                        //img.Rotation = (2 * (float)Math.PI / 12) * i;
+                        img.X = i * 30;
+                        tex.DrawObject(img);            
+                    }             
+                });
+            AddChild (new Image(tex));*/
             _started = true;
             _waitFrames = 3;
             AddTestObjects(1);
 
-            SparrowSharpApp.ShowStats = true;
+            ///SparrowSharpApp.ShowStats = true;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)

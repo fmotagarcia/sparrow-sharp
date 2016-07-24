@@ -42,7 +42,7 @@ namespace Sparrow.Display
 
             if (blendMode == NONE)
             {
-				GL.Disable(EnableCap.Blend);
+                GL.Disable(EnableCap.Blend);
                 return;
             }
 

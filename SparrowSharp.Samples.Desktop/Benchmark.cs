@@ -25,8 +25,7 @@ namespace Sparrow.Samples
         {
             GLTexture star = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
             GLTexture bird = SimpleTextureLoader.LoadLocalImage("../../benchmark_object.png");
-            GLTexture bigstar = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
-            textures = new Texture[] { bird, bigstar, star };
+            textures = new Texture[] { bird, star };
 
             // the container will hold all test objects
             _container = new Sprite();
@@ -44,11 +43,15 @@ namespace Sparrow.Samples
             for (int i = 0; i < numObjects; ++i)
             {   
                 Image egg = new Image(textures[0]);
-                if (i < -5)
+                if (i < 5)
                 {
-                    //ColorMatrixFilter cf = new ColorMatrixFilter ();
-                    egg.Filter = new BlurFilter(4, 1.1f);
-                    egg.Filter.Cache();
+                    ColorMatrix cm = new ColorMatrix();
+                    cm.AdjustSaturation(-0.8f);
+                    ColorMatrixFilter fi = new ColorMatrixFilter (cm);
+                    //EmptyFilter fi = new EmptyFilter();
+                    //BlurFilter fi = new BlurFilter(4, 1.1f);
+                    egg.Filter = fi;
+                    //egg.Filter.Cache();
                 }
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
@@ -57,6 +60,18 @@ namespace Sparrow.Samples
                 egg.Rotation = (float)(r.Next(0, 100) / 100.0f * Math.PI);
                 _container.AddChild(egg);
             }
+
+            Sprite sp = new Sprite();
+            sp.X = sp.Y = 250;
+            _container.AddChild(sp);
+
+            Image test = new Image(textures[1]);
+            test.PivotX = test.PivotY = test.Width / 2;
+            sp.AddChild(test);
+
+            Image test1 = new Image(textures[1]);
+            sp.AddChild(test1);
+            test1.X = test1.Y = 60;
         }
 
         private void BenchmarkComplete()
@@ -72,16 +87,22 @@ namespace Sparrow.Samples
         {
             _started = true;
             _waitFrames = 3;
-            AddTestObjects(4);
+            AddTestObjects(40);
 
             SparrowSharpApp.ShowStats = true;
+        }
+
+        public override void Render(RenderSupport support)
+        {
+            base.Render(support);
+            support.ProjectionMatrix = support.ProjectionMatrix;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)
         {
             if (!_started)
                 return;
-
+            
             _elapsed += passedTime / 1000;
             ++_frameCount;
             /*

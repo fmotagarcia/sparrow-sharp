@@ -292,7 +292,7 @@ namespace SparrowSharp.Fonts
                             {
                                 lastWhiteSpace = i;
                             }
-								
+                                
                             if (kerning)
                             {
                                 currentX += bitmapChar.KerningToChar(lastCharId);
@@ -410,7 +410,7 @@ namespace SparrowSharp.Fonts
                     }
                 }
             }
-				
+                
             return finalLocations;
         }
 

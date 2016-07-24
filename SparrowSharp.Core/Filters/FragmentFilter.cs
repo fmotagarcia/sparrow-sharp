@@ -160,7 +160,7 @@ namespace SparrowSharp.Filters
             {
                 obj.Render(support);
             }
-				
+                
             // center layer
             if (_cacheRequested)
             {
@@ -229,7 +229,7 @@ namespace SparrowSharp.Filters
         {
             StringBuilder source = new StringBuilder("");
             #if __WINDOWS__
-			source.AppendLine("uniform sampler2D uTexture;");
+            source.AppendLine("uniform sampler2D uTexture;");
             #else
             source.AppendLine("uniform lowp sampler2D uTexture;");
             #endif
@@ -352,14 +352,14 @@ namespace SparrowSharp.Filters
             support.ModelViewMatrix.Identity();
             support.PushClipRect(bounds);
 
-			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
-			GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
+            GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+            GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
 
-			GL.EnableVertexAttribArray (VertexPosID);
-			GL.VertexAttribPointer (VertexPosID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
+            GL.EnableVertexAttribArray (VertexPosID);
+            GL.VertexAttribPointer (VertexPosID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
 
-			GL.EnableVertexAttribArray (TexCoordsID);
-			GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
+            GL.EnableVertexAttribArray (TexCoordsID);
+            GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
 
             // draw all passes
             for (int i = 0; i < NumPasses; ++i)
@@ -391,11 +391,11 @@ namespace SparrowSharp.Filters
 
                 Texture passTexture = PassTextureForPass(i);
 
-				GL.ActiveTexture (TextureUnit.Texture0);
-				GL.BindTexture (TextureTarget.Texture2D, passTexture.Name);
+                GL.ActiveTexture (TextureUnit.Texture0);
+                GL.BindTexture (TextureTarget.Texture2D, passTexture.Name);
 
-				ActivateWithPass (i, passTexture, support.MvpMatrix);
-				GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
+                ActivateWithPass (i, passTexture, support.MvpMatrix);
+                GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
                 
                 DeactivateWithPass(i, passTexture);
             }
@@ -441,17 +441,17 @@ namespace SparrowSharp.Filters
             const int indexSize = sizeof(ushort) * 6;
             const int vertexSize = Vertex.SIZE * 4;
 
-			if (_vertexBufferName == 0) {
-				GL.GenBuffers (1, out _vertexBufferName);
-				GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+            if (_vertexBufferName == 0) {
+                GL.GenBuffers (1, out _vertexBufferName);
+                GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
 
                 GL.GenBuffers (1, out _indexBufferName);
                 GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
-				GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)indexSize, _indexData, BufferUsage.StaticDraw);
-			}
+                GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)indexSize, _indexData, BufferUsage.StaticDraw);
+            }
 
-			GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
-			GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, BufferUsage.StaticDraw);
+            GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
+            GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, BufferUsage.StaticDraw);
         }
 
         private void UpdatePassTextures(int width, int height, float scale)

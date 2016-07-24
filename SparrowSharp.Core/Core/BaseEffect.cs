@@ -122,8 +122,8 @@ namespace Sparrow.Core
 
             if (hasTexture)
             {
-            	GL.ActiveTexture (TextureUnit.Texture0);
-				GL.BindTexture (TextureTarget.Texture2D, texture.Name);
+                GL.ActiveTexture (TextureUnit.Texture0);
+                GL.BindTexture (TextureTarget.Texture2D, texture.Name);
             }
         }
 

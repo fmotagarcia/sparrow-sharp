@@ -302,7 +302,7 @@ namespace SparrowSharp.Display
             {
                 return;
             }
-		
+        
             int i = 0;
             float durationSum = 0.0f;
             float previousTime = _currentTime;

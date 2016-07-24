@@ -176,11 +176,11 @@ namespace SparrowSharp.Filters
 
             StringBuilder source = new StringBuilder("");
             #if __WINDOWS__
-			source.AppendLine("uniform mat4 uColorMatrix;");
-			source.AppendLine("uniform vec4 uColorOffset;");
-			source.AppendLine("uniform sampler2D uTexture;");
-			source.AppendLine("varying vec2 vTexCoords;");
-			source.AppendLine("const vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);");
+            source.AppendLine("uniform mat4 uColorMatrix;");
+            source.AppendLine("uniform vec4 uColorOffset;");
+            source.AppendLine("uniform sampler2D uTexture;");
+            source.AppendLine("varying vec2 vTexCoords;");
+            source.AppendLine("const vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);");
             #else
             source.AppendLine("uniform lowp mat4 uColorMatrix;");
             source.AppendLine("uniform lowp vec4 uColorOffset;");

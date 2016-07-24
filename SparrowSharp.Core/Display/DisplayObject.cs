@@ -295,7 +295,7 @@ namespace Sparrow.Display
                 {
                     value -= 2.0f * (float)Math.PI;
                 }
-				
+                
                 _rotation = value;
                 _orientationChanged = true;
             }
