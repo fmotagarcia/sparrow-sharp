@@ -211,6 +211,14 @@ namespace SparrowSharp.Filters
         protected static String StandardVertexShader()
         {
             StringBuilder source = new StringBuilder("");
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             source.AppendLine("attribute vec4 aPosition;");
             source.AppendLine("attribute lowp vec2 aTexCoords;");
             source.AppendLine("uniform mat4 uMvpMatrix;");
@@ -228,11 +236,15 @@ namespace SparrowSharp.Filters
         protected static String StandardFragmentShader()
         {
             StringBuilder source = new StringBuilder("");
-            #if __WINDOWS__
-            source.AppendLine("uniform sampler2D uTexture;");
-            #else
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             source.AppendLine("uniform lowp sampler2D uTexture;");
-            #endif
             source.AppendLine("varying lowp vec2 vTexCoords;");
             source.AppendLine("void main() {");
             source.AppendLine("    gl_FragColor = texture2D(uTexture, vTexCoords);");

@@ -39,7 +39,14 @@ namespace SparrowSharp.Filters
         private string GetVertexShader()
         {
             StringBuilder source = new StringBuilder("");
-
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             // attributes
             source.AppendLine("attribute vec4 aPosition;");
             source.AppendLine("attribute lowp vec2 aTexCoords;");
@@ -73,7 +80,14 @@ namespace SparrowSharp.Filters
         private string GetFragmentShader(bool isTinted)
         {
             StringBuilder source = new StringBuilder("");
-
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             // variables
             source.AppendLine("varying lowp vec2 v0;");
             source.AppendLine("varying lowp vec2 v1;");

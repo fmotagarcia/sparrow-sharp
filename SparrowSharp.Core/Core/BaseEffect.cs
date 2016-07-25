@@ -132,6 +132,14 @@ namespace Sparrow.Core
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
             // variables
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             source.AppendLine("attribute vec4 aPosition;");
             if (useTinting)
             {
@@ -172,7 +180,14 @@ namespace Sparrow.Core
         private String FragmentShaderString(bool hasTexture, bool useTinting)
         {
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
-
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
             // variables
             if (useTinting)
             {
@@ -182,11 +197,7 @@ namespace Sparrow.Core
             if (hasTexture)
             {
                 source.AppendLine("varying lowp vec2 vTexCoords;");
-#if __WINDOWS__
-                source.AppendLine("uniform sampler2D uTexture;");
-#else
                 source.AppendLine("uniform lowp sampler2D uTexture;");
-#endif
             }
 
             // main

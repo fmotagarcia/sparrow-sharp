@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Core
@@ -62,7 +61,7 @@ namespace Sparrow.Core
 
             GL.LinkProgram(program);
 
-            #if DEBUG
+#if DEBUG
             int linked;
             GL.GetProgram(program, ProgramParameter.LinkStatus, out linked);
             if (linked == 0)
@@ -77,7 +76,7 @@ namespace Sparrow.Core
                     Debug.WriteLine("Sparrow: Error linking program: " + log);
                 }
             }
-            #endif
+#endif
 
             Name = program;
 
@@ -102,7 +101,7 @@ namespace Sparrow.Core
             GL.ShaderSource(shader, 1, new string[] { source }, (int[])null);
             GL.CompileShader(shader);
 
-            #if DEBUG
+#if DEBUG
             int compiled;
             GL.GetShader(shader, ShaderParameter.CompileStatus, out compiled);
 
@@ -120,7 +119,7 @@ namespace Sparrow.Core
                 GL.DeleteShader(shader);
                 return 0;
             }
-            #endif
+#endif
 
             return shader;
         }
