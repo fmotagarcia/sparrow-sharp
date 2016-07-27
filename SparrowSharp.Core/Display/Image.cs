@@ -21,7 +21,7 @@ namespace Sparrow.Display
     /// </summary>
     public class Image : Quad
     {
-        private readonly VertexData _vertexDataCache;
+        private VertexData _vertexDataCache;
         private bool _vertexDataCacheInvalid;
         private Texture _texture;
 
@@ -31,12 +31,19 @@ namespace Sparrow.Display
         /// <param name="texture">The texture to use. Use for example the TextureLoader class to load one.</param>
         public Image(Texture texture)
         {
+            InitImage(texture);
+        }
+
+        protected Image() { }
+
+        protected void InitImage(Texture texture)
+        {
             if (texture == null)
             {
                 throw new Exception("texture cannot be null!");
             }
 
-            Rectangle frame = texture.Frame;    
+            Rectangle frame = texture.Frame;
             float width = (frame != null) ? frame.Width : texture.Width;
             float height = (frame != null) ? frame.Height : texture.Height;
             bool pma = texture.PremultipliedAlpha;
