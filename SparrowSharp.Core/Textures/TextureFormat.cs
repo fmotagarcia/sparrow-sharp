@@ -67,7 +67,7 @@ namespace Sparrow.Textures
             }
         }
 
-        private TextureFormat(PixelFormat format, PixelInternalFormat internalFormat, int bitsPerPixel, bool compressed, PixelType texType)
+        public TextureFormat(PixelFormat format, PixelInternalFormat internalFormat, int bitsPerPixel, bool compressed, PixelType texType)
         {
             _format = format;
             _internalformat = internalFormat;

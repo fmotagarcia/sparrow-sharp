@@ -19,6 +19,7 @@ namespace Sparrow.Core
 
             // Run the game at 60 updates per second
             Run(60.0);
+
         }
 
         private void HandleRenderFrame(object sender, FrameEventArgs e)
@@ -52,6 +53,7 @@ namespace Sparrow.Core
             {
                 Console.WriteLine("Framebuffer error: " + status);
             }
+            SparrowSharpApp.NativeWindow = this;
             SparrowSharpApp.Start(Width, Height, _rootClass);
         }
     }

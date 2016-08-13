@@ -20,6 +20,8 @@ namespace Sparrow
 
         public static int DrawableHeight { get; private set; }
 
+        public static Object NativeWindow;
+
         private static RenderSupport renderSupport;
 
         public static DisplayObject Root { get; private set; }
