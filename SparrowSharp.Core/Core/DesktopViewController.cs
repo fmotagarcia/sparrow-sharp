@@ -9,7 +9,9 @@ namespace Sparrow.Core
     {
         private readonly Type _rootClass;
 
-        public DesktopViewController(Type rootClass)
+        public DesktopViewController(Type rootClass) 
+            : base(900, 600, OpenTK.Graphics.GraphicsMode.Default, "title", GameWindowFlags.Default, DisplayDevice.Default, -1, -1,
+                  OpenTK.Graphics.GraphicsContextFlags.Debug)
         {
             _rootClass = rootClass;
 
@@ -19,7 +21,6 @@ namespace Sparrow.Core
 
             // Run the game at 60 updates per second
             Run(60.0);
-
         }
 
         private void HandleRenderFrame(object sender, FrameEventArgs e)
@@ -47,7 +48,7 @@ namespace Sparrow.Core
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.Dither);
             GL.Enable(EnableCap.Blend);
-
+            
             FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (status != FramebufferErrorCode.FramebufferComplete)
             {
