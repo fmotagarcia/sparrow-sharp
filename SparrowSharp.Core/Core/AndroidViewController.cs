@@ -173,7 +173,7 @@ namespace Sparrow.Core
                             // TODO: should we care about historical pointer events?
                             movedTouch.PreviousGlobalX = movedTouch.GlobalX;
                             movedTouch.PreviousGlobalY = movedTouch.GlobalY;
-
+                            movedTouch.TimeStamp = now;
                             float xc = e.GetX(i) * xConversion;
                             float yc = e.GetY(i) * yConversion;
                             if (movedTouch.GlobalX == xc && movedTouch.GlobalY == yc)
@@ -223,7 +223,8 @@ namespace Sparrow.Core
                 {
                     tou.Target.InvokeTouch(touchEvent);
                 }
-                //Console.WriteLine ("PHASE: " + tou.Phase + " ID: " + tou._touchID + " target: " + tou.Target + " isTap: "+ tou.IsTap);
+                //Console.WriteLine ("phase:" + tou.Phase + " ID:" + tou.TouchID + 
+                //    " target:" + tou.Target + " isTap:"+ tou.IsTap + " timestamp:" + tou.TimeStamp);
             }
 
             var touchList = new List<Touch>(_touches.Values);
