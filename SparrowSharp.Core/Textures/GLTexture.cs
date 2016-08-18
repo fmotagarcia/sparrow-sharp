@@ -134,7 +134,7 @@ namespace Sparrow.Textures
             GL.TexStorage2D(TextureTarget2D.Texture2D,
 #endif
                 properties.NumMipmaps + 1, // mipmap level, min 1
-                SizedInternalFormat.Rgba8,
+                properties.TextureFormat.InternalFormat,
                 properties.Width,
                 properties.Height);
 
@@ -148,8 +148,8 @@ namespace Sparrow.Textures
                         0, // yOffset
                         properties.Width,
                         properties.Height,
-                        PixelFormat.Rgba,
-                        PixelType.UnsignedByte,
+                        properties.TextureFormat.PixelFormat,
+                        properties.TextureFormat.PixelType,
                         imgData);
                 }
             }
@@ -165,7 +165,7 @@ namespace Sparrow.Textures
                         0, // yOffset
                         properties.Width,
                         properties.Height,
-                        PixelFormat.Rgba,
+                        properties.TextureFormat.PixelFormat,
                         size,
                         imgData);
                 }

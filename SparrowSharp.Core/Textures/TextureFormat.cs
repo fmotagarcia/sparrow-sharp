@@ -1,26 +1,32 @@
-﻿using OpenTK.Graphics.ES20;
+﻿#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Textures
 {
     public class TextureFormat
     {
-        public static readonly TextureFormat Rgba8888 = new TextureFormat(PixelFormat.Rgba, PixelInternalFormat.Rgba, 32, false, PixelType.UnsignedByte);
-        public static readonly TextureFormat Alpha8 = new TextureFormat(PixelFormat.Alpha, PixelInternalFormat.Alpha, 8, false, PixelType.UnsignedByte);
-        // TODO: these are not supported in iOS for some reason
+        // TODO review these
+        public static readonly TextureFormat Rgba8888 = new TextureFormat(PixelFormat.Rgba, SizedInternalFormat.Rgba8, 32, false, PixelType.UnsignedByte);
+        //public static readonly TextureFormat Alpha8 = new TextureFormat(PixelFormat.Alpha, SizedInternalFormat.Alpha8Ext, 8, false, PixelType.UnsignedByte);
+        // these are not supported in iOS for some reason
         //public static readonly TextureFormat CompressedRgbaPvrtc2Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbaPvrtc2Bppv1Img, 2, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat CompressedRgbPvrtc2Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbPvrtc2Bppv1Img, 2, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat CompressedRgbaPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbaPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat CompressedRgbPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
-        public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, PixelInternalFormat.Rgb, 16, false, PixelType.UnsignedShort565);
-        public static readonly TextureFormat Rgb888 = new TextureFormat(PixelFormat.Rgb, PixelInternalFormat.Rgb, 24, false, PixelType.UnsignedByte);
-        public static readonly TextureFormat Rgba5551 = new TextureFormat(PixelFormat.Rgba, PixelInternalFormat.Rgba, 16, false, PixelType.UnsignedShort5551);
-        public static readonly TextureFormat Rgba4444 = new TextureFormat(PixelFormat.Rgba, PixelInternalFormat.Rgba, 16, false, PixelType.UnsignedShort4444);
-        public static readonly TextureFormat AI88 = new TextureFormat(PixelFormat.LuminanceAlpha, PixelInternalFormat.LuminanceAlpha, 16, false, PixelType.UnsignedByte);
-        public static readonly TextureFormat I8 = new TextureFormat(PixelFormat.Luminance, PixelInternalFormat.Luminance, 8, false, PixelType.UnsignedByte);
-        private readonly PixelInternalFormat _internalformat;
+        //public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 16, false, PixelType.UnsignedShort565);
+        //public static readonly TextureFormat Rgb888 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 24, false, PixelType.UnsignedByte);
+        public static readonly TextureFormat Rgba5551 = new TextureFormat(PixelFormat.Rgba, SizedInternalFormat.Rgba8, 16, false, PixelType.UnsignedShort5551);
+        public static readonly TextureFormat Rgba4444 = new TextureFormat(PixelFormat.Rgba, SizedInternalFormat.Rgba8, 16, false, PixelType.UnsignedShort4444);
+        //public static readonly TextureFormat AI88 = new TextureFormat(PixelFormat.LuminanceAlpha, SizedInternalFormat.LuminanceAlpha16fExt, 16, false, PixelType.UnsignedByte);
+        //public static readonly TextureFormat I8 = new TextureFormat(PixelFormat.Luminance, SizedInternalFormat.Luminance8Ext, 8, false, PixelType.UnsignedByte);
+
+        private readonly SizedInternalFormat _internalformat;
         private readonly PixelFormat _format;
 
-        public PixelInternalFormat InternalFormat
+        public SizedInternalFormat InternalFormat
         {
             get
             {
@@ -28,7 +34,7 @@ namespace Sparrow.Textures
             }
         }
 
-        public PixelFormat Format
+        public PixelFormat PixelFormat
         {
             get
             {
@@ -59,7 +65,7 @@ namespace Sparrow.Textures
 
         private readonly PixelType _texType;
 
-        public PixelType TexType
+        public PixelType PixelType
         {
             get
             {
@@ -67,7 +73,7 @@ namespace Sparrow.Textures
             }
         }
 
-        public TextureFormat(PixelFormat format, PixelInternalFormat internalFormat, int bitsPerPixel, bool compressed, PixelType texType)
+        public TextureFormat(PixelFormat format, SizedInternalFormat internalFormat, int bitsPerPixel, bool compressed, PixelType texType)
         {
             _format = format;
             _internalformat = internalFormat;
