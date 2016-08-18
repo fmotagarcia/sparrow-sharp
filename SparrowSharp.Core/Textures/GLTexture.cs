@@ -1,5 +1,9 @@
 ﻿using System;
-using OpenTK.Graphics.ES20;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Textures
 {
@@ -57,8 +61,7 @@ namespace Sparrow.Textures
                 if (value != _smoothing)
                 {
                     _smoothing = value;
-                    GL.BindTexture(TextureTarget.Texture2D, _name);
-
+                   
                     TextureMagFilter magFilter; 
                     TextureMinFilter minFilter;
 
@@ -77,6 +80,7 @@ namespace Sparrow.Textures
                         magFilter = TextureMagFilter.Linear;
                         minFilter = _mipmaps ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear;
                     }
+                    GL.BindTexture(TextureTarget.Texture2D, _name);
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
                 }
@@ -124,61 +128,63 @@ namespace Sparrow.Textures
             GL.GenTextures(1, out glTexName);
             GL.BindTexture(TextureTarget.Texture2D, glTexName);
 
+#if __WINDOWS__
+            GL.TexStorage2D(TextureTarget2d.Texture2D,
+#elif __ANDROID__
+            GL.TexStorage2D(TextureTarget2D.Texture2D,
+#endif
+                properties.NumMipmaps + 1, // mipmap level, min 1
+                SizedInternalFormat.Rgba8,
+                properties.Width,
+                properties.Height);
+
             if (!compressed)
             {
-                int levelWidth = properties.Width;
-                int levelHeight = properties.Height;
-
-                for (int level = 0; level <= properties.NumMipmaps; ++level)
+                if (imgData != IntPtr.Zero)
                 {
-                    int size = levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8;
-                    GL.TexImage2D(
-                        TextureTarget.Texture2D, 
-                        level, 
-                        properties.TextureFormat.InternalFormat, 
-                        levelWidth, 
-                        levelHeight, 
-                        0, 
-                        properties.TextureFormat.Format,
-                        properties.TextureFormat.TexType,
+                    GL.TexSubImage2D(TextureTarget.Texture2D,
+                        0, // level
+                        0, // xOffset
+                        0, // yOffset
+                        properties.Width,
+                        properties.Height,
+                        PixelFormat.Rgba,
+                        PixelType.UnsignedByte,
                         imgData);
-                    imgData += size;
-                    levelWidth /= 2;
-                    levelHeight /= 2;
-                }
-
-                if (properties.NumMipmaps == 0 && properties.GenerateMipmaps)
-                {
-                    GL.GenerateMipmap(TextureTarget.Texture2D);
                 }
             }
             else
             {
-                int levelWidth = properties.Width;
-                int levelHeight = properties.Height;
-
-                for (int level = 0; level <= properties.NumMipmaps; ++level)
+                // TODO this is not tested!
+                if (imgData != IntPtr.Zero)
                 {
-                    int size = Math.Max(32, levelWidth * levelHeight * properties.TextureFormat.BitsPerPixel / 8);
-                    GL.CompressedTexImage2D(
-                        TextureTarget.Texture2D,
-                        level, 
-                        properties.TextureFormat.InternalFormat,
-                        levelWidth, 
-                        levelHeight,
-                        0,
+                    int size = Math.Max(32, properties.Width * properties.Height * properties.TextureFormat.BitsPerPixel / 8);
+                    GL.CompressedTexSubImage2D(TextureTarget.Texture2D,
+                        0, // level
+                        0, // xOffset
+                        0, // yOffset
+                        properties.Width,
+                        properties.Height,
+                        PixelFormat.Rgba,
                         size,
                         imgData);
-                    imgData += size;
-                    levelWidth /= 2;
-                    levelHeight /= 2;
                 }
             }
 
-            bool containsMipmaps = properties.NumMipmaps > 0 || (properties.GenerateMipmaps && !compressed);
+            if (properties.NumMipmaps > 0)
+            {
+#if __WINDOWS__
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+#elif __ANDROID__
+                GL.GenerateMipmap(TextureTarget.Texture2D);
+#endif
+            }
+
+            bool containsMipmaps = properties.NumMipmaps > 0;
 
             Init(glTexName, properties.Width, properties.Height, containsMipmaps, properties.Scale, properties.PremultipliedAlpha);
         }
+
         /// Initializes a PVR texture with with a certain scale factor.
         //public GLTexture (PVRData pvrData, float scale) {
         //}

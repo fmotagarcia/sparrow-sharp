@@ -7,7 +7,6 @@
         public int Width;
         public int Height;
         public int NumMipmaps;
-        public bool GenerateMipmaps;
         public bool PremultipliedAlpha;
     }
 }

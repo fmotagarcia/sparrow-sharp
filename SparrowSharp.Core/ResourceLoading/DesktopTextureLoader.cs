@@ -56,9 +56,7 @@ namespace Sparrow.ResourceLoading
         private void GenerateTexture(Bitmap bitmap)
         {
             _isLoaded = false;
-            uint name = (uint)GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, name);
-
+           
             // Fix up the Image to match the expected format
             bitmap = RGBToBGR(bitmap);
 
@@ -67,17 +65,25 @@ namespace Sparrow.ResourceLoading
                 ImageLockMode.ReadOnly, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            GL.TexImage2D(
-                TextureTarget.Texture2D,
-                0,
-                PixelInternalFormat.Rgba,
-                bitmapData.Width,
+            uint name = (uint)GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, name);
+
+            OpenTK.Graphics.OpenGL4.GL.TexStorage2D(OpenTK.Graphics.OpenGL4.TextureTarget2d.Texture2D,
+               1, // mipmap level
+               OpenTK.Graphics.OpenGL4.SizedInternalFormat.Rgba8,
+               bitmapData.Width,
+               bitmapData.Height);
+
+            OpenTK.Graphics.OpenGL4.GL.TexSubImage2D(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D,
+                0, // level
+                0, // xOffset
+                0, // yOffset
+                bitmapData.Width, 
                 bitmapData.Height,
-                0,
-                OpenTK.Graphics.ES20.PixelFormat.Rgba,
-                PixelType.UnsignedByte,
+                OpenTK.Graphics.OpenGL4.PixelFormat.Rgba,
+                OpenTK.Graphics.OpenGL4.PixelType.UnsignedByte,
                 bitmapData.Scan0);
-            // was brga
+            
             bitmap.UnlockBits(bitmapData);
 
             _glTexture = new GLTexture(name, bitmap.Width, bitmap.Height, false, 1.0f, false);
@@ -118,13 +124,13 @@ namespace Sparrow.ResourceLoading
 
             try
             {
-                System.Drawing.Imaging.ImageAttributes ia = new System.Drawing.Imaging.ImageAttributes();
-                System.Drawing.Imaging.ColorMatrix cm = new System.Drawing.Imaging.ColorMatrix(rgbtobgr);
+                ImageAttributes ia = new ImageAttributes();
+                ColorMatrix cm = new ColorMatrix(rgbtobgr);
 
                 ia.SetColorMatrix(cm);
-                using (System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(newBmp))
+                using (Graphics g = Graphics.FromImage(newBmp))
                 {
-                    g.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, System.Drawing.GraphicsUnit.Pixel, ia);
+                    g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, ia);
                 }
             }
             finally

@@ -2,9 +2,8 @@
 using System.Net.Http;
 using Android.Graphics;
 using Android.Opengl;
-using OpenTK.Graphics.ES20;
+using OpenTK.Graphics.ES30;
 using Sparrow.Textures;
-using Sparrow.Utils;
 using System.IO;
 
 namespace Sparrow.ResourceLoading
@@ -95,17 +94,36 @@ namespace Sparrow.ResourceLoading
         {
             GL.Hint(HintTarget.GenerateMipmapHint, HintMode.Fastest);
             uint name = (uint)GL.GenTexture();
-
             GL.BindTexture(TextureTarget.Texture2D, name);
+
+            /* TODO is this needed?
             if (GLExtensions.TextureMaxAnisotropySupported)
             {
                 float maxAniso;
                 GL.GetFloat((GetPName)ExtTextureFilterAnisotropic.MaxTextureMaxAnisotropyExt, out maxAniso);
                 GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)ExtTextureFilterAnisotropic.TextureMaxAnisotropyExt, maxAniso);
             }
+            */
+            
+            GL.TexStorage2D(TextureTarget2D.Texture2D,
+               1, // mipmap level, min 1
+               SizedInternalFormat.Rgba8,
+               bitmap.Width,
+               bitmap.Height);
 
-            GLUtils.TexImage2D(GLES20.GlTexture2d, 0, bitmap, 0);
-
+            if (bitmap.Width > 0 && bitmap.Height > 0)
+            {
+                GLUtils.TexSubImage2D(GLES20.GlTexture2d,
+                    0, // level
+                    0, // xOffset
+                    0, // yOffset
+                    bitmap);
+            }
+            else
+            {
+                Console.Out.WriteLine("WARNING: empty bitmap loaded");
+            }
+            
             // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.OpenGL.cs
             // for how MonoGame does it
             _glTexture = new GLTexture(name, bitmap.Width, bitmap.Height, false, 1.0f, false);

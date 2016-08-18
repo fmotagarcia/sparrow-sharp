@@ -493,7 +493,6 @@ namespace SparrowSharp.Filters
                 Width = legalWidth,
                 Height = legalHeight,
                 NumMipmaps = 0,
-                GenerateMipmaps = false,
                 PremultipliedAlpha = true
             };
 

@@ -55,7 +55,6 @@ namespace Sparrow.Textures
                 Width = legalWidth,
                 Height = legalHeight,
                 NumMipmaps = 0,
-                GenerateMipmaps = false,
                 PremultipliedAlpha = true
             };
 
