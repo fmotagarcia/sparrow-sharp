@@ -316,7 +316,7 @@ namespace SparrowSharp.Filters
         {
             Texture cacheTexture = null;
             Stage stage = obj.Stage;
-            float scale = SparrowSharpApp.ContentScaleFactor * Resolution;
+            float scale = Resolution;
 
             if (stage == null)
             {

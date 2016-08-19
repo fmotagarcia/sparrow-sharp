@@ -4,7 +4,7 @@ using Android.Util;
 using Android.Views;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.ES20;
+using OpenTK.Graphics.ES30;
 using OpenTK.Platform.Android;
 using Sparrow.Geom;
 using Sparrow.ResourceLoading;
@@ -21,15 +21,13 @@ namespace Sparrow.Core
     {
         public delegate void OnLoadedAction(int viewWidth,int viewHeight);
 
-        // TODO this should dispatch a resize event on the Stage
-        private readonly OnLoadedAction _onLoadedAction;
-
         private Type _rootClass;
         public static Android.Content.Context AndroidContext;
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
 
         public AndroidViewController(Android.Content.Context context, Type rootClass) : base(context)
         {
+            Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
             Setup(context);
         }
@@ -47,7 +45,7 @@ namespace Sparrow.Core
             Log.Verbose("Sparrow", "AndroidGameWindow.CreateFrameBuffer");
             try
             {
-                ContextRenderingApi = GLVersion.ES2;
+                ContextRenderingApi = GLVersion.ES3;
                 try
                 {
                     GraphicsMode = new AndroidGraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 0, 0, false);
@@ -69,13 +67,13 @@ namespace Sparrow.Core
                         base.CreateFrameBuffer();
                     }
                 }
-                Log.Verbose("Sparrow", "Created format {0}", GraphicsContext.GraphicsMode);
+                Log.Verbose("Sparrow", "Created format " + GraphicsContext.GraphicsMode);
                 FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
                 Log.Verbose("Sparrow", "Framebuffer Status: " + status);
             }
             catch (Exception)
             {
-                throw new NotSupportedException("Could not create OpenGLES 2.0 frame buffer");
+                throw new NotSupportedException("Could not create OpenGLES 3.0 frame buffer");
             }
             GL.Disable(EnableCap.CullFace);
             GL.Disable(EnableCap.DepthTest);
@@ -93,12 +91,7 @@ namespace Sparrow.Core
 
             if (SparrowSharpApp.Root == null)
             {
-                SparrowSharpApp.Start(Size.Width, Size.Height, _rootClass);
-            }
-
-            if (_onLoadedAction != null)
-            {
-                _onLoadedAction(Size.Width, Size.Height);
+                SparrowSharpApp.Start((uint)Size.Width, (uint)Size.Height, _rootClass);
             }
             // Run the render loop
             Run();
@@ -116,7 +109,7 @@ namespace Sparrow.Core
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            SparrowSharpApp.ReadjustStageSize(Size.Width, Size.Height);
+            SparrowSharpApp.Stage.SetDrawableArea((uint)Size.Width, (uint)Size.Height);
         }
 
         protected override void DestroyFrameBuffer()

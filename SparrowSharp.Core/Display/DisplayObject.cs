@@ -60,9 +60,9 @@ namespace Sparrow.Display
     {
         #region Events
 
-        public delegate void EventHandler(DisplayObject target,DisplayObject currentTarget);
+        public delegate void EventHandler(DisplayObject target, DisplayObject currentTarget);
 
-        public delegate void EnterFrameEventHandler(DisplayObject target,float passedTime);
+        public delegate void EnterFrameEventHandler(DisplayObject target, float passedTime);
 
         public delegate void TouchHandler(TouchEvent touch);
 
@@ -491,7 +491,7 @@ namespace Sparrow.Display
             Touchable = true;
             _transformationMatrix = Matrix.Create();
             _orientationChanged = false;
-            BlendMode = Sparrow.Display.BlendMode.AUTO;
+            BlendMode = Display.BlendMode.AUTO;
         }
 
         /// <summary>

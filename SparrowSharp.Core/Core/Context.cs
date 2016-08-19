@@ -51,7 +51,7 @@ namespace Sparrow.Core
                 }
                 else
                 {
-                    GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
+                    GL.Viewport(0, 0, (int)SparrowSharpApp.Stage.DrawableWidth, (int)SparrowSharpApp.Stage.DrawableHeight);
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace Sparrow.Core
                     #else
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                     #endif
-                    GL.Viewport(0, 0, SparrowSharpApp.DrawableWidth, SparrowSharpApp.DrawableHeight);
+                    GL.Viewport(0, 0, (int)SparrowSharpApp.Stage.DrawableWidth, (int)SparrowSharpApp.Stage.DrawableHeight);
                 }
             }
             get { return _renderTarget; }

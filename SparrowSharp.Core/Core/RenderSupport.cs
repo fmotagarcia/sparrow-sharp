@@ -384,8 +384,8 @@ namespace Sparrow.Core
                 }
                 else
                 {
-                    width = SparrowSharpApp.DrawableWidth;
-                    height = SparrowSharpApp.DrawableHeight;
+                    width = (int)SparrowSharpApp.Stage.DrawableWidth;
+                    height = (int)SparrowSharpApp.Stage.DrawableHeight;
                 }
 
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])

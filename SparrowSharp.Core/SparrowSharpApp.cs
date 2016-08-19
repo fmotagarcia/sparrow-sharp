@@ -16,10 +16,6 @@ namespace Sparrow
 
         public static readonly Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
-        public static int DrawableWidth { get; private set; }
-
-        public static int DrawableHeight { get; private set; }
-
         public static Object NativeWindow;
 
         private static RenderSupport renderSupport;
@@ -31,6 +27,28 @@ namespace Sparrow
         private static readonly Stopwatch watch = new Stopwatch();
 
         private static StatsDisplay stats;
+
+        public static void Start(uint width, uint height, Type rootType)
+        {
+            if (rootType == null)
+            {
+                throw new InvalidOperationException("Root cannot be null!");
+            }
+
+            if (Root != null)
+            {
+                throw new InvalidOperationException("App already initialized!");
+            }
+            RenderSupport.HasOpenGLError = false;
+
+            Stage = new Stage(width, height);
+            DefaultJuggler = new Juggler();
+            Context = new Context();
+            renderSupport = new RenderSupport();
+
+            Root = (DisplayObject)Activator.CreateInstance(rootType);
+            Stage.AddChild(Root);
+        }
 
         public static void Step(double time)
         {
@@ -45,47 +63,13 @@ namespace Sparrow
             {
                 stats.NumDrawCalls = renderSupport.NumDrawCalls - 2; // stats display requires 2 itself
             }
-                
-            #if DEBUG
+
+#if DEBUG
             RenderSupport.CheckForOpenGLError();
-            #endif
+#endif
 
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
-        }
-
-        public static void Start(float width, float height, Type rootType)
-        {
-            if (rootType == null)
-            {
-                throw new InvalidOperationException("Root cannot be null!");
-            }
-
-            if (Root != null)
-            {
-                throw new InvalidOperationException("App already initialized!");
-            }
-            RenderSupport.HasOpenGLError = false;
-            DrawableWidth = (int)width;
-            DrawableHeight = (int)height;
-
-            Stage = new Stage(width, height);
-            ReadjustStageSize(width, height); 
-            DefaultJuggler = new Juggler();
-            Context = new Context();
-            renderSupport = new RenderSupport();
-
-            Root = (DisplayObject)Activator.CreateInstance(rootType);
-            Stage.AddChild(Root);
-        }
-
-        public static void ReadjustStageSize(float width, float height)
-        {
-            // TODO check if Width/Height are not 0 here
-            DrawableWidth = (int)width;
-            DrawableHeight = (int)height;
-            Stage.Width = width * ViewScaleFactor / ContentScaleFactor;
-            Stage.Height = height * ViewScaleFactor / ContentScaleFactor;
         }
 
         public static void RegisterProgram(string name, Program program)
@@ -105,16 +89,6 @@ namespace Sparrow
                 return Programs[name];
             }
             return null;
-        }
-
-        public static float ContentScaleFactor
-        {
-            get { return 1.0f; }
-        }
-
-        private static float ViewScaleFactor
-        {
-            get { return 1.0f; }
         }
 
         public static bool ShowStats

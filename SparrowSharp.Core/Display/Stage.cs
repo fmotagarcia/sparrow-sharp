@@ -16,13 +16,34 @@ namespace Sparrow.Display
     /// </summary>
     public class Stage : DisplayObjectContainer
     {
+        public delegate void ResizeHandler(DisplayObject target);
+
+        /// <summary>
+        /// Dispatched when the drawable area changes, e.g. on window resize on PCs or device rotation on mobile.
+        /// </summary>
+        public event ResizeHandler OnResize;
+
+        /// <summary>
+        /// The drawable width in pixels. This is the size of the game window on PCs and the size of the app on mobile.
+        /// </summary>
+        public uint DrawableWidth { get; private set; }
+
+        /// <summary>
+        /// The drawable width in pixels. This is the size of the game window on PCs and the size of the app on mobile.
+        /// </summary>
+        public uint DrawableHeight { get; private set; }
+
         /// <summary>
         /// The height of the stage's coordinate system.
+        /// Changing Stage size does not affect the size of the rendered area. If its the same as the DrawableWidht/DrawableHeight,
+        /// 1 unit in the Stage equals 1 pixel.
         /// </summary>
         override public float Width { get; set; }
 
         /// <summary>
         /// The width of the stage's coordinate system.
+        /// Changing Stage size does not affect the size of the rendered area. If its the same as the DrawableWidht/DrawableHeight,
+        /// 1 unit in the Stage equals 1 pixel.
         /// </summary>
         override public float Height { get; set; }
 
@@ -34,10 +55,22 @@ namespace Sparrow.Display
         /// <summary>
         /// Initializes a stage with a certain size in points. Sparrow calls this automatically on startup.
         /// </summary>
-        internal Stage(float initWidth, float initHeight)
+        internal Stage(float width, float height)
         {
-            Width = initWidth;
-            Width = initHeight;
+            Width = width;
+            Height = height;
+            DrawableWidth = (uint)width;
+            DrawableHeight = (uint)height;
+        }
+
+        internal void SetDrawableArea(uint width, uint height)
+        {
+            DrawableWidth = width;
+            DrawableHeight = height;
+            if (OnResize != null)
+            {
+                OnResize(this);
+            }
         }
 
         override public void Render(RenderSupport support)

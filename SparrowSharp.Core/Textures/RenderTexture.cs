@@ -37,14 +37,9 @@ namespace Sparrow.Textures
 
         /// <summary>
         /// Initializes a render texture with a certain ARGB color (0xAARRGGBB) and a scale factor.
-        /// If scale is 0 or less, it will use SparrowSharpApp.ContentScaleFactor.
         /// </summary>
-        public RenderTexture(float width, float height, uint argbFillColor = 0x0, float scale = -1.0f)
+        public RenderTexture(float width, float height, uint argbFillColor = 0x0, float scale = 1.0f)
         {
-            if (scale <= 0)
-            {
-                scale = SparrowSharpApp.ContentScaleFactor;
-            }
             int legalWidth = NumberUtil.NextPowerOfTwo(width * scale);
             int legalHeight = NumberUtil.NextPowerOfTwo(height * scale);
 

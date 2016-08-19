@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenTK;
-using OpenTK.Graphics.ES20;
+using OpenTK.Graphics.ES30;
+using OpenTK.Graphics;
 using OpenTK.Input;
 using System.Collections.Generic;
 using Sparrow.Touches;
@@ -14,10 +15,11 @@ namespace Sparrow.Core
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
         private const int pointerId = 1;
 
-        public DesktopViewController(Type rootClass) 
-            : base(900, 600, OpenTK.Graphics.GraphicsMode.Default, "title", GameWindowFlags.Default, DisplayDevice.Default, -1, -1,
-                  OpenTK.Graphics.GraphicsContextFlags.Debug)
+        public DesktopViewController(Type rootClass, int windowWidth, int windowHeight, string windowTitle, 
+                                     GameWindowFlags windowFlags, DisplayDevice device, GraphicsContextFlags flags) 
+            : base(windowWidth, windowHeight, GraphicsMode.Default, windowTitle, windowFlags, device, -1, -1, flags)
         {
+            Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
 
             Load += HandleLoad;
@@ -145,7 +147,7 @@ namespace Sparrow.Core
         {
             base.OnResize(e);
             GL.Viewport(0, 0, Width, Height);
-            SparrowSharpApp.ReadjustStageSize(Width, Height);
+            SparrowSharpApp.Stage.SetDrawableArea((uint)Width, (uint)Height);
         }
 
         private void HandleLoad(object sender, EventArgs e)
@@ -162,7 +164,7 @@ namespace Sparrow.Core
                 Console.WriteLine("Framebuffer error: " + status);
             }
             SparrowSharpApp.NativeWindow = this;
-            SparrowSharpApp.Start(Width, Height, _rootClass);
+            SparrowSharpApp.Start((uint)Width, (uint)Height, _rootClass);
         }
     }
 }
