@@ -63,7 +63,10 @@
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
     <Compile Include="Rendering\GPUInfo.cs" />
+    <Compile Include="Rendering\IndexData.cs" />
+    <Compile Include="Rendering\Mesh.cs" />
     <Compile Include="Rendering\OpenGLDebugCallback.cs" />
+    <Compile Include="Styles\MeshStyle.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
     <Compile Include="Utils\ColorUtil.cs" />

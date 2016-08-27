@@ -495,9 +495,24 @@ namespace Sparrow.Display
         }
 
         /// <summary>
-        /// Renders the display object with the help of a support object. 
+        /// Disposes all resources of the display object. 
+        /// GPU buffers are released, event listeners are removed, filters and masks are disposed.
         /// </summary>
-        public abstract void Render(RenderSupport support);
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+            /*
+            if (_filter) _filter.dispose();
+            if (_mask) _mask.dispose();
+            removeEventListeners();
+            mask = null; // revert 'isMask' property, just to be sure.
+            */
+        }
+
+    /// <summary>
+    /// Renders the display object with the help of a support object. 
+    /// </summary>
+    public abstract void Render(RenderSupport support);
 
         /// <summary>
         /// Removes the object from its parent, if it has one.

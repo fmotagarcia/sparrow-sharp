@@ -54,6 +54,7 @@
     <Compile Include="..\Shared\RenderSupportTest.cs" />
     <Compile Include="..\Shared\TestBase.cs" />
     <Compile Include="..\Shared\VertexDataTest.cs" />
+    <Compile Include="IndexDataTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -1,3 +1,4 @@
+using Sparrow.Geom;
 using System;
 
 namespace Sparrow.Utils
@@ -75,5 +76,32 @@ namespace Sparrow.Utils
             }
             return result;    
         }
-    }
+
+        /// <summary>
+        /// Calculates if the point <code>p</code> is inside the triangle <code>a-b-c</code>. 
+        /// </summary>
+        public static bool IsPointInTriangle(Point p, Point a, Point b, Point c)
+        {
+            // This algorithm is described well in this article:
+            // http://www.blackpawn.com/texts/pointinpoly/default.html
+            float v0x = c.X - a.X;
+            float v0y = c.Y - a.Y;
+            float v1x = b.X - a.X;
+            float v1y = b.Y - a.Y;
+            float v2x = p.X - a.X;
+            float v2y = p.Y - a.Y;
+
+            float dot00 = v0x* v0x + v0y* v0y;
+            float dot01 = v0x* v1x + v0y* v1y;
+            float dot02 = v0x* v2x + v0y* v2y;
+            float dot11 = v1x* v1x + v1y* v1y;
+            float dot12 = v1x* v2x + v1y* v2y;
+
+            float invDen = 1.0f / (dot00* dot11 - dot01* dot01);
+            float u = (dot11* dot02 - dot01* dot12) * invDen;
+            float v = (dot00* dot12 - dot01* dot02) * invDen;
+
+            return (u >= 0) && (v >= 0) && (u + v< 1);
+        }
+}
 }
