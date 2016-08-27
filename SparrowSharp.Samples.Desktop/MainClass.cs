@@ -1,6 +1,8 @@
 ﻿using System;
 using Sparrow.Core;
 using Sparrow.Samples;
+using OpenTK.Graphics;
+using OpenTK;
 
 namespace SparrowSharp.Samples.Desktop
 {
@@ -9,7 +11,7 @@ namespace SparrowSharp.Samples.Desktop
 		[STAThread]
 		public static void Main()
 		{
-			new DesktopViewController (typeof(Benchmark));
+			new DesktopViewController(typeof(Benchmark), 960, 640, "title", GameWindowFlags.Default, DisplayDevice.Default, GraphicsContextFlags.Debug);
 		}
 	}
 }

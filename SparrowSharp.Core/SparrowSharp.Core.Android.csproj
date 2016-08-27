@@ -68,6 +68,8 @@
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Rendering\GPUInfo.cs" />
+    <Compile Include="Rendering\OpenGLDebugCallback.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\Juggler.cs" />
     <Compile Include="Utils\NumberUtil.cs" />

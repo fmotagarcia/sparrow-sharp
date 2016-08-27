@@ -314,7 +314,7 @@ namespace Sparrow.Core
         /// </summary>
         public void ApplyBlendMode(bool premultipliedAlpha)
         {
-            Sparrow.Display.BlendMode.ApplyBlendFactors(_stateStackTop.BlendMode, premultipliedAlpha);
+            Display.BlendMode.ApplyBlendFactors(_stateStackTop.BlendMode, premultipliedAlpha);
         }
 
         /// <summary>

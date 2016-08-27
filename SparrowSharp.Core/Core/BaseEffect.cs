@@ -127,7 +127,7 @@ namespace Sparrow.Core
             }
         }
 
-        private String VertexShaderString(bool hasTexture, bool useTinting)
+        private string VertexShaderString(bool hasTexture, bool useTinting)
         {
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 
@@ -177,7 +177,7 @@ namespace Sparrow.Core
             return source.ToString();
         }
 
-        private String FragmentShaderString(bool hasTexture, bool useTinting)
+        private string FragmentShaderString(bool hasTexture, bool useTinting)
         {
             System.Text.StringBuilder source = new System.Text.StringBuilder("");
 #if __WINDOWS__

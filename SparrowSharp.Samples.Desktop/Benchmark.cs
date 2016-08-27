@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
 using Sparrow.Display;
-using Sparrow;
-using OpenTK.Graphics.ES20;
 using Sparrow.Textures;
-using SparrowSharp.Display;
 using Sparrow.ResourceLoading;
 using Sparrow.Core;
 using SparrowSharp.Filters;
@@ -33,6 +29,15 @@ namespace Sparrow.Samples
 
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
+        }
+
+        private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
+        {
+            _started = true;
+            _waitFrames = 3;
+            AddTestObjects(40);
+
+            SparrowSharpApp.ShowStats = true;
         }
 
         private void AddTestObjects(int numObjects)
@@ -81,15 +86,6 @@ namespace Sparrow.Samples
 
             _started = false;
             _container.RemoveAllChildren();
-        }
-
-        private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
-        {
-            _started = true;
-            _waitFrames = 3;
-            AddTestObjects(40);
-
-            SparrowSharpApp.ShowStats = true;
         }
 
         public override void Render(RenderSupport support)

@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\..\sparrow-game\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,6 +62,8 @@
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Rendering\GPUInfo.cs" />
+    <Compile Include="Rendering\OpenGLDebugCallback.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
     <Compile Include="Utils\ColorUtil.cs" />

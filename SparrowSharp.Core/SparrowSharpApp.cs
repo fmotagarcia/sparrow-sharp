@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Sparrow.Core;
 using Sparrow.Display;
 using SparrowSharp.Utils;
+using SparrowSharp.Core.Desktop.Rendering;
 
 namespace Sparrow
 {
@@ -30,6 +31,10 @@ namespace Sparrow
 
         public static void Start(uint width, uint height, Type rootType)
         {
+            GPUInfo.PrintGPUInfo();
+#if DEBUG
+            OpenGLDebugCallback.Init();
+#endif
             if (rootType == null)
             {
                 throw new InvalidOperationException("Root cannot be null!");

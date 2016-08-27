@@ -285,7 +285,7 @@ namespace Sparrow.Display
                 SyncBuffers(alpha);
             }
 
-            if (blendMode == Sparrow.Display.BlendMode.AUTO)
+            if (blendMode == Display.BlendMode.AUTO)
             {
                 throw new InvalidOperationException("Cannot render object with blend mode AUTO");
             }
@@ -293,7 +293,7 @@ namespace Sparrow.Display
 
             _baseEffect.PrepareToDraw(matrix, _premultipliedAlpha, alpha, useTinting, _texture);
 
-            Sparrow.Display.BlendMode.ApplyBlendFactors(blendMode, _premultipliedAlpha);
+            Display.BlendMode.ApplyBlendFactors(blendMode, _premultipliedAlpha);
 
             int attribPosition = _baseEffect.AttribPosition;
             GL.EnableVertexAttribArray(attribPosition);
