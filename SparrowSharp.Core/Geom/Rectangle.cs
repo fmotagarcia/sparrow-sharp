@@ -214,10 +214,10 @@ namespace Sparrow.Geom
                 return false;
             }
 
-            return NumberUtil.Equals(X, other.X) &&
-            NumberUtil.Equals(Y, other.Y) &&
-            NumberUtil.Equals(Width, other.Width) &&
-            NumberUtil.Equals(Height, other.Height);
+            return MathUtil.Equals(X, other.X) &&
+            MathUtil.Equals(Y, other.Y) &&
+            MathUtil.Equals(Width, other.Width) &&
+            MathUtil.Equals(Height, other.Height);
         }
 
         public Rectangle Copy()

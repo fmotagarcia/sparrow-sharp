@@ -62,6 +62,9 @@
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Rendering\BatchToken.cs" />
+    <Compile Include="Rendering\Effect.cs" />
+    <Compile Include="Rendering\FilterEffect.cs" />
     <Compile Include="Rendering\GPUInfo.cs" />
     <Compile Include="Rendering\IndexData.cs" />
     <Compile Include="Rendering\Mesh.cs" />
@@ -72,6 +75,8 @@
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\Juggler.cs" />
+    <Compile Include="Utils\MatrixUtil.cs" />
+    <Compile Include="Utils\MeshUtil.cs" />
     <Compile Include="Utils\NumberUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />
     <Compile Include="Utils\Vertex.cs" />

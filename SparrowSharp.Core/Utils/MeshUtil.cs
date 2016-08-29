@@ -33,11 +33,11 @@ namespace SparrowSharp.Core.Utils
 
             for (i = 0; i < numIndices; i += 3)
             {
-            /*    vertexData.GetPoint(indexData.GetIndex(i  ), "position", p0);
+                vertexData.GetPoint(indexData.GetIndex(i  ), "position", p0);
                 vertexData.GetPoint(indexData.GetIndex(i+1), "position", p1);
                 vertexData.GetPoint(indexData.GetIndex(i+2), "position", p2);
-*/
-                if (NumberUtil.IsPointInTriangle(point, p0, p1, p2))
+
+                if (MathUtil.IsPointInTriangle(point, p0, p1, p2))
                 {
                     result = true;
                     break;
@@ -58,7 +58,7 @@ namespace SparrowSharp.Core.Utils
 
             Stage stage = sourceSpace.Stage;
 
-           /* if (sourceSpace.Is3D && stage)
+            if (sourceSpace.Is3D && stage)
             {
                 stage.GetCameraPosition(targetSpace, sPoint3D);
                 sourceSpace.GetTransformationMatrix3D(targetSpace, sMatrix3D);
@@ -68,7 +68,7 @@ namespace SparrowSharp.Core.Utils
             {
                 sourceSpace.GetTransformationMatrix(targetSpace, sMatrix);
                 vertexData.GetBounds("position", sMatrix, 0, -1, outRect);
-            }*/
+            }
             return outRect;
         }
     }

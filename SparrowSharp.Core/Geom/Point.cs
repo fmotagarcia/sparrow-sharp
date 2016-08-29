@@ -85,8 +85,8 @@ namespace Sparrow.Geom
         /// </summary>
         public void RotateBy(float angle)
         {
-            float sin = NumberUtil.FastSin(angle);
-            float cos = NumberUtil.FastCos(angle);
+            float sin = MathUtil.FastSin(angle);
+            float cos = MathUtil.FastCos(angle);
             X = X * cos - Y * sin;
             Y = X * sin + Y * cos;
         }
@@ -129,7 +129,7 @@ namespace Sparrow.Geom
                 return false;
             }
 
-            return NumberUtil.Equals(X, other.X) && NumberUtil.Equals(Y, other.Y);
+            return MathUtil.Equals(X, other.X) && MathUtil.Equals(Y, other.Y);
         }
 
         public float Distance(Point p2)

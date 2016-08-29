@@ -242,7 +242,7 @@ namespace Sparrow.Utils
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            alpha = NumberUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
+            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
 
             VertexColor vertexColor = VertexColorHelper.CreateVertexColor(color, alpha);
             _vertexColors[atIndex] = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
@@ -278,7 +278,7 @@ namespace Sparrow.Utils
                 SetColor(color, i);
             }
         }
-
+        // TODO rename to GetColor
         /// <summary>
         /// Returns the RGB color of a vertex (without premultiplied alpha).
         /// </summary>
@@ -358,7 +358,7 @@ namespace Sparrow.Utils
             for (int i = index; i < index + numVertices; ++i)
             {
                 VertexColor vertexColor = _vertexColors[i];
-                byte newAlpha = Convert.ToByte(NumberUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
+                byte newAlpha = Convert.ToByte(MathUtil.Clamp(vertexColor.A * factor, minAlpha, 255));
 
                 if (_premultipliedAlpha)
                 {

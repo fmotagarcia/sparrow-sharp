@@ -272,7 +272,7 @@ namespace SparrowSharp.Filters
             {
                 marginX = MarginX;
                 marginY = MarginY;
-                bounds = obj.BoundsInSpace(stage);
+                bounds = obj.GetBounds(stage);
             }
 
             if (intersectWithStage)
@@ -292,8 +292,8 @@ namespace SparrowSharp.Filters
 
                 boundsPOT = new Rectangle(result.X,
                     result.Top,
-                    NumberUtil.NextPowerOfTwo(minWidth * scale) / scale,
-                    NumberUtil.NextPowerOfTwo(minHeight * scale) / scale);
+                    MathUtil.NextPowerOfTwo(minWidth * scale) / scale,
+                    MathUtil.NextPowerOfTwo(minHeight * scale) / scale);
             }
         }
 
@@ -431,7 +431,7 @@ namespace SparrowSharp.Filters
                 cache = new QuadBatch();
                 Image image = new Image(cacheTexture);
 
-                Matrix matrix = stage.TransformationMatrixToSpace(obj);
+                Matrix matrix = stage.GetTransformationMatrix(obj);
                 // Note: the next line was originally:
                 // matrix.Translate (bounds.X + OffsetX, bounds.Y + OffsetY);
                 // this seems like a sparrow-s bug; fix is from Starling
@@ -483,8 +483,8 @@ namespace SparrowSharp.Filters
 
         private Texture CreateTexture(int width, int height, float scale)
         {
-            int legalWidth = NumberUtil.NextPowerOfTwo(width * scale);
-            int legalHeight = NumberUtil.NextPowerOfTwo(height * scale);
+            int legalWidth = MathUtil.NextPowerOfTwo(width * scale);
+            int legalHeight = MathUtil.NextPowerOfTwo(height * scale);
 
             TextureProperties texProps = new TextureProperties
             {

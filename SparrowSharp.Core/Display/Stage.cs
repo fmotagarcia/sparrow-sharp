@@ -81,14 +81,14 @@ namespace Sparrow.Display
             base.Render(support);
         }
 
-        override public DisplayObject HitTestPoint(Point localPoint)
+        override public DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable)
             {
                 return null;
             }
             // if nothing else is hit, the stage returns itself as target
-            DisplayObject target = base.HitTestPoint(localPoint);
+            DisplayObject target = base.HitTest(localPoint);
             if (target == null)
             {
                 target = this;

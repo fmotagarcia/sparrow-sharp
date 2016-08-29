@@ -81,8 +81,8 @@ namespace Tests
             Point point = Point.Create(10, 20);
             Point tPoint = identMatrix.TransformPoint(point);
 
-            Assert.IsTrue(NumberUtil.Equals(15, tPoint.X), "wrong X value " + tPoint.X);
-            Assert.IsTrue(NumberUtil.Equals(27, tPoint.Y), "wrong Y value " + tPoint.Y);
+            Assert.IsTrue(MathUtil.Equals(15, tPoint.X), "wrong X value " + tPoint.X);
+            Assert.IsTrue(MathUtil.Equals(27, tPoint.Y), "wrong Y value " + tPoint.Y);
         }
 
         [Test]
@@ -91,15 +91,15 @@ namespace Tests
             identMatrix.Rotate((float)Math.PI / 2.0f);
             Point point = Point.Create(10, 0);
             Point rPoint = identMatrix.TransformPoint(point);
-            Assert.IsTrue(NumberUtil.Equals(0, rPoint.X), "wrong X value " + rPoint.X);
-            Assert.IsTrue(NumberUtil.Equals(10, rPoint.Y), "wrong Y value " + rPoint.Y);
+            Assert.IsTrue(MathUtil.Equals(0, rPoint.X), "wrong X value " + rPoint.X);
+            Assert.IsTrue(MathUtil.Equals(10, rPoint.Y), "wrong Y value " + rPoint.Y);
 
             identMatrix.Identity();
             identMatrix.Rotate((float)Math.PI);
             point.Y = 20;
             rPoint = identMatrix.TransformPoint(point);
-            Assert.IsTrue(NumberUtil.Equals(-10, rPoint.X), "wrong X value " + rPoint.X);
-            Assert.IsTrue(NumberUtil.Equals(-20, rPoint.Y), "wrong Y value " + rPoint.Y);
+            Assert.IsTrue(MathUtil.Equals(-10, rPoint.X), "wrong X value " + rPoint.X);
+            Assert.IsTrue(MathUtil.Equals(-20, rPoint.Y), "wrong Y value " + rPoint.Y);
         }
 
         [Test]
@@ -109,8 +109,8 @@ namespace Tests
             Point point = Point.Create(10, 20);
             Point sPoint = identMatrix.TransformPoint(point);
 
-            Assert.IsTrue(NumberUtil.Equals(20.0f, sPoint.X), "wrong X value " + sPoint.X);
-            Assert.IsTrue(NumberUtil.Equals(10.0f, sPoint.Y), "wrong Y value " + sPoint.Y);
+            Assert.IsTrue(MathUtil.Equals(20.0f, sPoint.X), "wrong X value " + sPoint.X);
+            Assert.IsTrue(MathUtil.Equals(10.0f, sPoint.Y), "wrong Y value " + sPoint.Y);
         }
 
         [Test]
@@ -122,15 +122,15 @@ namespace Tests
 
             Point ctPoint = identMatrix.TransformPoint(10, 0);
 
-            Assert.IsTrue(NumberUtil.Equals(0.0f, ctPoint.X), "wrong X value " + ctPoint.X);
-            Assert.IsTrue(NumberUtil.Equals(10.0f, ctPoint.Y), "wrong Y value " + ctPoint.Y); 
+            Assert.IsTrue(MathUtil.Equals(0.0f, ctPoint.X), "wrong X value " + ctPoint.X);
+            Assert.IsTrue(MathUtil.Equals(10.0f, ctPoint.Y), "wrong Y value " + ctPoint.Y); 
         }
 
         bool CheckMatrixValues(Matrix matrix, float a, float b, float c, float d, float tx, float ty)
         {
-            return NumberUtil.Equals(a, matrix.A) && NumberUtil.Equals(b, matrix.B) &&
-                NumberUtil.Equals(b, matrix.B) && NumberUtil.Equals(c, matrix.C) &&
-                NumberUtil.Equals(tx, matrix.Tx) && NumberUtil.Equals(ty, matrix.Ty);
+            return MathUtil.Equals(a, matrix.A) && MathUtil.Equals(b, matrix.B) &&
+                MathUtil.Equals(b, matrix.B) && MathUtil.Equals(c, matrix.C) &&
+                MathUtil.Equals(tx, matrix.Tx) && MathUtil.Equals(ty, matrix.Ty);
         }
 
     }

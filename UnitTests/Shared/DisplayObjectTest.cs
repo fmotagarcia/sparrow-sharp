@@ -46,13 +46,13 @@ namespace Tests
             child.Rotation = (float)(Math.PI / 4.0f);    
             sprite.AddChild(child);
 
-            Matrix matrix = sprite.TransformationMatrixToSpace(child);
+            Matrix matrix = sprite.GetTransformationMatrix(child);
             Matrix expectedMatrix = child.TransformationMatrix;
             expectedMatrix.Invert();
 
             Assert.IsTrue(matrix.IsEqual(expectedMatrix));
 
-            matrix = child.TransformationMatrixToSpace(sprite);
+            matrix = child.GetTransformationMatrix(sprite);
 
             Assert.IsTrue(child.TransformationMatrix.IsEqual(matrix));
 
@@ -147,19 +147,19 @@ namespace Tests
             Quad quad = new Quad(10, 20);
             quad.X = -10;
             quad.Y = 10;
-            quad.Rotation = NumberUtil.PIHALF;
+            quad.Rotation = MathUtil.PIHALF;
             Rectangle bounds = quad.Bounds;
 
-            Assert.IsTrue(NumberUtil.Equals(-30, bounds.X), "wrong bounds.x: " + bounds.X);
-            Assert.IsTrue(NumberUtil.Equals(10, bounds.Y), "wrong bounds.y: " + bounds.Y);
-            Assert.IsTrue(NumberUtil.Equals(20, bounds.Width), "wrong bounds.width: " + bounds.Width);
-            Assert.IsTrue(NumberUtil.Equals(10, bounds.Height), "wrong bounds.height: " + bounds.Height);
+            Assert.IsTrue(MathUtil.Equals(-30, bounds.X), "wrong bounds.x: " + bounds.X);
+            Assert.IsTrue(MathUtil.Equals(10, bounds.Y), "wrong bounds.y: " + bounds.Y);
+            Assert.IsTrue(MathUtil.Equals(20, bounds.Width), "wrong bounds.width: " + bounds.Width);
+            Assert.IsTrue(MathUtil.Equals(10, bounds.Height), "wrong bounds.height: " + bounds.Height);
 
-            bounds = quad.BoundsInSpace(quad);
-            Assert.IsTrue(NumberUtil.Equals(0, bounds.X), "wrong inner bounds.x: " + bounds.X);
-            Assert.IsTrue(NumberUtil.Equals(0, bounds.Y), "wrong inner bounds.y: " + bounds.Y);
-            Assert.IsTrue(NumberUtil.Equals(10, bounds.Width), "wrong inner bounds.width: " + bounds.Width);
-            Assert.IsTrue(NumberUtil.Equals(20, bounds.Height), "wrong innter bounds.height: " + bounds.Height);
+            bounds = quad.GetBounds(quad);
+            Assert.IsTrue(MathUtil.Equals(0, bounds.X), "wrong inner bounds.x: " + bounds.X);
+            Assert.IsTrue(MathUtil.Equals(0, bounds.Y), "wrong inner bounds.y: " + bounds.Y);
+            Assert.IsTrue(MathUtil.Equals(10, bounds.Width), "wrong inner bounds.width: " + bounds.Width);
+            Assert.IsTrue(MathUtil.Equals(20, bounds.Height), "wrong innter bounds.height: " + bounds.Height);
         }
 
         [Test]

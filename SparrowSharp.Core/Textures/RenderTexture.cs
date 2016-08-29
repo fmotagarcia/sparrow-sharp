@@ -40,8 +40,8 @@ namespace Sparrow.Textures
         /// </summary>
         public RenderTexture(float width, float height, uint argbFillColor = 0x0, float scale = 1.0f)
         {
-            int legalWidth = NumberUtil.NextPowerOfTwo(width * scale);
-            int legalHeight = NumberUtil.NextPowerOfTwo(height * scale);
+            int legalWidth = MathUtil.NextPowerOfTwo(width * scale);
+            int legalHeight = MathUtil.NextPowerOfTwo(height * scale);
 
             TextureProperties properties = new TextureProperties
             {

@@ -84,6 +84,7 @@ namespace Sparrow.Geom
             Ty = ty;
         }
 
+        // matrix multiplication, called concat in AS3
         public void AppendMatrix(Matrix matrix)
         {
             float a = matrix.A * A + matrix.C * B;
@@ -156,8 +157,8 @@ namespace Sparrow.Geom
             {
                 return;
             }
-            float sin = NumberUtil.FastSin(angleInRadians);
-            float cos = NumberUtil.FastCos(angleInRadians);
+            float sin = MathUtil.FastSin(angleInRadians);
+            float cos = MathUtil.FastCos(angleInRadians);
 
             float a = A * cos - B * sin;
             float b = A * sin + B * cos;
@@ -218,6 +219,7 @@ namespace Sparrow.Geom
             Ty = 0.0f;
         }
 
+        // TODO move to MatrixUtil?
         /// <summary>
         /// Returns a point that is transformed by this matrix
         /// </summary>
@@ -272,12 +274,12 @@ namespace Sparrow.Geom
             }
             else
             {
-                return NumberUtil.Equals(A, other.A) &&
-                NumberUtil.Equals(B, other.B) &&
-                NumberUtil.Equals(C, other.C) &&
-                NumberUtil.Equals(D, other.D) &&
-                NumberUtil.Equals(Tx, other.Tx) &&
-                NumberUtil.Equals(Ty, other.Ty);
+                return MathUtil.Equals(A, other.A) &&
+                MathUtil.Equals(B, other.B) &&
+                MathUtil.Equals(C, other.C) &&
+                MathUtil.Equals(D, other.D) &&
+                MathUtil.Equals(Tx, other.Tx) &&
+                MathUtil.Equals(Ty, other.Ty);
             }
         }
 

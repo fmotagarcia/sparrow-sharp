@@ -36,7 +36,7 @@ namespace Sparrow.Touches
         /// </summary>
         public Point LocationInSpace(DisplayObject space)
         {
-            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            Matrix transformationMatrix = Target.Stage.GetTransformationMatrix(space);
             return transformationMatrix.TransformPoint(GlobalX, GlobalY);
         }
 
@@ -45,7 +45,7 @@ namespace Sparrow.Touches
         /// </summary>
         public Point PreviousLocationInSpace(DisplayObject space)
         {
-            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            Matrix transformationMatrix = Target.Stage.GetTransformationMatrix(space);
             return transformationMatrix.TransformPoint(PreviousGlobalX, PreviousGlobalY);
         }
 
@@ -54,7 +54,7 @@ namespace Sparrow.Touches
         /// </summary>
         public Point MovementInSpace(DisplayObject space)
         {
-            Matrix transformationMatrix = Target.Stage.TransformationMatrixToSpace(space);
+            Matrix transformationMatrix = Target.Stage.GetTransformationMatrix(space);
             Point curLoc = transformationMatrix.TransformPoint(GlobalX, GlobalY);
             Point preLoc = transformationMatrix.TransformPoint(PreviousGlobalX, PreviousGlobalY);
             curLoc.SubtractPoint(preLoc);

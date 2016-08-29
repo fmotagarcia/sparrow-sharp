@@ -1,4 +1,4 @@
-﻿using OpenTK.Graphics.ES20;
+﻿using OpenTK.Graphics.ES30;
 using System;
 
 namespace SparrowSharp.Core.Rendering
@@ -68,7 +68,7 @@ namespace SparrowSharp.Core.Rendering
 
         /// <summary>
         /// Explicitly frees up the memory, thus removing all indices.
-        /// Quad layout will be restored (until adding data violating that layout). */
+        /// Quad layout will be restored (until adding data violating that layout).
         /// </summary>
         public void Clear()
         {

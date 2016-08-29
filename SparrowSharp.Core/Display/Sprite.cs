@@ -93,7 +93,7 @@ namespace Sparrow.Display
             float clipTop = ClipRect.Top;
             float clipBottom = ClipRect.Bottom;
 
-            Matrix transform = TransformationMatrixToSpace(targetSpace);
+            Matrix transform = GetTransformationMatrix(targetSpace);
 
             float x = 0;
             float y = 0;
@@ -189,9 +189,9 @@ namespace Sparrow.Display
             }
         }
 
-        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        override public Rectangle GetBounds(DisplayObject targetSpace)
         {
-            Rectangle bounds = base.BoundsInSpace(targetSpace);
+            Rectangle bounds = base.GetBounds(targetSpace);
             // if we have a scissor rect, intersect it with our bounds
             if (ClipRect != null)
             {
@@ -200,13 +200,13 @@ namespace Sparrow.Display
             return bounds;
         }
 
-        override public DisplayObject HitTestPoint(Point localPoint)
+        override public DisplayObject HitTest(Point localPoint)
         {
             if (ClipRect != null && !ClipRect.Contains(localPoint))
             {
                 return null;
             }
-            return base.HitTestPoint(localPoint);
+            return base.HitTest(localPoint);
         }
     }
 }

@@ -220,7 +220,7 @@ namespace SparrowSharp.Fonts
                 }
                 if (_textBounds == null)
                 {
-                    _textBounds = _contents.BoundsInSpace(_contents);
+                    _textBounds = _contents.GetBounds(_contents);
                 }
                 return _textBounds.Copy();
             }
@@ -324,9 +324,9 @@ namespace SparrowSharp.Fonts
             base.Render(support);
         }
 
-        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        override public Rectangle GetBounds(DisplayObject targetSpace)
         {
-            return _hitArea.BoundsInSpace(targetSpace);
+            return _hitArea.GetBounds(targetSpace);
         }
 
         override public float Width

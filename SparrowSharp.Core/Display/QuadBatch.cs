@@ -246,9 +246,9 @@ namespace Sparrow.Display
             return true;
         }
 
-        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        override public Rectangle GetBounds(DisplayObject targetSpace)
         {
-            Matrix matrix = targetSpace == this ? null : TransformationMatrixToSpace(targetSpace);
+            Matrix matrix = targetSpace == this ? null : GetTransformationMatrix(targetSpace);
             return _vertexData.BoundsAfterTransformation(matrix, 0, _numQuads * 4);
         }
 

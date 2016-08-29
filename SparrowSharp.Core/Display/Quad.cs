@@ -124,7 +124,7 @@ namespace Sparrow.Display
             VertexDataDidChange();
         }
 
-        public override Rectangle BoundsInSpace(DisplayObject targetSpace)
+        public override Rectangle GetBounds(DisplayObject targetSpace)
         {
             Point bottomRight;
 
@@ -162,7 +162,7 @@ namespace Sparrow.Display
             }
             else
             {
-                Matrix transformationMatrix = TransformationMatrixToSpace(targetSpace);
+                Matrix transformationMatrix = GetTransformationMatrix(targetSpace);
                 return _vertexData.BoundsAfterTransformation(transformationMatrix, 0, 4);
             }
         }

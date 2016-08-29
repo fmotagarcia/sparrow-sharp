@@ -3,7 +3,7 @@ using System;
 
 namespace Sparrow.Utils
 {
-    public static class NumberUtil
+    public static class MathUtil
     {
         /// <summary>
         /// Lookup table for fast sine calculations
@@ -17,7 +17,7 @@ namespace Sparrow.Utils
         public readonly static float PIQUARTER = (float)(Math.PI / 4.0f);
         public readonly static float PIHALF = (float)(Math.PI / 2.0f);
 
-        static NumberUtil()
+        static MathUtil()
         {
             for (int i = 0; i < 2048; i++)
             {

@@ -21,8 +21,8 @@ namespace Sparrow.Core
 
         private string _vertexShader;
         private string _fragmentShader;
-        public readonly Dictionary<String, int> Uniforms = new Dictionary<string, int>();
-        public readonly Dictionary<String, int> Attributes = new Dictionary<string, int>();
+        public readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
+        public readonly Dictionary<string, int> Attributes = new Dictionary<string, int>();
         // Used by derived classes that need to manually call Init()
         protected Program()
         {
@@ -71,7 +71,7 @@ namespace Sparrow.Core
 
                 if (logLength != 0)
                 {
-                    String log;
+                    string log;
                     GL.GetProgramInfoLog(program, out log);
                     Debug.WriteLine("Sparrow: Error linking program: " + log);
                 }

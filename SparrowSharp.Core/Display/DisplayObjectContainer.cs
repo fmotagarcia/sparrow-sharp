@@ -263,26 +263,26 @@ namespace Sparrow.Display
             }
         }
 
-        override public Rectangle BoundsInSpace(DisplayObject targetSpace)
+        override public Rectangle GetBounds(DisplayObject targetSpace)
         {
             int numChildren = _children.Count;
 
             if (numChildren == 0)
             {
-                Matrix transformationMatrix = TransformationMatrixToSpace(targetSpace);
+                Matrix transformationMatrix = GetTransformationMatrix(targetSpace);
                 Point transformedPoint = transformationMatrix.TransformPoint(X, Y);
                 return new Rectangle(transformedPoint.X, transformedPoint.Y);
             }
             else if (numChildren == 1)
             {
-                return _children[0].BoundsInSpace(targetSpace);
+                return _children[0].GetBounds(targetSpace);
             }
             else
             {
                 float minX = float.MaxValue, maxX = -float.MaxValue, minY = float.MaxValue, maxY = -float.MaxValue;
                 foreach (DisplayObject child in _children)
                 {
-                    Rectangle childBounds = child.BoundsInSpace(targetSpace);
+                    Rectangle childBounds = child.GetBounds(targetSpace);
                     minX = Math.Min(minX, childBounds.X);
                     maxX = Math.Max(maxX, childBounds.X + childBounds.Width);
                     minY = Math.Min(minY, childBounds.Top);
@@ -292,7 +292,7 @@ namespace Sparrow.Display
             }
         }
 
-        override public DisplayObject HitTestPoint(Point localPoint)
+        override public DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable)
             {
@@ -303,9 +303,9 @@ namespace Sparrow.Display
             { 
                 // front to back!
                 DisplayObject child = _children[i];
-                Matrix transformationMatrix = TransformationMatrixToSpace(child);
+                Matrix transformationMatrix = GetTransformationMatrix(child);
                 Point transformedPoint = transformationMatrix.TransformPoint(localPoint);
-                DisplayObject target = child.HitTestPoint(transformedPoint);
+                DisplayObject target = child.HitTest(transformedPoint);
                 if (target != null)
                 {
                     return target;
