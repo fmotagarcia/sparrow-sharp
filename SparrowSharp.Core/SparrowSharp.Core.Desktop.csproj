@@ -52,6 +52,7 @@
     <Compile Include="Display\DisplayObjectContainer.cs" />
     <Compile Include="Display\IAnimatable.cs" />
     <Compile Include="Display\Image.cs" />
+    <Compile Include="Display\MeshBatch.cs" />
     <Compile Include="Display\MovieClip.cs" />
     <Compile Include="Display\Quad.cs" />
     <Compile Include="Display\QuadBatch.cs" />
@@ -62,13 +63,16 @@
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
+    <Compile Include="Rendering\BatchProcessor.cs" />
     <Compile Include="Rendering\BatchToken.cs" />
     <Compile Include="Rendering\Effect.cs" />
     <Compile Include="Rendering\FilterEffect.cs" />
     <Compile Include="Rendering\GPUInfo.cs" />
     <Compile Include="Rendering\IndexData.cs" />
     <Compile Include="Rendering\Mesh.cs" />
+    <Compile Include="Rendering\MeshEffect.cs" />
     <Compile Include="Rendering\OpenGLDebugCallback.cs" />
+    <Compile Include="Rendering\Painter.cs" />
     <Compile Include="Styles\MeshStyle.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
@@ -76,6 +80,7 @@
     <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\Juggler.cs" />
     <Compile Include="Utils\MatrixUtil.cs" />
+    <Compile Include="Utils\MeshSubset.cs" />
     <Compile Include="Utils\MeshUtil.cs" />
     <Compile Include="Utils\NumberUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />

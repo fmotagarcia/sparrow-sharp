@@ -4,6 +4,8 @@ namespace Sparrow.Core
 {
     internal class RenderState
     {
+        // TODO this needs a full rewrite :(
+
         public readonly Matrix ModelViewMatrix;
         public float Alpha;
         public uint BlendMode;
@@ -15,7 +17,7 @@ namespace Sparrow.Core
         {
             ModelViewMatrix = Matrix.Create();
             Alpha = 1.0f;
-            BlendMode = Sparrow.Display.BlendMode.NORMAL;
+            BlendMode = Display.BlendMode.NORMAL;
         }
 
         public void Setup(RenderState state, Matrix modelViewMatrix, float alpha, uint blendMode)

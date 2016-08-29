@@ -97,7 +97,7 @@ namespace SparrowSharp.Core.Rendering
          *  @see #defaultStyle
          *  @see #defaultStyleFactory
          */
-        public void SetStyle(MeshStyle meshStyle = null, bool mergeWithPredecessor= true)
+        virtual public void SetStyle(MeshStyle meshStyle = null, bool mergeWithPredecessor= true)
         {
             if (meshStyle == null) meshStyle = CreateDefaultMeshStyle();
             else if (meshStyle == _style) return;
