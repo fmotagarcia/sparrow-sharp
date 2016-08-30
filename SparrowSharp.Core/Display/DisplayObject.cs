@@ -122,7 +122,7 @@ namespace Sparrow.Display
         //private static var sHelperMatrix3D:Matrix3D  = new Matrix3D();
         //private static var sHelperMatrixAlt3D:Matrix3D  = new Matrix3D();
 
-        private DisplayObject()
+        protected DisplayObject()
         {
             _x = _y = _pivotX = _pivotY = _rotation = _skewX = _skewY = 0.0f;
             _scaleX = _scaleY = _alpha = 1.0f;

@@ -4,16 +4,16 @@ namespace SparrowSharp.Core.Utils
     public class MeshSubset
     {
         /** The ID of the first vertex. */
-        public int vertexID;
+        public int VertexID;
 
         /** The total number of vertices. */
-        public int numVertices;
+        public int NumVertices;
 
         /** The ID of the first index. */
-        public int indexID;
+        public int IndexID;
 
         /** The total number of indices. */
-        public int numIndices;
+        public int NumIndices;
 
         /** Creates a new MeshSubset. */
         public MeshSubset(int vertexID = 0, int numVertices = -1,

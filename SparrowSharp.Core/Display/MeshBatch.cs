@@ -5,7 +5,7 @@ using SparrowSharp.Core.Styles;
 using SparrowSharp.Core.Utils;
 using System;
 
-namespace SparrowSharp.Core.Desktop.Display
+namespace SparrowSharp.Core.Display
 {
     /** Combines a number of meshes to one display object and renders them efficiently.
      *
@@ -234,7 +234,7 @@ namespace SparrowSharp.Core.Desktop.Display
         /** The total number of vertices in the mesh. If you change this to a smaller value,
          *  the surplus will be deleted. Make sure that no indices reference those deleted
          *  vertices! */
-        public int NumVertices
+        override public int NumVertices
         {
             set
             {
@@ -250,7 +250,7 @@ namespace SparrowSharp.Core.Desktop.Display
         /** The total number of indices in the mesh. If you change this to a smaller value,
          *  the surplus will be deleted. Always make sure that the number of indices
          *  is a multiple of three! */
-        public int NumIndices
+        override public int NumIndices
         {
             set
             {

@@ -2,7 +2,7 @@ using Sparrow.Geom;
 
 namespace Sparrow.Core
 {
-    internal class RenderState
+    public class RenderState
     {
         // TODO this needs a full rewrite :(
 

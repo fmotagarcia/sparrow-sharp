@@ -77,9 +77,9 @@ namespace SparrowSharp.Core.Rendering
         {
             if (_pixelSnapping)
             {
-                MatrixUtil.SnapToPixels(painter.state.modelviewMatrix, painter.pixelSize);
+                MatrixUtil.SnapToPixels(painter.State.ModelviewMatrix, painter.PixelSize);
             }
-            painter.batchMesh(this);
+            painter.BatchMesh(this);
         }
 
         /** Sets the style that is used to render the mesh. Styles (which are always subclasses of
@@ -244,10 +244,16 @@ namespace SparrowSharp.Core.Rendering
         }
 
         /** The total number of vertices in the mesh. */
-        public int NumVertices { get { return _vertexData.NumVertices; } }
+        virtual public int NumVertices {
+            set { }
+            get { return _vertexData.NumVertices; }
+        }
 
         /** The total number of indices referencing vertices. */
-        public int NumIndices { get { return _indexData.NumIndices; } }
+        virtual public int NumIndices {
+            set { }
+            get { return _indexData.NumIndices;}
+        }
 
         /** The total number of triangles in this mesh.
          *  (In other words: the number of indices divided by three.) */
