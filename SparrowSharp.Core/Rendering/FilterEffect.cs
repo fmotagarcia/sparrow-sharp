@@ -79,9 +79,9 @@ namespace SparrowSharp.Core.Rendering
 
             if (_texture != null)
             {
-                bool repeat = _textureRepeat && _texture.root.isPotTexture;
-                RenderUtil.setSamplerStateAt(0, _texture.mipMapping, _textureSmoothing, repeat);
-                context.setTextureAt(0, _texture.base);
+                bool repeat = _textureRepeat && _texture.Root.isPotTexture;
+                RenderUtil.setSamplerStateAt(0, _texture.MipMapping, _textureSmoothing, repeat);
+                context.setTextureAt(0, _texture.Base);
                 VertexFormat.SetVertexBufferAt(1, VertexBuffer, "texCoords");
             }
         }

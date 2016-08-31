@@ -202,7 +202,7 @@ namespace SparrowSharp.Core.Rendering
          *
          *  @default MeshStyle
          */
-        public MeshStyle style { 
+        public MeshStyle Style { 
             get { return _style; }
             set { SetStyle(value);}
         }

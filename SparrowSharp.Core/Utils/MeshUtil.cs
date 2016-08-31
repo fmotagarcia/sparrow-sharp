@@ -12,9 +12,7 @@ namespace SparrowSharp.Core.Utils
     public class MeshUtil
     {
         // helper objects
-        private static Vector3D sPoint3D = new Vector3D();
         private static Matrix sMatrix = Matrix.Create();
-        private static Matrix3D sMatrix3D = new Matrix3D();
         
         private MeshUtil() { }
 
@@ -57,18 +55,8 @@ namespace SparrowSharp.Core.Utils
             if (outRect == null) outRect = new Rectangle();
 
             Stage stage = sourceSpace.Stage;
-
-            if (sourceSpace.Is3D && stage)
-            {
-                stage.GetCameraPosition(targetSpace, sPoint3D);
-                sourceSpace.GetTransformationMatrix3D(targetSpace, sMatrix3D);
-                vertexData.GetBoundsProjected("position", sMatrix3D, sPoint3D, 0, -1, outRect);
-            }
-            else
-            {
-                sourceSpace.GetTransformationMatrix(targetSpace, sMatrix);
-                vertexData.GetBounds("position", sMatrix, 0, -1, outRect);
-            }
+            sMatrix = sourceSpace.GetTransformationMatrix(targetSpace);
+            vertexData.GetBounds("position", sMatrix, 0, -1, outRect);
             return outRect;
         }
     }

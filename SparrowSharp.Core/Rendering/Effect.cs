@@ -91,8 +91,7 @@ namespace SparrowSharp.Core.Rendering
         private IndexBuffer3D _indexBuffer;
         private int _indexBufferSize;  // in number of indices
         private bool _indexBufferUsesQuadLayout;
-
-        private Matrix3D _mvpMatrix3D:Matrix3D;
+        
         private string _programBaseName;
 
         // helper objects
@@ -102,8 +101,7 @@ namespace SparrowSharp.Core.Rendering
         /** Creates a new effect. */
         public Effect()
         {
-            _mvpMatrix3D = new Matrix3D();
-            _programBaseName = getQualifiedClassName(this);
+            _programBaseName = GetType().Name;
         }
 
         /** Purges the index- and vertex-buffers. */
@@ -211,7 +209,7 @@ namespace SparrowSharp.Core.Rendering
             if (context == null) throw new Exception("missing context");
 
             BeforeDraw(context);
-            context.drawTriangles(indexBuffer, firstIndex, numTriangles);
+            context.drawTriangles(IndexBuffer, firstIndex, numTriangles);
             AfterDraw(context);
         }
 
@@ -326,7 +324,7 @@ namespace SparrowSharp.Core.Rendering
             {
                 string name = ProgramName;
                 Painter painter = Starling.painter;
-                Program program = painter.getProgram(name);
+                Program program = painter.GetProgram(name);
 
                 if (program == null)
                 {
@@ -340,12 +338,6 @@ namespace SparrowSharp.Core.Rendering
         /** The data format that this effect requires from the VertexData that it renders:
          *  <code>"position:float2"</code> */
         virtual public VertexDataFormat VertexFormat { get { return VERTEX_FORMAT; } }
-
-        /** The MVP (modelview-projection) matrix transforms vertices into clipspace. */
-        public Matrix3D mvpMatrix3D {
-            get { return _mvpMatrix3D; }
-            set { _mvpMatrix3D.copyFrom(value); }
-        }
 
         /** The internally used index buffer used on rendering. */
         protected IndexBuffer3D IndexBuffer { get { return _indexBuffer; } }

@@ -330,7 +330,7 @@ namespace Sparrow.Core
                 _clipRectStack.Add(new Rectangle());
             }
             Rectangle rectangle = _clipRectStack[_clipRectStackSize];
-            rectangle.CopyFromRectangle(clipRect);
+            rectangle.CopyFrom(clipRect);
 
             if (_clipRectStackSize > 0)
             {

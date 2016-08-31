@@ -316,7 +316,7 @@ namespace SparrowSharp.Core.Rendering
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
                 mask.GetBounds(mask, sClipRect);
-                RectangleUtil.getBounds(sClipRect, sMatrix, sClipRect);
+                sClipRect = sClipRect.GetBounds(sMatrix);
                 PushClipRect(sClipRect);
             }
             else
@@ -402,7 +402,7 @@ namespace SparrowSharp.Core.Rendering
             Rectangle intersection = new Rectangle(); // TODO add pooling
 
             if (stackLength != 0)
-                RectangleUtil.intersect(stack[stackLength - 1], clipRect, intersection);
+                intersection = clipRect.Intersection(stack[stackLength - 1]);
             else
                 intersection.CopyFrom(clipRect);
 
@@ -697,7 +697,7 @@ namespace SparrowSharp.Core.Rendering
                 sClipRect.Bottom = (0.5 - sPoint3D.y* 0.5) * height;
 
                 sBufferRect.SetTo(0, 0, width, height);
-                RectangleUtil.intersect(sClipRect, sBufferRect, sScissorRect);
+                sScissorRect = sClipRect.Intersection(sBufferRect);
 
                 // an empty rectangle is not allowed, so we set it to the smallest possible size
                 if (sScissorRect.Width < 1 || sScissorRect.Height< 1)

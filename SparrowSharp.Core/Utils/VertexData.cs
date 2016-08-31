@@ -4,32 +4,79 @@ using OpenTK;
 
 namespace Sparrow.Utils
 {
-    /// <summary>
-    /// The VertexData class manages a raw list of vertex information, allowing direct upload
-    /// to OpenGL vertex buffers. 
-    /// 
-    /// _You only have to work with this class if you create display objects with a custom render 
-    /// function. If you don't plan to do that, you can safely ignore it._
-    /// 
-    /// To render objects with OpenGL, you have to organize vertex data in so-called
-    /// vertex buffers. Those buffers reside in graphics memory and can be accessed very
-    /// efficiently by the GPU. Before you can move data into vertex buffers, you have to
-    /// set it up in conventional memory - that is, in a byte array. That array contains
-    /// all vertex information (the coordinates, color, and texture coordinates) - one
-    /// vertex after the other.
-    /// 
-    /// To simplify creating and working with such a bulky list, the VertexData class was
-    /// created. It contains methods to specify and modify vertex data. The raw array managed
-    /// by the class can then easily be uploaded to a vertex buffer.
-    /// 
-    /// **Premultiplied Alpha**
-    /// 
-    /// The color values of texture files may contain premultiplied alpha values, which
-    /// means that the 'RGB' values were multiplied with the 'alpha' value
-    /// before saving them. On rendering, it makes a difference in which way the alpha value is saved;
-    /// for that reason, the VertexData class mimics this behavior. You can choose how the alpha
-    /// values should be handled via the 'premultipliedAlpha' property.
-    /// </summary>
+    /** The VertexData class manages a raw list of vertex information, allowing direct upload
+     *  to Stage3D vertex buffers. <em>You only have to work with this class if you're writing
+     *  your own rendering code (e.g. if you create custom display objects).</em>
+     *
+     *  <p>To render objects with Stage3D, you have to organize vertices and indices in so-called
+     *  vertex- and index-buffers. Vertex buffers store the coordinates of the vertices that make
+     *  up an object; index buffers reference those vertices to determine which vertices spawn
+     *  up triangles. Those buffers reside in graphics memory and can be accessed very
+     *  efficiently by the GPU.</p>
+     *
+     *  <p>Before you can move data into the buffers, you have to set it up in conventional
+     *  memory — that is, in a Vector or a ByteArray. Since it's quite cumbersome to manually
+     *  create and manipulate those data structures, the IndexData and VertexData classes provide
+     *  a simple way to do just that. The data is stored sequentially (one vertex or index after
+     *  the other) so that it can easily be uploaded to a buffer.</p>
+     *
+     *  <strong>Vertex Format</strong>
+     *
+     *  <p>The VertexData class requires a custom format string on initialization, or an instance
+     *  of the VertexDataFormat class. Here is an example:</p>
+     *
+     *  <listing>
+     *  vertexData = new VertexData("position:float2, color:bytes4");
+     *  vertexData.setPoint(0, "position", 320, 480);
+     *  vertexData.setColor(0, "color", 0xff00ff);</listing>
+     *
+     *  <p>This instance is set up with two attributes: "position" and "color". The keywords
+     *  after the colons depict the format and size of the data that each property uses; in this
+     *  case, we store two floats for the position (for the x- and y-coordinates) and four
+     *  bytes for the color. Please refer to the VertexDataFormat documentation for details.</p>
+     *
+     *  <p>The attribute names are then used to read and write data to the respective positions
+     *  inside a vertex. Furthermore, they come in handy when copying data from one VertexData
+     *  instance to another: attributes with equal name and data format may be transferred between
+     *  different VertexData objects, even when they contain different sets of attributes or have
+     *  a different layout.</p>
+     *
+     *  <strong>Colors</strong>
+     *
+     *  <p>Always use the format <code>bytes4</code> for color data. The color access methods
+     *  expect that format, since it's the most efficient way to store color data. Furthermore,
+     *  you should always include the string "color" (or "Color") in the name of color data;
+     *  that way, it will be recognized as such and will always have its value pre-filled with
+     *  pure white at full opacity.</p>
+     *
+     *  <strong>Premultiplied Alpha</strong>
+     *
+     *  <p>Per default, color values are stored with premultiplied alpha values, which
+     *  means that the <code>rgb</code> values were multiplied with the <code>alpha</code> values
+     *  before saving them. You can change this behavior with the <code>premultipliedAlpha</code>
+     *  property.</p>
+     *
+     *  <p>Beware: with premultiplied alpha, the alpha value always affects the resolution of
+     *  the RGB channels. A small alpha value results in a lower accuracy of the other channels,
+     *  and if the alpha value reaches zero, the color information is lost altogether.</p>
+     *
+     *  <strong>Tinting</strong>
+     *
+     *  <p>Some low-end hardware is very sensitive when it comes to fragment shader complexity.
+     *  Thus, Starling optimizes shaders for non-tinted meshes. The VertexData class keeps track
+     *  of its <code>tinted</code>-state, at least at a basic level: whenever you change color
+     *  or alpha value of a vertex to something different than white (<code>0xffffff</code>) with
+     *  full alpha (<code>1.0</code>), the <code>tinted</code> property is enabled.</p>
+     *
+     *  <p>However, that value is not entirely accurate: when you restore the color of just a
+     *  range of vertices, or copy just a subset of vertices to another instance, the property
+     *  might wrongfully indicate a tinted mesh. If that's the case, you can either call
+     *  <code>updateTinted()</code> or assign a custom value to the <code>tinted</code>-property.
+     *  </p>
+     *
+     *  @see VertexDataFormat
+     *  @see IndexData
+     */
     public class VertexData
     {
         private const float MIN_ALPHA = 5.0f / 255.0f;

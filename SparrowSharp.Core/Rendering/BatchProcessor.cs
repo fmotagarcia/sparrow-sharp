@@ -1,5 +1,7 @@
 ﻿
 using Sparrow.Core;
+using Sparrow.Geom;
+using SparrowSharp.Core.Display;
 using SparrowSharp.Core.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,8 +14,12 @@ namespace SparrowSharp.Core.Rendering
         private BatchPool _batchPool;
         private MeshBatch _currentBatch;
         private Type _currentStyleType;
-        private Function _onBatchComplete;
         private BatchToken _cacheToken;
+        public delegate void OnBatchCompleteFunction(MeshBatch mb);
+        /** This callback is executed whenever a batch is finished and replaced by a new one.
+         *  The finished MeshBatch is passed to the callback. Typically, this callback is used
+         *  to actually render it. */
+        public OnBatchCompleteFunction OnBatchComplete;
 
         // helper objects
         private static MeshSubset sMeshSubset = new MeshSubset();
@@ -57,35 +63,35 @@ namespace SparrowSharp.Core.Rendering
             if (subset == null)
             {
                 subset = sMeshSubset;
-                subset.vertexID = subset.indexID = 0;
-                subset.numVertices = mesh.numVertices;
-                subset.numIndices  = mesh.numIndices;
+                subset.VertexID = subset.IndexID = 0;
+                subset.NumVertices = mesh.NumVertices;
+                subset.NumIndices  = mesh.NumIndices;
             }
             else
             {
-                if (subset.numVertices< 0) subset.numVertices = mesh.numVertices - subset.vertexID;
-                if (subset.numIndices< 0) subset.numIndices  = mesh.numIndices  - subset.indexID;
+                if (subset.NumVertices< 0) subset.NumVertices = mesh.NumVertices - subset.VertexID;
+                if (subset.NumIndices< 0) subset.NumIndices  = mesh.NumIndices  - subset.IndexID;
             }
 
-            if (subset.numVertices > 0)
+            if (subset.NumVertices > 0)
             {
-                if (_currentBatch == null || !_currentBatch.canAddMesh(mesh, subset.numVertices))
+                if (_currentBatch == null || !_currentBatch.CanAddMesh(mesh, subset.NumVertices))
                 {
-                    finishBatch();
+                    FinishBatch();
 
-                    _currentStyleType = mesh.style.type;
-                    _currentBatch = _batchPool.get(_currentStyleType);
-                    _currentBatch.blendMode = state? state.blendMode : mesh.blendMode;
-                    _cacheToken.setTo(_batches.length);
-                    _batches[_batches.length] = _currentBatch;
+                    _currentStyleType = mesh.Style.Type;
+                    _currentBatch = _batchPool.GetBatch(_currentStyleType);
+                    _currentBatch.BlendMode = state != null ? state.BlendMode : mesh.BlendMode;
+                    _cacheToken.SetTo(_batches.Count);
+                    _batches[_batches.Count] = _currentBatch;
                 }
 
-                var matrix:Matrix = state? state._modelviewMatrix : null;
-                var alpha:Number  = state? state._alpha : 1.0;
+                Matrix matrix = state != null ? state._modelviewMatrix : null;
+                float alpha  = state != null ? state._alpha : 1.0;
 
-                _currentBatch.addMesh(mesh, matrix, alpha, subset, ignoreTransformations);
-                _cacheToken.vertexID += subset.numVertices;
-                _cacheToken.indexID  += subset.numIndices;
+                _currentBatch.AddMesh(mesh, matrix, alpha, subset, ignoreTransformations);
+                _cacheToken.VertexID += subset.NumVertices;
+                _cacheToken.IndexID  += subset.NumIndices;
             }
         }
 
@@ -100,20 +106,24 @@ namespace SparrowSharp.Core.Rendering
                 _currentBatch = null;
                 _currentStyleType = null;
 
-                if (_onBatchComplete != null)
-                    _onBatchComplete(meshBatch);
+                if (OnBatchComplete != null)
+                {
+                    OnBatchComplete(meshBatch);
+                }
             }
         }
 
         /** Clears all batches and adds them to a pool so they can be reused later. */
         public void Clear()
         {
-            int numBatches = _batches.length;
+            int numBatches = _batches.Count;
 
             for (int i = 0; i < numBatches; ++i)
-                _batchPool.put(_batches[i]);
+            {
+                _batchPool.Put(_batches[i]);
+            }
 
-            _batches.length = 0;
+            _batches.Clear();
             _currentBatch = null;
             _currentStyleType = null;
             _cacheToken.Reset();
@@ -133,21 +143,24 @@ namespace SparrowSharp.Core.Rendering
 
         public void RewindTo(BatchToken token)
         {
-            if (token.batchID > _cacheToken.batchID)
-                throw new RangeError("Token outside available range");
+            if (token.BatchID > _cacheToken.BatchID)
+                throw new IndexOutOfRangeException("Token outside available range");
 
-            for (var i:int = _cacheToken.batchID; i > token.batchID; --i)
-                _batchPool.put(_batches.pop());
-
-            if (_batches.length > token.batchID)
+            for (int i = _cacheToken.BatchID; i > token.BatchID; --i)
             {
-                var batch:MeshBatch = _batches[token.batchID];
-                batch.numIndices  = MathUtil.min(batch.numIndices,  token.indexID);
-                batch.numVertices = MathUtil.min(batch.numVertices, token.vertexID);
+                _batchPool.Put(_batches[_batches.Count - 1]);
+                _batches.RemoveAt(_batches.Count - 1);
+            }
+
+            if (_batches.Count > token.BatchID)
+            {
+                MeshBatch batch  = _batches[token.BatchID];
+                batch.NumIndices  = Math.Min(batch.NumIndices,  token.IndexID);
+                batch.NumVertices = Math.Min(batch.NumVertices, token.VertexID);
             }
 
             _currentBatch = null;
-            _cacheToken.copyFrom(token);
+            _cacheToken.CopyFrom(token);
         }
 
         /** Sets all properties of the given token so that it describes the current position
@@ -161,37 +174,32 @@ namespace SparrowSharp.Core.Rendering
         }
 
         /** The number of batches currently stored in the BatchProcessor. */
-        public int NumBatches { get { return _batches.length; } }
-
-        /** This callback is executed whenever a batch is finished and replaced by a new one.
-         *  The finished MeshBatch is passed to the callback. Typically, this callback is used
-         *  to actually render it. */
-        public function get onBatchComplete():Function { return _onBatchComplete; }
-        public function set onBatchComplete(value:Function):void { _onBatchComplete = value; }
+        public int NumBatches { get { return _batches.Count; } }
     }
 
     class BatchPool
     {
-        private Dictionary<Type, MeshBatch> _batchLists;
+        private Dictionary<Type, List<MeshBatch>> _batchLists;
 
         public BatchPool()
         {
-            _batchLists = new Dictionary();
+            _batchLists = new Dictionary<Type, List<MeshBatch>>();
         }
 
         public void Purge()
         {
-            foreach (List<MeshBatch> batchList in _batchLists)
+            foreach (KeyValuePair<Type, List<MeshBatch>> entry in _batchLists)
             {
-                for (int i = 0; i < batchList.length; ++i)
+                List<MeshBatch> batchList = entry.Value;
+                for (int i = 0; i < batchList.Count; ++i)
                 {
-                    batchList[i].dispose();
+                    batchList[i].Dispose();
                 }
-                batchList.length = 0;
+                batchList.Clear();
             }
         }
 
-        public MeshBatch getBatch(Type styleType)
+        public MeshBatch GetBatch(Type styleType)
         {
             List<MeshBatch> batchList = _batchLists[styleType];
             if (batchList == null)
@@ -200,7 +208,12 @@ namespace SparrowSharp.Core.Rendering
                 _batchLists[styleType] = batchList;
             }
 
-            if (batchList.length > 0) return batchList.pop();
+            if (batchList.Count > 0)
+            {
+                var ret = batchList[batchList.Count - 1];
+                batchList.RemoveAt(batchList.Count - 1);
+                return ret;
+            }
             else return new MeshBatch();
         }
 
@@ -215,7 +228,7 @@ namespace SparrowSharp.Core.Rendering
             }
 
             meshBatch.Clear();
-            batchList[batchList.length] = meshBatch;
+            batchList[batchList.Count] = meshBatch;
         }
     }
 }

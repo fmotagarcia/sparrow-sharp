@@ -27,10 +27,10 @@ namespace SparrowSharp.Core.Utils
         public void SetTo(int vertexID = 0, int numVertices = -1,
                           int indexID = 0, int numIndices = -1)
         {
-            this.vertexID = vertexID;
-            this.numVertices = numVertices;
-            this.indexID = indexID;
-            this.numIndices = numIndices;
+            VertexID = vertexID;
+            NumVertices = numVertices;
+            IndexID = indexID;
+            NumIndices = numIndices;
         }
 }
 }

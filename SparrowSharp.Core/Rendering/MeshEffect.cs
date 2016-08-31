@@ -29,8 +29,7 @@ namespace SparrowSharp.Core.Rendering
             // this is actually the "MeshEffect" class.
 
             _alpha = 1.0f;
-            _optimizeIfNotTinted = GetType().Name == "starling.rendering::MeshEffect";
-            // todo check
+            _optimizeIfNotTinted = GetType().Name == "starling.rendering::MeshEffect";// todo check
         }
         
         override protected uint ProgramVariantName
@@ -69,7 +68,7 @@ namespace SparrowSharp.Core.Rendering
                 fragmentShader =
                     "mov oc, v0       \n";  // output color
             }
-            return Program.FromSource(vertexShader, fragmentShader);
+            return new Program(vertexShader, fragmentShader);
         }
 
         /** This method is called by <code>render</code>, directly before

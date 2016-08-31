@@ -5,13 +5,18 @@ using OpenTK.Graphics.ES20;
 
 namespace Sparrow.Core
 {
-    /// <summary>
-    /// A Program wraps a GLSL program (containing the source code for both vertex and fragment shader)
-    /// into an object.
-
-    /// Use the 'Uniforms' and 'Attributes' dictionaries to query the index of the respective
-    /// variables.
-    /// </summary>
+    /** A Program represents a pair of a fragment- and vertex-shader.
+    *
+    *  <p>This class is a convenient replacement for Stage3Ds "Program3D" class. Its main
+    *  advantage is that it survives a context loss; furthermore, it makes it simple to
+    *  create a program from AGAL source without having to deal with the assembler.</p>
+    *
+    *  <p>It is recommended to store programs in Starling's "Painter" instance via the methods
+    *  <code>registerProgram</code> and <code>getProgram</code>. That way, your programs may
+    *  be shared among different display objects or even Starling instances.</p>
+    *
+    *  @see Painter
+    */
     public class Program
     {
         /// <summary>

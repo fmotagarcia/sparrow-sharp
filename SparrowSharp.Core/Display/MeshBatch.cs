@@ -115,11 +115,11 @@ namespace SparrowSharp.Core.Display
                 SetupFor(mesh);
             }
             
-            meshStyle.BatchVertexData(_style, targetVertexID, matrix, subset.vertexID, subset.numVertices);
-            meshStyle.BatchIndexData(_style, targetIndexID, targetVertexID - subset.vertexID,
-                subset.indexID, subset.numIndices);
+            meshStyle.BatchVertexData(_style, targetVertexID, matrix, subset.VertexID, subset.NumVertices);
+            meshStyle.BatchIndexData(_style, targetIndexID, targetVertexID - subset.VertexID,
+                subset.IndexID, subset.NumIndices);
 
-            if (alpha != 1.0) _vertexData.ScaleAlphas("color", alpha, targetVertexID, subset.numVertices);
+            if (alpha != 1.0) _vertexData.ScaleAlphas("color", alpha, targetVertexID, subset.NumVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -149,7 +149,7 @@ namespace SparrowSharp.Core.Display
             meshStyle.BatchVertexData(_style, vertexID, matrix, 0, numVertices);
             meshStyle.BatchIndexData(_style, indexID, vertexID, 0, numIndices);
 
-            if (Alpha != 1.0) _vertexData.ScaleAlphas("color", Alpha, vertexID, numVertices);
+            if (Alpha != 1.0f) _vertexData.ScaleAlphas("color", Alpha, vertexID, numVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -197,7 +197,7 @@ namespace SparrowSharp.Core.Display
             }
             if (_pixelSnapping)
             {
-                MatrixUtil.SnapToPixels(painter.State.modelviewMatrix, painter.PixelSize);
+                MatrixUtil.SnapToPixels(painter.State.ModelviewMatrix, painter.PixelSize);
             }
 
             if (_batchable)
@@ -227,8 +227,7 @@ namespace SparrowSharp.Core.Display
             if (_effect != null)
                 _effect.Dispose();
 
-            _effect = style.CreateEffect();
-            _effect.onRestore = setVertexAndIndexDataChanged;
+            _effect = Style.CreateEffect();
         }
 
         /** The total number of vertices in the mesh. If you change this to a smaller value,

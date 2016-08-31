@@ -1,5 +1,6 @@
 using System;
 using Sparrow.Utils;
+using SparrowSharp.Core.Utils;
 
 namespace Sparrow.Geom
 {
@@ -98,24 +99,13 @@ namespace Sparrow.Geom
             rY >= Y && rY + rHeight <= Y + Height;
         }
 
-        public bool Intersects(Rectangle rectangle)
+        public void SetTo(float x, float y, float width, float height)
         {
-            if (rectangle == null)
-            {
-                return false;
-            }
-
-            float rX = rectangle.X;
-            float rY = rectangle.Y;
-            float rWidth = rectangle.Width;
-            float rHeight = rectangle.Height;
-
-            bool outside = 
-                (rX <= X && rX + rWidth <= X) || (rX >= X + Width && rX + rWidth >= X + Width) ||
-                (rY <= Y && rY + rHeight <= Y) || (rY >= Y + Height && rY + rHeight >= Y + Height);
-            return !outside;
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
         }
-
         /// <summary>
         /// Returns the intersecting rectangle
         /// </summary>
@@ -169,7 +159,7 @@ namespace Sparrow.Geom
             X = Y = Width = Height = 0.0f;
         }
 
-        public void CopyFromRectangle(Rectangle rectangle)
+        public void CopyFrom(Rectangle rectangle)
         {
             X = rectangle.X;
             Y = rectangle.Y;
@@ -220,9 +210,68 @@ namespace Sparrow.Geom
             MathUtil.Equals(Height, other.Height);
         }
 
+        /// <summary>
+        /// Calculates the bounds of a rectangle after transforming it by a matrix.
+        /// </summary>
+        public Rectangle GetBounds(Matrix matrix)
+        {
+            Rectangle outRect = new Rectangle();
+
+            float minX = float.MaxValue, maxX = -float.MaxValue;
+            float minY = float.MaxValue, maxY = -float.MaxValue;
+            Point[] positions = GetPositions();
+            Point sPoint = Point.Create();
+
+            for (int i = 0; i < 4; ++i)
+            {
+                sPoint = matrix.TransformPoint(positions[i]);
+
+                if (minX > sPoint.X) minX = sPoint.X;
+                if (maxX<sPoint.X) maxX = sPoint.X;
+                if (minY > sPoint.Y) minY = sPoint.Y;
+                if (maxY<sPoint.Y) maxY = sPoint.Y;
+            }
+
+            outRect.SetTo(minX, minY, maxX - minX, maxY - minY);
+            return outRect;
+        }
+
+        /** Returns a vector containing the positions of the four edges of the given rectangle. */
+        public Point[] GetPositions()
+        {
+            Point[] outP = new Point[4];
+
+            for (int i = 0; i < 4; ++i)
+            {
+                outP[i] = Point.Create();
+            }
+            outP[0].X = Left; outP[0].Y = Top;
+            outP[1].X = Right; outP[1].Y = Top;
+            outP[2].X = Left;  outP[2].Y = Bottom;
+            outP[3].X = Right; outP[3].Y = Bottom;
+            return outP;
+        }
+
         public Rectangle Copy()
         {
             return new Rectangle(X, Y, Width, Height);
+        }
+
+        // static functions 
+
+        /** Compares all properties of the given rectangle, returning true only if
+         *  they are equal (with the given accuracy 'e'). */
+        public static bool Compare(Rectangle r1, Rectangle r2, float e = 0.0001f)
+        {
+            if (r1 == null) return r2 == null;
+            else if (r2 == null) return false;
+            else
+            {
+                return r1.X > r2.X - e && r1.X < r2.X + e &&
+                       r1.Y > r2.Y - e && r1.Y < r2.Y + e &&
+                       r1.Width> r2.Width  - e && r1.Width < r2.Width  + e &&
+                       r1.Height> r2.Height - e && r1.Height<r2.Height + e;
+            }
         }
     }
 }
