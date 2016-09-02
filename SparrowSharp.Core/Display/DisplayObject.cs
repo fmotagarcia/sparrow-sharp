@@ -51,7 +51,7 @@ namespace Sparrow.Display
     /// 
     /// You will need to implement the following methods when you subclass DisplayObject:
     /// 
-    /// - void Render ( RenderSupport support);
+    /// - void Render ( Painter support);
     /// - Rectangle BoundsInSpace ( DisplayObject targetSpace);
     /// 
     /// Have a look at Quad for a sample implementation of those methods.  
@@ -106,7 +106,7 @@ namespace Sparrow.Display
         internal BatchToken _pushToken = new BatchToken();
         internal BatchToken _popToken = new BatchToken();
         internal bool _hasVisibleArea;
-        internal FragmentFilter _filter;
+      //TODO  internal FragmentFilter _filter;
         internal DisplayObject _mask;
 
         private double _lastTouchTimestamp;
@@ -137,9 +137,9 @@ namespace Sparrow.Display
         /// </summary>
         virtual public void Dispose()
         {
-            if (_filter != null) _filter.Dispose();
+      //TODO      if (_filter != null) _filter.Dispose();
             if (_mask != null) _mask.Dispose();
-            RemoveEventListeners();
+            //RemoveEventListeners();
             Mask = null; // revert 'isMask' property, just to be sure.
         }
 
@@ -236,7 +236,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Returns a rectangle that completely encloses the object as it appears in another coordinate system.
         /// </summary>
-        public abstract Rectangle GetBounds(DisplayObject targetSpace, Rectangle outRect = null);
+        public abstract Rectangle GetBounds(DisplayObject targetSpace);
 
         /// <summary>
         ///  Returns the object that is found topmost on a point in local coordinates, or null if the test fails.
@@ -254,7 +254,7 @@ namespace Sparrow.Display
             if (_mask != null && !HitTestMask(localPoint)) return null;
 
             // otherwise, check bounding box
-            if (GetBounds(this, sHelperRect).Contains(localPoint))
+            if (GetBounds(this).Contains(localPoint))
             {
                 return this;
             }
@@ -369,7 +369,7 @@ namespace Sparrow.Display
         public void SetRequiresRedraw()
         {
             DisplayObject parent = _parent;
-            uint frameID = SparrowSharpApp.frameID;
+            uint frameID = SparrowSharpApp.FrameID;
 
             _hasVisibleArea = _alpha != 0.0f && _visible && !_isMask && _scaleX != 0.0f && _scaleY != 0.0f;
             _lastParentOrSelfChangeFrameID = frameID;
@@ -381,14 +381,14 @@ namespace Sparrow.Display
                 parent = parent._parent;
             }
 
-            if (_isMask) SparrowSharpApp.Current.setRequiresRedraw(); // notify 'skipUnchangedFrames'
+            if (_isMask) SparrowSharpApp.SetRequiresRedraw(); // notify 'skipUnchangedFrames'
             else if (_mask != null) _mask.SetRequiresRedraw();         // propagate into mask
         }
 
         public bool RequiresRedraw
         {
             get {
-                uint frameID = Starling.frameID;
+                uint frameID = SparrowSharpApp.FrameID;
                 return _lastParentOrSelfChangeFrameID == frameID ||
                        _lastChildChangeFrameID == frameID;
             }
@@ -841,10 +841,16 @@ namespace Sparrow.Display
             }
         }
 
-        /// <summary>
-        /// The opacity of the object. 0 = transparent, 1 = opaque.
-        /// </summary>
-        virtual public float Alpha
+        /** @private Indicates if the object is rotated or skewed in any way. */
+        internal bool IsRotated
+        {
+            get { return _rotation != 0.0 || _skewX != 0.0 || _skewY != 0.0; }
+        }
+
+    /// <summary>
+    /// The opacity of the object. 0 = transparent, 1 = opaque.
+    /// </summary>
+    virtual public float Alpha
         {
             get { return _alpha; }
             set
@@ -909,17 +915,18 @@ namespace Sparrow.Display
         *  @see starling.filters.FilterChain
         */
         public FragmentFilter Filter { 
-            get { return _filter; }
+            get { return null;/*_filter;*/ }
             set
             {
-                if (value != _filter)
+                // TODO
+                /*if (value != _filter)
                 {
                     if (_filter != null) _filter.SetTarget(null);
                     if (value != null) value.SetTarget(this);
 
                     _filter = value;
                     SetRequiresRedraw();
-                }
+                }*/
             }
         }
 

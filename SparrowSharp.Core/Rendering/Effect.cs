@@ -248,10 +248,10 @@ namespace SparrowSharp.Core.Rendering
          */
         virtual protected Program CreateProgram()
         {
-            string vertexShader = new string[] {
-                "m44 op, va0, vc0", // 4x4 matrix transform to output clipspace
-                "seq v0, va0, va0"  // this is a hack that always produces "1"
-            }].Join("\n");
+            string[] vertexShader = new string[] {
+                "m44 op, va0, vc0\n", // 4x4 matrix transform to output clipspace
+                "seq v0, va0, va0\n"  // this is a hack that always produces "1"
+            };
 
            string fragmentShader =
                 "mov oc, v0";       // output color: white
@@ -323,7 +323,7 @@ namespace SparrowSharp.Core.Rendering
             get
             {
                 string name = ProgramName;
-                Painter painter = Starling.painter;
+                Painter painter = SparrowSharpApp.Painter;
                 Program program = painter.GetProgram(name);
 
                 if (program == null)

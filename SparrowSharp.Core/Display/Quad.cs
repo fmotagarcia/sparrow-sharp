@@ -1,7 +1,8 @@
-using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
+using SparrowSharp.Core.Rendering;
+using SparrowSharp.Core.Styles;
 
 namespace Sparrow.Display
 {
@@ -32,156 +33,164 @@ namespace Sparrow.Display
     ///   <para>0x00FF00 -> green</para>
     ///   <para>0x0000FF -> blue</para>
     /// </summary>
-    public class Quad : DisplayObject
+    public class Quad : Mesh
     {
-        private const float MIN_SIZE = 0.1f;
-        protected VertexData _vertexData;
+        private Rectangle _bounds;
 
         /// <summary>
         /// Initializes a quad with a certain size and color. The 'premultipliedAlpha' parameter indicates how the colors
         /// of the object are stored.
         /// </summary>
-        public Quad(float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
+        public Quad(float width = 32, float height = 32, uint color = 0xffffff) 
+            : base(new VertexData(MeshStyle.VERTEX_FORMAT, 4), new IndexData())
         {
-            Init(width, height, color, premultipliedAlpha);
+            Init(width, height, color);
         }
 
-        /// <summary>
-        /// Always null on Quads
-        /// </summary>
-        virtual public Texture Texture { get { return null; } set { } }
-
-        protected uint _color;
-        /// <summary>
-        /// Sets the colors of all vertices simultaneously.
-        /// </summary>
-        public uint Color
+        protected void Init(float width = 32, float height = 32, uint color = 0xffffff)
         {
-            get
+            if (width <= 0f || height <= 0f)
             {
-                return _color;
+                throw new System.ArgumentException("Invalid size: width and height must not be zero");
             }
-            set
-            {
-                _color = value;
-                for (int i = 0; i < 4; ++i)
-                {
-                    _vertexData.SetColor(value, i);
-                }
+            _bounds = new Rectangle(0, 0, width, height);
 
-                VertexDataDidChange();
-            }
+            SetupVertices();
+            Color = color;
         }
 
-        /// <summary>
-        /// Indicates if the rgb values are stored premultiplied with the alpha value. This can have
-        /// effect on the rendering. (Most developers don't have to care, though.)
-        /// </summary>
-        public bool PremultipliedAlpha
+        protected void SetupVertices()
         {
-            get
-            {
-                return _vertexData.PremultipliedAlpha;
-            }
-            set
-            {
-                if (value != _vertexData.PremultipliedAlpha)
-                {
-                    _vertexData.PremultipliedAlpha = value;
-                }
-            }
-        }
+            string posAttr = "position";
+            string texAttr = "texCoords";
+            Texture texture = Style.Texture;
+            VertexData vertexData = this.VertexData;
+            IndexData indexData = this.IndexData;
 
-        public virtual bool Tinted 
-        { 
-            get  { 
-                return true;
-            }
-        }
+            indexData.NumIndices = 0;
+            indexData.addQuad(0, 1, 2, 3);
 
-        protected void Init(float width = 32, float height = 32, uint color = 0xffffff, bool premultipliedAlpha = false)
-        {
-            if (width <= MIN_SIZE)
+            if (vertexData.NumVertices != 4)
             {
-                width = MIN_SIZE;
-            }
-            if (height <= MIN_SIZE)
-            {
-                height = MIN_SIZE;
-            }
-            _color = color;
-            _vertexData = new VertexData(4, premultipliedAlpha);
-            _vertexData.Vertices[1].Position.X = width;
-            _vertexData.Vertices[2].Position.Y = height;
-            _vertexData.Vertices[3].Position.X = width;
-            _vertexData.Vertices[3].Position.Y = height;
-
-            for (int i = 0; i < 4; ++i)
-            {
-                _vertexData.VertexColors[i] = VertexColorHelper.CreateVertexColor(color, 1.0f);
+                vertexData.NumVertices = 4;
+                vertexData.Trim();
             }
 
-            VertexDataDidChange();
+            if (Texture != null)
+            {
+                texture.SetupVertexPositions(vertexData, 0, "position", _bounds);
+                texture.SetupTextureCoordinates(vertexData, 0, texAttr);
+            }
+            else
+            {
+                vertexData.SetPoint(0, posAttr, _bounds.Left,  _bounds.Top);
+                vertexData.SetPoint(1, posAttr, _bounds.Right, _bounds.Top);
+                vertexData.SetPoint(2, posAttr, _bounds.Left,  _bounds.Bottom);
+                vertexData.SetPoint(3, posAttr, _bounds.Right, _bounds.Bottom);
+
+                vertexData.SetPoint(0, texAttr, 0.0, 0.0);
+                vertexData.SetPoint(1, texAttr, 1.0, 0.0);
+                vertexData.SetPoint(2, texAttr, 0.0, 1.0);
+                vertexData.SetPoint(3, texAttr, 1.0, 1.0);
+            }
+
+            SetRequiresRedraw();
         }
 
         public override Rectangle GetBounds(DisplayObject targetSpace)
         {
-            Point bottomRight;
+            Rectangle outRect = new Rectangle();
 
-            if (targetSpace == this)
-            { 
-                // optimization
-                bottomRight = _vertexData.PositionAt(3);
-                return new Rectangle(0.0f, 0.0f, bottomRight.X, bottomRight.Y);
+            if (targetSpace == this)// optimization
+            {
+                outRect.CopyFrom(Bounds);
             }
-            else if (targetSpace == Parent && Rotation == 0.0f)
-            { 
-                // optimization
+            else if (targetSpace == Parent && !IsRotated)// optimization
+            {
                 float scaleX = ScaleX;
                 float scaleY = ScaleY;
 
-                bottomRight = _vertexData.PositionAt(3);
-                Rectangle resultRect = new Rectangle(X - PivotX * scaleX, 
-                                           Y - PivotY * scaleY,
-                                           bottomRight.X * ScaleX,
-                                           bottomRight.Y * ScaleY); 
-
+                outRect = new Rectangle(X - PivotX * scaleX,
+                                       Y - PivotY * scaleY,
+                                       _bounds.Width * ScaleX,
+                                       _bounds.Height * ScaleY);
                 if (scaleX < 0.0f)
-                { 
-                    resultRect.Width *= -1.0f; 
-                    resultRect.X -= resultRect.Width;  
+                {
+                    outRect.Width *= -1.0f;
+                    outRect.X -= outRect.Width;
                 }
-
                 if (scaleY < 0.0f)
-                { 
-                    resultRect.Height *= -1.0f; 
-                    resultRect.Top -= resultRect.Height; 
+                {
+                    outRect.Height *= -1.0f;
+                    outRect.Top -= outRect.Height;
                 }
-
-                return resultRect;
             }
             else
             {
-                Matrix transformationMatrix = GetTransformationMatrix(targetSpace);
-                return _vertexData.BoundsAfterTransformation(transformationMatrix, 0, 4);
+                Matrix sMatrix = GetTransformationMatrix(targetSpace);
+                outRect = _bounds.GetBounds(sMatrix);
+            }
+            return outRect;
+        }
+        
+        override public DisplayObject HitTest(Point localPoint)
+        {
+            if (!Visible || !Touchable || !HitTestMask(localPoint)) return null;
+            else if (_bounds.Contains(localPoint)) return this;
+            else return null;
+        }
+
+        /** Readjusts the dimensions of the quad. Use this method without any arguments to
+         *  synchronize quad and texture size after assigning a texture with a different size.
+         *  You can also force a certain width and height by passing positive, non-zero
+         *  values for width and height. */
+        public void ReadjustSize(float width = -1, float height = -1)
+        {
+            if (width  <= 0) width  = Texture != null ? Texture.FrameWidth  : _bounds.Width;
+            if (height <= 0) height = Texture != null ? Texture.FrameHeight : _bounds.Height;
+
+            if (width != _bounds.Width || height != _bounds.Height)
+            {
+                _bounds.SetTo(0, 0, width, height);
+                SetupVertices();
             }
         }
 
-        override public void Render(RenderSupport support)
+        /** Creates a quad from the given texture.
+        *  The quad will have the same size as the texture. */
+        public static Quad FromTexture(Texture texture)
         {
-            support.BatchQuad(this);
+            Quad quad = new Quad(100, 100);
+            quad.Texture = texture;
+            quad.ReadjustSize();
+            return quad;
         }
 
-        protected virtual void VertexDataDidChange()
-        {
-            // override in subclass
+        /** The texture that is mapped to the quad (or <code>null</code>, if there is none).
+         *  Per default, it is mapped to the complete quad, i.e. to the complete area between the
+         *  top left and bottom right vertices. This can be changed with the
+         *  <code>setTexCoords</code>-method.
+         *
+         *  <p>Note that the size of the quad will not change when you assign a texture, which
+         *  means that the texture might be distorted at first. Call <code>readjustSize</code> to
+         *  synchronize quad and texture size.</p>
+         *
+         *  <p>You could also set the texture via the <code>style.texture</code> property.
+         *  That way, however, the texture frame won't be taken into account. Since only rectangular
+         *  objects can make use of a texture frame, only a property on the Quad class can do that.
+         *  </p>
+         */
+        public override Texture Texture {
+            get { return base.Texture; }
+            set
+            {
+                if (value != Texture)
+                {
+                    base.Texture = value;
+                    SetupVertices();
+                }
+            }
         }
-
-        virtual internal void CopyVertexDataTo(VertexData targetData, int atIndex, bool copyColor)
-        {
-            copyColor = copyColor || Tinted;
-
-            _vertexData.CopyToVertexData(targetData, copyColor, atIndex);
-        }
+        
     }
 }

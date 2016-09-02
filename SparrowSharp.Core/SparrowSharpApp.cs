@@ -5,21 +5,29 @@ using Sparrow.Core;
 using Sparrow.Display;
 using SparrowSharp.Utils;
 using SparrowSharp.Core.Desktop.Rendering;
+using SparrowSharp.Core.Rendering;
+using Sparrow.Geom;
 
 namespace Sparrow
 {
     public static class SparrowSharpApp
     {
 
+        private static Painter _painter;
+        private static uint _frameID;
+        private static readonly float ContentScaleFactor = 1.0f;
+
+        private static Rectangle _viewPort;
+        private static Rectangle _previousViewPort;
+        private static Rectangle _clippedViewPort;
+
         public static Stage Stage { get; private set; }
 
-        public static Context Context { get; private set; }
+        public static uint FrameID { get { return _frameID; } }
 
         public static readonly Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
-        public static Object NativeWindow;
-
-        private static RenderSupport renderSupport;
+        public static object NativeWindow;
 
         public static DisplayObject Root { get; private set; }
 
@@ -44,12 +52,10 @@ namespace Sparrow
             {
                 throw new InvalidOperationException("App already initialized!");
             }
-            RenderSupport.HasOpenGLError = false;
+            GPUInfo.HasOpenGLError = false;
 
             Stage = new Stage(width, height);
             DefaultJuggler = new Juggler();
-            Context = new Context();
-            renderSupport = new RenderSupport();
 
             Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
@@ -60,42 +66,88 @@ namespace Sparrow
             long elapsed = watch.ElapsedMilliseconds;
             watch.Restart();
 
-            renderSupport.NextFrame();
-            Stage.Render(renderSupport);
-            renderSupport.FinishQuadBatch();
-
-            if (stats != null)
-            {
-                stats.NumDrawCalls = renderSupport.NumDrawCalls - 2; // stats display requires 2 itself
-            }
-
-#if DEBUG
-            RenderSupport.CheckForOpenGLError();
-#endif
-
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
+            Render();
         }
 
-        public static void RegisterProgram(string name, Program program)
+        public static void Render()
         {
-            Programs.Add(name, program);
-        }
+            UpdateViewPort();
 
-        public static void UnregisterProgram(string name)
-        {
-            Programs.Remove(name);
-        }
-
-        public static Program GetProgram(string name)
-        {
-            if (Programs.ContainsKey(name))
+            bool doRedraw = Stage.RequiresRedraw;
+            if (doRedraw)
             {
-                return Programs[name];
+                //dispatchEventWith(starling.events.Event.RENDER);
+
+                bool shareContext = _painter.ShareContext;
+                //float scaleX = _viewPort.Width / Stage.Width;
+                //float scaleY = _viewPort.Height / Stage.Height;
+
+                _painter.NextFrame();
+                _painter.PixelSize = 1.0f / ContentScaleFactor;
+                /*_painter.State.SetProjectionMatrix(
+                    _viewPort.X < 0 ? -_viewPort.X / scaleX : 0.0,
+                    _viewPort.Y < 0 ? -_viewPort.Y / scaleY : 0.0,
+                    _clippedViewPort.Width / scaleX,
+                    _clippedViewPort.Height / scaleY,
+                    Stage.StageWidth, Stage.StageHeight, Stage.CameraPosition);
+                */
+                if (!shareContext)
+                    _painter.Clear(Stage.Color, 1.0f);
+
+                Stage.Render(_painter);
+                _painter.FinishFrame();
+                _painter.FrameID = ++_frameID;
+
+                if (!shareContext)
+                    _painter.Present();
             }
-            return null;
+            /*
+            if (stats != null)
+            {
+                stats.DrawCount = _painter.DrawCount;
+                if (!doRedraw) stats.MarkFrameAsSkipped();
+            }
+            */
+            // old code:
+            // renderSupport.NextFrame();
+            //Stage.Render(_painter);
+            //renderSupport.FinishQuadBatch();
+
+#if DEBUG
+            GPUInfo.CheckForOpenGLError();
+#endif
         }
 
+        private static void UpdateViewPort(bool forceUpdate = false)
+        {
+            // the last set viewport is stored in a variable; that way, people can modify the
+            // viewPort directly (without a copy) and we still know if it has changed.
+            if (forceUpdate || !Rectangle.Compare(_viewPort, _previousViewPort))
+            {
+                _previousViewPort.SetTo(_viewPort.X, _viewPort.Y, _viewPort.Width, _viewPort.Height);
+
+                _painter.ConfigureBackBuffer(_clippedViewPort);
+            }
+        }
+
+        /** The painter, which is used for all rendering. The same instance is passed to all
+         *  <code>render</code>methods each frame. */
+        public static Painter Painter {get { return _painter; } }
+
+        /** Makes sure that the next frame is actually rendered.
+         *
+         *  <p>When <code>skipUnchangedFrames</code> is enabled, some situations require that you
+         *  manually force a redraw, e.g. when a RenderTexture is changed. This method is the
+         *  easiest way to do so; it's just a shortcut to <code>stage.setRequiresRedraw()</code>.
+         *  </p>
+         */
+        public static void SetRequiresRedraw()
+        {
+            Stage.SetRequiresRedraw();
+        }
+    
         public static bool ShowStats
         {
             set {

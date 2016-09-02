@@ -11,7 +11,7 @@ namespace Sparrow.Core
     /// </summary>
     public class Context
     {
-        private static readonly Dictionary<uint, uint> FramebufferCache;
+        /*private static readonly Dictionary<uint, uint> FramebufferCache;
         private static readonly HashSet<string> Extensions;
         private Texture _renderTarget;
 
@@ -146,7 +146,7 @@ namespace Sparrow.Core
                 GL.DeleteFramebuffers(1, ref framebuffer);
                 FramebufferCache.Remove(texture.Name);
             }
-        }
+        }*/
     }
 }
 

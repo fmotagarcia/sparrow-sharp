@@ -35,7 +35,7 @@ namespace SparrowSharp.Core.Rendering
         internal bool _pixelSnapping;
 
         private static Type sDefaultStyle = typeof(MeshStyle);
-        //private static Function sDefaultStyleFactory = null;
+
         public delegate MeshStyle DefaultStyleFactoryFunction();
         private static DefaultStyleFactoryFunction sDefaultStyleFactory;
 
@@ -68,9 +68,9 @@ namespace SparrowSharp.Core.Rendering
             else return MeshUtil.ContainsPoint(_vertexData, _indexData, localPoint) ? this : null;
         }
         
-        override public Rectangle GetBounds(DisplayObject targetSpace, Rectangle outRect = null)
+        override public Rectangle GetBounds(DisplayObject targetSpace)
         {
-            return MeshUtil.CalculateBounds(_vertexData, this, targetSpace, outRect);
+            return MeshUtil.CalculateBounds(_vertexData, this, targetSpace);
         }
 
         override public void Render(Painter painter)
@@ -208,7 +208,7 @@ namespace SparrowSharp.Core.Rendering
         }
 
         /** The texture that is mapped to the mesh (or <code>null</code>, if there is none). */
-        public Texture Texture { 
+        virtual public Texture Texture { 
             get { return _style.Texture; }
             set { _style.Texture = value; }
         }

@@ -56,7 +56,7 @@ namespace Sparrow.Touches
             List<Touch> touchesFound = new List<Touch> ();
             foreach (Touch touch in _touches) {
                 if (target == touch.Target || 
-                   (target is DisplayObjectContainer && ((DisplayObjectContainer)target).ContainsChild(touch.Target)))
+                   (target is DisplayObjectContainer && ((DisplayObjectContainer)target).Contains(touch.Target)))
                 {
                     touchesFound.Add(touch);
                 }
@@ -71,7 +71,7 @@ namespace Sparrow.Touches
             foreach (Touch touch in _touches) {
                 if (touch.Phase == phase &&
                    (target == touch.Target || 
-                   (target is DisplayObjectContainer && ((DisplayObjectContainer)target).ContainsChild(touch.Target))))
+                   (target is DisplayObjectContainer && ((DisplayObjectContainer)target).Contains(touch.Target))))
                 {
                     touchesFound.Add(touch);
                 }

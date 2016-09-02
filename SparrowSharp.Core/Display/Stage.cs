@@ -73,17 +73,16 @@ namespace Sparrow.Display
             }
         }
 
-        override public void Render(RenderSupport support)
-        {
-            support.Clear(Color, 1.0f);
-            support.SetupOrthographicProjection(0, Width, 0, Height);
-
-            base.Render(support);
-        }
-
         override public DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable)
+            {
+                return null;
+            }
+
+            // locations outside of the stage area shouldn't be accepted
+            if (localPoint.X < 0 || localPoint.X > Width ||
+                localPoint.Y < 0 || localPoint.Y > Height)
             {
                 return null;
             }

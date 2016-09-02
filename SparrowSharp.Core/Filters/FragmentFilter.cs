@@ -37,6 +37,7 @@ namespace SparrowSharp.Filters
     /// </summary>
     public abstract class FragmentFilter
     {
+        /*
         protected const int MIN_TEXTURE_SIZE = 64;
         private bool _cached;
 
@@ -497,7 +498,7 @@ namespace SparrowSharp.Filters
             };
 
             return new GLTexture(IntPtr.Zero, texProps);
-        }
+        }*/
     }
 }
 

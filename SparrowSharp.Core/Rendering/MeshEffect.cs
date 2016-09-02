@@ -9,8 +9,7 @@ namespace SparrowSharp.Core.Rendering
 
         /** The vertex format expected by <code>uploadVertexData</code>:
          *  <code>"position:float2, texCoords:float2, color:bytes4"</code> */
-        public static readonly VertexDataFormat VERTEX_FORMAT =
-            FilterEffect.VERTEX_FORMAT.extend("color:bytes4");
+        public static readonly VertexDataFormat VERTEX_FORMAT = FilterEffect.VERTEX_FORMAT.extend("color:bytes4");
 
         private float _alpha;
         private bool _tinted;
@@ -124,5 +123,5 @@ namespace SparrowSharp.Core.Rendering
             set { _tinted = value; }
         }
 
-}
+    }
 }

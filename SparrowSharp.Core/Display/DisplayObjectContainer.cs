@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Sparrow.Core;
 using Sparrow.Geom;
+using SparrowSharp.Core.Rendering;
+using SparrowSharp.Filters;
 
 namespace Sparrow.Display
 {
@@ -51,6 +53,21 @@ namespace Sparrow.Display
     /// </summary>
     public abstract class DisplayObjectContainer : DisplayObject
     {
+
+        private static BatchToken sCacheToken = new BatchToken();
+
+        /// <summary>
+        /// Disposes the resources of all children. 
+        /// </summary>
+        public override void Dispose()
+        {
+            for (int i =_children.Count - 1; i >= 0; --i)
+            {
+                _children[i].Dispose();
+            }
+            base.Dispose();
+        }
+
         /// <summary>
         /// The number of children of this container.
         /// </summary>
@@ -82,14 +99,23 @@ namespace Sparrow.Display
         {
             if (index >= 0 && index <= _children.Count)
             {
-                child.RemoveFromParent();
-                _children.Insert(index, child);
-                child.Parent = this;
+                SetRequiresRedraw();
 
-                child.InvokeAdded(child, this);
-                if (Stage != null)
+                if (child.Parent == this)
                 {
-                    child.BroadcastAddedToStageEvent(this);
+                    SetChildIndex(child, index); // avoids dispatching events
+                }
+                else
+                {
+                    child.RemoveFromParent();
+                    _children.Insert(index, child);
+                    child.Parent = this;
+
+                    child.InvokeAdded(child, this);
+                    if (Stage != null)
+                    {
+                        child.BroadcastAddedToStageEvent(this);
+                    }
                 }
             }
             else
@@ -101,7 +127,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Determines if a certain object is a child of this container (recursively).
         /// </summary>
-        public bool ContainsChild(DisplayObject child)
+        public bool Contains(DisplayObject child)
         {
             while (child != null)
             {
@@ -133,7 +159,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Returns a child object with a certain name (non-recursively).
         /// </summary>
-        public DisplayObject GetChild(String name)
+        public DisplayObject GetChild(string name)
         {
             foreach (DisplayObject currentChild in _children)
             {
@@ -166,39 +192,48 @@ namespace Sparrow.Display
             }
             _children.RemoveAt(oldIndex);
             _children.Insert(index, child);
+            SetRequiresRedraw();
         }
 
         /// <summary>
         /// Removes a child from the container. If the object is not a child, nothing happens.
         /// </summary>
-        public void RemoveChild(DisplayObject child)
+        public DisplayObject RemoveChild(DisplayObject child, bool dispose = false)
         {
             int index = _children.IndexOf(child);
             if (index != -1)
             {
-                RemoveChildAt(index);
+                return RemoveChildAt(index, dispose);
             }
+            return null;
         }
 
         /// <summary>
         /// Removes a child at a certain index. Children above the child will move down.
         /// </summary>
-        public void RemoveChildAt(int index)
+        public DisplayObject RemoveChildAt(int index, bool dispose = false)
         {
             if (index >= 0 && index < _children.Count)
             {
+                SetRequiresRedraw(); 
+
                 DisplayObject child = _children[index];
                 child.InvokeRemoved();
+
                 if (Stage != null)
                 {
-                    BroadcastRemovedFromStageEvent(this);
+                    child.BroadcastRemovedFromStageEvent(this);
                 }
+
                 child.Parent = null;
                 int newIndex = _children.IndexOf(child); // index might have changed in event handler
                 if (newIndex != -1)
                 {
                     _children.RemoveAt(newIndex);
                 }
+                if (dispose) child.Dispose();
+
+                return child;
             }
             else
             {
@@ -228,7 +263,8 @@ namespace Sparrow.Display
             }
             DisplayObject tmp = _children[index1];
             _children[index1] = _children[index2];
-            _children[index2] = tmp;   
+            _children[index2] = tmp;
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -242,23 +278,52 @@ namespace Sparrow.Display
             }
         }
 
-        override public void Render(RenderSupport support)
+        override public void Render(Painter painter)
         {
-            foreach (DisplayObject child in _children)
-            {
-                if (child.HasVisibleArea)
-                {
-                    support.PushState(child.TransformationMatrix, child.Alpha, child.BlendMode);
+            int numChildren = _children.Count;
+            uint frameID = painter.FrameID;
+            bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameID;
 
-                    if (child.Filter != null)
+            for (int i = 0; i < numChildren; ++i)
+            {
+                DisplayObject child = _children[i];
+        //TODO        FragmentFilter filter = child._filter;
+                DisplayObject mask = child._mask;
+
+                if (child._hasVisibleArea)
+                {
+                    if (selfOrParentChanged)
                     {
-                        child.Filter.RenderObject(child, support);
+                        child._lastParentOrSelfChangeFrameID = frameID;
+                        if (mask != null) mask._lastParentOrSelfChangeFrameID = frameID;
+                    }
+
+                    if (child._lastParentOrSelfChangeFrameID != frameID &&
+                        child._lastChildChangeFrameID != frameID &&
+                        child._tokenFrameID == frameID - 1)
+                    {
+                        painter.PushState(sCacheToken);
+                        painter.DrawFromCache(child._pushToken, child._popToken);
+                        painter.PopState(child._popToken);
+
+                        child._pushToken.CopyFrom(sCacheToken);
                     }
                     else
                     {
-                        child.Render(support);
+                        painter.PushState(child._pushToken);
+                        painter.SetStateTo(child.TransformationMatrix, child.Alpha, child.BlendMode);
+
+                        if (mask != null) painter.DrawMask(mask, child);
+
+               //  TODO       if (filter != null) filter.Render(painter);
+                        /*else*/ child.Render(painter);
+
+                        if (mask != null) painter.EraseMask(mask, child);
+
+                        painter.PopState(child._popToken);
                     }
-                    support.PopState();
+
+                    child._tokenFrameID = frameID;
                 }
             }
         }
@@ -294,7 +359,7 @@ namespace Sparrow.Display
 
         override public DisplayObject HitTest(Point localPoint)
         {
-            if (!Visible || !Touchable)
+            if (!Visible || !Touchable || !HitTestMask(localPoint))
             {
                 return null;
             }
@@ -303,7 +368,11 @@ namespace Sparrow.Display
             { 
                 // front to back!
                 DisplayObject child = _children[i];
+                if (child.IsMask) continue;
+
                 Matrix transformationMatrix = GetTransformationMatrix(child);
+                transformationMatrix.Invert();
+
                 Point transformedPoint = transformationMatrix.TransformPoint(localPoint);
                 DisplayObject target = child.HitTest(transformedPoint);
                 if (target != null)
@@ -320,6 +389,7 @@ namespace Sparrow.Display
         public void SortChildren(IComparer<DisplayObject> comparator)
         {
             _children.Sort(comparator);
+            SetRequiresRedraw();
         }
     }
 }

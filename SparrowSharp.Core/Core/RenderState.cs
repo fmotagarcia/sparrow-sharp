@@ -48,14 +48,14 @@ namespace Sparrow.Core
 
         public float Alpha;
         protected uint _blendMode;
-        protected Matrix _modelviewMatrix;
+        internal Matrix _modelviewMatrix;
 
         private Texture _renderTarget;
         private uint _renderTargetOptions;
         private string _culling;
         private Rectangle _clipRect;
         public delegate void OnDrawRequiredFunction();
-        private OnDrawRequiredFunction _onDrawRequired;
+        public OnDrawRequiredFunction _onDrawRequired;
 
         public RenderState()
         {
@@ -93,10 +93,10 @@ namespace Sparrow.Core
         *  (Check each property documentation for its default value.) */
         public void Reset()
         {
-            this.Alpha = 1.0f;
-            this.BlendMode = Display.BlendMode.NORMAL;
-            this.RenderTarget = null;
-            this.ClipRect = null;
+            Alpha = 1.0f;
+            BlendMode = Display.BlendMode.NORMAL;
+            RenderTarget = null;
+            ClipRect = null;
 
             if (_modelviewMatrix != null) _modelviewMatrix.Identity();
             else _modelviewMatrix = Matrix.Create();
@@ -108,6 +108,27 @@ namespace Sparrow.Core
             _modelviewMatrix.PrependMatrix(matrix);
         }
 
+        /** Creates a perspective projection matrix suitable for 2D and 3D rendering.
+         *
+         *  <p>The first 4 parameters define which area of the stage you want to view (the camera
+         *  will 'zoom' to exactly this region). The final 3 parameters determine the perspective
+         *  in which you're looking at the stage.</p>
+         *
+         *  <p>The stage is always on the rectangle that is spawned up between x- and y-axis (with
+         *  the given size). All objects that are exactly on that rectangle (z equals zero) will be
+         *  rendered in their true size, without any distortion.</p>
+         *
+         *  <p>If you pass only the first 4 parameters, the camera will be set up above the center
+         *  of the stage, with a field of view of 1.0 rad.</p>
+         */
+        /*public void SetProjectionMatrix(float x, float y, float width, float height,
+                                        float stageWidth = 0, float stageHeight = 0,
+                                        Vector3D cameraPos = null)
+        {
+            MatrixUtil.createPerspectiveProjectionMatrix(
+                    x, y, width, height, stageWidth, stageHeight, cameraPos, _projectionMatrix3D);
+        }
+        */
         /** Changes the modelview matrices (2D and, if available, 3D) to identity matrices.
          *  An object transformed an identity matrix performs no transformation.
          */

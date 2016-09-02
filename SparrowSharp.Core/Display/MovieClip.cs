@@ -22,9 +22,9 @@ namespace SparrowSharp.Display
     /// As any animated object, a movie clip has to be added to a Juggler (or have its 'AdvanceTime' 
     /// method called regularly) to run.
     /// </summary>
-    public class MovieClip : Image, IAnimatable
-    {
-
+    public class MovieClip //: Image, IAnimatable
+    {//TODO
+        /*
         #region Events
 
         public delegate void CompletedHandler(MovieClip sender);
@@ -346,6 +346,6 @@ namespace SparrowSharp.Display
             //if ([NSNull class] != [sound class])
             //    [sound play];
         }
-
+        */
     }
 }

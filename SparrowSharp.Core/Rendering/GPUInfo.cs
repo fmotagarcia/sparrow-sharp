@@ -90,5 +90,35 @@ namespace SparrowSharp.Core.Desktop.Rendering
                 Console.Out.WriteLine("Shader linker error: " + info + " " + rvalue);
             }
         }
+
+        public static bool HasOpenGLError { get; internal set; }
+
+        /// <summary>
+        /// Checks for an OpenGL error. If there is one, it is logged an the error code is returned.
+        /// </summary>
+        public static uint CheckForOpenGLError()
+        {
+#if __WINDOWS__
+            ErrorCode err = GL.GetError();
+#else
+            ErrorCode err = GL.GetErrorCode();
+#endif
+            string errstr = "";
+            while (err != ErrorCode.NoError)
+            {
+                HasOpenGLError = true;
+                errstr += "There was an OpenGL error: " + err;
+#if __WINDOWS__
+                err = GL.GetError();
+#else
+                err = GL.GetErrorCode();
+#endif
+            }
+            if (errstr != "")
+            {
+                Console.WriteLine(errstr);
+            }
+            return (uint)err;
+        }
     }
 }

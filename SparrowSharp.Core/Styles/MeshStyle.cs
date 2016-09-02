@@ -1,9 +1,11 @@
 ﻿using Sparrow.Core;
+using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
 using SparrowSharp.Core.Rendering;
 using System;
+using static Sparrow.Display.DisplayObject;
 
 namespace SparrowSharp.Core.Styles
 {
@@ -77,7 +79,7 @@ namespace SparrowSharp.Core.Styles
 
         /** Dispatched every frame on styles assigned to display objects connected to the stage. */
         //[Event(name = "enterFrame", type = "starling.events.EnterFrameEvent")]
-
+        public event EnterFrameEventHandler EnterFrame;
         /** The vertex format expected by this style (the same as found in the MeshEffect-class). */
         public static readonly VertexDataFormat VERTEX_FORMAT = MeshEffect.VERTEX_FORMAT;
 
@@ -89,7 +91,7 @@ namespace SparrowSharp.Core.Styles
         private bool _textureRepeat;
         private VertexData _vertexData;   // just a reference to the target's vertex data
         private IndexData _indexData;     // just a reference to the target's index data
-
+       
         // helper objects
         private static Point sPoint = Point.Create();
 
@@ -137,12 +139,11 @@ namespace SparrowSharp.Core.Styles
          */
         public void UpdateEffect(MeshEffect effect, RenderState state)
         {
-            effect.texture = _texture;
-            effect.textureRepeat = _textureRepeat;
-            effect.textureSmoothing = _textureSmoothing;
-            effect.mvpMatrix3D = state.MvpMatrix3D;
-            effect.alpha = state.Alpha;
-            effect.tinted = _vertexData.Tinted;
+            effect.Texture = _texture;
+            effect.TextureRepeat = _textureRepeat;
+            effect.TextureSmoothing = _textureSmoothing;
+            effect.Alpha = state.Alpha;
+            effect.Tinted = _vertexData.Tinted;
         }
 
         /** Indicates if the current instance can be batched with the given style.
@@ -209,36 +210,20 @@ namespace SparrowSharp.Core.Styles
         { }
 
         // enter frame event
-        /*
-        override public function addEventListener(type:String, listener:Function):void
+
+        private void OnEnterFrame(DisplayObject target, float passedTime)
         {
-            if (type == Event.ENTER_FRAME && _target)
-                _target.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-            super.addEventListener(type, listener);
+            EnterFrame(target, passedTime); //dispatchEvent(event);
         }
-
-        override public function removeEventListener(type:String, listener:Function):void
-        {
-            if (type == Event.ENTER_FRAME && _target)
-                _target.removeEventListener(type, onEnterFrame);
-
-            super.removeEventListener(type, listener);
-        }
-
-        private function onEnterFrame(event:Event):void
-        {
-            dispatchEvent(event);
-        }
-        */
         // internal methods
-        
+
         internal void SetTarget(Mesh target, VertexData vertexData = null, IndexData indexData = null)
         {
             if (_target != target)
             {
-                if (_target != null) _target.RemoveEventListener(Event.ENTER_FRAME, onEnterFrame);
-                if (vertexData != null) vertexData.Format = vertexFormat;
+                //if (_target != null) _target.RemoveEventListener(Event.ENTER_FRAME, OnEnterFrame);
+                if (_target != null) _target.EnterFrame -= OnEnterFrame;
+                if (vertexData != null) vertexData.Format = VertexFormat;
 
                 _target = target;
                 _vertexData = vertexData;
@@ -246,9 +231,10 @@ namespace SparrowSharp.Core.Styles
 
                 if (target != null)
                 {
-                    if (hasEventListener(Event.ENTER_FRAME))
-                        target.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
+                    if (EnterFrame != null) //  if (hasEventListener(Event.ENTER_FRAME))
+                    {
+                        target.EnterFrame += OnEnterFrame; // addEventListener(Event.ENTER_FRAME)
+                    }
                     OnTargetAssigned(target);
                 }
             }
@@ -391,7 +377,7 @@ namespace SparrowSharp.Core.Styles
                     }
 
                     _texture = value;
-                    _textureBase = value != null ? value.base : null;
+                    _textureBase = value != null ? value.Base : null;
                     SetRequiresRedraw();
                 }
             }

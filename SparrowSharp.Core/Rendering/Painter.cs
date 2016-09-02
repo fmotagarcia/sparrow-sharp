@@ -44,10 +44,9 @@ namespace SparrowSharp.Core.Rendering
     */
     public class Painter
     {
-        // the key for the programs stored in 'sharedData'
-        private static readonly string PROGRAM_DATA_NAME = "starling.rendering.Painter.Programs";
 
         // members
+        private Dictionary<string, Program> programs;
 
         private Stage3D _stage3D;
         private Context3D _context;
@@ -68,7 +67,6 @@ namespace SparrowSharp.Core.Rendering
 
         private float _backBufferWidth;
         private float _backBufferHeight;
-        private float _backBufferScaleFactor;
 
         private RenderState _state;
         private List<RenderState> _stateStack;
@@ -77,8 +75,6 @@ namespace SparrowSharp.Core.Rendering
 
         // helper objects
         private static Matrix sMatrix = Matrix.Create();
-        private static Vector3D sPoint3D = new Vector3D();
-        private static Matrix3D sMatrix3D = new Matrix3D();
         private static Rectangle sClipRect = new Rectangle();
         private static Rectangle sBufferRect = new Rectangle();
         private static Rectangle sScissorRect = new Rectangle();
@@ -94,19 +90,19 @@ namespace SparrowSharp.Core.Rendering
             _shareContext = _context != null && _context.driverInfo != "Disposed";
             _backBufferWidth = _context != null ? _context.backBufferWidth : 0;
             _backBufferHeight = _context != null ? _context.backBufferHeight : 0;
-            _backBufferScaleFactor = _pixelSize = 1.0f;
+            _pixelSize = 1.0f;
             _stencilReferenceValues = new Dictionary<DisplayObject, uint>(); // use weak refs!
             _clipRectStack = new List<Rectangle>();
 
             _batchProcessor = new BatchProcessor();
-            _batchProcessor.onBatchComplete = DrawBatch;
+            _batchProcessor.OnBatchComplete = DrawBatch;
 
             _batchCache = new BatchProcessor();
-            _batchCache.onBatchComplete = DrawBatch;
+            _batchCache.OnBatchComplete = DrawBatch;
             _batchCacheExclusions = new List<DisplayObject>();
 
             _state = new RenderState();
-            _state.onDrawRequired = FinishMeshBatch;
+            _state._onDrawRequired = FinishMeshBatch;
             _stateStack = new List<RenderState>();
             _stateStackPos = -1;
             _stateStackLength = 0;
@@ -137,7 +133,7 @@ namespace SparrowSharp.Core.Rendering
          */
         public void RequestContext3D(string renderMode, string profile)
         {
-            RenderUtil.requestContext3D(_stage3D, renderMode, profile);
+            RenderUtil.RequestContext3D(_stage3D, renderMode, profile);
         }
 
         private void onContextCreated(Object eventObj)
@@ -157,47 +153,11 @@ namespace SparrowSharp.Core.Rendering
          *
          * @param viewPort                the position and size of the area that should be rendered
          *                                into, in pixels.
-         * @param contentScaleFactor      only relevant for Desktop (!) HiDPI screens. If you want
-         *                                to support high resolutions, pass the 'contentScaleFactor'
-         *                                of the Flash stage; otherwise, '1.0'.
-         * @param antiAlias               from 0 (none) to 16 (very high quality).
-         * @param enableDepthAndStencil   indicates whether the depth and stencil buffers should
-         *                                be enabled. Note that on AIR, you also have to enable
-         *                                this setting in the app-xml (application descriptor);
-         *                                otherwise, this setting will be silently ignored.
          */
-        public void ConfigureBackBuffer(Rectangle viewPort, float contentScaleFactor,
-                                        int antiAlias, bool enableDepthAndStencil)
+        public void ConfigureBackBuffer(Rectangle viewPort)
         {
-            if (!_shareContext)
-            {
-                enableDepthAndStencil &&= SystemUtil.supportsDepthAndStencil;
-
-                // Changing the stage3D position might move the back buffer to invalid bounds
-                // temporarily. To avoid problems, we set it to the smallest possible size first.
-
-                if (_context.profile == "baselineConstrained")
-                    _context.configureBackBuffer(32, 32, antiAlias, enableDepthAndStencil);
-
-                // If supporting HiDPI mode would exceed the maximum buffer size
-                // (can happen e.g in software mode), we stick to the low resolution.
-
-                if (viewPort.Width * contentScaleFactor > _context.maxBackBufferWidth ||
-                    viewPort.Height * contentScaleFactor > _context.maxBackBufferHeight)
-                {
-                    contentScaleFactor = 1.0f;
-                }
-
-                _stage3D.x = viewPort.X;
-                _stage3D.y = viewPort.Y;
-
-                _context.configureBackBuffer(viewPort.Width, viewPort.Height,
-                    antiAlias, enableDepthAndStencil, contentScaleFactor != 1.0);
-            }
-
             _backBufferWidth  = viewPort.Width;
             _backBufferHeight = viewPort.Height;
-            _backBufferScaleFactor = contentScaleFactor;
         }
 
         // program management
@@ -262,8 +222,8 @@ namespace SparrowSharp.Core.Rendering
         public void SetStateTo(Matrix transformationMatrix, float alphaFactor= 1.0f,
                                uint blendMode = BlendMode.AUTO)
         {
-            if (transformationMatrix != null) MatrixUtil.PrependMatrix(_state._modelviewMatrix, transformationMatrix);
-            if (alphaFactor != 1.0) _state._alpha *= alphaFactor;
+            if (transformationMatrix != null) _state._modelviewMatrix.PrependMatrix(transformationMatrix);
+            if (alphaFactor != 1.0) _state.Alpha *= alphaFactor;
             if (blendMode != BlendMode.AUTO) _state.BlendMode = blendMode;
         }
 
@@ -315,7 +275,7 @@ namespace SparrowSharp.Core.Rendering
 
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
-                mask.GetBounds(mask, sClipRect);
+                sClipRect = mask.GetBounds(mask);
                 sClipRect = sClipRect.GetBounds(sMatrix);
                 PushClipRect(sClipRect);
             }
@@ -371,23 +331,18 @@ namespace SparrowSharp.Core.Rendering
             _state.Alpha = 0.0f;
 
             Matrix matrix = null;
-            Matrix3D matrix3D = null;
 
-            if (mask.Stage)
+            if (mask.Stage != null)
             {
                 _state.SetModelviewMatricesToIdentity();
-
-                if (mask.Is3D) matrix3D = mask.GetTransformationMatrix3D(null, sMatrix3D);
-                else           matrix   = mask.GetTransformationMatrix(null, sMatrix);
+                matrix   = mask.GetTransformationMatrix(null);
             }
             else
             {
-                if (mask.Is3D) matrix3D = mask.TransformationMatrix3D;
-                else           matrix   = mask.TransformationMatrix;
+                matrix   = mask.TransformationMatrix;
             }
 
-            if (matrix3D) _state.TransformModelviewMatrix3D(matrix3D);
-            else          _state.TransformModelviewMatrix(matrix);
+            _state.TransformModelviewMatrix(matrix);
 
             mask.Render(this);
             FinishMeshBatch();
@@ -419,7 +374,7 @@ namespace SparrowSharp.Core.Rendering
                 throw new Exception("Trying to pop from empty clip rectangle stack");
 
             stackLength--;
-            stack.Pop();
+            stack.RemoveAt(stack.Count - 1);
             _state.ClipRect = stackLength != 0 ? stack[stackLength - 1] : null;
         }
 
@@ -429,19 +384,19 @@ namespace SparrowSharp.Core.Rendering
         *  stage coordinates. */
         private bool IsRectangularMask(DisplayObject mask, DisplayObject maskee, Matrix outMatrix)
         {
-            Quad quad = Mask as Quad;
-            bool is3D = mask.Is3D || (maskee && maskee.Is3D && mask.Stage == null);
+            Quad quad = mask as Quad;
+            bool is3D = (maskee != null && mask.Stage == null);
 
-            if (quad && !is3D && quad.Texture == null)
+            if (quad != null && !is3D && quad.Texture == null)
             {
-                if (mask.Stage != null) mask.GetTransformationMatrix(null, outMatrix);
+                if (mask.Stage != null) outMatrix = mask.GetTransformationMatrix(null);
                 else
                 {
-                    outMatrix.CopyFrom(mask.TransformationMatrix);
-                    outMatrix.Concat(_state.ModelviewMatrix);
+                    outMatrix.CopyFromMatrix(mask.TransformationMatrix);
+                    outMatrix.AppendMatrix(_state.ModelviewMatrix);
                 }
-                return (MathUtil.IsEquivalent(outMatrix.A, 0) && MathUtil.IsEquivalent(outMatrix.D, 0)) ||
-                       (MathUtil.IsEquivalent(outMatrix.B, 0) && MathUtil.IsEquivalent(outMatrix.C, 0));
+                return (MathUtil.Equals(outMatrix.A, 0f) && MathUtil.Equals(outMatrix.D, 0f)) ||
+                       (MathUtil.Equals(outMatrix.B, 0f) && MathUtil.Equals(outMatrix.C, 0f));
             }
             return false;
         }
@@ -581,9 +536,9 @@ namespace SparrowSharp.Core.Rendering
         {
             PushState();
 
-            state.blendMode = meshBatch.BlendMode;
-            state.modelviewMatrix.identity();
-            state.alpha = 1.0;
+            State.BlendMode = meshBatch.BlendMode;
+            State.ModelviewMatrix.Identity();
+            State.Alpha = 1.0f;
 
             meshBatch.Render(this);
 
@@ -729,7 +684,7 @@ namespace SparrowSharp.Core.Rendering
         {
             get
             {
-                var key = _state.RenderTarget ? _state.RenderTargetBase : this;
+                var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
                 if (_stencilReferenceValues.ContainsKey(key)) 
                 {
                     return _stencilReferenceValues[key];
@@ -738,7 +693,7 @@ namespace SparrowSharp.Core.Rendering
             }
             set
             {
-                var key = _state.RenderTarget ? _state.RenderTargetBase : this;
+                var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
                 _stencilReferenceValues[key] = value;
 
                 if (contextValid)
@@ -818,15 +773,13 @@ namespace SparrowSharp.Core.Rendering
         private Dictionary<string, Program> Programs {
             get
             {
-                Dictionary<string, Program> programs = sSharedData[PROGRAM_DATA_NAME];
                 if (programs == null)
                 {
-                    programs = new Dictionary<string, string();
-                    sSharedData[PROGRAM_DATA_NAME] = programs;
+                    programs = new Dictionary<string, Program>();
                 }
                 return programs;
             }
         }
-
+       
 }
 }

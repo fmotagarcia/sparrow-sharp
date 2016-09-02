@@ -18,7 +18,7 @@ namespace Sparrow.Core
     /// very efficiently; only changes in the state of added quads trigger OpenGL draw calls.
     /// </summary>
     public class RenderSupport
-    {
+    {/*
         private readonly Matrix _projectionMatrix;
         private readonly Matrix _mvpMatrix;
         private int _numDrawCalls;
@@ -171,34 +171,6 @@ namespace Sparrow.Core
         }
 
         public static bool HasOpenGLError { get; internal set; }
-
-        /// <summary>
-        /// Checks for an OpenGL error. If there is one, it is logged an the error code is returned.
-        /// </summary>
-        public static uint CheckForOpenGLError()
-        {
-            #if __WINDOWS__
-            ErrorCode err = GL.GetError();
-            #else
-            ErrorCode err = GL.GetErrorCode();
-            #endif
-            string errstr = "";
-            while (err != ErrorCode.NoError)
-            {
-                HasOpenGLError = true;
-                errstr += "There was an OpenGL error: " + err;
-                #if __WINDOWS__
-                err = GL.GetError();
-                #else
-                err = GL.GetErrorCode();
-                #endif
-            }
-            if (errstr != "")
-            {
-                Console.WriteLine(errstr);
-            }
-            return (uint)err;
-        }
 
         /// <summary>
         /// Raises the number of draw calls by a specific value. Call this method in custom render methods
@@ -427,6 +399,6 @@ namespace Sparrow.Core
                 context.ScissorBox = null;
             }
 
-        }
+        }*/
     }
 }

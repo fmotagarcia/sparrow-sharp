@@ -40,9 +40,9 @@ namespace SparrowSharp.Core.Rendering
         /** Changes all properties at once. */
         public void SetTo(int batchID = 0, int vertexID = 0, int indexID = 0)
         {
-            this.BatchID = batchID;
-            this.VertexID = vertexID;
-            this.IndexID = indexID;
+            BatchID = batchID;
+            VertexID = vertexID;
+            IndexID = indexID;
         }
 
         /** Resets all properties to zero. */

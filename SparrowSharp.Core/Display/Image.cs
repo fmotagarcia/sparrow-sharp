@@ -19,9 +19,9 @@ namespace Sparrow.Display
     /// texture inside an image without changing any vertex coordinates of the quad. You can also use 
     /// this feature as a very efficient way to create a rectangular mask.
     /// </summary>
-    public class Image : Quad
+    public class Image : Quad // TODO
     {
-        private VertexData _vertexDataCache;
+        /*private VertexData _vertexDataCache;
         private bool _vertexDataCacheInvalid;
         private Texture _texture;
 
@@ -148,6 +148,6 @@ namespace Sparrow.Display
             get { 
                 return _alpha != 1.0f || _color != 0xFFFFFF;
             } 
-        }
+        }*/
     }
 }

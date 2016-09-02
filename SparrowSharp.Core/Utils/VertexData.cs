@@ -325,11 +325,11 @@ namespace Sparrow.Utils
                 SetColor(color, i);
             }
         }
-        // TODO rename to GetColor
+
         /// <summary>
         /// Returns the RGB color of a vertex (without premultiplied alpha).
         /// </summary>
-        public uint ColorAt(int index)
+        public uint GetColor(int index)
         {
             if (index < 0 || index >= _numVertices)
             {
@@ -350,7 +350,7 @@ namespace Sparrow.Utils
         /// </summary>
         public void SetAlpha(float alpha, int atIndex)
         {
-            uint color = ColorAt(atIndex);
+            uint color = GetColor(atIndex);
             SetColor(color, alpha, atIndex);
         }
 

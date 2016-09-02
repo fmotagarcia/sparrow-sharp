@@ -87,7 +87,7 @@ namespace SparrowSharp.Core.Rendering
                 }
 
                 Matrix matrix = state != null ? state._modelviewMatrix : null;
-                float alpha  = state != null ? state._alpha : 1.0;
+                float alpha  = state != null ? state.Alpha : 1.0f;
 
                 _currentBatch.AddMesh(mesh, matrix, alpha, subset, ignoreTransformations);
                 _cacheToken.VertexID += subset.NumVertices;

@@ -1,5 +1,6 @@
 using System;
 using OpenTK.Graphics.ES20;
+using System.Collections.Generic;
 
 namespace Sparrow.Display
 {
@@ -22,7 +23,7 @@ namespace Sparrow.Display
     /// unmodified.) For this reason, a blending mode may have different factors depending on the pma 
     /// value.
     /// </summary>
-    public static class BlendMode
+    public class BlendMode
     {
         public const uint AUTO = 0;
         public const uint NONE = 2;
@@ -31,81 +32,62 @@ namespace Sparrow.Display
         public const uint MULTIPLY = 5;
         public const uint SCREEN = 6;
         public const uint ERASE = 7;
+        public const uint BELOW = 8;
+        public const uint MASK = 9;
 
-        /// <summary>
-        /// Makes OpenGL use the blend factors that correspond with a certain blend mode.
-        /// </summary>
-        public static void ApplyBlendFactors(uint blendMode, bool premultipliedAlpha)
+        private uint _name;
+        private BlendingFactorSrc _sourceFactor;
+        private BlendingFactorDest _destinationFactor;
+        private static Dictionary<uint, BlendMode> sBlendModes;
+
+        /** Creates a new BlendMode instance. */
+        private BlendMode(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
         {
-            BlendingFactorSrc srcFactor;
-            BlendingFactorDest dstFactor;
-
-            if (blendMode == NONE)
-            {
-                GL.Disable(EnableCap.Blend);
-                return;
-            }
-
-            if (premultipliedAlpha)
-            {
-                switch (blendMode)
-                {
-                    case NORMAL:
-                        srcFactor = BlendingFactorSrc.One;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    case ADD:
-                        srcFactor = BlendingFactorSrc.SrcAlpha;
-                        dstFactor = BlendingFactorDest.One;
-                        break;
-                    case MULTIPLY:
-                        srcFactor = BlendingFactorSrc.DstColor;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    case SCREEN:
-                        srcFactor = BlendingFactorSrc.One;
-                        dstFactor = BlendingFactorDest.OneMinusSrcColor;
-                        break;
-                    case ERASE:
-                        srcFactor = BlendingFactorSrc.Zero;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid blend mode " + blendMode);
-                }
-            }
-            else
-            {
-                switch (blendMode)
-                {
-                    case NORMAL:
-                        srcFactor = BlendingFactorSrc.SrcAlpha;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    case ADD:
-                        srcFactor = BlendingFactorSrc.SrcAlpha;
-                        dstFactor = BlendingFactorDest.DstAlpha;
-                        break;
-                    case MULTIPLY:
-                        srcFactor = BlendingFactorSrc.DstColor;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    case SCREEN:
-                        srcFactor = BlendingFactorSrc.SrcAlpha;
-                        dstFactor = BlendingFactorDest.One;
-                        break;
-                    case ERASE:
-                        srcFactor = BlendingFactorSrc.Zero;
-                        dstFactor = BlendingFactorDest.OneMinusSrcAlpha;
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid blend mode " + blendMode);
-                }
-            }
-
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(srcFactor, dstFactor);
+            _name = name;
+            _sourceFactor = srcFactor;
+            _destinationFactor = dstFactor;
         }
-    }
+
+        /** Returns the blend mode with the given name.
+         *  Throws an ArgumentError if the mode does not exist. */
+        public static BlendMode Get(uint modeName)
+        {
+            if (sBlendModes == null) RegisterDefaults();
+            if (sBlendModes.ContainsKey(modeName)) return sBlendModes[modeName];
+            else throw new ArgumentException("Blend mode not found: " + modeName);
+        }
+
+        /** Registers a blending mode under a certain name. */
+        public static BlendMode Register(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
+        {
+            if (sBlendModes == null) RegisterDefaults();
+            BlendMode blendMode = new BlendMode(name, srcFactor, dstFactor);
+            sBlendModes[name] = blendMode;
+            return blendMode;
+        }
+
+        private static void RegisterDefaults()
+        {
+            if (sBlendModes != null) return;
+
+            sBlendModes = new Dictionary<uint, BlendMode>();
+            Register(NONE, BlendingFactorSrc.One, BlendingFactorDest.Zero);
+            Register(NORMAL, BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+            Register(ADD, BlendingFactorSrc.One, BlendingFactorDest.One);// was srcAlpha, one
+            Register(MULTIPLY, BlendingFactorSrc.DstColor, BlendingFactorDest.OneMinusSrcAlpha);
+            Register(SCREEN, BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcColor);
+            Register(ERASE, BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcAlpha);
+            Register(MASK, BlendingFactorSrc.Zero, BlendingFactorDest.SrcAlpha);
+            Register(BELOW, BlendingFactorSrc.OneMinusDstAlpha, BlendingFactorDest.DstAlpha);
+        }
+
+        /** Sets the appropriate blend factors for source and destination on the current context. */
+        public void Activate()
+        {
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(_sourceFactor, _destinationFactor);
+        }
+
+}
 }
 

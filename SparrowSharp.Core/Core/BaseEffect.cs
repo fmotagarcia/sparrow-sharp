@@ -15,7 +15,7 @@ namespace Sparrow.Core
     /// </summary>
     public class BaseEffect
     {
-
+        /*
         private Program _currentProgram;
         private int _aPosition;
         private int _aColor;
@@ -220,7 +220,7 @@ namespace Sparrow.Core
             source.Append("}");
 
             return source.ToString();
-        }
+        }*/
     }
 }
 

@@ -29,8 +29,8 @@ namespace Sparrow.Display
     /// smoothing and repetition, and if it's tinted (colored vertices and/or transparency).
     /// When you reset the batch, it will accept a new state on the next added quad.
     /// </summary>
-    public class QuadBatch : DisplayObject
-    {
+    public class QuadBatch// : DisplayObject
+    {/*
         private const int INDICES_PER_QUAD = 6;
         private int _numQuads;
         private bool _syncRequired;
@@ -651,6 +651,6 @@ namespace Sparrow.Display
                 DestroyBuffers();
                 _syncRequired = true;
             }
-        }
+        }*/
     }
 }
