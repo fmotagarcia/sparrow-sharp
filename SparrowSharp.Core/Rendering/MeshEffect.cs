@@ -9,7 +9,7 @@ namespace SparrowSharp.Core.Rendering
 
         /** The vertex format expected by <code>uploadVertexData</code>:
          *  <code>"position:float2, texCoords:float2, color:bytes4"</code> */
-        public static readonly VertexDataFormat VERTEX_FORMAT = FilterEffect.VERTEX_FORMAT.extend("color:bytes4");
+        public static readonly VertexDataFormat VERTEX_FORMAT = FilterEffect.VERTEX_FORMAT.Extend("color:bytes4");
 
         private float _alpha;
         private bool _tinted;
@@ -91,7 +91,7 @@ namespace SparrowSharp.Core.Rendering
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha);
 
             if (_tinted || _alpha != 1.0 || !_optimizeIfNotTinted || Texture == null)
-                VertexFormat.setVertexBufferAt(2, VertexBuffer, "color");
+                VertexFormat.SetVertexBufferAt(2, VertexBuffer, "color");
         }
 
         /** This method is called by <code>render</code>, directly after

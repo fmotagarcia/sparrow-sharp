@@ -248,15 +248,14 @@ namespace SparrowSharp.Core.Rendering
          */
         virtual protected Program CreateProgram()
         {
-            string[] vertexShader = new string[] {
-                "m44 op, va0, vc0\n", // 4x4 matrix transform to output clipspace
-                "seq v0, va0, va0\n"  // this is a hack that always produces "1"
-            };
+            string vertexShader =
+                "m44 op, va0, vc0\n" + // 4x4 matrix transform to output clipspace
+                "seq v0, va0, va0\n";  // this is a hack that always produces "1"
 
            string fragmentShader =
                 "mov oc, v0";       // output color: white
 
-            return Program.FromSource(vertexShader, fragmentShader);
+            return new Program(vertexShader, fragmentShader);
         }
 
         /** Override this method if the effect requires a different program depending on the
@@ -329,7 +328,7 @@ namespace SparrowSharp.Core.Rendering
                 if (program == null)
                 {
                     program = CreateProgram();
-                    painter.registerProgram(name, program);
+                    painter.RegisterProgram(name, program);
                 }
                 return program;
             }

@@ -2,6 +2,7 @@
 {
     public static class VertexColorHelper
     {
+        /*
         public static VertexColor CreateVertexColor(byte r, byte g, byte b, byte a)
         {
             VertexColor vertexColor = new VertexColor();
@@ -68,6 +69,6 @@
         public static bool IsOpaqueWhite(VertexColor color)
         {
             return color.A == 255 && color.R == 255 && color.G == 255 && color.B == 255;
-        }
+        }*/
     }
 }

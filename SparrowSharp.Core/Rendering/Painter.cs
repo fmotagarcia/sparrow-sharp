@@ -164,7 +164,7 @@ namespace SparrowSharp.Core.Rendering
 
         /** Registers a program under a certain name.
          *  If the name was already used, the previous program is overwritten. */
-        public void registerProgram(string name, Program program)
+        public void RegisterProgram(string name, Program program)
         {
             DeleteProgram(name);
             Programs.Add(name, program);
@@ -696,8 +696,7 @@ namespace SparrowSharp.Core.Rendering
                 var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
                 _stencilReferenceValues[key] = value;
 
-                if (contextValid)
-                    _context.setStencilReferenceValue(value);
+                _context.setStencilReferenceValue(value);
             }
         }
 

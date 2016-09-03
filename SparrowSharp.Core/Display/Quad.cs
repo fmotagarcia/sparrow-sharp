@@ -73,7 +73,6 @@ namespace Sparrow.Display
             if (vertexData.NumVertices != 4)
             {
                 vertexData.NumVertices = 4;
-                vertexData.Trim();
             }
 
             if (Texture != null)
@@ -88,10 +87,10 @@ namespace Sparrow.Display
                 vertexData.SetPoint(2, posAttr, _bounds.Left,  _bounds.Bottom);
                 vertexData.SetPoint(3, posAttr, _bounds.Right, _bounds.Bottom);
 
-                vertexData.SetPoint(0, texAttr, 0.0, 0.0);
-                vertexData.SetPoint(1, texAttr, 1.0, 0.0);
-                vertexData.SetPoint(2, texAttr, 0.0, 1.0);
-                vertexData.SetPoint(3, texAttr, 1.0, 1.0);
+                vertexData.SetPoint(0, texAttr, 0.0f, 0.0f);
+                vertexData.SetPoint(1, texAttr, 1.0f, 0.0f);
+                vertexData.SetPoint(2, texAttr, 0.0f, 1.0f);
+                vertexData.SetPoint(3, texAttr, 1.0f, 1.0f);
             }
 
             SetRequiresRedraw();

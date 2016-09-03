@@ -74,6 +74,7 @@
     <Compile Include="Rendering\OpenGLDebugCallback.cs" />
     <Compile Include="Rendering\Painter.cs" />
     <Compile Include="Rendering\VertexDataAttribute.cs" />
+    <Compile Include="Rendering\VertexDataFormat.cs" />
     <Compile Include="Styles\MeshStyle.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
