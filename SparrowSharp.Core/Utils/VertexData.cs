@@ -180,17 +180,17 @@ namespace Sparrow.Utils
                 // In this case, it's fastest to copy the complete range in one call
                 // and then overwrite only the transformed positions.
 
-                ByteArray targetRawData = target._rawData;
-                targetRawData.position = targetVertexID* _vertexSize;
+                byte[] targetRawData = target._rawData;
+                targetRawData.position = targetVertexID * _vertexSize;
                 targetRawData.writeBytes(_rawData, vertexID* _vertexSize, numVertices * _vertexSize);
 
                 if (matrix != null)
                 {
                     float x, y;
-                    int pos = targetVertexID* _vertexSize + _posOffset;
-                    int endPos = pos + (numVertices* _vertexSize);
+                    int pos = targetVertexID * _vertexSize + _posOffset;
+                    int endPos = pos + (numVertices * _vertexSize);
 
-                    while (pos<endPos)
+                    while (pos < endPos)
                     {
                         targetRawData.position = pos;
                         x = targetRawData.readFloat();
@@ -271,8 +271,8 @@ namespace Sparrow.Utils
 
             int i, j;
             float x, y;
-            ByteArray sourceData = _rawData;
-            ByteArray targetData = target._rawData;
+            byte[] sourceData = _rawData;
+            byte[] targetData = target._rawData;
             int sourceDelta = _vertexSize - sourceAttribute.Size;
             int targetDelta = target._vertexSize - targetAttribute.Size;
             int attributeSizeIn32Bits = sourceAttribute.Size / 4;
@@ -612,7 +612,7 @@ namespace Sparrow.Utils
 
                 if (alpha == 1.0 || !_premultipliedAlpha)
                 {
-                    _rawData[alphaPos] = int(alpha* 255.0f);
+                    _rawData[alphaPos] = int(alpha * 255.0f);
                 }
                 else
                 {
@@ -707,14 +707,12 @@ namespace Sparrow.Utils
         public VertexBuffer3D CreateVertexBuffer(bool upload = false,
                                                  string bufferUsage = "staticDraw")
         {
-            Context3D context = Starling.context;
-            if (context == null) throw new Exception("missing context");
             if (_numVertices == 0) return null;
 
             VertexBuffer3D buffer = context.createVertexBuffer(
                 _numVertices, _vertexSize / 4, bufferUsage);
 
-            if (upload) uploadToVertexBuffer(buffer);
+            if (upload) UploadToVertexBuffer(buffer);
             return buffer;
         }
 

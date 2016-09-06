@@ -32,11 +32,11 @@ namespace SparrowSharp.Core.Rendering
                     "Invalid attribute format: " + format + ". " +
                     "Use one of the following: 'float1'-'float4', 'bytes4'");
 
-            this.Name = name;
-            this.Format = format;
-            this.Offset = offset;
-            this.Size = FORMAT_SIZES[format];
-            this.IsColor = name.Contains("color") || name.Contains("Color");
+            Name = name;
+            Format = format;
+            Offset = offset;
+            Size = FORMAT_SIZES[format];
+            IsColor = name.Contains("color") || name.Contains("Color");
         }
     }
 }

@@ -37,8 +37,15 @@ namespace Sparrow
 
         private static StatsDisplay stats;
 
+        private static uint _width;
+        private static uint _height;
+
         public static void Start(uint width, uint height, Type rootType)
         {
+            _width = width;
+            _height = height;
+            _viewPort = new Rectangle(0, 0, _width, _height);
+            _previousViewPort = new Rectangle();
             GPUInfo.PrintGPUInfo();
 #if DEBUG
             OpenGLDebugCallback.Init();
@@ -54,8 +61,11 @@ namespace Sparrow
             }
             GPUInfo.HasOpenGLError = false;
 
+            _painter = new Painter(width, height);
             Stage = new Stage(width, height);
             DefaultJuggler = new Juggler();
+
+            UpdateViewPort(true);
 
             Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
@@ -79,8 +89,7 @@ namespace Sparrow
             if (doRedraw)
             {
                 //dispatchEventWith(starling.events.Event.RENDER);
-
-                bool shareContext = _painter.ShareContext;
+                
                 //float scaleX = _viewPort.Width / Stage.Width;
                 //float scaleY = _viewPort.Height / Stage.Height;
 
@@ -93,15 +102,13 @@ namespace Sparrow
                     _clippedViewPort.Height / scaleY,
                     Stage.StageWidth, Stage.StageHeight, Stage.CameraPosition);
                 */
-                if (!shareContext)
-                    _painter.Clear(Stage.Color, 1.0f);
+                _painter.Clear(Stage.Color, 1.0f);
 
                 Stage.Render(_painter);
                 _painter.FinishFrame();
                 _painter.FrameID = ++_frameID;
-
-                if (!shareContext)
-                    _painter.Present();
+                
+                _painter.Present();
             }
             /*
             if (stats != null)
@@ -126,6 +133,7 @@ namespace Sparrow
             // viewPort directly (without a copy) and we still know if it has changed.
             if (forceUpdate || !Rectangle.Compare(_viewPort, _previousViewPort))
             {
+                _clippedViewPort = new Rectangle(0, 0, _width, _height);
                 _previousViewPort.SetTo(_viewPort.X, _viewPort.Y, _viewPort.Width, _viewPort.Height);
 
                 _painter.ConfigureBackBuffer(_clippedViewPort);

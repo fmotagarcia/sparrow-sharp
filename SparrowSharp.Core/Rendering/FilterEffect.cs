@@ -54,7 +54,7 @@ namespace SparrowSharp.Core.Rendering
             {
                 string vertexShader = STD_VERTEX_SHADER;
                 string fragmentShader = Tex("oc", "v0", 0, _texture);
-                return Program.FromSource(vertexShader, fragmentShader);
+                return new Program(vertexShader, fragmentShader);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace SparrowSharp.Core.Rendering
 
             if (_texture != null)
             {
-                bool repeat = _textureRepeat && _texture.Root.isPotTexture;
+                bool repeat = _textureRepeat && _texture.Base.IsPotTexture;
                 RenderUtil.setSamplerStateAt(0, _texture.MipMapping, _textureSmoothing, repeat);
                 context.setTextureAt(0, _texture.Base);
                 VertexFormat.SetVertexBufferAt(1, VertexBuffer, "texCoords");

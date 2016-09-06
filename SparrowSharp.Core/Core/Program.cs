@@ -95,6 +95,11 @@ namespace Sparrow.Core
             GL.DeleteShader(fragmentShader);
         }
 
+        public void Dispose()
+        {
+            //TODO
+        }
+
         private int CompileShader(string source, ShaderType type)
         {
             int shader = GL.CreateShader(type);
@@ -158,5 +163,6 @@ namespace Sparrow.Core
                 Attributes.Add(rawName, GL.GetAttribLocation(Name, rawName));
             }
         }
+
     }
 }

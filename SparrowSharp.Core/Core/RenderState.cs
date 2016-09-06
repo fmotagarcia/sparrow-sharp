@@ -66,8 +66,8 @@ namespace Sparrow.Core
         {
             if (_onDrawRequired != null)
             {
-                TextureBase currentTarget = _renderTarget != null ? _renderTarget.Base : null;
-                TextureBase nextTarget = renderState._renderTarget != null ? renderState._renderTarget.Base : null;
+                GLTexture currentTarget = _renderTarget != null ? _renderTarget.Base : null;
+                GLTexture nextTarget = renderState._renderTarget != null ? renderState._renderTarget.Base : null;
                 bool clipRectChanges = _clipRect != null || renderState._clipRect != null ?
                     !Rectangle.Compare(_clipRect, renderState._clipRect) : false;
 
@@ -86,7 +86,7 @@ namespace Sparrow.Core
             _modelviewMatrix.CopyFromMatrix(renderState._modelviewMatrix);
 
             if (_clipRect != null || renderState._clipRect != null)
-                this.ClipRect = renderState._clipRect;
+                ClipRect = renderState._clipRect;
         }
 
         /** Resets the RenderState to the default settings.
@@ -157,8 +157,8 @@ namespace Sparrow.Core
         public void SetRenderTarget(Texture target, bool enableDepthAndStencil = true,
                                     int antiAlias = 0)
         {
-            TextureBase currentTarget = _renderTarget != null? _renderTarget.Base : null;
-            TextureBase newTarget = target != null ? target.Base : null;
+            GLTexture currentTarget = _renderTarget != null? _renderTarget.Base : null;
+            GLTexture newTarget = target != null ? target.Base : null;
             uint depthStencil = enableDepthAndStencil ? 1u : 0;
             uint newOptions = depthStencil | (uint)antiAlias << 4;
 

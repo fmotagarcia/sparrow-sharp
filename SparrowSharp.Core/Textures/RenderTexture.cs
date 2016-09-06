@@ -31,7 +31,7 @@ namespace Sparrow.Textures
     // });
     /// </summary>
     public class RenderTexture : SubTexture
-    {
+    {/*
         private bool _framebufferIsActive;
         private readonly RenderSupport _renderSupport;
 
@@ -132,7 +132,7 @@ namespace Sparrow.Textures
                 // return to standard frame buffer
                 _renderSupport.RenderTarget = previousTarget;
             }
-        }
+        }*/
     }
 }
 

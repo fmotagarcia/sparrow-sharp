@@ -55,7 +55,7 @@ namespace Sparrow.Textures
 
         override public float NativeHeight { get { return _height * Scale; } }
 
-        override public GLTexture Root { get { return _parent.Root; } }
+        override public GLTexture Base { get { return _parent.Base; } }
 
         override public uint Name { get { return _parent.Name; } }
 

@@ -17,7 +17,7 @@ namespace Sparrow.Textures
 
         virtual public float Scale { get { return 1.0f; } }
 
-        virtual public GLTexture Root { get { return null; } }
+        virtual public GLTexture Base { get { return null; } }
 
         virtual public Rectangle Frame { get { return null; } }
 

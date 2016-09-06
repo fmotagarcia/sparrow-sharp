@@ -7,6 +7,9 @@ using SparrowSharp.Core.Display;
 using SparrowSharp.Core.Utils;
 using System;
 using System.Collections.Generic;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#endif
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -47,10 +50,7 @@ namespace SparrowSharp.Core.Rendering
 
         // members
         private Dictionary<string, Program> programs;
-
-        private Stage3D _stage3D;
-        private Context3D _context;
-        private bool _shareContext;
+        
         private int _drawCount;
         private uint _frameID;
         private float _pixelSize;
@@ -61,7 +61,7 @@ namespace SparrowSharp.Core.Rendering
         private BatchProcessor _batchCache;
         private List<DisplayObject> _batchCacheExclusions;
 
-        private TextureBase _actualRenderTarget;
+        //private TextureBase _actualRenderTarget;
         private string _actualCulling;
         private uint _actualBlendMode;
 
@@ -82,14 +82,13 @@ namespace SparrowSharp.Core.Rendering
         
         /** Creates a new Painter object. Normally, it's not necessary to create any custom
          *  painters; instead, use the global painter found on the Starling instance. */
-        public Painter(Stage3D stage3D)
+        public Painter(float width, float height)
         {
-            _stage3D = stage3D;
-            _stage3D.addEventListener(Event.CONTEXT3D_CREATE, onContextCreated, false, 10, true);
-            _context = _stage3D.context3D;
-            _shareContext = _context != null && _context.driverInfo != "Disposed";
-            _backBufferWidth = _context != null ? _context.backBufferWidth : 0;
-            _backBufferHeight = _context != null ? _context.backBufferHeight : 0;
+            _actualBlendMode = 0;
+            _actualCulling = null;
+
+            _backBufferWidth = width;
+            _backBufferHeight = height;
             _pixelSize = 1.0f;
             _stencilReferenceValues = new Dictionary<DisplayObject, uint>(); // use weak refs!
             _clipRectStack = new List<Rectangle>();
@@ -114,35 +113,10 @@ namespace SparrowSharp.Core.Rendering
         {
             _batchProcessor.Dispose();
             _batchCache.Dispose();
-
-            if (!_shareContext)
-            {
-                _context.Dispose(false);
-            }
+            // + dispose GL context?
         }
 
         // context handling
-
-        /** Requests a context3D object from the stage3D object.
-         *  This is called by Starling internally during the initialization process.
-         *  You normally don't need to call this method yourself. (For a detailed description
-         *  of the parameters, look at the documentation of the method with the same name in the
-         *  "RenderUtil" class.)
-         *
-         *  @see starling.utils.RenderUtil
-         */
-        public void RequestContext3D(string renderMode, string profile)
-        {
-            RenderUtil.RequestContext3D(_stage3D, renderMode, profile);
-        }
-
-        private void onContextCreated(Object eventObj)
-        {
-            _context = _stage3D.context3D;
-            _context.enableErrorChecking = _enableErrorChecking;
-            _actualBlendMode = 0;
-            _actualCulling = null;
-        }
 
         /** Sets the viewport dimensions and other attributes of the rendering buffer.
          *  Starling will call this method internally, so most apps won't need to mess with this.
@@ -269,9 +243,7 @@ namespace SparrowSharp.Core.Rendering
         */
         public void DrawMask(DisplayObject mask, DisplayObject maskee = null)
         {
-            if (_context == null) return;
-
-            FinishMeshBatch();
+            /*FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
@@ -291,7 +263,7 @@ namespace SparrowSharp.Core.Rendering
                     Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
             }
 
-            ExcludeFromCache(maskee);
+            ExcludeFromCache(maskee);*/
         }
 
         /** Draws a display object into the stencil buffer, decrementing the
@@ -304,9 +276,7 @@ namespace SparrowSharp.Core.Rendering
          */
         public void EraseMask(DisplayObject mask, DisplayObject maskee = null)
         {
-            if (_context == null) return;
-
-            FinishMeshBatch();
+            /*FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
@@ -322,7 +292,7 @@ namespace SparrowSharp.Core.Rendering
 
                 _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                     Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
-            }
+            }*/
         }
 
         private void RenderMask(DisplayObject mask)
@@ -457,8 +427,10 @@ namespace SparrowSharp.Core.Rendering
             // enforce reset of basic context settings
             _actualBlendMode = 0;
             _actualCulling = null;
-            _context.setDepthTest(false, Context3DCompareMode.ALWAYS);
-
+            //_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
+#if __WINDOWS__
+            GL.Enable(EnableCap.DepthTest);
+#endif
             // reset everything else
             StencilReferenceValue = 0;
             _clipRectStack.Clear();
@@ -556,7 +528,6 @@ namespace SparrowSharp.Core.Rendering
             ApplyBlendMode();
             ApplyRenderTarget();
             ApplyClipRect();
-            ApplyCulling();
         }
 
         /** Clears the render context with a certain color and alpha value. Since this also
@@ -565,17 +536,18 @@ namespace SparrowSharp.Core.Rendering
         {
             ApplyRenderTarget();
             StencilReferenceValue = 0;
-            RenderUtil.clear(rgb, alpha);
+            //RenderUtil.clear(rgb, alpha);
+            int intColor = (int)rgb;
+            System.Drawing.Color cl = System.Drawing.Color.FromArgb((int)(alpha * 255f), intColor & 0xFF, (intColor & 0xFF00) >> 8, (intColor & 0xFF0000) >> 16);
+            GL.ClearColor(cl);
         }
 
         /** Resets the render target to the back buffer and displays its contents. */
         public void Present()
         {
             _state.RenderTarget = null;
-            _actualRenderTarget = null;
-            _context.present();
+            //this is called automatically? _context.present();
         }
-
 
         private void ApplyBlendMode()
         {
@@ -588,35 +560,49 @@ namespace SparrowSharp.Core.Rendering
             }
         }
 
-        private void ApplyCulling()
-        {
-            string culling = _state.Culling;
-
-            if (culling != _actualCulling)
-            {
-                _context.setCulling(culling);
-                _actualCulling = culling;
-            }
-        }
-
         private void ApplyRenderTarget()
         {
-            TextureBase target = _state.RenderTargetBase;
-
+            //TextureBase target = _state.RenderTargetBase;
+            // TODO
+            /*
             if (target != _actualRenderTarget)
             {
                 if (target)
                 {
-                    int antiAlias  = _state.RenderTargetAntiAlias;
+int antiAlias  = _state.RenderTargetAntiAlias;
                     bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
                     _context.setRenderToTexture(target, depthAndStencil, antiAlias);
+
+                    // OpenGL code
+                    uint framebuffer;
+                    if (!FramebufferCache.TryGetValue(target.Name, out framebuffer))
+                    {
+                        framebuffer = CreateFramebufferForTexture(target);
+                        FramebufferCache.Add(target.Name, framebuffer);
+                    }
+                    
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+
+                    GL.Viewport(0, 0, (int)target.NativeWidth, (int)target.NativeHeight);
+                   
                 }
                 else
-                    _context.setRenderToBackBuffer();
-
-                _context.setStencilReferenceValue(StencilReferenceValue);
-                _actualRenderTarget = target;
-            }
+                { 
+                */
+                    //_context.setRenderToBackBuffer();
+                    // TODO: double check these on a device, the ifdef seems to be unneeded
+#if __IOS__
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 1);
+#else
+                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+#endif
+                    GL.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
+            //    }
+                    
+                
+                //_context.setStencilReferenceValue(StencilReferenceValue);
+                //_actualRenderTarget = target;
+          //  }
         }
 
         private void ApplyClipRect()
@@ -625,7 +611,7 @@ namespace SparrowSharp.Core.Rendering
 
             if (clipRect != null)
             {
-                int width, height;
+                /*float width, height;
                 Matrix3D projMatrix = _state.ProjectionMatrix3D;
                 Texture renderTarget = _state.RenderTarget;
 
@@ -658,11 +644,12 @@ namespace SparrowSharp.Core.Rendering
                 if (sScissorRect.Width < 1 || sScissorRect.Height< 1)
                     sScissorRect.SetTo(0, 0, 1, 1);
 
-                _context.setScissorRectangle(sScissorRect);
+                _context.setScissorRectangle(sScissorRect);*/
             }
             else
             {
-                _context.setScissorRectangle(null);
+                //_context.setScissorRectangle(null);
+                GL.Disable(EnableCap.ScissorTest);
             }
         }
 
@@ -684,19 +671,19 @@ namespace SparrowSharp.Core.Rendering
         {
             get
             {
-                var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
+                /*var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
                 if (_stencilReferenceValues.ContainsKey(key)) 
                 {
                     return _stencilReferenceValues[key];
                 }
-                else return 0;
+                else */return 0;
             }
             set
             {
-                var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
+                /*var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
                 _stencilReferenceValues[key] = value;
 
-                _context.setStencilReferenceValue(value);
+                _context.setStencilReferenceValue(value);*/
             }
         }
 
@@ -709,12 +696,6 @@ namespace SparrowSharp.Core.Rendering
          *  for changes of blend mode, clipping rectangle, render target or culling.</p>
          */
         public RenderState State { get { return _state; } }
-
-        /** The Stage3D instance this painter renders into. */
-        public Stage3D Stage3D { get { return _stage3D; } }
-
-        /** The Context3D instance this painter renders into. */
-        public Context3D Context { get { return _context; } }
 
         /** The number of frames that have been rendered with the current Starling instance. */
         public uint FrameID {
@@ -729,15 +710,6 @@ namespace SparrowSharp.Core.Rendering
             set { _pixelSize = value; }
         }
 
-        /** Indicates if another Starling instance (or another Stage3D framework altogether)
-         *  uses the same render context. @default false */
-         // TODO remove
-        public bool ShareContext
-        {
-            get { return _shareContext; }
-            set { _shareContext = value; }
-        }
-
         /** Indicates if Stage3D render methods will report errors. Activate only when needed,
          *  as this has a negative impact on performance. @default false */
         public bool EnableErrorChecking
@@ -746,7 +718,7 @@ namespace SparrowSharp.Core.Rendering
             set
             {
                 _enableErrorChecking = value;
-                if (_context != null) _context.enableErrorChecking = value;
+                // TODO
             }
         }
 
@@ -755,19 +727,14 @@ namespace SparrowSharp.Core.Rendering
          *  'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
          *  for the actual pixel count. Alternatively, use the Context3D-property with the
          *  same name: it will return the exact pixel values. */
-        public int BackBufferWidth { get { return _backBufferWidth; } }
+        public float BackBufferWidth { get { return _backBufferWidth; } }
 
         /** Returns the current height of the back buffer. In most cases, this value is in pixels;
          *  however, if the app is running on an HiDPI display with an activated
          *  'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
          *  for the actual pixel count. Alternatively, use the Context3D-property with the
          *  same name: it will return the exact pixel values. */
-        public int BackBufferHeight { get { return _backBufferHeight; } }
-
-        /** The number of pixels per point returned by the 'backBufferWidth/Height' properties.
-         *  Except for desktop HiDPI displays with an activated 'supportHighResolutions' setting,
-         *  this will always return '1'. */
-        public float BackBufferScaleFactor { get { return _backBufferScaleFactor; } }
+        public float BackBufferHeight { get { return _backBufferHeight; } }
 
         private Dictionary<string, Program> Programs {
             get
