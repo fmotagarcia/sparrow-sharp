@@ -569,7 +569,7 @@ namespace SparrowSharp.Core.Rendering
             {
                 if (target)
                 {
-int antiAlias  = _state.RenderTargetAntiAlias;
+                    int antiAlias  = _state.RenderTargetAntiAlias;
                     bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
                     _context.setRenderToTexture(target, depthAndStencil, antiAlias);
 
@@ -611,6 +611,7 @@ int antiAlias  = _state.RenderTargetAntiAlias;
 
             if (clipRect != null)
             {
+                throw new Exception("TODO");
                 /*float width, height;
                 Matrix3D projMatrix = _state.ProjectionMatrix3D;
                 Texture renderTarget = _state.RenderTarget;

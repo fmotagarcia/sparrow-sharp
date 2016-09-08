@@ -26,9 +26,12 @@ namespace Sparrow.Core
 
         private string _vertexShader;
         private string _fragmentShader;
+        private int vertexShader;
+        private int fragmentShader;
+
         public readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
         public readonly Dictionary<string, int> Attributes = new Dictionary<string, int>();
-        // Used by derived classes that need to manually call Init()
+        
         protected Program()
         {
         }
@@ -46,8 +49,23 @@ namespace Sparrow.Core
         {
             _vertexShader = vertexShader;
             _fragmentShader = fragmentShader;
+        }
 
-            Compile();
+        public void Activate()
+        {
+            // baseEffect.PrepareToDraw() goes here
+            /*if (_program3D == null)
+            {
+                _program3D = context.createProgram();
+                _program3D.upload(_vertexShader, _fragmentShader);
+            }
+            context.setProgram(_program3D);
+            */
+            if (Name == 0)
+            {
+                Compile();
+            }
+            GL.UseProgram(Name);
         }
 
         public string Description()
@@ -58,8 +76,8 @@ namespace Sparrow.Core
         private void Compile()
         {
             int program = GL.CreateProgram();
-            int vertexShader = CompileShader(_vertexShader, ShaderType.VertexShader);
-            int fragmentShader = CompileShader(_fragmentShader, ShaderType.FragmentShader);
+            vertexShader = CompileShader(_vertexShader, ShaderType.VertexShader);
+            fragmentShader = CompileShader(_fragmentShader, ShaderType.FragmentShader);
 
             GL.AttachShader(program, vertexShader);
             GL.AttachShader(program, fragmentShader);
@@ -97,7 +115,19 @@ namespace Sparrow.Core
 
         public void Dispose()
         {
-            //TODO
+            /*if (_program3D)
+            {
+                _program3D.dispose();
+                _program3D = null;
+            }*/
+            if (Name != 0)
+            {
+                GL.DetachShader(Name, vertexShader);
+                GL.DetachShader(Name, fragmentShader);
+
+                GL.DeleteShader(vertexShader);
+                GL.DeleteShader(fragmentShader);
+            }
         }
 
         private int CompileShader(string source, ShaderType type)
@@ -130,7 +160,6 @@ namespace Sparrow.Core
                 return 0;
             }
 #endif
-
             return shader;
         }
 

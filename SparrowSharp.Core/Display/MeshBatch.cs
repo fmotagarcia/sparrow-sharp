@@ -119,7 +119,7 @@ namespace SparrowSharp.Core.Display
             meshStyle.BatchIndexData(_style, targetIndexID, targetVertexID - subset.VertexID,
                 subset.IndexID, subset.NumIndices);
 
-            if (alpha != 1.0) _vertexData.ScaleAlphas("color", alpha, targetVertexID, subset.NumVertices);
+            if (alpha != 1.0) _vertexData.ScaleAlphas(alpha, targetVertexID, subset.NumVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -148,8 +148,8 @@ namespace SparrowSharp.Core.Display
             
             meshStyle.BatchVertexData(_style, vertexID, matrix, 0, numVertices);
             meshStyle.BatchIndexData(_style, indexID, vertexID, 0, numIndices);
-
-            if (Alpha != 1.0f) _vertexData.ScaleAlphas("color", Alpha, vertexID, numVertices);
+           
+            if (Alpha != 1.0f) _vertexData.ScaleAlphas(Alpha, vertexID, numVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -214,8 +214,8 @@ namespace SparrowSharp.Core.Display
                 if (_vertexSyncRequired) SyncVertexBuffer();
                 if (_indexSyncRequired)  SyncIndexBuffer();
 
-            _style.UpdateEffect(_effect, painter.State);
-            _effect.Render(0, _indexData.NumTriangles);
+                _style.UpdateEffect(_effect, painter.State);
+                _effect.Render(0, _indexData.NumTriangles);
             }
         }
         

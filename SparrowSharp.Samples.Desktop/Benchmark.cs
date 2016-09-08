@@ -4,6 +4,7 @@ using Sparrow.Textures;
 using Sparrow.ResourceLoading;
 using Sparrow.Core;
 using SparrowSharp.Filters;
+using SparrowSharp.Core.Rendering;
 
 namespace Sparrow.Samples
 {
@@ -19,7 +20,7 @@ namespace Sparrow.Samples
 
         public Benchmark()
         {
-            GLTexture star = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
+            /*GLTexture star = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
             GLTexture bird = SimpleTextureLoader.LoadLocalImage("../../benchmark_object.png");
             textures = new Texture[] { bird, star };
 
@@ -28,7 +29,10 @@ namespace Sparrow.Samples
             AddChild(_container);
 
             EnterFrame += EnterFrameHandler;
-            AddedToStage += AddedToStageHandler;
+            AddedToStage += AddedToStageHandler;*/
+
+            Quad q = new Quad(76, 127, 0x3faf2f);
+            AddChild(q);
         }
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
@@ -44,7 +48,7 @@ namespace Sparrow.Samples
         {
             int border = 15;
 
-            Random r = new Random();
+            /*Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
             {   
                 Image egg = new Image(textures[0]);
@@ -76,7 +80,7 @@ namespace Sparrow.Samples
 
             Image test1 = new Image(textures[1]);
             sp.AddChild(test1);
-            test1.X = test1.Y = 60;
+            test1.X = test1.Y = 60;*/
         }
 
         private void BenchmarkComplete()
@@ -86,12 +90,6 @@ namespace Sparrow.Samples
 
             _started = false;
             _container.RemoveAllChildren();
-        }
-
-        public override void Render(RenderSupport support)
-        {
-            base.Render(support);
-            support.ProjectionMatrix = support.ProjectionMatrix;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)

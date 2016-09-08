@@ -1,5 +1,7 @@
+using OpenTK;
 using Sparrow.Geom;
 using Sparrow.Textures;
+using SparrowSharp.Core.Geom;
 
 namespace Sparrow.Core
 {
@@ -56,6 +58,12 @@ namespace Sparrow.Core
         private Rectangle _clipRect;
         public delegate void OnDrawRequiredFunction();
         public OnDrawRequiredFunction _onDrawRequired;
+ 
+        private Matrix3D _modelviewMatrix3D;
+        private Matrix3D _projectionMatrix3D;
+        private Matrix3D _mvpMatrix3D;
+              // helper objects
+        private static Matrix4 sMatrix3D = new Matrix4();
 
         public RenderState()
         {
@@ -84,6 +92,11 @@ namespace Sparrow.Core
             _renderTargetOptions = renderState._renderTargetOptions;
             _culling = renderState._culling;
             _modelviewMatrix.CopyFromMatrix(renderState._modelviewMatrix);
+            
+            _projectionMatrix3D.CopyFrom(renderState._projectionMatrix3D);
+
+            if (_modelviewMatrix3D != null || renderState._modelviewMatrix3D != null)
+                this.ModelviewMatrix3D = renderState._modelviewMatrix3D;
 
             if (_clipRect != null || renderState._clipRect != null)
                 ClipRect = renderState._clipRect;
@@ -100,12 +113,31 @@ namespace Sparrow.Core
 
             if (_modelviewMatrix != null) _modelviewMatrix.Identity();
             else _modelviewMatrix = Matrix.Create();
+
+            if (_projectionMatrix3D != null) _projectionMatrix3D.Identity();
+            else _projectionMatrix3D = Matrix3D.Create();
+
+            if (_mvpMatrix3D == null) _mvpMatrix3D = Matrix3D.Create();
         }
 
         /** Prepends the given matrix to the 2D modelview matrix. */
         public void TransformModelviewMatrix(Matrix matrix)
         {
             _modelviewMatrix.PrependMatrix(matrix);
+        }
+
+        /** Prepends the given matrix to the 3D modelview matrix.
+         *  The current contents of the 2D modelview matrix is stored in the 3D modelview matrix
+         *  before doing so; the 2D modelview matrix is then reset to the identity matrix.
+         */
+        public void TransformModelviewMatrix3D(Matrix3D matrix)
+        {
+            if (_modelviewMatrix3D == null)
+                _modelviewMatrix3D = Matrix3D.Create();
+
+            _modelviewMatrix3D.Prepend(_modelviewMatrix.ConvertToMatrix3D());
+            _modelviewMatrix3D.Prepend(matrix);
+            _modelviewMatrix.Identity();
         }
 
         /** Creates a perspective projection matrix suitable for 2D and 3D rendering.
@@ -121,26 +153,70 @@ namespace Sparrow.Core
          *  <p>If you pass only the first 4 parameters, the camera will be set up above the center
          *  of the stage, with a field of view of 1.0 rad.</p>
          */
-        /*public void SetProjectionMatrix(float x, float y, float width, float height,
+        public void SetProjectionMatrix(float x, float y, float width, float height,
                                         float stageWidth = 0, float stageHeight = 0,
                                         Vector3D cameraPos = null)
         {
-            MatrixUtil.createPerspectiveProjectionMatrix(
+            // TODO
+            MatrixUtil.CreatePerspectiveProjectionMatrix(
                     x, y, width, height, stageWidth, stageHeight, cameraPos, _projectionMatrix3D);
         }
-        */
+        
         /** Changes the modelview matrices (2D and, if available, 3D) to identity matrices.
          *  An object transformed an identity matrix performs no transformation.
          */
         public void SetModelviewMatricesToIdentity()
         {
             _modelviewMatrix.Identity();
+            if (_modelviewMatrix3D != null) _modelviewMatrix3D.Identity();
         }
 
         public Matrix ModelviewMatrix
         {
             get { return _modelviewMatrix; }
             set { _modelviewMatrix.CopyFromMatrix(value); }
+        }
+
+        /** Returns the current 3D modelview matrix, if there have been 3D transformations.
+         *  CAUTION: Use with care! Each call returns the same instance.
+         *  @default null */
+         public Matrix3D ModelviewMatrix3D
+        {
+            get { return _modelviewMatrix3D; }
+            set
+            {
+                if (value != null)
+                {
+                    if (_modelviewMatrix3D == null) _modelviewMatrix3D = Matrix3D.Create(value.RawData);
+                    else _modelviewMatrix3D.CopyFrom(value);
+                }
+                else if (_modelviewMatrix3D != null)
+                {
+                    _modelviewMatrix3D = null;
+                }
+            }
+        }
+
+        /** Returns the current projection matrix. You can use the method 'setProjectionMatrix3D'
+         *  to set it up in an intuitive way.
+         *  CAUTION: Use with care! Each call returns the same instance.
+         *  @default identity matrix */
+         public Matrix3D ProjectionMatrix3D
+        {
+            get { return _projectionMatrix3D; }
+            set { _projectionMatrix3D.CopyFrom(value); }
+        }
+
+        /** Calculates the product of modelview and projection matrix and stores it in a 3D matrix.
+         *  CAUTION: Use with care! Each call returns the same instance. */
+        public Matrix3D MvpMatrix3D
+        {
+            get {
+                _mvpMatrix3D.CopyFrom(_projectionMatrix3D);
+                if (_modelviewMatrix3D != null) _mvpMatrix3D.Prepend(_modelviewMatrix3D);
+                _mvpMatrix3D.Prepend(_modelviewMatrix.ConvertToMatrix3D());
+                return _mvpMatrix3D;
+            }
         }
 
         // other methods
@@ -222,6 +298,11 @@ namespace Sparrow.Core
         public uint RenderTargetAntiAlias
         {
             get { return _renderTargetOptions >> 4; }
+        }
+
+        public bool is3D
+        {
+            get { return _modelviewMatrix3D != null; }
         }
 }
 }

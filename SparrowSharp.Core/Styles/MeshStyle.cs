@@ -80,13 +80,11 @@ namespace SparrowSharp.Core.Styles
         /** Dispatched every frame on styles assigned to display objects connected to the stage. */
         //[Event(name = "enterFrame", type = "starling.events.EnterFrameEvent")]
         public event EnterFrameEventHandler EnterFrame;
-        /** The vertex format expected by this style (the same as found in the MeshEffect-class). */
-        public static readonly VertexDataFormat VERTEX_FORMAT = MeshEffect.VERTEX_FORMAT;
 
         private Type _type;
         private Mesh _target;
         private Texture _texture;
-        private TextureBase _textureBase;
+        private GLTexture _textureBase;
         private TextureSmoothing _textureSmoothing;
         private bool _textureRepeat;
         private VertexData _vertexData;   // just a reference to the target's vertex data
@@ -142,8 +140,8 @@ namespace SparrowSharp.Core.Styles
             effect.Texture = _texture;
             effect.TextureRepeat = _textureRepeat;
             effect.TextureSmoothing = _textureSmoothing;
+            effect.MvpMatrix3D = state.MvpMatrix3D;
             effect.Alpha = state.Alpha;
-            effect.Tinted = _vertexData.Tinted;
         }
 
         /** Indicates if the current instance can be batched with the given style.
@@ -178,7 +176,10 @@ namespace SparrowSharp.Core.Styles
         public void BatchVertexData(MeshStyle targetStyle, int targetVertexID = 0,
                                     Matrix matrix = null, int vertexID = 0, int numVertices= -1)
         {
-            _vertexData.CopyTo(targetStyle._vertexData, targetVertexID, matrix, vertexID, numVertices);
+            // TODO parameters are ignored!
+            throw new Exception("TODO");
+            //_vertexData.CopyTo(targetStyle._vertexData, targetVertexID, matrix, vertexID, numVertices);
+            _vertexData.CopyTo(targetStyle._vertexData, true, vertexID, numVertices);
         }
 
         /** Copies the index data of the style's current target to the target of another style.
@@ -223,7 +224,6 @@ namespace SparrowSharp.Core.Styles
             {
                 //if (_target != null) _target.RemoveEventListener(Event.ENTER_FRAME, OnEnterFrame);
                 if (_target != null) _target.EnterFrame -= OnEnterFrame;
-                if (vertexData != null) vertexData.Format = VertexFormat;
 
                 _target = target;
                 _vertexData = vertexData;
@@ -251,14 +251,14 @@ namespace SparrowSharp.Core.Styles
          *  area; some of its optimized methods won't work correctly if that premise is no longer
          *  fulfilled or the original bounds change.</p>
          */
-        public Point GetVertexPosition(int vertexID, Point outPoint = null)
+        public Point GetVertexPosition(int vertexID)
         {
-            return _vertexData.GetPoint(vertexID, "position", out);
+            return _vertexData.GetPoint(vertexID);
         }
 
         public void SetVertexPosition(int vertexID, float x, float y)
         {
-            _vertexData.SetPoint(vertexID, "position", x, y);
+            _vertexData.SetPoint(vertexID, x, y);
             SetRequiresRedraw();
         }
 
@@ -271,7 +271,7 @@ namespace SparrowSharp.Core.Styles
         /** Sets the alpha value of the vertex at the specified index to a certain value. */
         public void SetVertexAlpha(int vertexID, float alpha)
         {
-            _vertexData.SetAlpha(vertexID, "color", alpha);
+            _vertexData.SetAlpha(vertexID, alpha);
             SetRequiresRedraw();
         }
 
@@ -284,24 +284,25 @@ namespace SparrowSharp.Core.Styles
         /** Sets the RGB color of the vertex at the specified index to a certain value. */
         public void SetVertexColor(int vertexID, uint color)
         {
-            _vertexData.SetColor(vertexID, "color", color);
+            _vertexData.SetColor(vertexID, color);
             SetRequiresRedraw();
         }
 
         /** Returns the texture coordinates of the vertex at the specified index. */
-        public Point GetTexCoords(int vertexID, Point outPoint = null)
+        public Point GetTexCoords(int vertexID)
         {
-            if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID, "texCoords", outPoint);
-            else return _vertexData.GetPoint(vertexID, "texCoords", outPoint);
+            /*           if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID, "texCoords", outPoint);
+                       else return _vertexData.GetPoint(vertexID, "texCoords", outPoint);*/
+            return null;
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
         public void SetTexCoords(int vertexID, float u, float v)
         {
-            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, "texCoords", u, v);
+/*            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, "texCoords", u, v);
             else _vertexData.SetPoint(vertexID, "texCoords", u, v);
 
-            SetRequiresRedraw();
+            SetRequiresRedraw();*/
         }
 
         // properties
@@ -334,23 +335,11 @@ namespace SparrowSharp.Core.Styles
                 int numVertices = _vertexData.NumVertices;
 
                 for (i = 0; i < numVertices; ++i)
-                    _vertexData.SetColor(i, "color", value);
-
-                if (value == 0xffffff && _vertexData.Tinted)
-                    _vertexData.UpdateTinted();
+                    _vertexData.SetColor(i, value);
 
                 SetRequiresRedraw();
             }
             
-        }
-
-        /** The format used to store the vertices. */
-        public VertexDataFormat VertexFormat
-        {
-            get
-            {
-                return VERTEX_FORMAT;
-            }
         }
 
         /** The texture that is mapped to the mesh (or <code>null</code>, if there is none). */
@@ -362,7 +351,7 @@ namespace SparrowSharp.Core.Styles
             }
             set
             {
-                if (value != _texture)
+                /*if (value != _texture)
                 {
                     if (value != null)
                     {
@@ -379,7 +368,7 @@ namespace SparrowSharp.Core.Styles
                     _texture = value;
                     _textureBase = value != null ? value.Base : null;
                     SetRequiresRedraw();
-                }
+                }*/
             }
         }
 

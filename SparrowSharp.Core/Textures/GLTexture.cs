@@ -32,7 +32,7 @@ namespace Sparrow.Textures
 
         override public float Width { get { return _width / _scale; } }
 
-        override public GLTexture Root { get { return this; } }
+        override public GLTexture Base { get { return this; } }
 
         override public bool MipMaps { get { return _mipmaps; } }
 

@@ -138,9 +138,9 @@ namespace SparrowSharp.Core.Rendering
          *  area; some of its optimized methods won't work correctly if that premise is no longer
          *  fulfilled or the original bounds change.</p>
          */
-        public Point GetVertexPosition(int vertexID, Point outPoint = null)
+        public Point GetVertexPosition(int vertexID)
         {
-            return _style.GetVertexPosition(vertexID, outPoint);
+            return _style.GetVertexPosition(vertexID);
         }
 
         public void SetVertexPosition(int vertexID, float x, float y)
@@ -173,9 +173,9 @@ namespace SparrowSharp.Core.Rendering
         }
 
         /** Returns the texture coordinates of the vertex at the specified index. */
-        public Point GetTexCoords(int vertexID, Point outPoint = null)
+        public Point GetTexCoords(int vertexID)
         {
-            return _style.GetTexCoords(vertexID, outPoint);
+            return _style.GetTexCoords(vertexID);
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
@@ -258,9 +258,6 @@ namespace SparrowSharp.Core.Rendering
         /** The total number of triangles in this mesh.
          *  (In other words: the number of indices divided by three.) */
         public int NumTriangles { get { return _indexData.NumTriangles; } }
-
-        /** The format used to store the vertices. */
-        public VertexDataFormat VertexFormat { get { return _style.VertexFormat; } }
 
         // static properties
 

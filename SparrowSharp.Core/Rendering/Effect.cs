@@ -1,10 +1,14 @@
 ﻿
+using OpenTK;
 using OpenTK.Graphics.ES30;
 using Sparrow;
 using Sparrow.Core;
+using Sparrow.Geom;
 using Sparrow.Utils;
+using SparrowSharp.Core.Geom;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -82,16 +86,15 @@ namespace SparrowSharp.Core.Rendering
      */
     public class Effect
     {
-        /** The vertex format expected by <code>uploadVertexData</code>:
-         *  <code>"position:float2"</code> */
-        public static readonly VertexDataFormat VERTEX_FORMAT = VertexDataFormat.fromString("position:float2");
 
-        private VertexBuffer3D _vertexBuffer;
-        private int _vertexBufferSize; // in bytes
-        private IndexBuffer3D _indexBuffer;
+        private int _vertexBufferName;
+        private int _vertexColorsBufferName;
+        private int _indexBufferName;
+        private int _vertexBufferSize; // in number of vertices
         private int _indexBufferSize;  // in number of indices
         private bool _indexBufferUsesQuadLayout;
-        
+
+        private Matrix3D _mvpMatrix3D;
         private string _programBaseName;
 
         // helper objects
@@ -101,6 +104,7 @@ namespace SparrowSharp.Core.Rendering
         /** Creates a new effect. */
         public Effect()
         {
+            _mvpMatrix3D = Matrix3D.Create();
             _programBaseName = GetType().Name;
         }
 
@@ -113,19 +117,21 @@ namespace SparrowSharp.Core.Rendering
         /** Purges one or both of the vertex- and index-buffers. */
         public void PurgeBuffers(bool vertexBuffer = true, bool indexBuffer = true)
         {
-            // We wrap the dispose calls in a try/catch block to work around a stage3D problem.
-            // Since they are not re-used later, that shouldn't have any evil side effects.
-
-            if (_vertexBuffer && vertexBuffer)
+            if (_vertexBufferName != 0 && vertexBuffer)
             {
-                try { _vertexBuffer.dispose(); } catch (Exception e) {}
-                _vertexBuffer = null;
+                GL.DeleteBuffers(1, ref _vertexBufferName);
+                _vertexBufferName = 0;
+                if (_vertexColorsBufferName != 0)
+                {
+                    GL.DeleteBuffers(1, ref _vertexColorsBufferName);
+                    _vertexColorsBufferName = 0;
+                }
             }
 
-            if (_indexBuffer && indexBuffer)
+            if (_indexBufferName != 0 && indexBuffer)
             {
-                try { _indexBuffer.dispose(); } catch (Exception e) {}
-                _indexBuffer = null;
+                GL.DeleteBuffers(1, ref _indexBufferName);
+                _indexBufferName = 0;
             }
         }
 
@@ -143,13 +149,13 @@ namespace SparrowSharp.Core.Rendering
             bool isQuadLayout = indexData.UseQuadLayout;
             bool wasQuadLayout = _indexBufferUsesQuadLayout;
 
-            if (_indexBuffer)
+            if (_indexBufferName != 0)
             {
                 if (numIndices <= _indexBufferSize)
                 {
                     if (!isQuadLayout || !wasQuadLayout)
                     {
-                        indexData.UploadToIndexBuffer(_indexBuffer);
+                        indexData.UploadToIndexBuffer(_indexBufferName, bufferUsage);
                         _indexBufferUsesQuadLayout = isQuadLayout && numIndices == _indexBufferSize;
                     }
                 }
@@ -158,9 +164,9 @@ namespace SparrowSharp.Core.Rendering
                     PurgeBuffers(false, true);
                 }
             }
-            if (_indexBuffer == null)
+            if (_indexBufferName == 0)
             {
-                _indexBuffer = indexData.CreateIndexBuffer(true, bufferUsage);
+                _indexBufferName = indexData.CreateIndexBuffer(true, bufferUsage);
                 _indexBufferSize = numIndices;
                 _indexBufferUsesQuadLayout = isQuadLayout;
             }
@@ -176,11 +182,11 @@ namespace SparrowSharp.Core.Rendering
          */
         public void UploadVertexData(VertexData vertexData, BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
         {
-            if (_vertexBuffer)
+            if (_vertexBufferName != 0)
             {
-                if (vertexData.Size <= _vertexBufferSize)
+                if (vertexData.NumVertices <= _vertexBufferSize)
                 {
-                    vertexData.UploadToVertexBuffer(_vertexBuffer);
+                    vertexData.UploadToVertexBuffer(_vertexBufferName, _vertexColorsBufferName, bufferUsage);
                 }
                 else
                 {
@@ -188,10 +194,13 @@ namespace SparrowSharp.Core.Rendering
                 }
                     
             }
-            if (_vertexBuffer == null)
+            if (_vertexBufferName == 0)
             {
-                _vertexBuffer = vertexData.CreateVertexBuffer(true, bufferUsage);
-                _vertexBufferSize = vertexData.Size;
+                GL.GenBuffers(1, out _vertexBufferName);
+                GL.GenBuffers(1, out _vertexColorsBufferName);
+
+                _vertexBufferName = vertexData.CreateVertexBuffer(true);
+                _vertexBufferSize = vertexData.NumVertices;
             }
         }
 
@@ -202,15 +211,12 @@ namespace SparrowSharp.Core.Rendering
          *  <code>afterDraw</code>, in this order. */
         virtual public void Render(int firstIndex = 0, int numTriangles= -1)
         {
-            if (numTriangles< 0) numTriangles = _indexBufferSize / 3;
+            if (numTriangles < 0) numTriangles = _indexBufferSize / 3;
             if (numTriangles == 0) return;
-
-            Context3D context = Starling.context;
-            if (context == null) throw new Exception("missing context");
-
-            BeforeDraw(context);
-            context.drawTriangles(IndexBuffer, firstIndex, numTriangles);
-            AfterDraw(context);
+            
+            BeforeDraw();
+            context.drawTriangles(_indexBuffer, firstIndex, numTriangles);
+            AfterDraw();
         }
 
         /** This method is called by <code>render</code>, directly before
@@ -222,17 +228,26 @@ namespace SparrowSharp.Core.Rendering
          *    <li><code>va0</code> — vertex position (xy)</li>
          *  </ul>
          */
-        virtual protected void BeforeDraw(Context3D context)
+        virtual protected void BeforeDraw()
         {
-            Program.Activate(context);
+            Program.Activate(); // create, upload, set program
+
+            // calls context.setVertexBufferAt(index, buffer, attribute.offset / 4, attribute.format);
             VertexFormat.SetVertexBufferAt(0, vertexBuffer, "position");
-            Context.SetProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
+            context.SetProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
+
+            //?? not used?? _aPosition = _currentProgram.Attributes["aPosition"];
+            int _uMvpMatrix = Program.Uniforms["uMvpMatrix"];
+            Matrix4 glkMvpMatrix = MvpMatrix3D.RawData;
+            GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix);
+
+            // color & alpha are set in subclasses?
         }
 
         /** This method is called by <code>render</code>, directly after
          *  <code>context.drawTriangles</code>. Resets vertex buffer attributes.
          */
-        virtual protected void AfterDraw(Context3D context)
+        virtual protected void AfterDraw()
         {
             context.setVertexBufferAt(0, null);
         }
@@ -248,16 +263,50 @@ namespace SparrowSharp.Core.Rendering
          */
         virtual protected Program CreateProgram()
         {
-            string vertexShader =
-                "m44 op, va0, vc0\n" + // 4x4 matrix transform to output clipspace
-                "seq v0, va0, va0\n";  // this is a hack that always produces "1"
+            StringBuilder source = new StringBuilder("");
 
-           string fragmentShader =
-                "mov oc, v0";       // output color: white
+            // variables
+            AddShaderInitCode(source);
+            source.AppendLine("attribute vec4 aPosition;");
+            source.AppendLine("attribute vec4 aColor;");
+            source.AppendLine("uniform mat4 uMvpMatrix;");
+            source.AppendLine("uniform vec4 uAlpha;");
+            source.AppendLine("varying lowp vec4 vColor;");
+
+            // main
+            source.AppendLine("void main() {");
+            source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
+            source.AppendLine("  vColor = aColor * uAlpha;");
+            source.Append("}");
+
+            string vertexShader = source.ToString();
+            
+            // fragment shader
+            source = new StringBuilder("");
+            AddShaderInitCode(source);
+            // variables
+            source.AppendLine("varying lowp vec4 vColor;");
+            // main
+            source.AppendLine("void main() {");
+            source.AppendLine("  gl_FragColor = vColor;");
+            source.Append("}");
+
+            string fragmentShader = source.ToString();
 
             return new Program(vertexShader, fragmentShader);
         }
 
+        protected void AddShaderInitCode(StringBuilder source)
+        {
+#if __WINDOWS__
+            source.AppendLine("#version 110");
+            source.AppendLine("#define highp  ");
+            source.AppendLine("#define mediump  ");
+            source.AppendLine("#define lowp  ");
+#else
+            source.AppendLine("#version 100");
+#endif
+        }
         /** Override this method if the effect requires a different program depending on the
          *  current settings. Ideally, you do this by creating a bit mask encoding all the options.
          *  This method is called often, so do not allocate any temporary objects when overriding.
@@ -334,20 +383,10 @@ namespace SparrowSharp.Core.Rendering
             }
         }
 
-        /** The data format that this effect requires from the VertexData that it renders:
-         *  <code>"position:float2"</code> */
-        virtual public VertexDataFormat VertexFormat { get { return VERTEX_FORMAT; } }
-
-        /** The internally used index buffer used on rendering. */
-        protected IndexBuffer3D IndexBuffer { get { return _indexBuffer; } }
-
-        /** The current size of the index buffer (in number of indices). */
-        protected int IndexBufferSize { get { return _indexBufferSize; } }
-
-        /** The internally used vertex buffer used on rendering. */
-        protected VertexBuffer3D VertexBuffer { get { return _vertexBuffer; } }
-        
-        /** The current size of the vertex buffer (in blocks of 32 bits). */
-        protected int VertexBufferSize { get { return _vertexBufferSize; } }
+        public Matrix3D MvpMatrix3D
+        {
+            get { return _mvpMatrix3D; }
+            set { _mvpMatrix3D.CopyFrom(value); }
+        }
     }
 }

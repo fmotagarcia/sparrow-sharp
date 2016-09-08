@@ -2,6 +2,7 @@ using System;
 using OpenTK;
 using Sparrow.Utils;
 using SparrowSharp.Pool;
+using SparrowSharp.Core.Geom;
 
 namespace Sparrow.Geom
 {
@@ -309,6 +310,17 @@ namespace Sparrow.Geom
                                  Tx, Ty, 0, 1
                              ); 
             return matrix;
+        }
+
+        public Matrix3D ConvertToMatrix3D()
+        {
+            Matrix4 matrix = new Matrix4(
+                                 A, B, 0, 0,
+                                 C, D, 0, 0,
+                                 0, 0, 1, 0,
+                                 Tx, Ty, 0, 1
+                             );
+            return Matrix3D.Create(matrix);
         }
 
         public override string ToString() 

@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Sparrow.Utils
 {
-    /*
+    
     [StructLayout(LayoutKind.Sequential)]
     public struct VertexColor
     {
@@ -10,5 +10,5 @@ namespace Sparrow.Utils
         public byte G;
         public byte B;
         public byte A;
-    }*/
+    }
 }

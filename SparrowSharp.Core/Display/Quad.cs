@@ -42,7 +42,7 @@ namespace Sparrow.Display
         /// of the object are stored.
         /// </summary>
         public Quad(float width = 32, float height = 32, uint color = 0xffffff) 
-            : base(new VertexData(MeshStyle.VERTEX_FORMAT, 4), new IndexData())
+            : base(new VertexData(4), new IndexData())
         {
             Init(width, height, color);
         }
@@ -61,11 +61,9 @@ namespace Sparrow.Display
 
         protected void SetupVertices()
         {
-            string posAttr = "position";
-            string texAttr = "texCoords";
             Texture texture = Style.Texture;
-            VertexData vertexData = this.VertexData;
-            IndexData indexData = this.IndexData;
+            VertexData vertexData = VertexData;
+            IndexData indexData = IndexData;
 
             indexData.NumIndices = 0;
             indexData.addQuad(0, 1, 2, 3);
@@ -77,20 +75,20 @@ namespace Sparrow.Display
 
             if (Texture != null)
             {
-                texture.SetupVertexPositions(vertexData, 0, "position", _bounds);
-                texture.SetupTextureCoordinates(vertexData, 0, texAttr);
+ //               texture.SetupVertexPositions(vertexData, 0, "position", _bounds);
+ //               texture.SetupTextureCoordinates(vertexData, 0, texAttr);
             }
             else
             {
-                vertexData.SetPoint(0, posAttr, _bounds.Left,  _bounds.Top);
-                vertexData.SetPoint(1, posAttr, _bounds.Right, _bounds.Top);
-                vertexData.SetPoint(2, posAttr, _bounds.Left,  _bounds.Bottom);
-                vertexData.SetPoint(3, posAttr, _bounds.Right, _bounds.Bottom);
+                vertexData.SetPoint(0, _bounds.Left,  _bounds.Top);
+                vertexData.SetPoint(1, _bounds.Right, _bounds.Top);
+                vertexData.SetPoint(2, _bounds.Left,  _bounds.Bottom);
+                vertexData.SetPoint(3,  _bounds.Right, _bounds.Bottom);
 
-                vertexData.SetPoint(0, texAttr, 0.0f, 0.0f);
-                vertexData.SetPoint(1, texAttr, 1.0f, 0.0f);
-                vertexData.SetPoint(2, texAttr, 0.0f, 1.0f);
-                vertexData.SetPoint(3, texAttr, 1.0f, 1.0f);
+                vertexData.SetPoint(0, 0.0f, 0.0f);
+                vertexData.SetPoint(1, 1.0f, 0.0f);
+                vertexData.SetPoint(2, 0.0f, 1.0f);
+                vertexData.SetPoint(3, 1.0f, 1.0f);
             }
 
             SetRequiresRedraw();
@@ -145,8 +143,8 @@ namespace Sparrow.Display
          *  values for width and height. */
         public void ReadjustSize(float width = -1, float height = -1)
         {
-            if (width  <= 0) width  = Texture != null ? Texture.FrameWidth  : _bounds.Width;
-            if (height <= 0) height = Texture != null ? Texture.FrameHeight : _bounds.Height;
+            if (width  <= 0) width  = /*Texture != null ? Texture.FrameWidth  :*/ _bounds.Width;
+            if (height <= 0) height = /*Texture != null ? Texture.FrameHeight :*/ _bounds.Height;
 
             if (width != _bounds.Width || height != _bounds.Height)
             {

@@ -6,11 +6,6 @@ namespace SparrowSharp.Core.Rendering
 
     public class MeshEffect : FilterEffect
     {
-
-        /** The vertex format expected by <code>uploadVertexData</code>:
-         *  <code>"position:float2, texCoords:float2, color:bytes4"</code> */
-        public static readonly VertexDataFormat VERTEX_FORMAT = FilterEffect.VERTEX_FORMAT.Extend("color:bytes4");
-
         private float _alpha;
         private bool _tinted;
         private bool _optimizeIfNotTinted;
@@ -83,44 +78,27 @@ namespace SparrowSharp.Core.Rendering
          *    <li><code>fs0</code> — texture</li>
          *  </ul>
          */
-        override protected void BeforeDraw(Context3D context)
+        override protected void BeforeDraw()
         {
-            base.BeforeDraw(context);
+            base.BeforeDraw();
 
             sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = sRenderAlpha[3] = _alpha;
             context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha);
-
-            if (_tinted || _alpha != 1.0 || !_optimizeIfNotTinted || Texture == null)
-                VertexFormat.SetVertexBufferAt(2, VertexBuffer, "color");
         }
 
         /** This method is called by <code>render</code>, directly after
          *  <code>context.drawTriangles</code>. Resets texture and vertex buffer attributes. */
-        override protected void AfterDraw(Context3D context)
+        override protected void AfterDraw()
         {
             context.setVertexBufferAt(2, null);
-            base.AfterDraw(context);
+            base.AfterDraw();
         }
-
-        /** The data format that this effect requires from the VertexData that it renders:
-         *  <code>"position:float2, texCoords:float2, color:bytes4"</code> */
-        override public VertexDataFormat VertexFormat { get { return VERTEX_FORMAT; } }
 
         /** The alpha value of the object rendered by the effect. Must be taken into account
          *  by all subclasses. */
         public float Alpha {
             get { return _alpha; }
             set { _alpha = value;  }
-        }
-
-        /** Indicates if the rendered vertices are tinted in any way, i.e. if there are vertices
-         *  that have a different color than fully opaque white. The base <code>MeshEffect</code>
-         *  class uses this information to simplify the fragment shader if possible. May be
-         *  ignored by subclasses. */
-        public bool Tinted
-        {
-            get { return _tinted; }
-            set { _tinted = value; }
         }
 
     }
