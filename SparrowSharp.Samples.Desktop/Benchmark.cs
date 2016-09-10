@@ -31,12 +31,10 @@ namespace Sparrow.Samples
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
 
-            
-            Quad q = new Quad(76, 127, 0x3faf2f);
-            AddChild(q);
 
-            Quad q2 = new Quad(566, 344, 0x653421);
-            AddChild(q2);
+            Quad q = new Quad(120, 180);
+            q.Color = 0x127878;
+            AddChild(q);
         }
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)

@@ -75,17 +75,18 @@ namespace SparrowSharp.Core.Geom
 
         public void CopyRawDataFrom(float[] arr)
         {
-            rawData.Column0 = new Vector4(arr[0], arr[1], arr[2], arr[3]);
-            rawData.Column1 = new Vector4(arr[4], arr[5], arr[6], arr[7]);
-            rawData.Column2 = new Vector4(arr[8], arr[9], arr[10], arr[11]);
-            rawData.Column3 = new Vector4(arr[12], arr[13], arr[14], arr[15]);
+            rawData.Row0 = new Vector4(arr[0], arr[1], arr[2], arr[3]);
+            rawData.Row1 = new Vector4(arr[4], arr[5], arr[6], arr[7]);
+            rawData.Row2 = new Vector4(arr[8], arr[9], arr[10], arr[11]);
+            rawData.Row3 = new Vector4(arr[12], arr[13], arr[14], arr[15]);
         }
 
         public void PrependTranslation(float x, float y, float z)
         {
-            rawData.M14 += x; // TODO this is likely wrong!
-            rawData.M24 += y;
-            rawData.M34 += z;
+            rawData.M41 += rawData.M11 * x + rawData.M21 * y + rawData.M31 * z;
+            rawData.M42 += rawData.M12 * x + rawData.M22 * y + rawData.M32 * z;
+            rawData.M43 += rawData.M13 * x + rawData.M23 * y + rawData.M33 * z;
+            rawData.M44 += rawData.M14 * x + rawData.M24 * y + rawData.M34 * z;
         }
 
         public float M11

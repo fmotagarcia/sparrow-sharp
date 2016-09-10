@@ -467,7 +467,7 @@ namespace SparrowSharp.Core.Rendering
             if (numIndices > 0)
             {
                 //buffer.uploadFromByteArray(rawData, 0, indexID, numIndices);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
+                GL.BindBuffer(BufferTarget.ElementArrayBuffer, buffer);
                 //short[] temp = new short[] { 0, 1, 2, 3, 4, 5 };
                 GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(sizeof(short) * numIndices), RawData, hint);
                 

@@ -234,7 +234,7 @@ namespace SparrowSharp.Core.Rendering
         {
             Program.Activate(); // create, upload, use program
 
-            //is this the best place for this?
+            //is this the best place for this?/needed?
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
 
