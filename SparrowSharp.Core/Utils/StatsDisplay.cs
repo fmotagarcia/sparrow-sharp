@@ -13,7 +13,7 @@ namespace SparrowSharp.Utils
     /// </summary>
     public class StatsDisplay : Sprite
     {
-
+        /*
         /// <summary>
         /// The actual frame rate, i.e. the number of frames rendered per second.
         /// </summary>
@@ -76,7 +76,7 @@ namespace SparrowSharp.Utils
             }
             textField.Text = "DRW: " + NumDrawCalls + " FPS: " + FramesPerSecond;
         }
-
+        */
     }
 }
 

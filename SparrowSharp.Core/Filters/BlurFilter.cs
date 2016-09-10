@@ -24,7 +24,7 @@ namespace SparrowSharp.Filters
     /// </summary>
     public class BlurFilter : FragmentFilter
     {
-        private float _blurX;
+        /*private float _blurX;
 
         public float BlurX
         { 
@@ -204,7 +204,7 @@ namespace SparrowSharp.Filters
             NumPasses = (int)Math.Ceiling(_blurX) + (int)Math.Ceiling(_blurY);
             MarginX = 4.0f + (int)Math.Ceiling(_blurX);
             MarginY = 4.0f + (int)Math.Ceiling(_blurY);
-        }
+        }*/
     }
 }
 

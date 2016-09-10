@@ -155,14 +155,20 @@ namespace SparrowSharp.Core.Rendering
             }
         }
 
-        /** Returns the program registered under a certain name, or null if no program with
-         *  this name has been registered. */
+        /// <summary>
+        /// Returns the program registered under a certain name, or null if no program with
+        ///  this name has been registered.
+        /// </summary>
         public Program GetProgram(string name)
         {
-            return Programs[name] as Program;
+            Program ret;
+            Programs.TryGetValue(name, out ret);
+            return ret;
         }
 
-        /** Indicates if a program is registered under a certain name. */
+        /// <summary>
+        /// Indicates if a program is registered under a certain name.
+        /// </summary>
         public bool HasProgram(string name)
         {
             return Programs.ContainsKey(name);
@@ -180,7 +186,11 @@ namespace SparrowSharp.Core.Rendering
         {
             _stateStackPos++;
 
-            if (_stateStackLength < _stateStackPos + 1) _stateStack[_stateStackLength++] = new RenderState();
+            if (_stateStackLength < _stateStackPos + 1)
+            {
+                _stateStackLength++;
+                _stateStack.Add(new RenderState());
+            }
             if (token != null) _batchProcessor.FillToken(token);
 
             _stateStack[_stateStackPos].CopyFrom(_state);
@@ -415,7 +425,7 @@ namespace SparrowSharp.Core.Rendering
         {
             int i;
             int length = _batchCacheExclusions.Count;
-            for (i=0; i<length; ++i) _batchCacheExclusions[i].ExcludeFromCache();
+            for (i = 0; i < length; ++i) _batchCacheExclusions[i].ExcludeFromCache();
             _batchCacheExclusions.Clear();
         }
 
@@ -501,7 +511,10 @@ namespace SparrowSharp.Core.Rendering
          */
         public void ExcludeFromCache(DisplayObject obj)
         {
-            if (obj != null) _batchCacheExclusions[_batchCacheExclusions.Count] = obj;
+            if (obj != null)
+            {
+                _batchCacheExclusions.Add(obj);
+            }
         }
 
         private void DrawBatch(MeshBatch meshBatch)

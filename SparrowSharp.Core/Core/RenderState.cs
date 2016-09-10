@@ -2,6 +2,7 @@ using OpenTK;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using SparrowSharp.Core.Geom;
+using SparrowSharp.Core.Utils;
 
 namespace Sparrow.Core
 {
@@ -155,11 +156,10 @@ namespace Sparrow.Core
          */
         public void SetProjectionMatrix(float x, float y, float width, float height,
                                         float stageWidth = 0, float stageHeight = 0,
-                                        Vector3D cameraPos = null)
+                                        float[] cameraPos = null)
         {
-            // TODO
-            MatrixUtil.CreatePerspectiveProjectionMatrix(
-                    x, y, width, height, stageWidth, stageHeight, cameraPos, _projectionMatrix3D);
+            _projectionMatrix3D = MatrixUtil.CreatePerspectiveProjectionMatrix(
+                            x, y, width, height, stageWidth, stageHeight, cameraPos);
         }
         
         /** Changes the modelview matrices (2D and, if available, 3D) to identity matrices.

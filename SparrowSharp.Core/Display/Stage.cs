@@ -1,5 +1,7 @@
 using Sparrow.Core;
 using Sparrow.Geom;
+using SparrowSharp.Core.Geom;
+using SparrowSharp.Core.Utils;
 using System;
 
 namespace Sparrow.Display
@@ -52,6 +54,9 @@ namespace Sparrow.Display
         /// </summary>
         public uint Color { get; set; }
 
+        public float FieldOfView { get; set; }
+        private Point _projectionOffset;
+
         /// <summary>
         /// Initializes a stage with a certain size in points. Sparrow calls this automatically on startup.
         /// </summary>
@@ -61,6 +66,7 @@ namespace Sparrow.Display
             Height = height;
             DrawableWidth = (uint)width;
             DrawableHeight = (uint)height;
+            _projectionOffset = Point.Create();
         }
 
         internal void SetDrawableArea(uint width, uint height)
@@ -94,6 +100,24 @@ namespace Sparrow.Display
             }
             return target;
         }
+
+
+        // camera positioning
+
+        /** Returns the position of the camera within the local coordinate system of a certain
+         *  display object. If you do not pass a space, the method returns the global position.
+         *  To change the position of the camera, you can modify the properties 'fieldOfView',
+         *  'focalDistance' and 'projectionOffset'.
+         */
+        public float[] GetCameraPosition(DisplayObject space = null)
+        {
+            Matrix3D m = GetTransformationMatrix3D(space);
+
+            return m.TransformCoords3D(
+                Width / 2 + _projectionOffset.X, Height / 2 + _projectionOffset.Y,
+                -FocalLength);
+        }
+
 
         internal void AdvanceTime(float passedTime)
         {
@@ -171,5 +195,25 @@ namespace Sparrow.Display
         {
             set { throw new Exception("cannot set rotation of stage"); }
         }
-    }
+
+        /** The distance between the stage and the camera. Changing this value will update the
+         *  field of view accordingly. */
+        public float FocalLength
+        {
+            get { return Width / (2f * (float)Math.Tan(FieldOfView / 2f)); }
+            set { FieldOfView = 2 * (float)Math.Atan(Width / (2f * value)); }
+        }
+
+        /** The global position of the camera. This property can only be used to find out the
+         *  current position, but not to modify it. For that, use the 'projectionOffset',
+         *  'fieldOfView' and 'focalLength' properties. If you need the camera position in
+         *  a certain coordinate space, use 'getCameraPosition' instead.
+         *
+         *  <p>CAUTION: not a copy, but the actual object!</p>
+         */
+        public float[] CameraPosition
+        {
+            get { return GetCameraPosition(null); }
+        }
+}
 }

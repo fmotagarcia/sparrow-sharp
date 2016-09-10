@@ -12,7 +12,7 @@ namespace SparrowSharp.Filters
     /// </summary>
     public class EmptyFilter : FragmentFilter
     {
-        Program _program;
+       /* Program _program;
 
         override protected void CreatePrograms()
         {
@@ -35,7 +35,7 @@ namespace SparrowSharp.Filters
             GL.UseProgram(_program.Name);
             Matrix4 mvp = mvpMatrix.ConvertToMatrix4();
             GL.UniformMatrix4(_program.Uniforms["uMvpMatrix"], false, ref mvp);
-        }
+        }*/
     }
 }
 

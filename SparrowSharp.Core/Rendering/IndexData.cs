@@ -1,5 +1,8 @@
-﻿using OpenTK.Graphics.ES30;
+﻿
 using System;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#endif
 
 namespace SparrowSharp.Core.Rendering
 {

@@ -1,7 +1,9 @@
 using System;
 using Sparrow.Geom;
 using OpenTK;
-using OpenTK.Graphics.ES30;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#endif
 
 namespace Sparrow.Utils
 {
@@ -185,22 +187,31 @@ namespace Sparrow.Utils
         /// <summary>
         /// Copies the vertex data of this instance to another vertex data object, starting at a certain index.
         /// </summary>
-        public void CopyTo(VertexData target, bool copyColor, int atIndex = 0)
+        public void CopyTo(VertexData target, int atIndex = 0)
         {
-            CopyTo(target, copyColor, atIndex, _numVertices);
+            CopyTo(target, atIndex, _numVertices);
         }
 
         /// <summary>
         /// Copies a range of vertices of this instance to another vertex data object.
         /// </summary>
-        public void CopyTo(VertexData target, bool copyColor, int atIndex, int numVertices)
+        public void CopyTo(VertexData target, int atIndex, int numVertices)
         {
             Vertex.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
+            Array.Copy(_vertexColors, 0, target.VertexColors, atIndex, numVertices);
+        }
 
-            if (copyColor)
+        /// <summary>
+        /// Copies a range of vertices of this instance to another vertex data object.
+        /// </summary>
+        public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices)
+        {
+            if (target.NumVertices < targetOffset + numVertices)
             {
-                Array.Copy(_vertexColors, 0, target.VertexColors, atIndex, numVertices);
+                target.NumVertices = targetOffset + numVertices;
             }
+            Vertex.Copy(_vertices, sourceOffset, target.Vertices, targetOffset, numVertices);
+            Array.Copy(_vertexColors, 0, target.VertexColors, targetOffset, numVertices);
         }
 
         /// <summary>

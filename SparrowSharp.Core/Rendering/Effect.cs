@@ -1,14 +1,15 @@
 ﻿
 using OpenTK;
-using OpenTK.Graphics.ES30;
 using Sparrow;
 using Sparrow.Core;
-using Sparrow.Geom;
 using Sparrow.Utils;
 using SparrowSharp.Core.Geom;
 using System;
 using System.Collections.Generic;
 using System.Text;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#endif
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -87,12 +88,12 @@ namespace SparrowSharp.Core.Rendering
     public class Effect
     {
 
-        private int _vertexBufferName;
-        private int _vertexColorsBufferName;
-        private int _indexBufferName;
-        private int _vertexBufferSize; // in number of vertices
-        private int _indexBufferSize;  // in number of indices
-        private bool _indexBufferUsesQuadLayout;
+        protected int _vertexBufferName;
+        protected int _vertexColorsBufferName;
+        protected int _indexBufferName;
+        protected int _vertexBufferSize; // in number of vertices
+        protected int _indexBufferSize;  // in number of indices
+        protected bool _indexBufferUsesQuadLayout;
 
         private Matrix3D _mvpMatrix3D;
         private string _programBaseName;
@@ -211,11 +212,12 @@ namespace SparrowSharp.Core.Rendering
          *  <code>afterDraw</code>, in this order. */
         virtual public void Render(int firstIndex = 0, int numTriangles= -1)
         {
-            if (numTriangles < 0) numTriangles = _indexBufferSize / 3;
+            if (numTriangles < 0) numTriangles = _indexBufferSize;
             if (numTriangles == 0) return;
             
             BeforeDraw();
-            context.drawTriangles(_indexBuffer, firstIndex, numTriangles);
+            //context.drawTriangles(_indexBuffer, firstIndex, numTriangles);
+            GL.DrawElements(PrimitiveType.Triangles, numTriangles, DrawElementsType.UnsignedShort, IntPtr.Zero);
             AfterDraw();
         }
 
@@ -230,18 +232,26 @@ namespace SparrowSharp.Core.Rendering
          */
         virtual protected void BeforeDraw()
         {
-            Program.Activate(); // create, upload, set program
+            Program.Activate(); // create, upload, use program
 
-            // calls context.setVertexBufferAt(index, buffer, attribute.offset / 4, attribute.format);
-            VertexFormat.SetVertexBufferAt(0, vertexBuffer, "position");
-            context.SetProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
+            // needed????
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
 
-            //?? not used?? _aPosition = _currentProgram.Attributes["aPosition"];
+            // attribute = getAttribute("position")
+            // context.setVertexBufferAt(0, vertexBuffer, attribute.offset / 4, attribute.format);
+            int attribPosition = Program.Attributes["aPosition"];
+            GL.EnableVertexAttribArray(attribPosition);
+            
+            GL.VertexAttribPointer(attribPosition, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
+
+
+            //context.SetProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
             int _uMvpMatrix = Program.Uniforms["uMvpMatrix"];
             Matrix4 glkMvpMatrix = MvpMatrix3D.RawData;
             GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix);
 
-            // color & alpha are set in subclasses?
+            // color & alpha are set in subclasses
         }
 
         /** This method is called by <code>render</code>, directly after
@@ -249,7 +259,7 @@ namespace SparrowSharp.Core.Rendering
          */
         virtual protected void AfterDraw()
         {
-            context.setVertexBufferAt(0, null);
+            //?? context.setVertexBufferAt(0, null);
         }
 
         // program management
@@ -338,10 +348,10 @@ namespace SparrowSharp.Core.Rendering
                 string baseName = ProgramBaseName;
                 uint variantName = ProgramVariantName;
                 Dictionary<uint, string> nameCache;
-                if (sProgramNameCache.ContainsKey(baseName))
+                if (!sProgramNameCache.ContainsKey(baseName))
                 {
                     nameCache = new Dictionary<uint, string>();
-                    sProgramNameCache.Add(baseName, nameCache);
+                    sProgramNameCache[baseName] = nameCache;
                 }
                 else
                 {

@@ -9,6 +9,7 @@ namespace SparrowSharp.Fonts
 {
     public class TextField : DisplayObjectContainer
     {
+        /*
         public static readonly string MiniFontName = "mini";// the value is actually read from the font XML
         private static readonly Dictionary<string, BitmapFont> bitmapFonts = new Dictionary<string, BitmapFont>();
         private string _text;
@@ -328,7 +329,7 @@ namespace SparrowSharp.Fonts
         {
             return _hitArea.GetBounds(targetSpace);
         }
-
+        
         override public float Width
         {
             set
@@ -350,8 +351,8 @@ namespace SparrowSharp.Fonts
                 _requiresRedraw = true;
                 UpdateBorder();
             }
-
         }
+        */
     }
 }
 

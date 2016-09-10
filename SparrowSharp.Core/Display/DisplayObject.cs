@@ -6,6 +6,8 @@ using Sparrow.Utils;
 using SparrowSharp.Core;
 using SparrowSharp.Filters;
 using SparrowSharp.Core.Rendering;
+using SparrowSharp.Core.Geom;
+using SparrowSharp.Core.Utils;
 
 namespace Sparrow.Display
 {
@@ -350,6 +352,83 @@ namespace Sparrow.Display
             }
         }
 
+
+        // 3D transformation
+
+        /** Creates a matrix that represents the transformation from the local coordinate system
+         *  to another. This method supports three dimensional objects created via 'Sprite3D'.
+         *  If you pass an <code>out</code>-matrix, the result will be stored in this matrix
+         *  instead of creating a new object. */
+        public Matrix3D GetTransformationMatrix3D(DisplayObject targetSpace)
+        {
+            DisplayObject commonParent;
+            DisplayObject currentObject;
+
+            Matrix3D outM = Matrix3D.Create();
+
+            if (targetSpace == this)
+            {
+                return outM;
+            }
+            else if (targetSpace == _parent || (targetSpace == null && _parent == null))
+            {
+                outM.CopyFrom(TransformationMatrix3D);
+                return outM;
+            }
+            else if (targetSpace == null || targetSpace == Base)
+            {
+                // targetCoordinateSpace 'null' represents the target space of the base object.
+                // -> move up from this to base
+
+                currentObject = this;
+                while (currentObject != targetSpace)
+                {
+                    outM.Append(currentObject.TransformationMatrix3D);
+                    currentObject = currentObject._parent;
+                }
+                return outM;
+            }
+            else if (targetSpace._parent == this) // optimization
+            {
+                outM = targetSpace.GetTransformationMatrix3D(this);
+                outM.Invert();
+                return outM;
+            }
+
+            // 1. find a common parent of this and the target space
+
+            commonParent = FindCommonParent(this, targetSpace);
+
+            // 2. move up from this to common parent
+
+            currentObject = this;
+            while (currentObject != commonParent)
+            {
+                outM.Append(currentObject.TransformationMatrix3D);
+                currentObject = currentObject._parent;
+            }
+
+            if (commonParent == targetSpace)
+                return outM;
+
+            // 3. now move up from target until we reach the common parent
+
+            Matrix3D sHelperMatrix3D = Matrix3D.Create();
+            currentObject = targetSpace;
+            while (currentObject != commonParent)
+            {
+                sHelperMatrix3D.Append(currentObject.TransformationMatrix3D);
+                currentObject = currentObject._parent;
+            }
+
+            // 4. now combine the two matrices
+
+            sHelperMatrix3D.Invert();
+            outM.Append(sHelperMatrix3D);
+
+            return outM;
+        }
+
         internal bool IsMask { get { return _isMask; } }
 
         // render cache
@@ -644,6 +723,17 @@ namespace Sparrow.Display
                     _rotation = 0.0f;
                 }
             }
+        }
+
+        /** The 3D transformation matrix of the object relative to its parent.
+         *
+         *  <p>For 2D objects, this property returns just a 3D version of the 2D transformation
+         *  matrix. Only the 'Sprite3D' class supports real 3D transformations.</p>
+         *
+         *  <p>CAUTION: not a copy, but the actual object!</p> */
+        public Matrix3D TransformationMatrix3D
+        {
+            get { return TransformationMatrix.ConvertToMatrix3D(); }
         }
 
         /// <summary>

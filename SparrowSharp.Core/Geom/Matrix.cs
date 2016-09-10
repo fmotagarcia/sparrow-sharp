@@ -220,6 +220,16 @@ namespace Sparrow.Geom
             Ty = 0.0f;
         }
 
+        public bool IsIdentity()
+        {
+            if (A == 1.0f && B == 0.0f && C == 0.0f && 
+                D == 1.0f && Tx == 0.0f && Ty == 0.0f)
+            {
+                return true;
+            }
+            return false;
+        }
+
         // TODO move to MatrixUtil?
         /// <summary>
         /// Returns a point that is transformed by this matrix

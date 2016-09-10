@@ -7,6 +7,7 @@ namespace SparrowSharp.Filters
     /// </summary>
     public static class FilterFactory
     {
+        /*
         /// <summary>
         /// Creates a blur filter on the object with the specified parameters
         /// </summary>
@@ -57,7 +58,7 @@ namespace SparrowSharp.Filters
         public static ColorMatrixFilter ColorMatrix(ColorMatrix colorMatrix = null)
         {
             return new ColorMatrixFilter(colorMatrix);
-        }
+        }*/
     }
 }
 

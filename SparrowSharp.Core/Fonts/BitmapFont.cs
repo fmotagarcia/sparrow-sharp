@@ -36,6 +36,7 @@ namespace SparrowSharp.Fonts
     /// </summary>
     public class BitmapFont
     {
+        /*
         private const uint MAX_TEXT_CHAR_COUNT = 8192;
         private Image _helperImage;
         private Texture _fontTexture;
@@ -422,6 +423,7 @@ namespace SparrowSharp.Fonts
         private const int CarriageReturnAsciiCode = 13;
 
         #endregion
+        */
     }
 }
 

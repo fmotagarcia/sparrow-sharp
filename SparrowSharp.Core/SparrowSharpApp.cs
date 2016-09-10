@@ -90,18 +90,18 @@ namespace Sparrow
             {
                 //dispatchEventWith(starling.events.Event.RENDER);
                 
-                //float scaleX = _viewPort.Width / Stage.Width;
-                //float scaleY = _viewPort.Height / Stage.Height;
+                float scaleX = _viewPort.Width / Stage.Width;
+                float scaleY = _viewPort.Height / Stage.Height;
 
                 _painter.NextFrame();
                 _painter.PixelSize = 1.0f / ContentScaleFactor;
-                /*_painter.State.SetProjectionMatrix(
-                    _viewPort.X < 0 ? -_viewPort.X / scaleX : 0.0,
-                    _viewPort.Y < 0 ? -_viewPort.Y / scaleY : 0.0,
+                _painter.State.SetProjectionMatrix(
+                    _viewPort.X < 0 ? -_viewPort.X / scaleX : 0.0f,
+                    _viewPort.Y < 0 ? -_viewPort.Y / scaleY : 0.0f,
                     _clippedViewPort.Width / scaleX,
                     _clippedViewPort.Height / scaleY,
-                    Stage.StageWidth, Stage.StageHeight, Stage.CameraPosition);
-                */
+                    Stage.Width, Stage.Height, Stage.CameraPosition);
+                
                 _painter.Clear(Stage.Color, 1.0f);
 
                 Stage.Render(_painter);

@@ -25,15 +25,15 @@ namespace SparrowSharp.Core.Utils
             int i;
             bool result = false;
             int numIndices = indexData.NumIndices;
-            Point p0 = Point.Create();
-            Point p1 = Point.Create();
-            Point p2 = Point.Create();
+            Point p0;
+            Point p1;
+            Point p2;
 
             for (i = 0; i < numIndices; i += 3)
             {
-                vertexData.GetPoint(indexData.GetIndex(i  ), "position", p0);
-                vertexData.GetPoint(indexData.GetIndex(i+1), "position", p1);
-                vertexData.GetPoint(indexData.GetIndex(i+2), "position", p2);
+                p0 = vertexData.GetPoint(i);
+                p1 = vertexData.GetPoint(i + 1);
+                p2 = vertexData.GetPoint(i + 2);
 
                 if (MathUtil.IsPointInTriangle(point, p0, p1, p2))
                 {
@@ -56,7 +56,7 @@ namespace SparrowSharp.Core.Utils
 
             Stage stage = sourceSpace.Stage;
             sMatrix = sourceSpace.GetTransformationMatrix(targetSpace);
-            vertexData.GetBounds("position", sMatrix, 0, -1, outRect);
+            outRect = vertexData.BoundsAfterTransformation(sMatrix);
             return outRect;
         }
     }

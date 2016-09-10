@@ -1,5 +1,6 @@
 ﻿using Sparrow.Core;
 using Sparrow.Textures;
+using SparrowSharp.Core.Utils;
 using System;
 
 namespace SparrowSharp.Core.Rendering
@@ -42,7 +43,7 @@ namespace SparrowSharp.Core.Rendering
          *  <p>Reserve 4 bits for the variant name of the base class.</p>
          */
         override protected uint ProgramVariantName {
-            get { return RenderUtil.getTextureVariantBits(_texture); }
+            get { return RenderUtil.GetTextureVariantBits(_texture); }
         }
 
         /** @private */
@@ -109,7 +110,8 @@ namespace SparrowSharp.Core.Rendering
         {
             // return RenderUtil.createAGALTexOperation(resultReg, uvReg, sampler, texture,
             //     convertToPmaIfRequired);
-            return "";
+            throw new NotImplementedException();
+           // return "";
         }
 
         /** The texture to be mapped onto the vertices. */

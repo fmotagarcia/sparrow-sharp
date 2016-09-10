@@ -61,6 +61,7 @@
     <Compile Include="Fonts\BitmapChar.cs" />
     <Compile Include="Fonts\BitmapFont.cs" />
     <Compile Include="Geom\Matrix.cs" />
+    <Compile Include="Geom\Matrix3D.cs" />
     <Compile Include="Geom\Point.cs" />
     <Compile Include="Geom\Rectangle.cs" />
     <Compile Include="Rendering\BatchProcessor.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Utils\MeshSubset.cs" />
     <Compile Include="Utils\MeshUtil.cs" />
     <Compile Include="Utils\NumberUtil.cs" />
+    <Compile Include="Utils\RenderUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />
     <Compile Include="Utils\Vertex.cs" />
     <Compile Include="Utils\VertexColor.cs" />

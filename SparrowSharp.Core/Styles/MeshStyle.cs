@@ -5,7 +5,6 @@ using Sparrow.Textures;
 using Sparrow.Utils;
 using SparrowSharp.Core.Rendering;
 using System;
-using static Sparrow.Display.DisplayObject;
 
 namespace SparrowSharp.Core.Styles
 {
@@ -79,7 +78,7 @@ namespace SparrowSharp.Core.Styles
 
         /** Dispatched every frame on styles assigned to display objects connected to the stage. */
         //[Event(name = "enterFrame", type = "starling.events.EnterFrameEvent")]
-        public event EnterFrameEventHandler EnterFrame;
+        public event DisplayObject.EnterFrameEventHandler EnterFrame;
 
         private Type _type;
         private Mesh _target;
@@ -165,21 +164,28 @@ namespace SparrowSharp.Core.Styles
             else return false;
         }
 
-        /** Copies the vertex data of the style's current target to the target of another style.
-         *  If you pass a matrix, all vertices will be transformed during the process.
-         *
-         *  <p>This method is used when batching meshes together for rendering. The parameter
-         *  <code>targetStyle</code> will point to the style of a <code>MeshBatch</code> (a
-         *  subclass of <code>Mesh</code>). Subclasses may override this method if they need
-         *  to modify the vertex data in that process.</p>
-         */
+        /// <summary>
+        ///  Copies the vertex data of the style's current target to the target of another style.
+        ///  If you pass a matrix, all vertices will be transformed during the process.
+        ///
+        ///  Subclasses may override this method if they need to modify the vertex data in that
+        ///  process.
+        /// </summary>
+        /// <param name="targetStyle">Points to the style of a MeshBatch</param>
+        /// <param name="targetVertexID">Where to start the copy in the target</param>
+        /// <param name="matrix">If you pass a non-null matrix, the 2D position of each vertex 
+        /// will be transformed by that matrix before storing it in the target object.</param>
+        /// <param name="vertexID">position to start copyting from</param>
+        /// <param name="numVertices">Number of vertices to copy</param>
         public void BatchVertexData(MeshStyle targetStyle, int targetVertexID = 0,
                                     Matrix matrix = null, int vertexID = 0, int numVertices= -1)
         {
-            // TODO parameters are ignored!
-            throw new Exception("TODO");
+            if (matrix != null && !matrix.IsIdentity())
+            {
+                throw new Exception("TODO");
+            }
             //_vertexData.CopyTo(targetStyle._vertexData, targetVertexID, matrix, vertexID, numVertices);
-            _vertexData.CopyTo(targetStyle._vertexData, true, vertexID, numVertices);
+            _vertexData.CopyTo(targetStyle._vertexData, vertexID, targetVertexID, numVertices);
         }
 
         /** Copies the index data of the style's current target to the target of another style.

@@ -1,5 +1,8 @@
 ﻿
+using OpenTK.Graphics.ES20;
 using Sparrow.Core;
+using System;
+using System.Text;
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -8,7 +11,6 @@ namespace SparrowSharp.Core.Rendering
     {
         private float _alpha;
         private bool _tinted;
-        private bool _optimizeIfNotTinted;
 
         // helper objects
         private static float[] sRenderAlpha = new float[4];
@@ -16,34 +18,28 @@ namespace SparrowSharp.Core.Rendering
         /** Creates a new MeshEffect instance. */
         public MeshEffect()
         {
-            // Non-tinted meshes may be rendered with a simpler fragment shader, which brings
-            // a huge performance benefit on some low-end hardware. However, I don't want
-            // subclasses to become any more complicated because of this optimization (they
-            // probably use much longer shaders, anyway), so I only apply this optimization if
-            // this is actually the "MeshEffect" class.
-
             _alpha = 1.0f;
-            _optimizeIfNotTinted = GetType().Name == "starling.rendering::MeshEffect";// todo check
         }
         
         override protected uint ProgramVariantName
         {
             get
             {
-                uint noTinting = (_optimizeIfNotTinted && !_tinted && _alpha == 1.0f) == true ? 1u : 0u;
-                return base.ProgramVariantName | (noTinting << 3);
+                // might not be needed..
+                return base.ProgramVariantName | (0 << 3);
             }
         }
         
         override protected Program CreateProgram()
         {
-            string vertexShader, fragmentShader;
+            StringBuilder source = new StringBuilder("");
+            string vertexShader;
+            string fragmentShader;
 
             if (Texture != null)
             {
-                if (_optimizeIfNotTinted && !_tinted && _alpha == 1.0)
-                    return base.CreateProgram();
-
+                throw new NotImplementedException();
+                /*
                 vertexShader =
                     "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clip-space
                     "mov v0, va1      \n" + // pass texture coordinates to fragment program
@@ -52,15 +48,41 @@ namespace SparrowSharp.Core.Rendering
                 fragmentShader =
                     Tex("ft0", "v0", 0, Texture) +
                     "mul oc, ft0, v1  \n";  // multiply color with texel color
+                */
             }
             else
             {
-                vertexShader =
-                    "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clipspace
-                    "mul v0, va2, vc4 \n";  // multiply alpha (vc4) with color (va2)
+                //vertexShader =
+                //    "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clipspace
+                //    "mul v0, va2, vc4 \n";  // multiply alpha (vc4) with color (va2)
+                AddShaderInitCode(source);
+                source.AppendLine("attribute vec4 aPosition;");
+                source.AppendLine("attribute vec4 aColor;");
+                source.AppendLine("uniform mat4 uMvpMatrix;");
+                source.AppendLine("uniform vec4 uAlpha;");
+                source.AppendLine("varying lowp vec4 vColor;");
 
-                fragmentShader =
-                    "mov oc, v0       \n";  // output color
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
+                source.AppendLine("  vColor = aColor * uAlpha;");
+                source.Append("}");
+
+                vertexShader = source.ToString();
+
+                //fragmentShader =
+                //    "mov oc, v0       \n";  // output color
+
+                source = new StringBuilder("");
+                AddShaderInitCode(source);
+                // variables
+                source.AppendLine("varying lowp vec4 vColor;");
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_FragColor = vColor;");
+                source.Append("}");
+
+                fragmentShader = source.ToString();
             }
             return new Program(vertexShader, fragmentShader);
         }
@@ -81,16 +103,25 @@ namespace SparrowSharp.Core.Rendering
         override protected void BeforeDraw()
         {
             base.BeforeDraw();
+            //sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = sRenderAlpha[3] = _alpha;
+            //context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha);
 
-            sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = sRenderAlpha[3] = _alpha;
-            context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha);
+            int _uAlpha = Program.Uniforms["uAlpha"];
+            GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
+
+            //if (_tinted || _alpha != 1.0 || !_optimizeIfNotTinted || texture == null)
+            //    vertexFormat.setVertexBufferAt(2, vertexBuffer, "color");
+            int attribColor = Program.Attributes["aColor"];
+            GL.EnableVertexAttribArray(attribColor);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
+            GL.VertexAttribPointer(attribColor, 4, VertexAttribPointerType.UnsignedByte, true, sizeof(float), (IntPtr)0);
         }
 
         /** This method is called by <code>render</code>, directly after
          *  <code>context.drawTriangles</code>. Resets texture and vertex buffer attributes. */
         override protected void AfterDraw()
         {
-            context.setVertexBufferAt(2, null);
+            //?? context.setVertexBufferAt(2, null);
             base.AfterDraw();
         }
 

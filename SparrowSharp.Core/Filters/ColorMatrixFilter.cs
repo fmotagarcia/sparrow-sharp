@@ -25,7 +25,7 @@ namespace SparrowSharp.Filters
     /// after each step, or use an identical adjustment value for each step; the changes will add up.
     /// </summary>
     public class ColorMatrixFilter : FragmentFilter
-    {
+    {/*
         /// <summary>
         /// The color matrix object used to apply the filter.
         /// </summary>
@@ -202,7 +202,7 @@ namespace SparrowSharp.Filters
             source.AppendLine("}");
 
             return source.ToString();
-        }
+        }*/
     }
 }
 

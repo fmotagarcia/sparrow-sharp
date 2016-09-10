@@ -11,24 +11,13 @@ namespace Sparrow.Core
     /// </summary>
     public class Context
     {
-        /*private static readonly Dictionary<uint, uint> FramebufferCache;
-        private static readonly HashSet<string> Extensions;
+        /*
+        private static readonly Dictionary<uint, uint> FramebufferCache;
         private Texture _renderTarget;
 
         static Context()
         {
-            Extensions = new HashSet<string>();
             FramebufferCache = new Dictionary<uint, uint>();
-            string extensionsString = GL.GetString(StringName.Extensions);
-
-            if (!string.IsNullOrEmpty(extensionsString))
-            {
-                string[] extensions = extensionsString.Split(' ');
-                for (int i = 0; i < extensions.Length; i++)
-                {
-                    Extensions.Add(extensions[i]);
-                }
-            }
         }
 
         /// <summary>
@@ -115,15 +104,7 @@ namespace Sparrow.Core
             }
             get { return _renderTarget; }
         }
-
-        /// <summary>
-        /// Checks if the device supports the specified OpenGL ES extension
-        /// </summary>
-        public static bool DeviceSupportsOpenGLExtension(string extensionName)
-        {
-            return Extensions.Contains(extensionName);
-        }
-
+        
         private uint CreateFramebufferForTexture(Texture texture)
         {
             uint framebuffer;
