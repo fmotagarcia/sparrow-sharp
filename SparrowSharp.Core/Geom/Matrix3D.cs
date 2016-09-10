@@ -83,9 +83,9 @@ namespace SparrowSharp.Core.Geom
 
         public void PrependTranslation(float x, float y, float z)
         {
-            rawData.M14 += x;
-            rawData.M24 += x;
-            rawData.M34 += x;
+            rawData.M14 += x; // TODO this is likely wrong!
+            rawData.M24 += y;
+            rawData.M34 += z;
         }
 
         public float M11

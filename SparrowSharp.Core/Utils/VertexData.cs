@@ -232,7 +232,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Updates the position of a vertex.
         /// </summary>
-        public void SetPoint(Point position, int atIndex)
+        public void SetPoint(int atIndex, Point position)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
@@ -272,7 +272,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Updates the texture coordinates of a vertex.
         /// </summary>
-        public void SetTexCoords(Point texCoords, int atIndex)
+        public void SetTexCoords(int atIndex, Point texCoords)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {
@@ -285,7 +285,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Updates the texture coordinates of a vertex.
         /// </summary>
-        public void SetTexCoords(float x, float y, int atIndex)
+        public void SetTexCoords(int atIndex, float x, float y)
         {
             if (atIndex < 0 || atIndex >= _numVertices)
             {

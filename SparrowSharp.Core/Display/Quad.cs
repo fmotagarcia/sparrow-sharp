@@ -85,10 +85,10 @@ namespace Sparrow.Display
                 vertexData.SetPoint(2, _bounds.Left,  _bounds.Bottom);
                 vertexData.SetPoint(3,  _bounds.Right, _bounds.Bottom);
 
-                vertexData.SetPoint(0, 0.0f, 0.0f);
-                vertexData.SetPoint(1, 1.0f, 0.0f);
-                vertexData.SetPoint(2, 0.0f, 1.0f);
-                vertexData.SetPoint(3, 1.0f, 1.0f);
+                vertexData.SetTexCoords(0, 0.0f, 0.0f);
+                vertexData.SetTexCoords(1, 1.0f, 0.0f);
+                vertexData.SetTexCoords(2, 0.0f, 1.0f);
+                vertexData.SetTexCoords(3, 1.0f, 1.0f);
             }
 
             SetRequiresRedraw();

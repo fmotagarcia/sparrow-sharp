@@ -75,7 +75,7 @@ namespace SparrowSharp.Core.Utils
                     stageWidth / (float)Math.Tan(0.5f) * 0.5f };// -> fieldOfView = 1.0 rad
             }
 
-            float focalLength = Math.Abs(cameraPos[3]);
+            float focalLength = Math.Abs(cameraPos[2]);
             float offsetX = cameraPos[0] - stageWidth  / 2f;
             float offsetY = cameraPos[1] - stageHeight / 2f;
             float far    = focalLength * 20f;

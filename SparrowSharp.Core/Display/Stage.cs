@@ -62,6 +62,7 @@ namespace Sparrow.Display
         /// </summary>
         internal Stage(float width, float height)
         {
+            FieldOfView = 1.0f;
             Width = width;
             Height = height;
             DrawableWidth = (uint)width;
@@ -213,7 +214,7 @@ namespace Sparrow.Display
          */
         public float[] CameraPosition
         {
-            get { return GetCameraPosition(null); }
+            get { return GetCameraPosition(); }
         }
 }
 }

@@ -63,8 +63,6 @@ namespace Sparrow.Core
         private Matrix3D _modelviewMatrix3D;
         private Matrix3D _projectionMatrix3D;
         private Matrix3D _mvpMatrix3D;
-              // helper objects
-        private static Matrix4 sMatrix3D = new Matrix4();
 
         public RenderState()
         {
