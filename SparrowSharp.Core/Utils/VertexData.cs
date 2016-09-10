@@ -185,26 +185,9 @@ namespace Sparrow.Utils
         }
 
         /// <summary>
-        /// Copies the vertex data of this instance to another vertex data object, starting at a certain index.
-        /// </summary>
-        public void CopyTo(VertexData target, int atIndex = 0)
-        {
-            CopyTo(target, atIndex, _numVertices);
-        }
-
-        /// <summary>
         /// Copies a range of vertices of this instance to another vertex data object.
         /// </summary>
-        public void CopyTo(VertexData target, int atIndex, int numVertices)
-        {
-            Vertex.Copy(_vertices, 0, target.Vertices, atIndex, numVertices);
-            Array.Copy(_vertexColors, 0, target.VertexColors, atIndex, numVertices);
-        }
-
-        /// <summary>
-        /// Copies a range of vertices of this instance to another vertex data object.
-        /// </summary>
-        public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices)
+        public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices, Matrix matrix)
         {
             if (target.NumVertices < targetOffset + numVertices)
             {
@@ -212,6 +195,20 @@ namespace Sparrow.Utils
             }
             Vertex.Copy(_vertices, sourceOffset, target.Vertices, targetOffset, numVertices);
             Array.Copy(_vertexColors, 0, target.VertexColors, targetOffset, numVertices);
+
+            // TODO optimize this. Maybe do it inside Vertex.copy with unsafe code?
+            if (matrix != null && !matrix.IsIdentity())
+            {
+                int len = target._vertices.Length;
+                for (int i = 0; i < len; i++)
+                {
+                    float x = target._vertices[i].Position.X;
+                    float y = target._vertices[i].Position.Y;
+
+                    target._vertices[i].Position.X = matrix.A * x + matrix.C * y + matrix.Tx;
+                    target._vertices[i].Position.Y = matrix.D * y + matrix.B * x + matrix.Ty;
+                }
+            }
         }
 
         /// <summary>

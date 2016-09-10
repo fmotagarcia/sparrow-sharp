@@ -215,9 +215,8 @@ namespace SparrowSharp.Core.Rendering
             if (numTriangles == 0) return;
             
             BeforeDraw();
-            //context.drawTriangles(_indexBuffer, firstIndex, numTriangles);
             GPUInfo.CheckForOpenGLError();
-            GL.DrawElements(PrimitiveType.Triangles, numTriangles, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
             AfterDraw();
         }
 

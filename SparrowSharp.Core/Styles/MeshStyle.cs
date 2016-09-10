@@ -180,12 +180,7 @@ namespace SparrowSharp.Core.Styles
         public void BatchVertexData(MeshStyle targetStyle, int targetVertexID = 0,
                                     Matrix matrix = null, int vertexID = 0, int numVertices= -1)
         {
-            if (matrix != null && !matrix.IsIdentity())
-            {
-                throw new Exception("TODO");
-            }
-            //_vertexData.CopyTo(targetStyle._vertexData, targetVertexID, matrix, vertexID, numVertices);
-            _vertexData.CopyTo(targetStyle._vertexData, vertexID, targetVertexID, numVertices);
+            _vertexData.CopyTo(targetStyle._vertexData, vertexID, targetVertexID, numVertices, matrix);
         }
 
         /** Copies the index data of the style's current target to the target of another style.

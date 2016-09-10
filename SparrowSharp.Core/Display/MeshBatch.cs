@@ -211,8 +211,14 @@ namespace SparrowSharp.Core.Display
                 painter.PrepareToDraw();
                 painter.ExcludeFromCache(this);
 
-                if (_vertexSyncRequired) SyncVertexBuffer();
-                if (_indexSyncRequired)  SyncIndexBuffer();
+                if (_vertexSyncRequired)
+                {
+                    SyncVertexBuffer();
+                }
+                if (_indexSyncRequired)
+                {
+                    SyncIndexBuffer();
+                }
 
                 _style.UpdateEffect(_effect, painter.State);
                 _effect.Render(0, _indexData.NumTriangles);
