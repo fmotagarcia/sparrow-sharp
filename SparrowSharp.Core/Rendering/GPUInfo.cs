@@ -7,7 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Graphics.ES20;
 #endif
 
-namespace SparrowSharp.Core.Desktop.Rendering
+namespace SparrowSharp.Core.Rendering
 {
     class GPUInfo
     {

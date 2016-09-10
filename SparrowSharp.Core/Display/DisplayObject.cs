@@ -444,7 +444,6 @@ namespace Sparrow.Display
          *  call <code>painter.excludeFromCache()</code> in the object's render method instead.
          *  That way, Starling's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
          */
-
         public void SetRequiresRedraw()
         {
             DisplayObject parent = _parent;
@@ -461,7 +460,7 @@ namespace Sparrow.Display
             }
 
             if (_isMask) SparrowSharpApp.SetRequiresRedraw(); // notify 'skipUnchangedFrames'
-            else if (_mask != null) _mask.SetRequiresRedraw();         // propagate into mask
+            else if (_mask != null) _mask.SetRequiresRedraw(); // propagate into mask
         }
 
         public bool RequiresRedraw

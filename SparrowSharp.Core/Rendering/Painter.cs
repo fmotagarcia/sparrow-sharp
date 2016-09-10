@@ -549,11 +549,13 @@ namespace SparrowSharp.Core.Rendering
         {
             ApplyRenderTarget();
             StencilReferenceValue = 0;
-            //RenderUtil.clear(rgb, alpha);
-            int intColor = (int)rgb;
-            System.Drawing.Color cl = System.Drawing.Color.FromArgb((int)(alpha * 255f), intColor & 0xFF, (intColor & 0xFF00) >> 8, (intColor & 0xFF0000) >> 16);
-            GL.ClearColor(cl);
-        }
+
+            float red = ColorUtil.GetR(rgb) / 255.0f;
+            float green = ColorUtil.GetG(rgb) / 255.0f;
+            float blue = ColorUtil.GetB(rgb) / 255.0f;
+            GL.ClearColor(red, green, blue, alpha);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+    }
 
         /** Resets the render target to the back buffer and displays its contents. */
         public void Present()

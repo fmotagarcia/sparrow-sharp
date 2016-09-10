@@ -27,21 +27,28 @@ namespace Sparrow.Samples
             // the container will hold all test objects
             _container = new Sprite();
             AddChild(_container);
-
+*/
             EnterFrame += EnterFrameHandler;
-            AddedToStage += AddedToStageHandler;*/
+            AddedToStage += AddedToStageHandler;
 
+            
             Quad q = new Quad(76, 127, 0x3faf2f);
             AddChild(q);
+
+            Quad q2 = new Quad(566, 344, 0x653421);
+            AddChild(q2);
         }
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
+            //Stage.Color = 0x34FF43;
+            /*
             _started = true;
             _waitFrames = 3;
             AddTestObjects(40);
 
             SparrowSharpApp.ShowStats = true;
+            */
         }
 
         private void AddTestObjects(int numObjects)
@@ -94,12 +101,13 @@ namespace Sparrow.Samples
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)
         {
-            if (!_started)
+            SparrowSharpApp.SetRequiresRedraw();
+            /*if (!_started)
                 return;
             
             _elapsed += passedTime / 1000;
             ++_frameCount;
-            /*
+            
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
@@ -125,12 +133,12 @@ namespace Sparrow.Samples
 
                 _elapsed = _frameCount = 0;
             }
-*/
+
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
                 child.Rotation += 0.05f;    
-            } 
+            } */
         }
     }
 }

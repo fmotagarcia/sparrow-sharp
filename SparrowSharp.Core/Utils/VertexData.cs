@@ -553,10 +553,10 @@ namespace Sparrow.Utils
 
         /** Creates a vertex buffer object with the right size to fit the complete data.
          *  Optionally, the current data is uploaded right away. */
-        public int CreateVertexBuffer(bool upload = false,
+        public int[] CreateVertexBuffer(bool upload = false,
                                       BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
         {
-            if (_numVertices == 0) return 0;
+            if (_numVertices == 0) return new int[] { 0, 0 };
 
             //VertexBuffer3D buffer = context.createVertexBuffer(
             //    _numVertices, _vertexSize / 4, bufferUsage);
@@ -569,7 +569,8 @@ namespace Sparrow.Utils
             {
                 UploadToVertexBuffer(_vertexBufferName, _vertexColorsBufferName, bufferUsage);
             }
-            return _vertexBufferName; // needs to return color buffer name too!
+            int[] ret = new int[] { _vertexBufferName, _vertexColorsBufferName };
+            return ret;
         }
 
         public void UploadToVertexBuffer(int vertexBufferName, int vertexColorsBufferName, BufferUsageHint hint)

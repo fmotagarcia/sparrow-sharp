@@ -10,12 +10,10 @@ namespace SparrowSharp.Core.Rendering
     public class MeshEffect : FilterEffect
     {
         private float _alpha;
-        private bool _tinted;
 
         // helper objects
         private static float[] sRenderAlpha = new float[4];
-
-        /** Creates a new MeshEffect instance. */
+        
         public MeshEffect()
         {
             _alpha = 1.0f;

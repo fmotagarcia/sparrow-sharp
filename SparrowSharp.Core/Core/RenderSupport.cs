@@ -170,8 +170,6 @@ namespace Sparrow.Core
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public static bool HasOpenGLError { get; internal set; }
-
         /// <summary>
         /// Raises the number of draw calls by a specific value. Call this method in custom render methods
         /// to keep the statistics display in sync.

@@ -89,7 +89,7 @@ namespace Sparrow
             if (doRedraw)
             {
                 //dispatchEventWith(starling.events.Event.RENDER);
-                
+                Console.Out.WriteLine("RENDER!");
                 float scaleX = _viewPort.Width / Stage.Width;
                 float scaleY = _viewPort.Height / Stage.Height;
 

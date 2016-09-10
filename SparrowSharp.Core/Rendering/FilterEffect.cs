@@ -29,8 +29,7 @@ namespace SparrowSharp.Core.Rendering
         private Texture _texture;
         private TextureSmoothing _textureSmoothing;
         private bool _textureRepeat;
-
-        /** Creates a new FilterEffect instance. */
+        
         public FilterEffect()
         {
             _textureSmoothing = TextureSmoothing.Bilinear;
@@ -51,9 +50,10 @@ namespace SparrowSharp.Core.Rendering
         {
             if (_texture != null)
             {
-                string vertexShader = STD_VERTEX_SHADER;
-                string fragmentShader = Tex("oc", "v0", 0, _texture);
-                return new Program(vertexShader, fragmentShader);
+                throw new NotImplementedException();
+                //string vertexShader = STD_VERTEX_SHADER;
+                //string fragmentShader = Tex("oc", "v0", 0, _texture);
+                //return new Program(vertexShader, fragmentShader);
             }
             else
             {
@@ -106,7 +106,7 @@ namespace SparrowSharp.Core.Rendering
          *  @see starling.utils.RenderUtil#createAGALTexOperation()
          */
         protected static string Tex(string resultReg, string uvReg, int sampler, Texture texture,
-                                     bool convertToPmaIfRequired= true)
+                                    bool convertToPmaIfRequired= true)
         {
             // return RenderUtil.createAGALTexOperation(resultReg, uvReg, sampler, texture,
             //     convertToPmaIfRequired);

@@ -248,7 +248,7 @@ namespace SparrowSharp.Core.Rendering
             }
 
             meshBatch.Clear();
-            batchList[batchList.Count] = meshBatch;
+            batchList.Add(meshBatch);
         }
     }
 }

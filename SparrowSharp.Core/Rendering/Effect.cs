@@ -197,10 +197,9 @@ namespace SparrowSharp.Core.Rendering
             }
             if (_vertexBufferName == 0)
             {
-                GL.GenBuffers(1, out _vertexBufferName);
-                GL.GenBuffers(1, out _vertexColorsBufferName);
-
-                _vertexBufferName = vertexData.CreateVertexBuffer(true);
+                int[] names = vertexData.CreateVertexBuffer(true);
+                _vertexBufferName = names[0];
+                _vertexColorsBufferName = names[1];
                 _vertexBufferSize = vertexData.NumVertices;
             }
         }
@@ -217,6 +216,7 @@ namespace SparrowSharp.Core.Rendering
             
             BeforeDraw();
             //context.drawTriangles(_indexBuffer, firstIndex, numTriangles);
+            GPUInfo.CheckForOpenGLError();
             GL.DrawElements(PrimitiveType.Triangles, numTriangles, DrawElementsType.UnsignedShort, IntPtr.Zero);
             AfterDraw();
         }
@@ -234,7 +234,7 @@ namespace SparrowSharp.Core.Rendering
         {
             Program.Activate(); // create, upload, use program
 
-            // needed????
+            //is this the best place for this?
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
 
@@ -242,7 +242,6 @@ namespace SparrowSharp.Core.Rendering
             // context.setVertexBufferAt(0, vertexBuffer, attribute.offset / 4, attribute.format);
             int attribPosition = Program.Attributes["aPosition"];
             GL.EnableVertexAttribArray(attribPosition);
-            
             GL.VertexAttribPointer(attribPosition, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
 
 
