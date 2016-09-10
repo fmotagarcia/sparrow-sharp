@@ -439,7 +439,8 @@ namespace SparrowSharp.Core.Rendering
             _actualCulling = null;
             //_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
 #if __WINDOWS__
-            GL.Enable(EnableCap.DepthTest);
+            //TODO GL.Enable(EnableCap.DepthTest);
+            //GL.DepthFunc(DepthFunction.Always);
 #endif
             // reset everything else
             StencilReferenceValue = 0;

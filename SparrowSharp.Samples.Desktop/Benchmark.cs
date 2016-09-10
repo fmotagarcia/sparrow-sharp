@@ -41,7 +41,7 @@ namespace Sparrow.Samples
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
-            //Stage.Color = 0x34FF43;
+            Stage.Color = 0x34FF43;
             /*
             _started = true;
             _waitFrames = 3;
