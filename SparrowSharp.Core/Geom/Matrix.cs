@@ -229,8 +229,7 @@ namespace Sparrow.Geom
             }
             return false;
         }
-
-        // TODO move to MatrixUtil?
+        
         /// <summary>
         /// Returns a point that is transformed by this matrix
         /// </summary>

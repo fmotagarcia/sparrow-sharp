@@ -437,10 +437,9 @@ namespace SparrowSharp.Core.Rendering
             // enforce reset of basic context settings
             _actualBlendMode = 0;
             _actualCulling = null;
-            //_context.setDepthTest(false, Context3DCompareMode.ALWAYS);
 #if __WINDOWS__
-            //TODO GL.Enable(EnableCap.DepthTest);
-            //GL.DepthFunc(DepthFunction.Always);
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Always);
 #endif
             // reset everything else
             StencilReferenceValue = 0;
@@ -621,7 +620,7 @@ namespace SparrowSharp.Core.Rendering
           //  }
         }
 
-        private void ApplyClipRect()
+        private void ApplyClipRect() // used by masks
         {
             Rectangle clipRect = _state.ClipRect;
 

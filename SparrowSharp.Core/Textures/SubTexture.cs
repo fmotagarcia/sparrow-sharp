@@ -153,7 +153,7 @@ namespace Sparrow.Textures
             if (_frame != null)
             {
                 if (count != 4)
-                    throw new InvalidOperationException(@"Textures with a frame can only be used on quads");
+                    throw new InvalidOperationException("Textures with a frame can only be used on quads");
 
                 float deltaRight = _frame.Width + _frame.X - _width;
                 float deltaBottom = _frame.Height + _frame.Top - _height;
