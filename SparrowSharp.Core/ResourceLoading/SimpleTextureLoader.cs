@@ -10,7 +10,7 @@ namespace Sparrow.ResourceLoading
             return new TextureLoader().LoadRemoteImage(remoteURL);
         }
 
-        public static GLTexture LoadLocalImage(string pathToFile)
+        public static Texture LoadLocalImage(string pathToFile)
         {
             return new TextureLoader().LoadLocalImage(pathToFile);
         }
@@ -20,7 +20,7 @@ namespace Sparrow.ResourceLoading
             return new TextureLoader().LoadLocalImageAsync(pathToFile);
         }
 
-        public static GLTexture LoadImageFromStream(Stream strean)
+        public static Texture LoadImageFromStream(Stream strean)
         {
             return new TextureLoader().LoadFromStream(strean);
         }

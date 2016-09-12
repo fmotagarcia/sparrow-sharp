@@ -15,7 +15,7 @@ namespace Sparrow
 
         private static Painter _painter;
         private static uint _frameID;
-        private static readonly float ContentScaleFactor = 1.0f;
+        public static readonly float ContentScaleFactor = 1.0f;
 
         private static Rectangle _viewPort;
         private static Rectangle _previousViewPort;

@@ -20,20 +20,26 @@ namespace Sparrow.Samples
 
         public Benchmark()
         {
-            /*GLTexture star = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
-            GLTexture bird = SimpleTextureLoader.LoadLocalImage("../../benchmark_object.png");
+            Texture star = SimpleTextureLoader.LoadLocalImage("../../bigstar.png");
+            /*GLTexture bird = SimpleTextureLoader.LoadLocalImage("../../benchmark_object.png");
             textures = new Texture[] { bird, star };
 
             // the container will hold all test objects
             _container = new Sprite();
             AddChild(_container);
 */
+
+
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
 
 
-            Quad q = new Quad(120, 180);
-            q.Color = 0x127878;
+            Quad q = new Quad(star.Width, star.Height);
+            q.Texture = star;
+            //q.Color = 0x127878;
+            q.X = 234;
+            q.Y = 111;
+            q.Rotation = 2;
             AddChild(q);
         }
 

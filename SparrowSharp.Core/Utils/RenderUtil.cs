@@ -1,4 +1,9 @@
 ﻿using Sparrow.Textures;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace SparrowSharp.Core.Utils
 {
@@ -38,6 +43,38 @@ namespace SparrowSharp.Core.Utils
                 bitField |= 1 << 2;
 
             return bitField;
+        }
+
+        public static void SetSamplerStateAt(int _name, bool hasMipMaps,
+                                      TextureSmoothing smoothing = TextureSmoothing.Bilinear,
+                                      bool repeat = false)
+        {
+            // set repeat
+            GL.BindTexture(TextureTarget.Texture2D, _name);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, repeat ? (int)All.Repeat : (int)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, repeat ? (int)All.Repeat : (int)All.ClampToEdge);
+
+            // set smoothing
+            TextureMagFilter magFilter;
+            TextureMinFilter minFilter;
+
+            if (smoothing == TextureSmoothing.None)
+            {
+                magFilter = TextureMagFilter.Nearest;
+                minFilter = hasMipMaps ? TextureMinFilter.NearestMipmapNearest : TextureMinFilter.Nearest;
+            }
+            else if (smoothing == TextureSmoothing.Bilinear)
+            {
+                magFilter = TextureMagFilter.Linear;
+                minFilter = hasMipMaps ? TextureMinFilter.LinearMipmapNearest : TextureMinFilter.Linear;
+            }
+            else
+            {
+                magFilter = TextureMagFilter.Linear;
+                minFilter = hasMipMaps ? TextureMinFilter.LinearMipmapLinear : TextureMinFilter.Linear;
+            }
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)magFilter);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)minFilter);
         }
     }
 }

@@ -77,8 +77,10 @@
     <Compile Include="Rendering\VertexDataAttribute.cs" />
     <Compile Include="Rendering\VertexDataFormat.cs" />
     <Compile Include="Styles\MeshStyle.cs" />
+    <Compile Include="Textures\ConcreteTexture.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
+    <Compile Include="Textures\TextureOptions.cs" />
     <Compile Include="Utils\ColorUtil.cs" />
     <Compile Include="Utils\HAlign.cs" />
     <Compile Include="Utils\Juggler.cs" />
@@ -92,7 +94,6 @@
     <Compile Include="Utils\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
     <Compile Include="Utils\VertexData.cs" />
-    <Compile Include="Textures\GLTexture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />

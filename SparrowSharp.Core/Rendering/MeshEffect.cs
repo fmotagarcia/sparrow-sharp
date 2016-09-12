@@ -1,8 +1,12 @@
 ﻿
-using OpenTK.Graphics.ES20;
 using Sparrow.Core;
 using System;
 using System.Text;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -36,30 +40,44 @@ namespace SparrowSharp.Core.Rendering
 
             if (Texture != null)
             {
-                throw new NotImplementedException();
-                /*
-                vertexShader =
-                    "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clip-space
-                    "mov v0, va1      \n" + // pass texture coordinates to fragment program
-                    "mul v1, va2, vc4 \n";  // multiply alpha (vc4) with color (va2), pass to fp
+                AddShaderInitCode(source);
+                source.AppendLine("attribute vec4 aPosition;");
+                source.AppendLine("attribute vec4 aColor;");
+                source.AppendLine("attribute vec2 aTexCoords;");
+                source.AppendLine("uniform mat4 uMvpMatrix;");
+                source.AppendLine("uniform vec4 uAlpha;");
+                source.AppendLine("varying lowp vec4 vColor;");
+                source.AppendLine("varying lowp vec2 vTexCoords;");
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
+                source.AppendLine("  vColor = aColor * uAlpha;");
+                source.AppendLine("  vTexCoords  = aTexCoords;");
+                source.Append("}");
 
-                fragmentShader =
-                    Tex("ft0", "v0", 0, Texture) +
-                    "mul oc, ft0, v1  \n";  // multiply color with texel color
-                */
+                vertexShader = source.ToString();
+
+                source = new StringBuilder("");
+                AddShaderInitCode(source);
+                // variables
+                source.AppendLine("varying lowp vec4 vColor;");
+                source.AppendLine("varying lowp vec2 vTexCoords;");
+                source.AppendLine("uniform lowp sampler2D uTexture;");
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords) * vColor;");
+                source.Append("}");
+
+                fragmentShader = source.ToString();
             }
             else
             {
-                //vertexShader =
-                //    "m44 op, va0, vc0 \n" + // 4x4 matrix transform to output clipspace
-                //    "mul v0, va2, vc4 \n";  // multiply alpha (vc4) with color (va2)
                 AddShaderInitCode(source);
                 source.AppendLine("attribute vec4 aPosition;");
                 source.AppendLine("attribute vec4 aColor;");
                 source.AppendLine("uniform mat4 uMvpMatrix;");
                 source.AppendLine("uniform vec4 uAlpha;");
                 source.AppendLine("varying lowp vec4 vColor;");
-
                 // main
                 source.AppendLine("void main() {");
                 source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
@@ -67,9 +85,6 @@ namespace SparrowSharp.Core.Rendering
                 source.Append("}");
 
                 vertexShader = source.ToString();
-
-                //fragmentShader =
-                //    "mov oc, v0       \n";  // output color
 
                 source = new StringBuilder("");
                 AddShaderInitCode(source);

@@ -1,22 +1,22 @@
 ﻿using System;
-using OpenTK.Graphics.ES20;
 using System.Drawing;
 using System.Drawing.Imaging;
 using Sparrow.Textures;
 using System.IO;
+using SparrowSharp.Core.Textures;
 
 namespace Sparrow.ResourceLoading
 {
     public class TextureLoader
     {
         protected bool _isLoaded = false;
-        protected GLTexture _glTexture;
+        protected Texture _glTexture;
 
         public bool IsLoaded { get { return _isLoaded; } }
 
-        public GLTexture Texture { get { return _glTexture; } }
+        public Texture Texture { get { return _glTexture; } }
 
-        public event EventHandler<GLTexture> ResourceLoaded;
+        public event EventHandler<Texture> ResourceLoaded;
 
         public TextureLoader LoadRemoteImage(string remoteURL)
         {
@@ -24,7 +24,7 @@ namespace Sparrow.ResourceLoading
             return this; 
         }
 
-        public GLTexture LoadLocalImage(string pathToFile)
+        public Texture LoadLocalImage(string pathToFile)
         {
             _isLoaded = false;
             GenerateTexture(new Bitmap(pathToFile));
@@ -40,7 +40,7 @@ namespace Sparrow.ResourceLoading
             return this; 
         }
 
-        public GLTexture LoadFromStream(Stream stream)
+        public Texture LoadFromStream(Stream stream)
         {
             _isLoaded = false;
             Bitmap bitmap = new Bitmap(stream);
@@ -50,7 +50,7 @@ namespace Sparrow.ResourceLoading
 
         private async void LoadLocalBitmapAsync(string path)
         {
-            // TODO
+            throw new NotImplementedException();
         }
 
         private void GenerateTexture(Bitmap bitmap)
@@ -65,6 +65,13 @@ namespace Sparrow.ResourceLoading
                 ImageLockMode.ReadOnly, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
+            
+            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, 
+                                         SparrowSharpApp.ContentScaleFactor, 0, false);
+            bitmap.UnlockBits(bitmapData);
+            _glTexture = Texture.FromData(bitmapData.Scan0, opts, bitmapData.Width, bitmapData.Height);
+            
+            /*
             uint name = (uint)GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, name);
 
@@ -83,16 +90,16 @@ namespace Sparrow.ResourceLoading
                 OpenTK.Graphics.OpenGL4.PixelFormat.Rgba,
                 OpenTK.Graphics.OpenGL4.PixelType.UnsignedByte,
                 bitmapData.Scan0);
-            
+           
             bitmap.UnlockBits(bitmapData);
-
             _glTexture = new GLTexture(name, bitmap.Width, bitmap.Height, false, 1.0f, false);
+            */
 
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
-            EventHandler<GLTexture> handler = ResourceLoaded;
+            EventHandler<Texture> handler = ResourceLoaded;
             if (handler != null)
             {
                 handler(this, _glTexture);

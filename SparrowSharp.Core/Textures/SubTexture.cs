@@ -10,6 +10,7 @@ namespace Sparrow.Textures
     /// manipulation of texture coordinates, making the class very efficient. 
     /// Note that it is OK to create subtextures of subtextures.
     /// </summary>
+    /*
     public class SubTexture : Texture
     {
         private Texture _parent;
@@ -183,6 +184,6 @@ namespace Sparrow.Textures
                 matrix.D * vector.Y + matrix.B * vector.X + matrix.Ty
             );
         }
-    }
+    }*/
 }
 

@@ -2,7 +2,6 @@ using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
 using SparrowSharp.Core.Rendering;
-using SparrowSharp.Core.Styles;
 
 namespace Sparrow.Display
 {
@@ -75,8 +74,8 @@ namespace Sparrow.Display
 
             if (Texture != null)
             {
- //               texture.SetupVertexPositions(vertexData, 0, "position", _bounds);
- //               texture.SetupTextureCoordinates(vertexData, 0, texAttr);
+                texture.SetupVertexPositions(vertexData, 0, _bounds);
+                texture.SetupTextureCoordinates(vertexData, 0);
             }
             else
             {
@@ -143,8 +142,8 @@ namespace Sparrow.Display
          *  values for width and height. */
         public void ReadjustSize(float width = -1, float height = -1)
         {
-            if (width  <= 0) width  = /*Texture != null ? Texture.FrameWidth  :*/ _bounds.Width;
-            if (height <= 0) height = /*Texture != null ? Texture.FrameHeight :*/ _bounds.Height;
+            if (width  <= 0) width  = Texture != null ? Texture.FrameWidth  : _bounds.Width;
+            if (height <= 0) height = Texture != null ? Texture.FrameHeight : _bounds.Height;
 
             if (width != _bounds.Width || height != _bounds.Height)
             {

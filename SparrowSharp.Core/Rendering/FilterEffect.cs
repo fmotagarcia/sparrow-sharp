@@ -2,6 +2,12 @@
 using Sparrow.Textures;
 using SparrowSharp.Core.Utils;
 using System;
+using Sparrow.Utils;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace SparrowSharp.Core.Rendering
 {
@@ -78,11 +84,15 @@ namespace SparrowSharp.Core.Rendering
 
             if (_texture != null)
             {
-                throw new Exception("TODO");
-                //bool repeat = _textureRepeat && _texture.Base.IsPotTexture;
-                //RenderUtil.setSamplerStateAt(0, _texture.MipMapping, _textureSmoothing, repeat);
-                //context.setTextureAt(0, _texture.Base);
-                //VertexFormat.SetVertexBufferAt(1, VertexBuffer, "texCoords");
+                int aTexCoords = Program.Attributes["aTexCoords"];
+                GL.EnableVertexAttribArray(aTexCoords);
+                GL.VertexAttribPointer(aTexCoords, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
+
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, _texture.Base);
+                
+                RenderUtil.SetSamplerStateAt(_texture.Base, _texture.NumMipMaps > 0, 
+                                _textureSmoothing, _textureRepeat);
             }
         }
 
@@ -92,9 +102,8 @@ namespace SparrowSharp.Core.Rendering
         {
             if (_texture != null)
             {
-                throw new Exception("TODO");
-                //  context.setTextureAt(0, null);
-                //   context.setVertexBufferAt(1, null);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                // do we need to unbind anything else?
             }
             base.AfterDraw();
         }

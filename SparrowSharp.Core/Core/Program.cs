@@ -53,14 +53,6 @@ namespace Sparrow.Core
 
         public void Activate()
         {
-            // baseEffect.PrepareToDraw() goes here
-            /*if (_program3D == null)
-            {
-                _program3D = context.createProgram();
-                _program3D.upload(_vertexShader, _fragmentShader);
-            }
-            context.setProgram(_program3D);
-            */
             if (Name == 0)
             {
                 Compile();
@@ -115,11 +107,6 @@ namespace Sparrow.Core
 
         public void Dispose()
         {
-            /*if (_program3D)
-            {
-                _program3D.dispose();
-                _program3D = null;
-            }*/
             if (Name != 0)
             {
                 GL.DetachShader(Name, vertexShader);

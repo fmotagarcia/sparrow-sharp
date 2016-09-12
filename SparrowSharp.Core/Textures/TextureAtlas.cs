@@ -45,6 +45,7 @@ namespace Sparrow.Textures
     /// </summary>
     public class TextureAtlas
     {
+        /*
         private readonly Texture _atlasTexture;
         private readonly Dictionary<string, TextureInfo> _textureInfos;
 
@@ -341,5 +342,6 @@ namespace Sparrow.Textures
             }
             return len1 - len2;
         }
+        */
     }
 }

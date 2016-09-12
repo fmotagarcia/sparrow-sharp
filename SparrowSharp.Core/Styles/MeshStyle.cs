@@ -83,7 +83,7 @@ namespace SparrowSharp.Core.Styles
         private Type _type;
         private Mesh _target;
         private Texture _texture;
-        private GLTexture _textureBase;
+        private int _textureBase;
         private TextureSmoothing _textureSmoothing;
         private bool _textureRepeat;
         private VertexData _vertexData;   // just a reference to the target's vertex data
@@ -292,18 +292,17 @@ namespace SparrowSharp.Core.Styles
         /** Returns the texture coordinates of the vertex at the specified index. */
         public Point GetTexCoords(int vertexID)
         {
-            /*           if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID, "texCoords", outPoint);
-                       else return _vertexData.GetPoint(vertexID, "texCoords", outPoint);*/
-            return null;
+            if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID);
+            else return _vertexData.GetPoint(vertexID);
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
         public void SetTexCoords(int vertexID, float u, float v)
         {
-/*            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, "texCoords", u, v);
-            else _vertexData.SetPoint(vertexID, "texCoords", u, v);
+            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, u, v);
+            else _vertexData.SetPoint(vertexID, u, v);
 
-            SetRequiresRedraw();*/
+            SetRequiresRedraw();
         }
 
         // properties
@@ -352,7 +351,7 @@ namespace SparrowSharp.Core.Styles
             }
             set
             {
-                /*if (value != _texture)
+                if (value != _texture)
                 {
                     if (value != null)
                     {
@@ -361,15 +360,15 @@ namespace SparrowSharp.Core.Styles
 
                         for (i = 0; i < numVertices; ++i)
                         {
-                            GetTexCoords(i, sPoint);
-                            value.SetTexCoords(_vertexData, i, "texCoords", sPoint.X, sPoint.Y);
+                            sPoint = GetTexCoords(i);
+                            value.SetTexCoords(_vertexData, i, sPoint.X, sPoint.Y);
                         }
                     }
 
                     _texture = value;
-                    _textureBase = value != null ? value.Base : null;
+                    _textureBase = value != null ? value.Base : 0;
                     SetRequiresRedraw();
-                }*/
+                }
             }
         }
 
