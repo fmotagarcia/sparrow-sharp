@@ -49,10 +49,9 @@ namespace SparrowSharp.Core.Utils
         /// </summary>
         public static Rectangle CalculateBounds(VertexData vertexData,
                                                 DisplayObject sourceSpace,
-                                                DisplayObject targetSpace,
-                                                Rectangle outRect = null)
+                                                DisplayObject targetSpace)
         {
-            if (outRect == null) outRect = new Rectangle();
+            Rectangle outRect = Rectangle.Create();
 
             Stage stage = sourceSpace.Stage;
             sMatrix = sourceSpace.GetTransformationMatrix(targetSpace);

@@ -52,20 +52,20 @@ namespace Sparrow.Display
             {
                 throw new System.ArgumentException("Invalid size: width and height must not be zero");
             }
-            _bounds = new Rectangle(0, 0, width, height);
+            _bounds = Rectangle.Create(0, 0, width, height);
 
             SetupVertices();
             Color = color;
         }
 
-        protected void SetupVertices()
+        virtual protected void SetupVertices()
         {
             Texture texture = Style.Texture;
             VertexData vertexData = VertexData;
             IndexData indexData = IndexData;
 
             indexData.NumIndices = 0;
-            indexData.addQuad(0, 1, 2, 3);
+            indexData.AddQuad(0, 1, 2, 3);
 
             if (vertexData.NumVertices != 4)
             {
@@ -95,7 +95,7 @@ namespace Sparrow.Display
 
         public override Rectangle GetBounds(DisplayObject targetSpace)
         {
-            Rectangle outRect = new Rectangle();
+            Rectangle outRect = Rectangle.Create();
 
             if (targetSpace == this)// optimization
             {
@@ -106,10 +106,10 @@ namespace Sparrow.Display
                 float scaleX = ScaleX;
                 float scaleY = ScaleY;
 
-                outRect = new Rectangle(X - PivotX * scaleX,
-                                       Y - PivotY * scaleY,
-                                       _bounds.Width * ScaleX,
-                                       _bounds.Height * ScaleY);
+                outRect = Rectangle.Create(X - PivotX * scaleX,
+                                           Y - PivotY * scaleY,
+                                           _bounds.Width * ScaleX,
+                                           _bounds.Height * ScaleY);
                 if (scaleX < 0.0f)
                 {
                     outRect.Width *= -1.0f;

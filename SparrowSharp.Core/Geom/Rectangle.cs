@@ -1,15 +1,34 @@
 using System;
 using Sparrow.Utils;
-using SparrowSharp.Core.Utils;
+using SparrowSharp.Pool;
 
 namespace Sparrow.Geom
 {
-    public class Rectangle
+    public class Rectangle : PooledObject
     {
         public float X;
         public float Y;
         public float Width;
         public float Height;
+
+        private static readonly ObjectPool _pool = new ObjectPool(new CreateObject<PooledObject>(Init), 1000);
+
+        public static Rectangle Create(float x = 0.0f, float y = 0.0f, float width = 0.0f, float height = 0.0f)
+        {
+            Rectangle point = (Rectangle)_pool.GetObject();
+            point.X = x;
+            point.Y = y;
+            point.Width = width;
+            point.Height = height;
+            return point;
+        }
+
+        private static Rectangle Init()
+        {
+            return new Rectangle();
+        }
+
+        private Rectangle() {}
 
         public float Top
         {
@@ -65,14 +84,6 @@ namespace Sparrow.Geom
             }
         }
 
-        public Rectangle(float x = 0.0f, float y = 0.0f, float width = 0.0f, float height = 0.0f)
-        { 
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
-        }
-
         public bool Contains(float x, float y)
         {
             return x >= X && y >= Y && x <= X + Width && y <= Y + Height;
@@ -123,9 +134,9 @@ namespace Sparrow.Geom
 
             if (left > right || top > bottom)
             {
-                return new Rectangle();
+                return Create();
             }
-            return new Rectangle(left, top, right - left, bottom - top);
+            return Create(left, top, right - left, bottom - top);
         }
 
         /// <summary>
@@ -143,7 +154,7 @@ namespace Sparrow.Geom
             float top = Math.Max(Y, rectangle.Y);
             float bottom = Math.Min(Y + Height, rectangle.Y + rectangle.Height);
 
-            return new Rectangle(left, top, right - left, bottom - top);
+            return Create(left, top, right - left, bottom - top);
         }
 
         public void Inflate(float dx, float dy)
@@ -252,9 +263,9 @@ namespace Sparrow.Geom
             return outP;
         }
 
-        public Rectangle Copy()
+        public Rectangle Clone()
         {
-            return new Rectangle(X, Y, Width, Height);
+            return Create(X, Y, Width, Height);
         }
 
         // static functions 

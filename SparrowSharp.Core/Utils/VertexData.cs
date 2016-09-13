@@ -244,11 +244,14 @@ namespace Sparrow.Utils
         /// </summary>
         public void SetPoint(int atIndex, float x, float y)
         {
-            if (atIndex < 0 || atIndex >= _numVertices)
+            if (atIndex < 0)
             {
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
-
+            if (atIndex >= _numVertices)
+            {
+                NumVertices = atIndex + 1;
+            }
             _vertices[atIndex].Position = new Vector2(x, y);
         }
 
@@ -356,6 +359,34 @@ namespace Sparrow.Utils
             }
 
             return ColorUtil.GetRGB(vertexColor.R, vertexColor.G, vertexColor.B);
+        }
+
+        /// <summary>
+        /// Writes the given RGB and alpha values to all vertices.
+        /// </summary>
+        public void Colorize(uint color, float alpha)
+        {
+
+            Colorize(color, alpha, 0, _numVertices);
+        }
+
+        /// <summary>
+        /// Writes the given RGB and alpha values to the specified vertices.
+        /// </summary>
+        public void Colorize(uint color, float alpha, int vertexID, int numVertices)
+        {
+            if (numVertices < 0 || vertexID + numVertices > _numVertices)
+            {
+                numVertices = _numVertices - vertexID;
+            }
+
+            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f);
+            VertexColor vertexColor = VertexColorHelper.CreateVertexColor(color, alpha);
+            VertexColor col = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
+            for (int i = vertexID; i < numVertices; i++)
+            {
+                _vertexColors[i] = col;
+            }
         }
 
         /// <summary>
@@ -508,7 +539,7 @@ namespace Sparrow.Utils
                 }
             }
 
-            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+            return Rectangle.Create(minX, minY, maxX - minX, maxY - minY);
         }
 
         /// <summary>
@@ -546,6 +577,24 @@ namespace Sparrow.Utils
         public void Clear()
         {
             NumVertices = 0;
+        }
+
+        private static uint PremultiplyAlpha(uint rgba)
+        {
+            uint alpha = rgba & 0xff;
+
+            if (alpha == 0xff) return rgba;
+            else
+            {
+                float factor = alpha / 255.0f;
+                uint r = (uint)(((rgba >> 24) & 0xff) * factor);
+                uint g = (uint)(((rgba >> 16) & 0xff) * factor);
+                uint b = (uint)(((rgba >>  8) & 0xff) * factor);
+
+                return (r & 0xff) << 24 |
+                       (g & 0xff) << 16 |
+                       (b & 0xff) <<  8 | alpha;
+            }
         }
 
         /** Creates a vertex buffer object with the right size to fit the complete data.

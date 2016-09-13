@@ -310,7 +310,7 @@ namespace SparrowSharp.Core.Rendering
         ///  <p>To make sure the indices will follow the basic quad layout, make sure each
         /// parameter increments the one before it(e.g. <code>0, 1, 2, 3</code>).</p>
         /// </summary>
-        public void addQuad(short a, short b, short c, short d)
+        public void AddQuad(short a, short b, short c, short d)
         {
             if (_useQuadLayout)
             {

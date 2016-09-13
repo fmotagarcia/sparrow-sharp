@@ -116,13 +116,9 @@ namespace Sparrow.Display
         // helper objects
         private static List<DisplayObject> sAncestors = new List<DisplayObject>();
         private static Point sHelperPoint = Point.Create();
-        //private static var sHelperPoint3D:Vector3D = new Vector3D();
-        //private static var sHelperPointAlt3D:Vector3D = new Vector3D();
-        private static Rectangle sHelperRect = new Rectangle();
+        private static Rectangle sHelperRect = Rectangle.Create();
         private static Matrix sHelperMatrix = Matrix.Create();
         private static Matrix sHelperMatrixAlt = Matrix.Create();
-        //private static var sHelperMatrix3D:Matrix3D  = new Matrix3D();
-        //private static var sHelperMatrixAlt3D:Matrix3D  = new Matrix3D();
 
         protected DisplayObject()
         {
@@ -769,7 +765,7 @@ namespace Sparrow.Display
             set
             {
                 ScaleY = 1.0f;
-                float actualHeight = Width;
+                float actualHeight = Height;
                 if (actualHeight != 0.0f)
                 {
                     ScaleY = value / actualHeight;
@@ -936,10 +932,10 @@ namespace Sparrow.Display
             get { return _rotation != 0.0 || _skewX != 0.0 || _skewY != 0.0; }
         }
 
-    /// <summary>
-    /// The opacity of the object. 0 = transparent, 1 = opaque.
-    /// </summary>
-    virtual public float Alpha
+        /// <summary>
+        /// The opacity of the object. 0 = transparent, 1 = opaque.
+        /// </summary>
+        virtual public float Alpha
         {
             get { return _alpha; }
             set
@@ -1004,9 +1000,10 @@ namespace Sparrow.Display
         *  @see starling.filters.FilterChain
         */
         public FragmentFilter Filter { 
-            get { return null;/*_filter;*/ }
+            get { throw new NotImplementedException(); return null;/*_filter;*/ }
             set
             {
+                throw new NotImplementedException();
                 // TODO
                 /*if (value != _filter)
                 {

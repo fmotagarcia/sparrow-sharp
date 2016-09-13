@@ -27,11 +27,7 @@ namespace Sparrow.Geom
         public float X;
         public float Y;
 
-        private Point(float x = 0.0f, float y = 0.0f)
-        {
-            X = x;
-            Y = y;
-        }
+        private Point() {}
 
         public float Length
         {

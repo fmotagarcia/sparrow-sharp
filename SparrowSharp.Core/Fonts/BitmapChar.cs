@@ -10,15 +10,16 @@ namespace SparrowSharp.Fonts
     /// </summary>
     public class BitmapChar
     {
-        private Dictionary<int, float> _kernings;
-        /// <summary>
-        ///  The unicode ID of the char.
-        /// </summary>
-        public readonly int CharId;
         /// <summary>
         /// The texture of the character.
         /// </summary>
         public readonly Texture Texture;
+
+        /// <summary>
+        ///  The unicode ID of the char.
+        /// </summary>
+        public readonly int CharID;
+
         /// <summary>
         /// The number of pixels to move the char in x direction on character arrangement.
         /// </summary>
@@ -32,6 +33,67 @@ namespace SparrowSharp.Fonts
         /// </summary>
         public readonly float XAdvance;
 
+        private Dictionary<int, float> _kernings;
+        
+
+        /// <summary>
+        /// Initializes a char with a texture and its properties.
+        /// </summary>
+        public BitmapChar(int charId, Texture texture, float xOffset, float yOffset, float xAdvance)
+        {
+            CharID = charId;
+            XAdvance = xAdvance;
+            Texture = texture;
+            XOffset = xOffset;
+            YOffset = yOffset;
+        }
+
+        /// <summary>
+        /// Initializes a char with a texture.
+        /// </summary>
+        public BitmapChar(Texture texture)
+        {
+            CharID = 0;
+            XAdvance = texture.Width;
+            Texture = texture;
+            XOffset = 0;
+            YOffset = 0;
+        }
+
+        /// <summary>
+        ///  Adds kerning information relative to a specific other character ID.
+        /// </summary>
+        public void AddKerning(float amount, int charId)
+        {
+            if (_kernings == null)
+            {
+                _kernings = new Dictionary<int, float>();
+            }
+
+            _kernings.Add(charId, amount);
+        }
+
+        /// <summary>
+        /// Retrieve kerning information relative to the given character ID.
+        /// </summary>
+        public float GetKerning(int charId)
+        {
+            float kerning = 1.0f;
+            if (_kernings != null)
+            {
+                _kernings.TryGetValue(charId, out kerning);
+            }
+            return kerning;
+        }
+        /*
+        /// <summary>
+        /// Creates an image of the char.
+        /// </summary>
+        public Image CreateImage()
+        {
+            return new Image(Texture);
+        }
+        */
         /// <summary>
         /// The width of the character in points.
         /// </summary>
@@ -46,57 +108,6 @@ namespace SparrowSharp.Fonts
         public float Height
         {
             get { return Texture.Height; }
-        }
-
-        /// <summary>
-        /// Initializes a char with a texture and its properties.
-        /// </summary>
-        public BitmapChar(int charId, Texture texture, float xOffset, float yOffset, float xAdvance)
-        {
-            CharId = charId;
-            XAdvance = xAdvance;
-            Texture = texture;
-            XOffset = xOffset;
-            YOffset = yOffset;
-        }
-
-        /// <summary>
-        /// Initializes a char with a texture.
-        /// </summary>
-        public BitmapChar(Texture texture)
-        {
-            CharId = 0;
-            XAdvance = texture.Width;
-            Texture = texture;
-            XOffset = 0;
-            YOffset = 0;
-        }
-
-        /// <summary>
-        ///  Adds kerning information relative to a specific other character ID.
-        /// </summary>
-        public void AddKerning(float amount, int charId)
-        {
-            // TODO: sparrow lazy loads the kernings dictionary, revisit to check that we really want this
-            if (_kernings == null)
-            {
-                _kernings = new Dictionary<int, float>();
-            }
-
-            _kernings.Add(charId, amount);
-        }
-
-        /// <summary>
-        /// Retrieve kerning information relative to the given character ID.
-        /// </summary>
-        public float KerningToChar(int charId)
-        {
-            float kerning = 1.0f;
-            if (_kernings != null)
-            {
-                _kernings.TryGetValue(charId, out kerning);
-            }
-            return kerning;
         }
     }
 }

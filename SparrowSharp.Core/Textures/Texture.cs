@@ -187,7 +187,7 @@ namespace Sparrow.Textures
             float width     = Width;
             float height    = Height;
 
-            Rectangle sRectangle = new Rectangle();
+            Rectangle sRectangle = Rectangle.Create();
             if (frame != null)
                 sRectangle.SetTo(-frame.X, -frame.Y, width, height);
             else
@@ -286,15 +286,15 @@ namespace Sparrow.Textures
 
         /** The texture frame if it has one (see class description), otherwise <code>null</code>.
          *  <p>CAUTION: not a copy, but the actual object! Do not modify!</p> */
-        public Rectangle Frame { get { return null; } }
+        virtual public Rectangle Frame { get { return null; } }
 
         /** The height of the texture in points, taking into account the frame rectangle
          *  (if there is one). */
-        public float FrameWidth { get { return Frame != null ? Frame.Width : Width; } }
+        virtual public float FrameWidth { get { return Frame != null ? Frame.Width : Width; } }
 
         /** The width of the texture in points, taking into account the frame rectangle
          *  (if there is one). */
-        public float FrameHeight { get { return Frame != null ? Frame.Height : Height; } }
+        virtual public float FrameHeight { get { return Frame != null ? Frame.Height : Height; } }
 
         /** The width of the texture in points. */
         virtual public float Width { get { return 0; } }
@@ -330,13 +330,13 @@ namespace Sparrow.Textures
          *  space of the parent texture, if there is one. @default null
          *
          *  <p>CAUTION: not a copy, but the actual object! Never modify this matrix!</p> */
-        public Matrix TransformationMatrix { get { return null; } }
+        virtual public Matrix TransformationMatrix { get { return null; } }
 
         /** The matrix that is used to transform the texture coordinates into the coordinate
          *  space of the root texture, if this instance is not the root. @default null
          *
          *  <p>CAUTION: not a copy, but the actual object! Never modify this matrix!</p> */
-        public Matrix TransformationMatrixToRoot { get { return null; } }
+        virtual public Matrix TransformationMatrixToRoot { get { return null; } }
 
         /** Returns the maximum size constraint (for both width and height) for textures in the
          *  current Context3D profile. */

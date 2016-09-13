@@ -75,9 +75,9 @@ namespace SparrowSharp.Core.Rendering
 
         // helper objects
         private static Matrix sMatrix = Matrix.Create();
-        private static Rectangle sClipRect = new Rectangle();
-        private static Rectangle sBufferRect = new Rectangle();
-        private static Rectangle sScissorRect = new Rectangle();
+        private static Rectangle sClipRect = Rectangle.Create();
+        private static Rectangle sBufferRect = Rectangle.Create();
+        private static Rectangle sScissorRect = Rectangle.Create();
         private static MeshSubset sMeshSubset = new MeshSubset();
         
         /** Creates a new Painter object. Normally, it's not necessary to create any custom
@@ -253,6 +253,7 @@ namespace SparrowSharp.Core.Rendering
         */
         public void DrawMask(DisplayObject mask, DisplayObject maskee = null)
         {
+            throw new NotImplementedException();
             /*FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
@@ -286,6 +287,7 @@ namespace SparrowSharp.Core.Rendering
          */
         public void EraseMask(DisplayObject mask, DisplayObject maskee = null)
         {
+            throw new NotImplementedException();
             /*FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
@@ -334,7 +336,7 @@ namespace SparrowSharp.Core.Rendering
         {
             List<Rectangle> stack = _clipRectStack;
             int stackLength = stack.Count;
-            Rectangle intersection = new Rectangle(); // TODO add pooling
+            Rectangle intersection = Rectangle.Create();
 
             if (stackLength != 0)
                 intersection = clipRect.Intersection(stack[stackLength - 1]);

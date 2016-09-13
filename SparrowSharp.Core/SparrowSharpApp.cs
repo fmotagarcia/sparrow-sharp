@@ -44,8 +44,8 @@ namespace Sparrow
         {
             _width = width;
             _height = height;
-            _viewPort = new Rectangle(0, 0, _width, _height);
-            _previousViewPort = new Rectangle();
+            _viewPort = Rectangle.Create(0, 0, _width, _height);
+            _previousViewPort = Rectangle.Create();
             GPUInfo.PrintGPUInfo();
 #if DEBUG
             OpenGLDebugCallback.Init();
@@ -133,7 +133,7 @@ namespace Sparrow
             // viewPort directly (without a copy) and we still know if it has changed.
             if (forceUpdate || !Rectangle.Compare(_viewPort, _previousViewPort))
             {
-                _clippedViewPort = new Rectangle(0, 0, _width, _height);
+                _clippedViewPort = Rectangle.Create(0, 0, _width, _height);
                 _previousViewPort.SetTo(_viewPort.X, _viewPort.Y, _viewPort.Width, _viewPort.Height);
 
                 _painter.ConfigureBackBuffer(_clippedViewPort);

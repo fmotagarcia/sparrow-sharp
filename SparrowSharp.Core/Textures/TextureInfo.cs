@@ -12,12 +12,12 @@ namespace Sparrow.Textures
         {
             if (region != null)
             {
-                Region = region.Copy();
+                Region = region.Clone();
             }
 
             if (frame != null)
             {
-                Frame = frame.Copy();
+                Frame = frame.Clone();
             }
 
             Rotated = rotated;

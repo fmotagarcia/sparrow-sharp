@@ -336,7 +336,7 @@ namespace Sparrow.Display
             {
                 Matrix transformationMatrix = GetTransformationMatrix(targetSpace);
                 Point transformedPoint = transformationMatrix.TransformPoint(X, Y);
-                return new Rectangle(transformedPoint.X, transformedPoint.Y);
+                return Rectangle.Create(transformedPoint.X, transformedPoint.Y);
             }
             else if (numChildren == 1)
             {
@@ -353,7 +353,7 @@ namespace Sparrow.Display
                     minY = Math.Min(minY, childBounds.Top);
                     maxY = Math.Max(maxY, childBounds.Top + childBounds.Height);
                 }
-                return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+                return Rectangle.Create(minX, minY, maxX - minX, maxY - minY);
             }
         }
 

@@ -280,7 +280,7 @@ namespace Sparrow.Core
                     if (_onDrawRequired != null) _onDrawRequired();
                     if (value != null)
                     {
-                        if (_clipRect == null) _clipRect = new Rectangle();
+                        if (_clipRect == null) _clipRect = Rectangle.Create();
                         _clipRect.CopyFrom(value);
                     }
                     else if (_clipRect != null)
