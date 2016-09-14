@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SparrowSharp.Core.Desktop.Rendering;
+using SparrowSharp.Core.Rendering;
 
 namespace Tests
 {
@@ -109,8 +109,8 @@ namespace Tests
 
             // basic quad data
 
-            indexData.addQuad(0, 1, 2, 3);
-            indexData.addQuad(4, 5, 6, 7);
+            indexData.AddQuad(0, 1, 2, 3);
+            indexData.AddQuad(4, 5, 6, 7);
 
             Assert.IsTrue(indexData.UseQuadLayout);
             Assert.AreEqual(2, indexData.NumQuads);
@@ -135,7 +135,7 @@ namespace Tests
             Assert.AreEqual(0, indexData.NumQuads);
 
             // arbitrary data
-            indexData.addQuad(0, 1, 3, 2);
+            indexData.AddQuad(0, 1, 3, 2);
             Assert.IsFalse(indexData.UseQuadLayout);
             Assert.AreEqual(1, indexData.NumQuads);
             Assert.AreEqual(2, indexData.NumTriangles);
@@ -232,7 +232,7 @@ namespace Tests
             target.Clear();
 
             source.AddTriangle(0, 1, 2);
-            target.addQuad(0, 1, 2, 3);
+            target.AddQuad(0, 1, 2, 3);
             source.CopyTo(target, 6, 4);
 
             Assert.IsTrue(target.UseQuadLayout);
@@ -244,7 +244,7 @@ namespace Tests
 
             // quad data -> arbitrary data
             target.Clear();
-            target.addQuad(1, 2, 3, 4);
+            target.AddQuad(1, 2, 3, 4);
             source.CopyTo(target, 6, 4);
 
             Assert.IsTrue(source.UseQuadLayout);
@@ -259,7 +259,7 @@ namespace Tests
             source.Clear();
             source.AddTriangle(1, 2, 3);
             target.Clear();
-            target.addQuad(0, 1, 2, 3);
+            target.AddQuad(0, 1, 2, 3);
             source.CopyTo(target, 6, 4);
 
             Assert.IsFalse(source.UseQuadLayout);

@@ -48,7 +48,7 @@ namespace Tests
 
             for (int i = 0; i < vertexData.NumVertices; ++i)
             {
-                Assert.AreEqual(color, vertexData.ColorAt(i), "wrong color");
+                Assert.AreEqual(color, vertexData.GetColor(i), "wrong color");
             }
         }
 
@@ -60,7 +60,7 @@ namespace Tests
 
             for (int i = 0; i < vertexData.NumVertices; ++i)
             {
-                AssertAreEqualWithSmallError(0.5f, vertexData.AlphaAt(i), "wrong alpha", 0.005f);
+                AssertAreEqualWithSmallError(0.5f, vertexData.GetAlpha(i), "wrong alpha", 0.005f);
             }
         }
 
@@ -75,8 +75,8 @@ namespace Tests
 
             for (int i=0; i<vertexData.NumVertices; ++i)
             {
-                Assert.AreEqual(color, vertexData.ColorAt(i), "wrong color");
-                AssertAreEqualWithSmallError(alpha, vertexData.AlphaAt(i), "wrong alpha", 0.005f);
+                Assert.AreEqual(color, vertexData.GetColor(i), "wrong color");
+                AssertAreEqualWithSmallError(alpha, vertexData.GetAlpha(i), "wrong alpha", 0.005f);
             }
         }
 
@@ -129,7 +129,7 @@ namespace Tests
 
             vertexData.SetColor(ColorUtil.GetRGB(80, 60, 40), 128/255.0f);
 
-            vertexData.ScaleAlphaBy(0.5f);
+            vertexData.ScaleAlphas(0.5f);
 
             CompareVertexColor(VertexColorHelper.CreateVertexColor(80, 60, 40, 64), vertexData.VertexColors[0]);
         }
@@ -141,7 +141,7 @@ namespace Tests
 
             vertexData.SetColor(ColorUtil.GetRGB(80, 60, 40), 204/255.0f);
 
-            vertexData.ScaleAlphaBy(0.8f);
+            vertexData.ScaleAlphas(0.8f);
 
             CompareVertexColor(VertexColorHelper.CreateVertexColor(
                 (byte)(80 * 0.64f + 0.5f), 
@@ -192,7 +192,7 @@ namespace Tests
 
             VertexData targetData = new VertexData(5, false);
 
-            sourceData.CopyToVertexData(targetData, true, 2);
+            sourceData.CopyTo(targetData, 0, 2, 3);
 
             CompareVertex(defaultVertex, targetData.Vertices[0]);
             CompareVertex(defaultVertex, targetData.Vertices[1]);

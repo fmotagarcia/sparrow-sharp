@@ -233,18 +233,14 @@ namespace SparrowSharp.Core.Rendering
         {
             Program.Activate(); // create, upload, use program
 
-            //is this the best place for this?/needed?
+            //is this the best place for this?
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
-
-            // attribute = getAttribute("position")
-            // context.setVertexBufferAt(0, vertexBuffer, attribute.offset / 4, attribute.format);
+            
             int attribPosition = Program.Attributes["aPosition"];
             GL.EnableVertexAttribArray(attribPosition);
             GL.VertexAttribPointer(attribPosition, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
-
-
-            //context.SetProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, mvpMatrix3D, true);
+            
             int _uMvpMatrix = Program.Uniforms["uMvpMatrix"];
             Matrix4 glkMvpMatrix = MvpMatrix3D.RawData;
             GL.UniformMatrix4(_uMvpMatrix, false, ref glkMvpMatrix);

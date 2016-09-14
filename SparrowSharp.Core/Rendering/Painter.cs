@@ -439,10 +439,10 @@ namespace SparrowSharp.Core.Rendering
             // enforce reset of basic context settings
             _actualBlendMode = 0;
             _actualCulling = null;
-#if __WINDOWS__
+
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Always);
-#endif
+
             // reset everything else
             StencilReferenceValue = 0;
             _clipRectStack.Clear();

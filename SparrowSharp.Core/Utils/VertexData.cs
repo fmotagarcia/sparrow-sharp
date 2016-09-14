@@ -187,20 +187,20 @@ namespace Sparrow.Utils
         /// <summary>
         /// Copies a range of vertices of this instance to another vertex data object.
         /// </summary>
-        public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices, Matrix matrix)
+        public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices, Matrix matrix = null)
         {
             if (target.NumVertices < targetOffset + numVertices)
             {
                 target.NumVertices = targetOffset + numVertices;
             }
             Vertex.Copy(_vertices, sourceOffset, target.Vertices, targetOffset, numVertices);
-            Array.Copy(_vertexColors, 0, target.VertexColors, targetOffset, numVertices);
+            Array.Copy(_vertexColors, sourceOffset, target.VertexColors, targetOffset, numVertices);
 
             // TODO optimize this. Maybe do it inside Vertex.copy with unsafe code?
             if (matrix != null && !matrix.IsIdentity())
             {
                 int len = target._vertices.Length;
-                for (int i = 0; i < len; i++)
+                for (int i = targetOffset; i < targetOffset + numVertices; i++)
                 {
                     float x = target._vertices[i].Position.X;
                     float y = target._vertices[i].Position.Y;

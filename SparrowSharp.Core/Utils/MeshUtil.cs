@@ -31,9 +31,9 @@ namespace SparrowSharp.Core.Utils
 
             for (i = 0; i < numIndices; i += 3)
             {
-                p0 = vertexData.GetPoint(i);
-                p1 = vertexData.GetPoint(i + 1);
-                p2 = vertexData.GetPoint(i + 2);
+                p0 = vertexData.GetPoint(indexData.GetIndex(i));
+                p1 = vertexData.GetPoint(indexData.GetIndex(i + 1));
+                p2 = vertexData.GetPoint(indexData.GetIndex(i + 2));
 
                 if (MathUtil.IsPointInTriangle(point, p0, p1, p2))
                 {

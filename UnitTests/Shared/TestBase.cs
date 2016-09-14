@@ -2,6 +2,7 @@
 using Sparrow.Utils;
 using OpenTK;
 using NUnit.Framework;
+using Sparrow.Geom;
 
 namespace Tests
 {
@@ -34,6 +35,20 @@ namespace Tests
                     " actual: " + v2.R + " " + v2.G + " " + v2.B + " " + v2.A);
             }
         }
-    }
+
+        public void CompareRectangles(Rectangle rect1, Rectangle rect2, float e = 0.0001f)
+        {
+            AssertAreEqualWithSmallError(rect1.X, rect2.X, "Rect X coordinate wrong", e);
+            AssertAreEqualWithSmallError(rect1.Y, rect2.Y, "Rect Y coordinate wrong", e);
+            AssertAreEqualWithSmallError(rect1.Width, rect2.Width, "Rect width wrong", e);
+            AssertAreEqualWithSmallError(rect1.Height, rect2.Height, "Rect height wrong", e);
+        }
+
+        public void ComparePoints(Point p1, Point p2, float e = 0.0001f)
+        {
+            AssertAreEqualWithSmallError(p1.X, p2.X, "Point X coordinate wrong", e);
+            AssertAreEqualWithSmallError(p1.Y, p2.Y, "Point X coordinate wrong", e);
+        }
+}
 }
 

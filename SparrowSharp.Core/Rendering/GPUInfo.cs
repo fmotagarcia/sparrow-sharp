@@ -9,7 +9,7 @@ using OpenTK.Graphics.ES20;
 
 namespace SparrowSharp.Core.Rendering
 {
-    class GPUInfo
+    public class GPUInfo
     {
         public static void PrintGPUInfo()
         {

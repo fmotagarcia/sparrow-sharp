@@ -51,10 +51,11 @@
     <Compile Include="..\Shared\DisplayObjectContainerTest.cs" />
     <Compile Include="..\Shared\DisplayObjectTest.cs" />
     <Compile Include="..\Shared\MatrixTest.cs" />
-    <Compile Include="..\Shared\RenderSupportTest.cs" />
     <Compile Include="..\Shared\TestBase.cs" />
     <Compile Include="..\Shared\VertexDataTest.cs" />
     <Compile Include="IndexDataTest.cs" />
+    <Compile Include="MeshStyleTest.cs" />
+    <Compile Include="MeshTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
