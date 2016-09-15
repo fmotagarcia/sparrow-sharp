@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// Helper class that allows quick creation Sparrow's built in filters.

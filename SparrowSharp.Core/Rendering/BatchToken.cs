@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
     /** Points to a location within a list of MeshBatches.
      *

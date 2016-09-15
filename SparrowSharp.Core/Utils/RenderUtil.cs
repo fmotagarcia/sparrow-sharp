@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Graphics.ES30;
 #endif
 
-namespace SparrowSharp.Core.Utils
+namespace Sparrow.Utils
 {
     public class RenderUtil
     {

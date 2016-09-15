@@ -3,10 +3,10 @@ using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Rendering;
 using System;
 
-namespace SparrowSharp.Core.Styles
+namespace Sparrow.Styles
 {
     /** MeshStyles provide a means to completely modify the way a mesh is rendered.
      *  The base class provides Starling's standard mesh rendering functionality: colored and

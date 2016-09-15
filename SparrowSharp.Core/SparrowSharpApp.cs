@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Sparrow.Core;
 using Sparrow.Display;
-using SparrowSharp.Utils;
-using SparrowSharp.Core.Desktop.Rendering;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Utils;
+using Sparrow.Rendering;
 using Sparrow.Geom;
 
 namespace Sparrow

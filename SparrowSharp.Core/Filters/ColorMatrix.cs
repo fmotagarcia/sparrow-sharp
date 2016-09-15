@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// A color matrix class containing an array of 20 floats arranged as a 4x5 matrix.

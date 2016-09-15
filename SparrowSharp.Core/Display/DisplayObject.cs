@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using Sparrow.Geom;
 using Sparrow.Touches;
 using Sparrow.Utils;
-using SparrowSharp.Core;
-using SparrowSharp.Filters;
-using SparrowSharp.Core.Rendering;
-using SparrowSharp.Core.Geom;
-using SparrowSharp.Core.Utils;
+using Sparrow.Filters;
+using Sparrow.Rendering;
 
 namespace Sparrow.Display
 {

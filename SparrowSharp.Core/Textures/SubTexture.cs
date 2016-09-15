@@ -1,6 +1,5 @@
 ﻿using System;
 using Sparrow.Geom;
-using SparrowSharp.Core.Textures;
 
 namespace Sparrow.Textures
 {

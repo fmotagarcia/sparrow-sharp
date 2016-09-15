@@ -1,12 +1,12 @@
 ﻿
 using Sparrow.Core;
 using Sparrow.Geom;
-using SparrowSharp.Core.Display;
-using SparrowSharp.Core.Utils;
+using Sparrow.Display;
+using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
     public class BatchProcessor
     {

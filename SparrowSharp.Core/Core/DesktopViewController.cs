@@ -59,6 +59,10 @@ namespace Sparrow.Core
             }
             else
             {
+                if (_touches.ContainsKey(pointerId) == false)
+                {
+                    return; // right click
+                }
                 touchInFocus = _touches[pointerId];
                 touchInFocus.Phase = TouchPhase.Ended;
                 long downTime = -1; // TODO

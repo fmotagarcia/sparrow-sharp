@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using Sparrow.Display;
 using Sparrow.Textures;
-using SparrowSharp.Utils;
+using Sparrow.Utils;
 
-namespace SparrowSharp.Display
+namespace Sparrow.Display
 {
     /// <summary>
     /// A MovieClip is a simple way to display an animation depicted by a list of textures.

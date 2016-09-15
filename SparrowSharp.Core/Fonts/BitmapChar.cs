@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Sparrow.Textures;
 
-namespace SparrowSharp.Fonts
+namespace Sparrow.Fonts
 {
     /// <summary>
     /// A BitmapChar contains the information about one char of a bitmap font.

@@ -1,11 +1,10 @@
-﻿using SparrowSharp.Core;
+﻿using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Display;
 using System.Collections.Generic;
 using System;
-using Sparrow.Core;
 
-namespace SparrowSharp.Fonts
+namespace Sparrow.Fonts
 {
     public class TextField : DisplayObjectContainer
     {

@@ -4,7 +4,7 @@ using System;
 using OpenTK.Graphics.OpenGL4;
 #endif
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
     /// <summary>
     /// The IndexData class manages a raw list of vertex indices, allowing direct upload

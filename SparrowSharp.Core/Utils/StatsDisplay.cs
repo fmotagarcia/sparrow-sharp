@@ -1,9 +1,9 @@
-﻿using System;
+﻿
 using Sparrow.Display;
-using SparrowSharp.Fonts;
-using SparrowSharp.Core;
+using Sparrow.Fonts;
+using Sparrow.Core;
 
-namespace SparrowSharp.Utils
+namespace Sparrow.Utils
 {
     /// <summary>
     /// The statistics display is used internally by Sparrow to display statistical information.

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Sparrow.Core;
 using Sparrow.Geom;
-using SparrowSharp.Core.Rendering;
-using SparrowSharp.Filters;
+using Sparrow.Rendering;
+using Sparrow.Filters;
 
 namespace Sparrow.Display
 {

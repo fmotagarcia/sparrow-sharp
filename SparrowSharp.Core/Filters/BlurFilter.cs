@@ -6,7 +6,7 @@ using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// <para>The BlurFilter applies a gaussian blur to an object. The strength of the blur can be

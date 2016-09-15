@@ -1,11 +1,10 @@
 ﻿using Sparrow.Geom;
 using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
-using SparrowSharp.Core.Styles;
-using SparrowSharp.Core.Utils;
+using Sparrow.Rendering;
+using Sparrow.Styles;
 using System;
 
-namespace SparrowSharp.Core.Display
+namespace Sparrow.Display
 {
     /** Combines a number of meshes to one display object and renders them efficiently.
      *

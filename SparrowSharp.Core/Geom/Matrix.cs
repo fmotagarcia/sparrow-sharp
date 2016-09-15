@@ -2,7 +2,6 @@ using System;
 using OpenTK;
 using Sparrow.Utils;
 using SparrowSharp.Pool;
-using SparrowSharp.Core.Geom;
 
 namespace Sparrow.Geom
 {

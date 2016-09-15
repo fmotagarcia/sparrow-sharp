@@ -1,9 +1,8 @@
-﻿using System;
+﻿
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
-using SparrowSharp.Utils;
+using Sparrow.Rendering;
 
 namespace Sparrow.Display
 {

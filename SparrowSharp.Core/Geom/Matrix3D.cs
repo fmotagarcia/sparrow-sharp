@@ -1,9 +1,8 @@
 ﻿
 using OpenTK;
 using SparrowSharp.Pool;
-using System.Reflection;
 
-namespace SparrowSharp.Core.Geom
+namespace Sparrow.Geom
 {
 
     public class Matrix3D : PooledObject

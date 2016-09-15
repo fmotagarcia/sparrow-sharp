@@ -1,7 +1,5 @@
-using Sparrow.Core;
+
 using Sparrow.Geom;
-using SparrowSharp.Core.Geom;
-using SparrowSharp.Core.Utils;
 using System;
 
 namespace Sparrow.Display

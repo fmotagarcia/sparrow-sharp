@@ -1,10 +1,9 @@
 ﻿
 using Sparrow.Display;
 using Sparrow.Geom;
-using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Rendering;
 
-namespace SparrowSharp.Core.Utils
+namespace Sparrow.Utils
 {
     /// <summary>
     /// A utility class that helps with tasks that are common when working with meshes.

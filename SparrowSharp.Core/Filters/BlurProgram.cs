@@ -1,7 +1,7 @@
 ﻿using Sparrow.Core;
 using System.Text;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// Shader used by BlurFilter

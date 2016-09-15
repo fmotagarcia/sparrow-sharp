@@ -1,4 +1,4 @@
-﻿namespace SparrowSharp.Core
+﻿namespace Sparrow.Utils
 {
 	public enum VAlign
 	{

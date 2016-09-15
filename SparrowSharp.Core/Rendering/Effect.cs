@@ -3,7 +3,7 @@ using OpenTK;
 using Sparrow;
 using Sparrow.Core;
 using Sparrow.Utils;
-using SparrowSharp.Core.Geom;
+using Sparrow.Geom;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,7 +11,7 @@ using System.Text;
 using OpenTK.Graphics.OpenGL4;
 #endif
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
     /** An effect encapsulates all steps of a Stage3D draw operation. It configures the
      *  render context and sets up shader programs as well as index- and vertex-buffers, thus

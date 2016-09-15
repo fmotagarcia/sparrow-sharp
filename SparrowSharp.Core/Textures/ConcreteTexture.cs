@@ -2,10 +2,10 @@
 using Sparrow;
 using Sparrow.Textures;
 using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Rendering;
 using System;
 
-namespace SparrowSharp.Core.Textures
+namespace Sparrow.Textures
 {
     /** A ConcreteTexture wraps a Stage3D texture object, storing the properties of the texture
      *  and providing utility methods for data upload, etc.

@@ -1,9 +1,8 @@
 ﻿using OpenTK;
 using Sparrow.Geom;
-using SparrowSharp.Core.Geom;
 using System;
 
-namespace SparrowSharp.Core.Utils
+namespace Sparrow.Utils
 {
     public class MatrixUtil
     {

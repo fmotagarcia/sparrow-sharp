@@ -10,7 +10,7 @@ using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// The FragmentFilter class is the base class for all filter effects in Sparrow.

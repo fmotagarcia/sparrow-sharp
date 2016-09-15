@@ -1,5 +1,5 @@
 ﻿
-namespace SparrowSharp.Utils
+namespace Sparrow.Utils
 {
     public class Padding
     {

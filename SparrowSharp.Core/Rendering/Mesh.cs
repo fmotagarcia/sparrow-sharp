@@ -2,11 +2,10 @@
 using Sparrow.Geom;
 using Sparrow.Utils;
 using System;
-using SparrowSharp.Core.Styles;
-using SparrowSharp.Core.Utils;
+using Sparrow.Styles;
 using Sparrow.Textures;
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
 
     /// <summary>

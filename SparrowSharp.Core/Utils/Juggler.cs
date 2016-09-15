@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using SparrowSharp.Display;
 
-namespace SparrowSharp.Utils
+namespace Sparrow.Utils
 {
     /// <summary>
     /// The Juggler takes objects that implement IAnimatable (e.g. 'MovieClip's) and executes them.

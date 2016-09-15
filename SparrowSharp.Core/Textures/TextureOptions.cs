@@ -1,8 +1,5 @@
 ﻿
-using Sparrow;
-using Sparrow.Textures;
-
-namespace SparrowSharp.Core.Textures
+namespace Sparrow.Textures
 {
     public class TextureOptions
     {

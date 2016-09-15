@@ -42,11 +42,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Core\BaseEffect.cs" />
     <Compile Include="Core\Context.cs" />
     <Compile Include="Core\Program.cs" />
     <Compile Include="Core\RenderState.cs" />
-    <Compile Include="Core\RenderSupport.cs" />
     <Compile Include="Display\BlendMode.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
@@ -74,8 +72,6 @@
     <Compile Include="Rendering\MeshEffect.cs" />
     <Compile Include="Rendering\OpenGLDebugCallback.cs" />
     <Compile Include="Rendering\Painter.cs" />
-    <Compile Include="Rendering\VertexDataAttribute.cs" />
-    <Compile Include="Rendering\VertexDataFormat.cs" />
     <Compile Include="Styles\MeshStyle.cs" />
     <Compile Include="Textures\ConcreteTexture.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />

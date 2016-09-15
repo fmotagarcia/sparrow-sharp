@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using Android.Opengl;
 #endif
 
-namespace SparrowSharp.Core.Desktop.Rendering
+namespace Sparrow.Core
 {
 
 #if __WINDOWS__

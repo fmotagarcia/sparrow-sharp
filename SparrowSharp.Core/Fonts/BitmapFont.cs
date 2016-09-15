@@ -5,10 +5,10 @@ using System.Xml;
 using System.IO;
 using Sparrow.Geom;
 using Sparrow.Display;
-using SparrowSharp.Core;
+using Sparrow.Core;
 using Sparrow.ResourceLoading;
 
-namespace SparrowSharp.Fonts
+namespace Sparrow.Fonts
 {
     /// <summary>
     /// The BitmapFont class parses bitmap font files and arranges the glyphs in the form of a text.

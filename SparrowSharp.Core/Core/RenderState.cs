@@ -1,8 +1,7 @@
-using OpenTK;
+
 using Sparrow.Geom;
 using Sparrow.Textures;
-using SparrowSharp.Core.Geom;
-using SparrowSharp.Core.Utils;
+using Sparrow.Utils;
 
 namespace Sparrow.Core
 {

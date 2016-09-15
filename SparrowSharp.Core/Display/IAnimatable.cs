@@ -18,7 +18,7 @@ namespace SparrowSharp.Display
         /// <summary>
         /// Dispatch if you want this removed from its Juggler
         /// </summary>
-        event SparrowSharp.Utils.Juggler.RemoveFromJugglerHandler RemoveFromJugglerEvent;
+        event Sparrow.Utils.Juggler.RemoveFromJugglerHandler RemoveFromJugglerEvent;
 
     }
 }

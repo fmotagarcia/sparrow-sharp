@@ -1,15 +1,14 @@
 ﻿using Sparrow.Core;
 using Sparrow.Textures;
-using SparrowSharp.Core.Utils;
-using System;
 using Sparrow.Utils;
+using System;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
 using OpenTK.Graphics.ES30;
 #endif
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
     /** An effect drawing a mesh of textured vertices.
     *  This is the standard effect that is the base for all fragment filters;

@@ -3,15 +3,15 @@ using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
-using SparrowSharp.Core.Display;
-using SparrowSharp.Core.Utils;
+using Sparrow.Display;
+using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #endif
 
-namespace SparrowSharp.Core.Rendering
+namespace Sparrow.Rendering
 {
 
     /** A class that orchestrates rendering of all Starling display objects.

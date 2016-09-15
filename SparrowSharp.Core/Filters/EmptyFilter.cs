@@ -5,7 +5,7 @@ using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Textures;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// Empty filter that does nothing. Used for testing; you can use its code to make custom filters.

@@ -4,7 +4,7 @@ using Sparrow;
 using OpenTK.Graphics.ES20;
 using System.Text;
 
-namespace SparrowSharp.Filters
+namespace Sparrow.Filters
 {
     /// <summary>
     /// The ColorMatrixFilter class lets you apply a 4x5 matrix transformation on the RGBA color and 

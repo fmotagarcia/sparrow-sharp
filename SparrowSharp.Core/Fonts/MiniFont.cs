@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Fonts
+namespace Sparrow.Fonts
 {
     internal class MiniFont
     {

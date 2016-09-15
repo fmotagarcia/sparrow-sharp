@@ -1,5 +1,5 @@
 ﻿
-namespace SparrowSharp.Core.Utils
+namespace Sparrow.Utils
 {
     public class MeshSubset
     {

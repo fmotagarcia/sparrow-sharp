@@ -1,4 +1,4 @@
-﻿namespace SparrowSharp.Filters
+﻿namespace Sparrow.Filters
 {
     /// <summary>
     /// Defines how a Filter will be rendered.
