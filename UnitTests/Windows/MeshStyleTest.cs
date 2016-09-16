@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Sparrow.Display;
-using SparrowSharp.Core.Rendering;
-using SparrowSharp.Core.Styles;
+using Sparrow.Rendering;
+using Sparrow.Styles;
 using System;
 
 namespace Tests

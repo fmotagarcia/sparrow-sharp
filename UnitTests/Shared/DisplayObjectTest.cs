@@ -4,6 +4,7 @@ using Sparrow;
 using System;
 using Sparrow.Geom;
 using Sparrow.Utils;
+using System.Reflection;
 
 namespace Tests
 {
@@ -13,24 +14,50 @@ namespace Tests
     {
 
         [Test]
-        public void TestRoot()
+        public void TestBase()
         {
-            SparrowSharpApp.Start(12, 12, typeof(Sprite));
+            Sprite object1 = new Sprite();
+            Sprite object2 = new Sprite();
+            Sprite object3 = new Sprite();
 
-            Sprite root = new Sprite();
-            Sprite child = new Sprite();
-            Sprite grandChild = new Sprite();
-            root.AddChild(child);
-            child.AddChild(grandChild);
+            object1.AddChild(object2);
+            object2.AddChild(object3);
 
-            Assert.AreEqual(root, grandChild.Root, "Wrong root " + grandChild.Root);
+            Assert.AreEqual(object1, object1.Base);
+            Assert.AreEqual(object1, object2.Base);
+            Assert.AreEqual(object1, object3.Base);
 
-            SparrowSharpApp.Stage.AddChild(root);
+            Quad quad = new Quad(100, 100);
+            Assert.AreEqual(quad, quad.Base);
+        }
 
-            Assert.AreEqual(SparrowSharpApp.Stage, grandChild.Root, "Wrong root " + grandChild.Root);
+        [Test]
+        public void TestRootAndStage()
+        {
+            Sprite object1 = new Sprite();
+            Sprite object2 = new Sprite();
+            Sprite object3 = new Sprite();
 
-            SparrowSharpApp.Stage.RemoveAllChildren();
-            SparrowSharpApp.Destroy();
+            object1.AddChild(object2);
+            object2.AddChild(object3);
+
+            Assert.AreEqual(null, object1.Root);
+            Assert.AreEqual(null, object2.Root);
+            Assert.AreEqual(null, object3.Root);
+            Assert.AreEqual(null, object1.Stage);
+            Assert.AreEqual(null, object2.Stage);
+            Assert.AreEqual(null, object3.Stage);
+
+            Stage stage = CreateInstance<Stage>(100, 100);
+            
+            stage.AddChild(object1);
+
+            Assert.AreEqual(object1, object1.Root);
+            Assert.AreEqual(object1, object2.Root);
+            Assert.AreEqual(object1, object3.Root);
+            Assert.AreEqual(stage, object1.Stage);
+            Assert.AreEqual(stage, object2.Stage);
+            Assert.AreEqual(stage, object3.Stage);
         }
 
         [Test]
@@ -102,6 +129,23 @@ namespace Tests
         }
 
         [Test]
+        public void TestSetTransformationMatrixWithPivot()
+        {
+            // pivot point information is redundant; instead, x/y properties will be modified.
+            Sprite sprite = new Sprite();
+            sprite.PivotX = 50;
+            sprite.PivotY = 20;
+
+            Matrix matrix = sprite.TransformationMatrix;
+            sprite.TransformationMatrix = matrix;
+            
+            AssertAreEqualWithSmallError(sprite.X, -50);
+            AssertAreEqualWithSmallError(sprite.Y, -20);
+            AssertAreEqualWithSmallError(sprite.PivotX, 0.0f);
+            AssertAreEqualWithSmallError(sprite.PivotY, 0.0f);
+        }
+
+        [Test]
         public void TestSetTransformationMatrixWithRightAngle()
         {
             Sprite sprite = new Sprite();
@@ -149,17 +193,16 @@ namespace Tests
             quad.Y = 10;
             quad.Rotation = MathUtil.PIHALF;
             Rectangle bounds = quad.Bounds;
-
-            Assert.IsTrue(MathUtil.Equals(-30, bounds.X), "wrong bounds.x: " + bounds.X);
-            Assert.IsTrue(MathUtil.Equals(10, bounds.Y), "wrong bounds.y: " + bounds.Y);
-            Assert.IsTrue(MathUtil.Equals(20, bounds.Width), "wrong bounds.width: " + bounds.Width);
-            Assert.IsTrue(MathUtil.Equals(10, bounds.Height), "wrong bounds.height: " + bounds.Height);
+            AssertAreEqualWithSmallError(-30, bounds.X, "wrong bounds.x: " + bounds.X);
+            AssertAreEqualWithSmallError(10, bounds.Y, "wrong bounds.y: " + bounds.Y);
+            AssertAreEqualWithSmallError(20, bounds.Width, "wrong bounds.width: " + bounds.Width);
+            AssertAreEqualWithSmallError(10, bounds.Height, "wrong bounds.height: " + bounds.Height);
 
             bounds = quad.GetBounds(quad);
-            Assert.IsTrue(MathUtil.Equals(0, bounds.X), "wrong inner bounds.x: " + bounds.X);
-            Assert.IsTrue(MathUtil.Equals(0, bounds.Y), "wrong inner bounds.y: " + bounds.Y);
-            Assert.IsTrue(MathUtil.Equals(10, bounds.Width), "wrong inner bounds.width: " + bounds.Width);
-            Assert.IsTrue(MathUtil.Equals(20, bounds.Height), "wrong innter bounds.height: " + bounds.Height);
+            AssertAreEqualWithSmallError(0, bounds.X, "wrong inner bounds.x: " + bounds.X);
+            AssertAreEqualWithSmallError(0, bounds.Y, "wrong inner bounds.y: " + bounds.Y);
+            AssertAreEqualWithSmallError(10, bounds.Width, "wrong inner bounds.width: " + bounds.Width);
+            AssertAreEqualWithSmallError(20, bounds.Height, "wrong innter bounds.height: " + bounds.Height);
         }
 
         [Test]
@@ -191,6 +234,17 @@ namespace Tests
             AssertAreEqualWithSmallError(200.0f, quad.Height, "wrong height");
             AssertAreEqualWithSmallError(1.0f, quad.ScaleX, "wrong scaleX value");
             AssertAreEqualWithSmallError(1.0f, quad.ScaleY, "wrong scaleY value");
+
+            quad = new Quad(100, 200);
+            quad.Width = 0.0f;
+            quad.Height = 0.0f;
+            AssertAreEqualWithSmallError(0.0f, quad.Width, "wrong width");
+            AssertAreEqualWithSmallError(0.0f, quad.Height, "wrong height");
+
+            quad.Width = 50.0f;
+            quad.Height = 100.0f;
+            AssertAreEqualWithSmallError(0.5f, quad.ScaleX, "wrong scaleX");
+            AssertAreEqualWithSmallError(0.5f, quad.ScaleY, "wrong scaleY");
         }
 
         [Test]
@@ -215,6 +269,66 @@ namespace Tests
             root.X = 50;
             globalPoint = sprite2.LocalToGlobal(localPoint);
             Assert.IsTrue(globalPoint.Equals(expectedPoint));
+        }
+
+        [Test]
+        public void TestGlobalToLocal()
+        {
+            Sprite root = new Sprite();
+            Sprite sprite = new Sprite();
+            sprite.X = 10;
+            sprite.Y = 20;
+            root.AddChild(sprite);
+            Sprite sprite2 = new Sprite();
+            sprite2.X = 150;
+            sprite2.Y = 200;
+            sprite.AddChild(sprite2);
+
+            Point globalPoint = Point.Create(160, 220);
+            Point localPoint = sprite2.GlobalToLocal(globalPoint);
+            Point expectedPoint = Point.Create();
+            ComparePoints(expectedPoint, localPoint);
+            
+            // the position of the root object should be irrelevant -- we want the coordinates
+            // *within* the root coordinate system!
+            root.X = 50;
+            localPoint = sprite2.GlobalToLocal(globalPoint);
+            ComparePoints(expectedPoint, localPoint);
+        }
+
+        // + add missing test
+
+        [Test]
+        public void TestPivotPoint()
+        {
+            float width = 100.0f;
+            float height = 150.0f;
+
+            // a quad with a pivot point should behave exactly as a quad without 
+            // pivot point inside a sprite
+
+            Sprite sprite = new Sprite();
+            Quad innerQuad = new Quad(width, height);
+            sprite.AddChild(innerQuad);
+            Quad quad = new Quad(width, height);
+            CompareRectangles(sprite.Bounds, quad.Bounds);
+            
+            innerQuad.X = -50;
+            quad.PivotX = 50;            
+            innerQuad.Y = -20;
+            quad.PivotY = 20;            
+            CompareRectangles(sprite.Bounds, quad.Bounds);
+            
+            sprite.Rotation = quad.Rotation = MathUtil.Deg2rad(45);
+            CompareRectangles(sprite.Bounds, quad.Bounds);
+            
+            sprite.ScaleX = quad.ScaleX = 1.5f;
+            sprite.ScaleY = quad.ScaleY = 0.6f;
+            CompareRectangles(sprite.Bounds, quad.Bounds);
+            
+            sprite.X = quad.X = 5;
+            sprite.Y = quad.Y = 20;
+            CompareRectangles(sprite.Bounds, quad.Bounds);
         }
 
         [Test]

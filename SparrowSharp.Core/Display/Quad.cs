@@ -99,7 +99,7 @@ namespace Sparrow.Display
 
             if (targetSpace == this)// optimization
             {
-                outRect.CopyFrom(Bounds);
+                outRect.CopyFrom(_bounds);
             }
             else if (targetSpace == Parent && !IsRotated)// optimization
             {
@@ -121,6 +121,12 @@ namespace Sparrow.Display
                     outRect.Top -= outRect.Height;
                 }
             }
+            /*else if (Is3D && Stage != null)
+            {
+                float[] point3D = Stage.GetCameraPosition(targetSpace);
+                GetTransformationMatrix3D(targetSpace);
+                RectangleUtil.getBoundsProjected(_bounds, sMatrix3D, sPoint3D, out);
+            }*/
             else
             {
                 Matrix sMatrix = GetTransformationMatrix(targetSpace);

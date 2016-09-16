@@ -3,11 +3,22 @@ using Sparrow.Utils;
 using OpenTK;
 using NUnit.Framework;
 using Sparrow.Geom;
+using System.Reflection;
 
 namespace Tests
 {
     public class TestBase
     {
+        public T CreateInstance<T>(params object[] args)
+        {
+            var type = typeof(T);
+            var instance = type.Assembly.CreateInstance(
+                type.FullName, false,
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null, args, null, null);
+            return (T)instance;
+        }
+
         public void CompareVertex (Vertex v1, Vertex v2)
         {
             CompareVector(v1.Position, v2.Position);;

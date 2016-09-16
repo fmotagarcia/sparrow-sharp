@@ -90,7 +90,6 @@ namespace Sparrow.Display
         private bool _touchable;
         private uint _blendmode;
         private string _name;
-        //private bool _useHandCursor; // not implemented
         private readonly Matrix _transformationMatrix;
         //private Matrix3D _transformationMatrix3D;
         private bool _orientationChanged;
@@ -744,12 +743,16 @@ namespace Sparrow.Display
             get { return GetBounds(_parent).Width; }
             set
             {
-                ScaleX = 1.0f;
-                float actualWidth = Width;
-                if (actualWidth != 0.0f)
+                float actualWidth;
+
+                if (_scaleX == 0.0f || !_scaleX.IsFinite())
                 {
-                    ScaleX = value / actualWidth;
+                    ScaleX = 1.0f;
+                    actualWidth = Width;
                 }
+                else actualWidth = Math.Abs(Width / _scaleX);
+
+                if (actualWidth != 0.0f) ScaleX = value / actualWidth;
             }
         }
 
@@ -761,12 +764,16 @@ namespace Sparrow.Display
             get { return GetBounds(_parent).Height; }
             set
             {
-                ScaleY = 1.0f;
-                float actualHeight = Height;
-                if (actualHeight != 0.0f)
+                float actualHeight;
+
+                if (_scaleY == 0.0f || !_scaleY.IsFinite())
                 {
-                    ScaleY = value / actualHeight;
+                    ScaleY = 1.0f;
+                    actualHeight = Height;
                 }
+                else actualHeight = Math.Abs(Height / _scaleY);
+
+                if (actualHeight != 0.0f) ScaleY = value / actualHeight;
             }
         }
 
@@ -1109,7 +1116,6 @@ namespace Sparrow.Display
                     DisplayObject currParent = currentObject._parent;
                     if (currParent.GetType() == typeof(Stage) ) return currentObject;
                     else currentObject = currentObject._parent;
-                    currentObject = currentObject.Parent;
                 }
                 return null;
             }

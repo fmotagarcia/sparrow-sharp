@@ -116,10 +116,6 @@ namespace Sparrow
                 if (!doRedraw) stats.MarkFrameAsSkipped();
             }
             */
-            // old code:
-            // renderSupport.NextFrame();
-            //Stage.Render(_painter);
-            //renderSupport.FinishQuadBatch();
 
 #if DEBUG
             GPUInfo.CheckForOpenGLError();

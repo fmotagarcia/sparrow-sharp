@@ -603,9 +603,7 @@ namespace Sparrow.Utils
                                       BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
         {
             if (_numVertices == 0) return new int[] { 0, 0 };
-
-            //VertexBuffer3D buffer = context.createVertexBuffer(
-            //    _numVertices, _vertexSize / 4, bufferUsage);
+            
             int _vertexBufferName;
             int _vertexColorsBufferName;
             _vertexBufferName = GL.GenBuffer();
@@ -628,7 +626,6 @@ namespace Sparrow.Utils
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexColorsBufferName);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * sizeof(byte) * 4), VertexColors, hint);
-                //buffer.uploadFromByteArray(_rawData, 0, vertexID, numVertices);
             }
         }
 

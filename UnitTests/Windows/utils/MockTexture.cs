@@ -1,6 +1,5 @@
 ﻿
 using Sparrow.Textures;
-using SparrowSharp.Core.Textures;
 
 namespace Tests
 {

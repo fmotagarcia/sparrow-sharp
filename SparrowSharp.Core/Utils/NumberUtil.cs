@@ -103,5 +103,10 @@ namespace Sparrow.Utils
 
             return (u >= 0) && (v >= 0) && (u + v< 1);
         }
+
+        public static float Deg2rad(float deg)
+        {
+            return deg / 180.0f * (float)Math.PI;   
+        }
 }
 }

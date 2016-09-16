@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Rendering;
 
 namespace Tests
 {

@@ -1,9 +1,6 @@
 ﻿using Sparrow.Core;
 using Sparrow.Display;
 using Sparrow.Geom;
-using Sparrow.Textures;
-using Sparrow.Utils;
-using Sparrow.Display;
 using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
@@ -207,7 +204,7 @@ namespace Sparrow.Rendering
                                uint blendMode = BlendMode.AUTO)
         {
             if (transformationMatrix != null) _state._modelviewMatrix.PrependMatrix(transformationMatrix);
-            if (alphaFactor != 1.0) _state.Alpha *= alphaFactor;
+            if (alphaFactor != 1.0f) _state.Alpha *= alphaFactor;
             if (blendMode != BlendMode.AUTO) _state.BlendMode = blendMode;
         }
 

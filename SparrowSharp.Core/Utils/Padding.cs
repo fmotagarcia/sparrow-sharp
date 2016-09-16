@@ -26,7 +26,10 @@ namespace Sparrow.Utils
             _top = top;
             _bottom = bottom;
 
-            if (changed) OnChangedFunction();
+            if (changed)
+            {
+                OnChangedFunction?.Invoke();
+            }
         }
 
         /** Copies all properties from another Padding instance.
@@ -51,7 +54,7 @@ namespace Sparrow.Utils
                 if (_left != value)
                 {
                     _left = value;
-                    OnChangedFunction();
+                    OnChangedFunction?.Invoke();
                 }
 
             }
@@ -65,7 +68,7 @@ namespace Sparrow.Utils
                 if (_right != value)
                 {
                     _right = value;
-                    OnChangedFunction();
+                    OnChangedFunction?.Invoke();
                 }
             }
         }
@@ -78,7 +81,7 @@ namespace Sparrow.Utils
                 if (_top != value)
                 {
                     _top = value;
-                    OnChangedFunction();
+                    OnChangedFunction?.Invoke();
                 }
             }
         }
@@ -91,7 +94,7 @@ namespace Sparrow.Utils
                 if (_bottom != value)
                 {
                     _bottom = value;
-                    OnChangedFunction();
+                    OnChangedFunction?.Invoke();
                 }
             }
         }

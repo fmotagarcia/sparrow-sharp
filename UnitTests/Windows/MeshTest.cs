@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Sparrow.Geom;
 using Sparrow.Utils;
-using SparrowSharp.Core.Rendering;
+using Sparrow.Rendering;
 using System;
 
 namespace Tests
