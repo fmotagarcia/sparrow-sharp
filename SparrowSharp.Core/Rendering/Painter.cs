@@ -261,11 +261,12 @@ namespace Sparrow.Rendering
             }
             else
             {
+               
                 // triangleFace, compareMode, actionOnBothPass,
                 //actionOnDepthFail: String = "keep", actionOnDepthPassStencilFail: String = "keep"
                 //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
                 //    Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Incr);
+                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Incr);               
                 GL.ColorMask(false, false, false, false);
                 GL.DepthMask(false);
 
@@ -670,13 +671,16 @@ namespace Sparrow.Rendering
                 {
                     sScissorRect.SetTo(0, 0, 1, 1);
                 }
-
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);
             }
             else
-            {
-                GL.Disable(EnableCap.ScissorTest);
+            {       
+                if (GL.IsEnabled(EnableCap.ScissorTest))
+                {
+                    GL.Disable(EnableCap.ScissorTest);
+                    GL.Clear(ClearBufferMask.ColorBufferBit);
+                }
             }
         }
 

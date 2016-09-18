@@ -15,9 +15,10 @@ namespace Sparrow.Core
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
         private const int pointerId = 1;
 
+        // default graphics mode does not have a stencil buffer.
         public DesktopViewController(Type rootClass, int windowWidth, int windowHeight, string windowTitle, 
                                      GameWindowFlags windowFlags, DisplayDevice device, GraphicsContextFlags flags) 
-            : base(windowWidth, windowHeight, GraphicsMode.Default, windowTitle, windowFlags, device, -1, -1, flags)
+            : base(windowWidth, windowHeight, new GraphicsMode(32, 24, 8), windowTitle, windowFlags, device, -1, -1, flags)
         {
             Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
