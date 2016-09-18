@@ -42,9 +42,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\Program.cs" />
-    <Compile Include="Core\RenderState.cs" />
+    <Compile Include="Fonts\ITextCompositor.cs" />
+    <Compile Include="Rendering\Program.cs" />
+    <Compile Include="Rendering\RenderState.cs" />
     <Compile Include="Display\BlendMode.cs" />
     <Compile Include="Display\DisplayObject.cs" />
     <Compile Include="Display\DisplayObjectContainer.cs" />
@@ -87,14 +87,14 @@
     <Compile Include="Utils\Padding.cs" />
     <Compile Include="Utils\RenderUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />
-    <Compile Include="Utils\Vertex.cs" />
-    <Compile Include="Utils\VertexColor.cs" />
+    <Compile Include="Rendering\Vertex.cs" />
+    <Compile Include="Rendering\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
-    <Compile Include="Utils\VertexData.cs" />
+    <Compile Include="Rendering\VertexData.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
-    <Compile Include="SparrowSharpApp.cs" />
+    <Compile Include="Core\SparrowSharpApp.cs" />
     <Compile Include="Core\DesktopViewController.cs" />
     <Compile Include="ResourceLoading\DesktopTextureLoader.cs" />
     <Compile Include="ResourceLoading\SimpleTextureLoader.cs" />

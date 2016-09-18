@@ -1,9 +1,9 @@
-using System;
+
 using System.Collections.Generic;
 using System.Diagnostics;
 using OpenTK.Graphics.ES20;
 
-namespace Sparrow.Core
+namespace Sparrow.Rendering
 {
     /** A Program represents a pair of a fragment- and vertex-shader.
     *

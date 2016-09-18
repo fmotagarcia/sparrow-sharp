@@ -3,7 +3,7 @@ using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
 
-namespace Sparrow.Core
+namespace Sparrow.Rendering
 {
     /** The RenderState stores a combination of settings that are currently used for rendering.
      *  This includes modelview and transformation matrices as well as context3D related settings.
@@ -94,7 +94,7 @@ namespace Sparrow.Core
             _projectionMatrix3D.CopyFrom(renderState._projectionMatrix3D);
 
             if (_modelviewMatrix3D != null || renderState._modelviewMatrix3D != null)
-                this.ModelviewMatrix3D = renderState._modelviewMatrix3D;
+                ModelviewMatrix3D = renderState._modelviewMatrix3D;
 
             if (_clipRect != null || renderState._clipRect != null)
                 ClipRect = renderState._clipRect;
@@ -257,10 +257,18 @@ namespace Sparrow.Core
             }
         }
 
+        /** The texture that is currently being rendered into, or <code>null</code>
+         *  to render into the back buffer. On assignment, calls <code>setRenderTarget</code>
+         *  with its default parameters. */
         public Texture RenderTarget
         {
             get { return _renderTarget; }
             set { SetRenderTarget(value); }
+        }
+
+        internal int RenderTargetBase
+        {
+            get { return _renderTarget != null ? _renderTarget.Base : 0; }
         }
 
         /** The clipping rectangle can be used to limit rendering in the current render target to

@@ -1,9 +1,8 @@
 ﻿
-using Sparrow;
-using Sparrow.Textures;
 using Sparrow.Utils;
 using Sparrow.Rendering;
 using System;
+using Sparrow.Core;
 
 namespace Sparrow.Textures
 {

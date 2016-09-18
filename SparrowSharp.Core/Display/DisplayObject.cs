@@ -5,6 +5,7 @@ using Sparrow.Touches;
 using Sparrow.Utils;
 using Sparrow.Filters;
 using Sparrow.Rendering;
+using Sparrow.Core;
 
 namespace Sparrow.Display
 {
@@ -91,9 +92,9 @@ namespace Sparrow.Display
         private uint _blendmode;
         private string _name;
         private readonly Matrix _transformationMatrix;
-        //private Matrix3D _transformationMatrix3D;
+        private Matrix3D _transformationMatrix3D;
         private bool _orientationChanged;
-        //private bool _is3D;
+        private bool _is3D = false;
         private bool _isMask;
 
         // internal members (for fast access on rendering)
@@ -564,7 +565,7 @@ namespace Sparrow.Display
         }
 
         // TODO this is optimized in Sparrow-s; it maintains an array of things on the Stage
-        internal void BroadcastEnterFrameEvent(float passedTime)
+        protected void BroadcastEnterFrameEvent(float passedTime)
         {
             if (EnterFrame != null)
             {
@@ -726,6 +727,9 @@ namespace Sparrow.Display
         {
             get { return TransformationMatrix.ConvertToMatrix3D(); }
         }
+
+        /** Indicates if this object or any of its parents is a 'Sprite3D' object. */
+        public bool Is3D { get { return _is3D; } }
 
         /// <summary>
         /// The bounds of the object relative to the local coordinates of the parent.

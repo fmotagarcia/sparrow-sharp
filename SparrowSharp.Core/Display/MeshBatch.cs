@@ -45,9 +45,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Creates a new, empty MeshBatch instance.
         /// </summary>
-        public MeshBatch() : base( new VertexData(), new IndexData())
-        {
-        }
+        public MeshBatch() : base( new VertexData(), new IndexData()) { }
 
         // display object overrides
 
@@ -118,7 +116,7 @@ namespace Sparrow.Display
             meshStyle.BatchIndexData(_style, targetIndexID, targetVertexID - subset.VertexID,
                 subset.IndexID, subset.NumIndices);
 
-            if (alpha != 1.0) _vertexData.ScaleAlphas(alpha, targetVertexID, subset.NumVertices);
+            if (alpha != 1.0f) _vertexData.ScaleAlphas(alpha, targetVertexID, subset.NumVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -133,7 +131,7 @@ namespace Sparrow.Display
          *  For the latter, indices are aligned in groups of 6 (one quad requires six indices),
          *  and the vertices in groups of 4 (one vertex for every corner).</p>
          */
-        public void addMeshAt(Mesh mesh, int indexID, int vertexID)
+        public void AddMeshAt(Mesh mesh, int indexID, int vertexID)
         {
             int numIndices = mesh.NumIndices;
             int numVertices = mesh.NumVertices;

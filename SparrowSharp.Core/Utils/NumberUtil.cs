@@ -108,5 +108,22 @@ namespace Sparrow.Utils
         {
             return deg / 180.0f * (float)Math.PI;   
         }
+
+        /// <summary>
+        /// Divides the value of the x, y, and z properties of the current Vector3D object 
+        /// by the value of its w property.
+        ///
+        /// If the current Vector3D object is the result of multiplying a Vector3D object 
+        /// by a projection Matrix3D object, the w property can hold the transform value.
+        /// The ProjectVector3D() method then can complete the projection by dividing the
+        /// elements by the w property.
+        /// </summary>
+        public static float[] ProjectVector3D(ref float[] vector)
+        {
+            vector[0] = vector[0] / vector[3];
+            vector[1] = vector[1] / vector[3];
+            vector[2] = vector[2] / vector[3];
+            return vector;
+        }
 }
 }

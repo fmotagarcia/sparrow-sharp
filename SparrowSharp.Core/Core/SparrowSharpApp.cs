@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Sparrow.Core;
 using Sparrow.Display;
 using Sparrow.Utils;
 using Sparrow.Rendering;
 using Sparrow.Geom;
 
-namespace Sparrow
+namespace Sparrow.Core
 {
     public static class SparrowSharpApp
     {
@@ -31,6 +30,19 @@ namespace Sparrow
         public static DisplayObject Root { get; private set; }
 
         public static Juggler DefaultJuggler { get; private set; }
+
+        /** When enabled, Starling will skip rendering the stage if it hasn't changed since the
+        *  last frame. This is great for apps that remain static from time to time, since it will
+        *  greatly reduce power consumption. You should activate this whenever possible!
+        *
+        *  <p>The reason why it's disabled by default is just that it causes problems with Render-
+        *  and VideoTextures. When you use those, you either have to disable this property
+        *  temporarily, or call <code>setRequiresRedraw()</code> (ideally on the stage) whenever
+        *  those textures are changing. Otherwise, the changes won't show up.</p>
+        *
+        *  @default false
+        */
+        public static bool SkipUnchangedFrames = false;
 
         private static readonly Stopwatch watch = new Stopwatch();
 
@@ -84,11 +96,11 @@ namespace Sparrow
         {
             UpdateViewPort();
 
-            bool doRedraw = Stage.RequiresRedraw;
+            bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames;
             if (doRedraw)
             {
+                //Console.WriteLine("RENDER");
                 //dispatchEventWith(starling.events.Event.RENDER);
-                Console.Out.WriteLine("RENDER!");
                 float scaleX = _viewPort.Width / Stage.Width;
                 float scaleY = _viewPort.Height / Stage.Height;
 

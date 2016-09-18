@@ -1,4 +1,5 @@
-﻿using Sparrow.Core;
+﻿
+using Sparrow.Rendering;
 using System.Text;
 
 namespace Sparrow.Filters

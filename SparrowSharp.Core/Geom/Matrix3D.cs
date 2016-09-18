@@ -193,10 +193,10 @@ namespace Sparrow.Geom
         public float[] TransformCoords3D(float x, float y, float z)
         {
             float[] outV = new float[4];
-            outV[0] = x * rawData.M11 + y * rawData.M12 + z * rawData.M13 + rawData.M14;
-            outV[1] = x * rawData.M21 + y * rawData.M22 + z * rawData.M23 + rawData.M24;
-            outV[2] = x * rawData.M31 + y * rawData.M32 + z * rawData.M33 + rawData.M34;
-            outV[3] = x * rawData.M41 + y * rawData.M42 + z * rawData.M43 + rawData.M44;
+            outV[0] = x * rawData.M11 + y * rawData.M21 + z * rawData.M31 + rawData.M41; // x
+            outV[1] = x * rawData.M12 + y * rawData.M22 + z * rawData.M32 + rawData.M42; // y
+            outV[2] = x * rawData.M13 + y * rawData.M23 + z * rawData.M33 + rawData.M43; // z
+            outV[3] = x * rawData.M14 + y * rawData.M24 + z * rawData.M34 + rawData.M44; // w
             return outV;
         }
 

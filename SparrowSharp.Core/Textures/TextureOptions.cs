@@ -1,4 +1,6 @@
 ﻿
+using Sparrow.Core;
+
 namespace Sparrow.Textures
 {
     public class TextureOptions

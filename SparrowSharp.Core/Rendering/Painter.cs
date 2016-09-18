@@ -1,9 +1,10 @@
-﻿using Sparrow.Core;
+﻿
 using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
+using Sparrow.Textures;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #endif
@@ -52,13 +53,13 @@ namespace Sparrow.Rendering
         private uint _frameID;
         private float _pixelSize;
         private bool _enableErrorChecking;
-        private Dictionary<DisplayObject, uint> _stencilReferenceValues;
-        private List<Rectangle> _clipRectStack;
+        private Dictionary<int, int> _stencilReferenceValues;
+        private Stack<Rectangle> _clipRectStack;
         private BatchProcessor _batchProcessor;
         private BatchProcessor _batchCache;
         private List<DisplayObject> _batchCacheExclusions;
 
-        //private TextureBase _actualRenderTarget;
+       private int _actualRenderTarget;
         private string _actualCulling;
         private uint _actualBlendMode;
 
@@ -87,8 +88,8 @@ namespace Sparrow.Rendering
             _backBufferWidth = width;
             _backBufferHeight = height;
             _pixelSize = 1.0f;
-            _stencilReferenceValues = new Dictionary<DisplayObject, uint>(); // use weak refs!
-            _clipRectStack = new List<Rectangle>();
+            _stencilReferenceValues = new Dictionary<int, int>(); // use weak refs!
+            _clipRectStack = new Stack<Rectangle>();
 
             _batchProcessor = new BatchProcessor();
             _batchProcessor.OnBatchComplete = DrawBatch;
@@ -250,8 +251,7 @@ namespace Sparrow.Rendering
         */
         public void DrawMask(DisplayObject mask, DisplayObject maskee = null)
         {
-            throw new NotImplementedException();
-            /*FinishMeshBatch();
+            FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
@@ -261,17 +261,25 @@ namespace Sparrow.Rendering
             }
             else
             {
-                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                    Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE);
+                // triangleFace, compareMode, actionOnBothPass,
+                //actionOnDepthFail: String = "keep", actionOnDepthPassStencilFail: String = "keep"
+                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                //    Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE);
+                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Incr);
+                GL.ColorMask(false, false, false, false);
+                GL.DepthMask(false);
 
                 RenderMask(mask);
                 StencilReferenceValue++;
 
-                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
+                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                //    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
+                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
+                GL.ColorMask(true, true, true, true);
+                GL.DepthMask(true);
             }
 
-            ExcludeFromCache(maskee);*/
+            ExcludeFromCache(maskee);
         }
 
         /** Draws a display object into the stencil buffer, decrementing the
@@ -284,8 +292,8 @@ namespace Sparrow.Rendering
          */
         public void EraseMask(DisplayObject mask, DisplayObject maskee = null)
         {
-            throw new NotImplementedException();
-            /*FinishMeshBatch();
+           
+            FinishMeshBatch();
 
             if (IsRectangularMask(mask, maskee, sMatrix))
             {
@@ -293,15 +301,21 @@ namespace Sparrow.Rendering
             }
             else
             {
-                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                    Context3DCompareMode.EQUAL, Context3DStencilAction.DECREMENT_SATURATE);
-
+                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                //    Context3DCompareMode.EQUAL, Context3DStencilAction.DECREMENT_SATURATE);
+                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Decr);
+                GL.ColorMask(false, false, false, false);
+                GL.DepthMask(false);
+                
                 RenderMask(mask);
                 StencilReferenceValue--;
 
-                _context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
-            }*/
+                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
+                //    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
+                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
+                GL.ColorMask(true, true, true, true);
+                GL.DepthMask(true);
+            }
         }
 
         private void RenderMask(DisplayObject mask)
@@ -331,30 +345,29 @@ namespace Sparrow.Rendering
 
         private void PushClipRect(Rectangle clipRect)
         {
-            List<Rectangle> stack = _clipRectStack;
-            int stackLength = stack.Count;
-            Rectangle intersection = Rectangle.Create();
-
-            if (stackLength != 0)
-                intersection = clipRect.Intersection(stack[stackLength - 1]);
+            Rectangle intersection;
+            if (_clipRectStack.Count != 0)
+            {
+                intersection = clipRect.Intersection(_clipRectStack.Peek());
+            }
             else
-                intersection.CopyFrom(clipRect);
-
-            stack[stackLength] = intersection;
+            {
+                intersection = clipRect.Clone();
+            }
+            _clipRectStack.Push(intersection);
             _state.ClipRect = intersection;
         }
 
         private void PopClipRect()
         {
-            List<Rectangle> stack = _clipRectStack;
-            int stackLength = stack.Count;
-
+            int stackLength = _clipRectStack.Count;
             if (stackLength == 0)
+            {
                 throw new Exception("Trying to pop from empty clip rectangle stack");
-
+            }
             stackLength--;
-            stack.RemoveAt(stack.Count - 1);
-            _state.ClipRect = stackLength != 0 ? stack[stackLength - 1] : null;
+            _clipRectStack.Pop();
+            _state.ClipRect = stackLength != 0 ? _clipRectStack.Peek() : null;
         }
 
         /** Figures out if the mask can be represented by a scissor rectangle; this is possible
@@ -364,7 +377,7 @@ namespace Sparrow.Rendering
         private bool IsRectangularMask(DisplayObject mask, DisplayObject maskee, Matrix outMatrix)
         {
             Quad quad = mask as Quad;
-            bool is3D = (maskee != null && mask.Stage == null);
+            bool is3D = mask.Is3D || (maskee != null && maskee.Is3D && mask.Stage == null);
 
             if (quad != null && !is3D && quad.Texture == null)
             {
@@ -436,9 +449,6 @@ namespace Sparrow.Rendering
             // enforce reset of basic context settings
             _actualBlendMode = 0;
             _actualCulling = null;
-
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Always);
 
             // reset everything else
             StencilReferenceValue = 0;
@@ -554,6 +564,8 @@ namespace Sparrow.Rendering
             float blue = ColorUtil.GetB(rgb) / 255.0f;
             GL.ClearColor(red, green, blue, alpha);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.StencilBufferBit);
+            GL.Clear(ClearBufferMask.DepthBufferBit);
     }
 
         /** Resets the render target to the back buffer and displays its contents. */
@@ -576,18 +588,17 @@ namespace Sparrow.Rendering
 
         private void ApplyRenderTarget()
         {
-            //TextureBase target = _state.RenderTargetBase;
-            // TODO
-            /*
+            int target = _state.RenderTargetBase;
             if (target != _actualRenderTarget)
             {
-                if (target)
+                if (target != 0)
                 {
+                    throw new NotImplementedException();
+                    /*
                     int antiAlias  = _state.RenderTargetAntiAlias;
                     bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
                     _context.setRenderToTexture(target, depthAndStencil, antiAlias);
-
-                    // OpenGL code
+                    
                     uint framebuffer;
                     if (!FramebufferCache.TryGetValue(target.Name, out framebuffer))
                     {
@@ -598,11 +609,11 @@ namespace Sparrow.Rendering
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 
                     GL.Viewport(0, 0, (int)target.NativeWidth, (int)target.NativeHeight);
+                    */
                    
                 }
                 else
                 { 
-                */
                     //_context.setRenderToBackBuffer();
                     // TODO: double check these on a device, the ifdef seems to be unneeded
 #if __IOS__
@@ -611,22 +622,19 @@ namespace Sparrow.Rendering
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
                     GL.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
-            //    }
-                    
-                
-                //_context.setStencilReferenceValue(StencilReferenceValue);
-                //_actualRenderTarget = target;
-          //  }
+                }
+                StencilReferenceValue = StencilReferenceValue;
+                _actualRenderTarget = target;
+            }
         }
 
-        private void ApplyClipRect() // used by masks
+        private void ApplyClipRect() // used by rectangular masks
         {
             Rectangle clipRect = _state.ClipRect;
 
             if (clipRect != null)
             {
-                throw new Exception("TODO");
-                /*float width, height;
+                float width, height;
                 Matrix3D projMatrix = _state.ProjectionMatrix3D;
                 Texture renderTarget = _state.RenderTarget;
 
@@ -642,28 +650,32 @@ namespace Sparrow.Rendering
                 }
 
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])
-                MatrixUtil.TransformCoords3D(projMatrix, clipRect.X, clipRect.Y, 0.0, sPoint3D);
-                sPoint3D.project(); // eliminate w-coordinate
-                sClipRect.X = (sPoint3D.X * 0.5 + 0.5) * width;
-                sClipRect.Y = (0.5 - sPoint3D.Y * 0.5) * height;
+                float[] sPoint3D = projMatrix.TransformCoords3D(clipRect.X, clipRect.Y, 0.0f);
+                MathUtil.ProjectVector3D(ref sPoint3D); // eliminate w-coordinate
+                sClipRect.X = (sPoint3D[0] * 0.5f + 0.5f) * width;
+                sClipRect.Y = (0.5f - sPoint3D[1] * 0.5f) * height;
 
-                MatrixUtil.TransformCoords3D(projMatrix, clipRect.Right, clipRect.Bottom, 0.0, sPoint3D);
-                sPoint3D.project(); // eliminate w-coordinate
-                sClipRect.Right  = (sPoint3D.x* 0.5 + 0.5) * width;
-                sClipRect.Bottom = (0.5 - sPoint3D.y* 0.5) * height;
+                sPoint3D = projMatrix.TransformCoords3D(clipRect.Right, clipRect.Bottom, 0.0f);
+                MathUtil.ProjectVector3D(ref sPoint3D); // eliminate w-coordinate
+                sClipRect.Right  = (sPoint3D[0]* 0.5f + 0.5f) * width;
+                sClipRect.Bottom = (0.5f - sPoint3D[1] * 0.5f) * height;
+                // OpenGL positions the scissor rectangle from the bottom of the screen :(
+                sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
 
                 sBufferRect.SetTo(0, 0, width, height);
                 sScissorRect = sClipRect.Intersection(sBufferRect);
 
                 // an empty rectangle is not allowed, so we set it to the smallest possible size
-                if (sScissorRect.Width < 1 || sScissorRect.Height< 1)
+                if (sScissorRect.Width < 1f || sScissorRect.Height < 1f)
+                {
                     sScissorRect.SetTo(0, 0, 1, 1);
+                }
 
-                _context.setScissorRectangle(sScissorRect);*/
+                GL.Enable(EnableCap.ScissorTest);
+                GL.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);
             }
             else
             {
-                //_context.setScissorRectangle(null);
                 GL.Disable(EnableCap.ScissorTest);
             }
         }
@@ -682,23 +694,23 @@ namespace Sparrow.Rendering
          *  The painter keeps track of one stencil reference value per render target.
          *  Only change this value if you know what you're doing!
          */
-        public uint StencilReferenceValue
+        public int StencilReferenceValue
         {
             get
             {
-                /*var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
+                int key = _state.RenderTarget != null ? _state.RenderTargetBase : -1;
                 if (_stencilReferenceValues.ContainsKey(key)) 
                 {
                     return _stencilReferenceValues[key];
                 }
-                else */return 0;
+                else return 0;
             }
             set
             {
-                /*var key = _state.RenderTarget != null ? _state.RenderTargetBase : this;
+                int key = _state.RenderTarget != null ? _state.RenderTargetBase : -1;
                 _stencilReferenceValues[key] = value;
-
-                _context.setStencilReferenceValue(value);*/
+                
+                GL.StencilFunc(StencilFunction.Equal, value, 0xFF);
             }
         }
 

@@ -10,6 +10,8 @@ namespace Tests
     class MeshStyleTest : TestBase
     {
 
+        private int eventCount;
+
         [Test]
         public void TestAssignment()
         {
@@ -32,45 +34,42 @@ namespace Tests
             Assert.AreEqual(quad1.Style.Type, meshStyleType);
             Assert.IsNull(style.Target);
         }
-
+       
         [Test]
         public void TestEnterFrameEvent()
         {
-            /* todo
-            var eventCount:int = 0;
-            var event:EnterFrameEvent = new EnterFrameEvent(Event.ENTER_FRAME, 0.1);
-            var style:MeshStyle = new MeshStyle();
-            var quad0:Quad = new Quad(100, 100);
-            var quad1:Quad = new Quad(100, 100);
+            eventCount = 0;
+            MeshStyle style = new MeshStyle();
+            TestQuad quad0 = new TestQuad(100, 100);
+            TestQuad quad1 = new TestQuad(100, 100);
 
-            style.addEventListener(Event.ENTER_FRAME, onEvent);
-                quad0.dispatchEvent(event);
-            assertEquals(0, eventCount);
+            style.EnterFrame += StyleEnterFrame;
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(0, eventCount);
 
-            quad0.style = style;
-            quad0.dispatchEvent(event);
-            assertEquals(1, eventCount);
+            quad0.Style = style;
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(1, eventCount);
 
-            quad0.dispatchEvent(event);
-            assertEquals(2, eventCount);
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(2, eventCount);
 
-            quad1.style = style;
-            quad0.dispatchEvent(event);
-            assertEquals(2, eventCount);
+            quad1.Style = style;
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(2, eventCount);
 
-            quad0.style = style;
-            quad0.dispatchEvent(event);
-            assertEquals(3, eventCount);
+            quad0.Style = style;
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(3, eventCount);
 
-            style.removeEventListener(Event.ENTER_FRAME, onEvent);
-            quad0.dispatchEvent(event);
-            assertEquals(3, eventCount);
+            style.EnterFrame -= StyleEnterFrame;
+            quad0.DispatchEnterFrame();
+            Assert.AreEqual(3, eventCount);
+        }
 
-            function onEvent(event:EnterFrameEvent):void
-            {
-                ++eventCount;
-            }
-            */
+        private void StyleEnterFrame(DisplayObject target, float passedTime)
+        {
+            ++eventCount;
         }
 
         [Test]
@@ -93,4 +92,14 @@ namespace Tests
     }
 
     class MockStyle : MeshStyle { }
+
+    class TestQuad : Quad
+    {
+        public TestQuad(float w, float h) : base(w, h) { }
+                
+        public void DispatchEnterFrame()
+        {
+            BroadcastEnterFrameEvent(0.5f);
+        }
+    }
 }

@@ -139,18 +139,12 @@ namespace Sparrow.Core
         private void HandleRenderFrame(object sender, FrameEventArgs e)
         {
             SparrowSharpApp.Step(e.Time);
-            // add game logic, input handling
-            if (Keyboard[Key.Escape])
-            {
-                Exit();
-            }
             SwapBuffers();
         }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            GL.Viewport(0, 0, Width, Height);
             SparrowSharpApp.Stage.SetDrawableArea((uint)Width, (uint)Height);
         }
 
@@ -158,10 +152,13 @@ namespace Sparrow.Core
         {
             // setup settings, load textures, sounds
             GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.Dither);
             GL.Enable(EnableCap.Blend);
-            
+
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Always);
+            GL.Enable(EnableCap.StencilTest);
+
             FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (status != FramebufferErrorCode.FramebufferComplete)
             {

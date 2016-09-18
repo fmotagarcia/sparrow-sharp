@@ -208,14 +208,13 @@ namespace Sparrow.Styles
         }
 
         /** Called when assigning a target mesh. Override to plug in class-specific logic. */
-        virtual protected void OnTargetAssigned(Mesh target)
-        { }
+        virtual protected void OnTargetAssigned(Mesh target) { }
 
         // enter frame event
 
         private void OnEnterFrame(DisplayObject target, float passedTime)
         {
-            EnterFrame(target, passedTime); //dispatchEvent(event);
+            EnterFrame?.Invoke(target, passedTime);
         }
         // internal methods
 
@@ -223,7 +222,6 @@ namespace Sparrow.Styles
         {
             if (_target != target)
             {
-                //if (_target != null) _target.RemoveEventListener(Event.ENTER_FRAME, OnEnterFrame);
                 if (_target != null) _target.EnterFrame -= OnEnterFrame;
 
                 _target = target;
@@ -232,9 +230,9 @@ namespace Sparrow.Styles
 
                 if (target != null)
                 {
-                    if (EnterFrame != null) //  if (hasEventListener(Event.ENTER_FRAME))
+                    if (EnterFrame != null)
                     {
-                        target.EnterFrame += OnEnterFrame; // addEventListener(Event.ENTER_FRAME)
+                        target.EnterFrame += OnEnterFrame;
                     }
                     OnTargetAssigned(target);
                 }

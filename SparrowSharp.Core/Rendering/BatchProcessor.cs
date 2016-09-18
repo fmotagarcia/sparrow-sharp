@@ -63,8 +63,8 @@ namespace Sparrow.Rendering
         /// <param name="ignoreTransformations">when enabled, the mesh's vertices will be added
         ///                    without transforming them in any way (no matter the value of the
         ///                    state's <code>modelviewMatrix</param>
-        public void AddMesh(Mesh mesh, RenderState state, MeshSubset subset= null,
-                            bool ignoreTransformations= false)
+        public void AddMesh(Mesh mesh, RenderState state, MeshSubset subset = null,
+                            bool ignoreTransformations = false)
         {
             if (subset == null)
             {

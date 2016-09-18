@@ -48,11 +48,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="Core\BaseEffect.cs" />
-    <Compile Include="Core\Context.cs" />
-    <Compile Include="Core\Program.cs" />
-    <Compile Include="Core\RenderState.cs" />
-    <Compile Include="Core\RenderSupport.cs" />
     <Compile Include="Display\IAnimatable.cs" />
     <Compile Include="Display\BlendMode.cs" />
     <Compile Include="Display\DisplayObject.cs" />
@@ -60,7 +55,6 @@
     <Compile Include="Display\Image.cs" />
     <Compile Include="Display\MovieClip.cs" />
     <Compile Include="Display\Quad.cs" />
-    <Compile Include="Display\QuadBatch.cs" />
     <Compile Include="Display\Sprite.cs" />
     <Compile Include="Display\Stage.cs" />
     <Compile Include="Fonts\BitmapChar.cs" />
@@ -77,14 +71,12 @@
     <Compile Include="Utils\VertexColor.cs" />
     <Compile Include="Utils\VertexColorHelper.cs" />
     <Compile Include="Utils\VertexData.cs" />
-    <Compile Include="Textures\GLTexture.cs" />
     <Compile Include="Textures\Texture.cs" />
     <Compile Include="Textures\SubTexture.cs" />
     <Compile Include="Textures\TextureSmoothing.cs" />
     <Compile Include="Core\AndroidViewController.cs" />
     <Compile Include="Textures\TextureAtlas.cs" />
     <Compile Include="Textures\TextureInfo.cs" />
-    <Compile Include="SparrowSharpApp.cs" />
     <Compile Include="Pool\ObjectPool.cs" />
     <Compile Include="Pool\PooledObject.cs" />
     <Compile Include="Utils\GLExtensions.cs" />

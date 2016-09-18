@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sparrow.Textures;
+using Sparrow.Display;
 
 namespace Sparrow.Fonts
 {
@@ -85,7 +86,7 @@ namespace Sparrow.Fonts
             }
             return kerning;
         }
-        /*
+        
         /// <summary>
         /// Creates an image of the char.
         /// </summary>
@@ -93,7 +94,7 @@ namespace Sparrow.Fonts
         {
             return new Image(Texture);
         }
-        */
+        
         /// <summary>
         /// The width of the character in points.
         /// </summary>

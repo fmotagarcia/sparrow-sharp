@@ -1,4 +1,5 @@
 
+using OpenTK.Graphics.ES20;
 using Sparrow.Geom;
 using System;
 
@@ -70,6 +71,7 @@ namespace Sparrow.Display
 
         internal void SetDrawableArea(uint width, uint height)
         {
+            GL.Viewport(0, 0, (int)width, (int)height);
             DrawableWidth = width;
             DrawableHeight = height;
             if (OnResize != null)

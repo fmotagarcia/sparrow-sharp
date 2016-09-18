@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using Sparrow.Textures;
 using System.IO;
+using Sparrow.Core;
 
 namespace Sparrow.ResourceLoading
 {
@@ -62,7 +63,7 @@ namespace Sparrow.ResourceLoading
             BitmapData bitmapData = bitmap.LockBits(
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
                 ImageLockMode.ReadOnly, 
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                PixelFormat.Format32bppArgb);
 
             
             TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, 

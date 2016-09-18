@@ -108,8 +108,14 @@ namespace Sparrow.Utils
                     {
                         if (_vertices != null)
                         {
-                            Array.Resize(ref _vertices, value);
-                            Array.Resize(ref _vertexColors, value);
+                            if (value > _vertices.Length || value < _vertices.Length * 0.6f)
+                            {
+                                //add some buffer to prevent frequent resizing
+                                int newLenght = Math.Max((int)(_vertices.Length * 1.4f), (int)(value * 1.4f));
+                                //Console.WriteLine("expand buffer " + newLenght);
+                                Array.Resize(ref _vertices, newLenght);
+                                Array.Resize(ref _vertexColors, newLenght);
+                            }
                         }
                         else
                         {
@@ -199,7 +205,7 @@ namespace Sparrow.Utils
             // TODO optimize this. Maybe do it inside Vertex.copy with unsafe code?
             if (matrix != null && !matrix.IsIdentity())
             {
-                int len = target._vertices.Length;
+                int len = target._numVertices;
                 for (int i = targetOffset; i < targetOffset + numVertices; i++)
                 {
                     float x = target._vertices[i].Position.X;
@@ -622,7 +628,7 @@ namespace Sparrow.Utils
             if (_numVertices > 0)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferName);
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * 4 * sizeof(float)), Vertices, hint);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * 4 * sizeof(float)), _vertices, hint);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexColorsBufferName);
                 GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * sizeof(byte) * 4), VertexColors, hint);
