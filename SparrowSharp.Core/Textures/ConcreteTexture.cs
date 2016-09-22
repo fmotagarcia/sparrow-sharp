@@ -65,7 +65,7 @@ namespace Sparrow.Textures
          *  texture is wiped out. */
         public void Clear(uint color = 0x0, float alpha = 0.0f)
         {
-            if (_premultipliedAlpha && alpha< 1.0)
+            if (_premultipliedAlpha && alpha< 1.0f)
             {
                 color = ColorUtil.GetRGB(
                     (byte)((float)(ColorUtil.GetR(color)) * alpha),

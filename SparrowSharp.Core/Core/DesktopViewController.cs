@@ -18,7 +18,7 @@ namespace Sparrow.Core
         // default graphics mode does not have a stencil buffer.
         public DesktopViewController(Type rootClass, int windowWidth, int windowHeight, string windowTitle, 
                                      GameWindowFlags windowFlags, DisplayDevice device, GraphicsContextFlags flags) 
-            : base(windowWidth, windowHeight, new GraphicsMode(32, 24, 8), windowTitle, windowFlags, device, -1, -1, flags)
+            : base(windowWidth, windowHeight, GraphicsMode.Default, windowTitle, windowFlags, device, -1, -1, flags)
         {
             Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
@@ -158,7 +158,6 @@ namespace Sparrow.Core
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Always);
-            GL.Enable(EnableCap.StencilTest);
 
             FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (status != FramebufferErrorCode.FramebufferComplete)

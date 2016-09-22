@@ -88,10 +88,15 @@ namespace Sparrow.Utils
         private int _numVertices;
         private bool _premultipliedAlpha;
 
-        public VertexData(int numVertices)
+        /// <summary>
+        /// Initializes a VertexData instance with a certain size.
+        /// </summary>
+        public VertexData(int numVertices = 0, bool premultipliedAlpha = true)
         {
+            _premultipliedAlpha = premultipliedAlpha;
             NumVertices = numVertices;
         }
+
         /// <summary>
         /// Indicates the size of the VertexData object. You can resize the object any time; if you
         /// make it bigger, it will be filled up with vertices that have all properties zeroed, except
@@ -179,15 +184,6 @@ namespace Sparrow.Utils
             {
                 SetPremultipliedAlpha(value, true);
             }
-        }
-
-        /// <summary>
-        /// Initializes a VertexData instance with a certain size.
-        /// </summary>
-        public VertexData(int numVertices = 0, bool premultipliedAlpha = false)
-        {
-            _premultipliedAlpha = premultipliedAlpha;
-            NumVertices = numVertices;
         }
 
         /// <summary>

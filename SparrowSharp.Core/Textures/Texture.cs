@@ -14,6 +14,37 @@ namespace Sparrow.Textures
     public abstract class Texture
     {
 
+        public static Texture FromData(byte[] imgData, TextureOptions properties,
+                                       int width, int height)
+        {
+            if (imgData == null)
+            {
+                throw new ArgumentException("imgData cannot null!");
+            }
+            Texture tex = Empty(width, height, properties.PremultipliedAlpha,
+                                properties.NumMipMaps, properties.OptimizeForRenderToTexture,
+                                properties.Scale, properties.Format);
+
+            GL.TexSubImage2D(TextureTarget.Texture2D,
+                        0, // level
+                        0, // xOffset
+                        0, // yOffset
+                        width,
+                        height,
+                        properties.Format.PixelFormat,
+                        properties.Format.PixelType,
+                        imgData);
+            if (properties.NumMipMaps > 0)
+            {
+#if __WINDOWS__
+                GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+#elif __ANDROID__
+                GL.GenerateMipmap(TextureTarget.Texture2D);
+#endif
+            }
+            return tex;
+        }
+
         public static Texture FromData(IntPtr imgData, TextureOptions properties, 
                                        int width, int height)
         {

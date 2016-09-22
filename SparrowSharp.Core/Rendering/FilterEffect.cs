@@ -24,13 +24,6 @@ namespace Sparrow.Rendering
     public class FilterEffect : Effect
     {
 
-        /** The AGAL code for the standard vertex shader that most filters will use.
-         *  It simply transforms the vertex coordinates to clip-space and passes the texture
-         *  coordinates to the fragment program (as 'v0'). */
-        public static readonly string STD_VERTEX_SHADER =
-            "m44 op, va0, vc0 \n"+  // 4x4 matrix transform to output clip-space
-            "mov v0, va1";          // pass texture coordinates to fragment program
-
         private Texture _texture;
         private TextureSmoothing _textureSmoothing;
         private bool _textureRepeat;
@@ -56,9 +49,6 @@ namespace Sparrow.Rendering
             if (_texture != null)
             {
                 throw new NotImplementedException();
-                //string vertexShader = STD_VERTEX_SHADER;
-                //string fragmentShader = Tex("oc", "v0", 0, _texture);
-                //return new Program(vertexShader, fragmentShader);
             }
             else
             {

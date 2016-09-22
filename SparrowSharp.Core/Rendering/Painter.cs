@@ -201,7 +201,7 @@ namespace Sparrow.Rendering
          *  @param blendMode            Replaces the current blend mode; except for "auto", which
          *                              means the current value remains unchanged.
          */
-        public void SetStateTo(Matrix transformationMatrix, float alphaFactor= 1.0f,
+        public void SetStateTo(Matrix transformationMatrix, float alphaFactor = 1.0f,
                                uint blendMode = BlendMode.AUTO)
         {
             if (transformationMatrix != null) _state._modelviewMatrix.PrependMatrix(transformationMatrix);
@@ -261,23 +261,7 @@ namespace Sparrow.Rendering
             }
             else
             {
-               
-                // triangleFace, compareMode, actionOnBothPass,
-                //actionOnDepthFail: String = "keep", actionOnDepthPassStencilFail: String = "keep"
-                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                //    Context3DCompareMode.EQUAL, Context3DStencilAction.INCREMENT_SATURATE);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Incr);               
-                GL.ColorMask(false, false, false, false);
-                GL.DepthMask(false);
-
-                RenderMask(mask);
-                StencilReferenceValue++;
-
-                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                //    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
-                GL.ColorMask(true, true, true, true);
-                GL.DepthMask(true);
+                throw new NotImplementedException();
             }
 
             ExcludeFromCache(maskee);
@@ -302,46 +286,8 @@ namespace Sparrow.Rendering
             }
             else
             {
-                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                //    Context3DCompareMode.EQUAL, Context3DStencilAction.DECREMENT_SATURATE);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Decr);
-                GL.ColorMask(false, false, false, false);
-                GL.DepthMask(false);
-                
-                RenderMask(mask);
-                StencilReferenceValue--;
-
-                //_context.setStencilActions(Context3DTriangleFace.FRONT_AND_BACK,
-                //    Context3DCompareMode.EQUAL, Context3DStencilAction.KEEP);
-                GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Keep);
-                GL.ColorMask(true, true, true, true);
-                GL.DepthMask(true);
+                throw new NotImplementedException();
             }
-        }
-
-        private void RenderMask(DisplayObject mask)
-        {
-            PushState();
-            _state.Alpha = 0.0f;
-
-            Matrix matrix = null;
-
-            if (mask.Stage != null)
-            {
-                _state.SetModelviewMatricesToIdentity();
-                matrix   = mask.GetTransformationMatrix(null);
-            }
-            else
-            {
-                matrix   = mask.TransformationMatrix;
-            }
-
-            _state.TransformModelviewMatrix(matrix);
-
-            mask.Render(this);
-            FinishMeshBatch();
-
-            PopState();
         }
 
         private void PushClipRect(Rectangle clipRect)
@@ -452,7 +398,6 @@ namespace Sparrow.Rendering
             _actualCulling = null;
 
             // reset everything else
-            StencilReferenceValue = 0;
             _clipRectStack.Clear();
             _drawCount = 0;
             _stateStackPos = -1;
@@ -558,7 +503,6 @@ namespace Sparrow.Rendering
         public void Clear(uint rgb = 0, float alpha= 0.0f)
         {
             ApplyRenderTarget();
-            StencilReferenceValue = 0;
 
             float red = ColorUtil.GetR(rgb) / 255.0f;
             float green = ColorUtil.GetG(rgb) / 255.0f;
@@ -624,7 +568,6 @@ namespace Sparrow.Rendering
 #endif
                     GL.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
                 }
-                StencilReferenceValue = StencilReferenceValue;
                 _actualRenderTarget = target;
             }
         }
@@ -691,31 +634,6 @@ namespace Sparrow.Rendering
         {
             set { _drawCount = value; }
             get { return _drawCount; }
-        }
-
-        /** The current stencil reference value of the active render target. This value
-         *  is typically incremented when drawing a mask and decrementing when erasing it.
-         *  The painter keeps track of one stencil reference value per render target.
-         *  Only change this value if you know what you're doing!
-         */
-        public int StencilReferenceValue
-        {
-            get
-            {
-                int key = _state.RenderTarget != null ? _state.RenderTargetBase : -1;
-                if (_stencilReferenceValues.ContainsKey(key)) 
-                {
-                    return _stencilReferenceValues[key];
-                }
-                else return 0;
-            }
-            set
-            {
-                int key = _state.RenderTarget != null ? _state.RenderTargetBase : -1;
-                _stencilReferenceValues[key] = value;
-                
-                GL.StencilFunc(StencilFunction.Equal, value, 0xFF);
-            }
         }
 
         /** The current render state, containing some of the context settings, projection- and

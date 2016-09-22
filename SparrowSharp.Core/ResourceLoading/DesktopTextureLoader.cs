@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using Sparrow.Textures;
 using System.IO;
 using Sparrow.Core;
+using System.Runtime.InteropServices;
 
 namespace Sparrow.ResourceLoading
 {
@@ -56,44 +57,35 @@ namespace Sparrow.ResourceLoading
         private void GenerateTexture(Bitmap bitmap)
         {
             _isLoaded = false;
-           
-            // Fix up the Image to match the expected format
-            bitmap = RGBToBGR(bitmap);
+
 
             BitmapData bitmapData = bitmap.LockBits(
-                new Rectangle(0, 0, bitmap.Width, bitmap.Height), 
-                ImageLockMode.ReadOnly, 
-                PixelFormat.Format32bppArgb);
-
-            
-            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, 
-                                         SparrowSharpApp.ContentScaleFactor, 0, false);
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb
+            );
             bitmap.UnlockBits(bitmapData);
-            _glTexture = Texture.FromData(bitmapData.Scan0, opts, bitmapData.Width, bitmapData.Height);
+            IntPtr rawData = bitmapData.Scan0;
             
-            /*
-            uint name = (uint)GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, name);
 
-            OpenTK.Graphics.OpenGL4.GL.TexStorage2D(OpenTK.Graphics.OpenGL4.TextureTarget2d.Texture2D,
-               1, // mipmap level
-               OpenTK.Graphics.OpenGL4.SizedInternalFormat.Rgba8,
-               bitmapData.Width,
-               bitmapData.Height);
+            int length = bitmap.Width * bitmap.Height * 4;
+            byte[] data = new byte[length];
+            Marshal.Copy(rawData, data, 0, length);
 
-            OpenTK.Graphics.OpenGL4.GL.TexSubImage2D(OpenTK.Graphics.OpenGL4.TextureTarget.Texture2D,
-                0, // level
-                0, // xOffset
-                0, // yOffset
-                bitmapData.Width, 
-                bitmapData.Height,
-                OpenTK.Graphics.OpenGL4.PixelFormat.Rgba,
-                OpenTK.Graphics.OpenGL4.PixelType.UnsignedByte,
-                bitmapData.Scan0);
-           
-            bitmap.UnlockBits(bitmapData);
-            _glTexture = new GLTexture(name, bitmap.Width, bitmap.Height, false, 1.0f, false);
-            */
+            for (int i = 0; i < length; i += 4)
+            {
+                float alpha = (float)data[i + 3] / 255;
+                byte r = data[i + 2];
+                byte g = data[i + 1];
+                byte b = data[i + 0];
+                data[i + 0] = (byte)(r * alpha);
+                data[i + 1] = (byte)(g * alpha);
+                data[i + 2] = (byte)(b * alpha);
+                data[i + 3] = (byte)(alpha * 255);
+            }
+            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, SparrowSharpApp.ContentScaleFactor);
+
+            _glTexture = Texture.FromData(data, opts, bitmapData.Width, bitmapData.Height);
 
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
@@ -104,51 +96,6 @@ namespace Sparrow.ResourceLoading
             {
                 handler(this, _glTexture);
             }
-        }
-
-        // from https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/ImageEx.cs
-        // RGB to BGR convert Matrix
-        private static float[][] rgbtobgr = new float[][]
-        {
-            new float[] {0, 0, 1, 0, 0},
-            new float[] {0, 1, 0, 0, 0},
-            new float[] {1, 0, 0, 0, 0},
-            new float[] {0, 0, 0, 1, 0},
-            new float[] {0, 0, 0, 0, 1}
-        };
-
-        private static Bitmap RGBToBGR(Bitmap bmp)
-        {
-            Bitmap newBmp;
-            if ((bmp.PixelFormat & System.Drawing.Imaging.PixelFormat.Indexed) != 0)
-            {
-                newBmp = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            }
-            else
-            {
-                newBmp = bmp;
-            }
-
-            try
-            {
-                ImageAttributes ia = new ImageAttributes();
-                ColorMatrix cm = new ColorMatrix(rgbtobgr);
-
-                ia.SetColorMatrix(cm);
-                using (Graphics g = Graphics.FromImage(newBmp))
-                {
-                    g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, ia);
-                }
-            }
-            finally
-            {
-                if (newBmp != bmp)
-                {
-                    bmp.Dispose();
-                }
-            }
-
-            return newBmp;
         }
 
     }

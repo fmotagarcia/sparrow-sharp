@@ -107,8 +107,8 @@ namespace Sparrow.Core
                 _painter.NextFrame();
                 _painter.PixelSize = 1.0f / ContentScaleFactor;
                 _painter.State.SetProjectionMatrix(
-                    _viewPort.X < 0 ? -_viewPort.X / scaleX : 0.0f,
-                    _viewPort.Y < 0 ? -_viewPort.Y / scaleY : 0.0f,
+                    _viewPort.X < 0f ? -_viewPort.X / scaleX : 0.0f,
+                    _viewPort.Y < 0f ? -_viewPort.Y / scaleY : 0.0f,
                     _clippedViewPort.Width / scaleX,
                     _clippedViewPort.Height / scaleY,
                     Stage.Width, Stage.Height, Stage.CameraPosition);
