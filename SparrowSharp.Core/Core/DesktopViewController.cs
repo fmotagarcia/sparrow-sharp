@@ -139,8 +139,11 @@ namespace Sparrow.Core
 
         private void HandleRenderFrame(object sender, FrameEventArgs e)
         {
-            SparrowSharpApp.Step(e.Time);
-            SwapBuffers();
+            bool needsSwap = SparrowSharpApp.Step(e.Time);
+            if (needsSwap)
+            {
+                SwapBuffers();
+            }
         }
 
         protected override void OnResize(EventArgs e)

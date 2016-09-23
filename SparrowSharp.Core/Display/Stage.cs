@@ -51,7 +51,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The background color of the stage. Default: black.
         /// </summary>
-        public uint Color { get; set; }
+        public uint Color { get; set; } // TODO call setRequiresRedraw
 
         public float FieldOfView { get; set; }
         private Point _projectionOffset;
@@ -78,6 +78,7 @@ namespace Sparrow.Display
             {
                 OnResize(this);
             }
+            SetRequiresRedraw();
         }
 
         override public DisplayObject HitTest(Point localPoint)

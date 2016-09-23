@@ -82,24 +82,24 @@ namespace Sparrow.Core
             Stage.AddChild(Root);
         }
 
-        public static void Step(double time)
+        public static bool Step(double time)
         {
             long elapsed = watch.ElapsedMilliseconds;
             watch.Restart();
 
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
-            Render();
+            bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames;
+            Render(doRedraw);
+            return doRedraw;
         }
 
-        public static void Render()
+        public static void Render(bool doRedraw)
         {
             UpdateViewPort();
-
-            bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames;
+            
             if (doRedraw)
             {
-                //Console.WriteLine("RENDER");
                 //dispatchEventWith(starling.events.Event.RENDER);
                 float scaleX = _viewPort.Width / Stage.Width;
                 float scaleY = _viewPort.Height / Stage.Height;

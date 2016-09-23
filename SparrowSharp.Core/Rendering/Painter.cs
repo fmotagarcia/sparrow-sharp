@@ -513,11 +513,10 @@ namespace Sparrow.Rendering
             GL.Clear(ClearBufferMask.DepthBufferBit);
     }
 
-        /** Resets the render target to the back buffer and displays its contents. */
+        /** Resets the render target to the back buffer */
         public void Present()
         {
             _state.RenderTarget = null;
-            //this is called automatically? _context.present();
         }
 
         private void ApplyBlendMode()

@@ -174,16 +174,26 @@ namespace Sparrow.Display
 
         // vertex setup
 
-        private void SetupScale9Grid()
+        private void SetupScale9Grid() // TODO rewrite this
         {
-            Texture texture = this.Texture;
+            Texture texture = Texture;
             Rectangle frame = texture.Frame;
             float absScaleX = ScaleX > 0 ? ScaleX : -ScaleX;
             float absScaleY = ScaleY > 0 ? ScaleY : -ScaleY;
+
+            // If top and bottom row / left and right column are empty, this is actually
+            // a scale3 grid. In that case, we want the 'caps' to maintain their aspect ratio.
+
+            if (MathUtil.IsEquivalent(_scale9Grid.Width, texture.FrameWidth))
+                absScaleY /= absScaleX;
+            else if (MathUtil.IsEquivalent(_scale9Grid.Height, texture.FrameHeight))
+                absScaleX /= absScaleY;
+
+
             float invScaleX = 1.0f / absScaleX;
             float invScaleY = 1.0f / absScaleY;
-            VertexData vertexData = this.VertexData;
-            IndexData indexData = this.IndexData;
+            VertexData vertexData = VertexData;
+            IndexData indexData = IndexData;
             int prevNumVertices = vertexData.NumVertices;
             int numVertices;
             int numQuads;
@@ -262,26 +272,23 @@ namespace Sparrow.Display
             // if the total width / height becomes smaller than the outer columns / rows,
             // we hide the center column / row and scale the rest normally.
 
-            if (sPosCols[1] < 0)
+            if (sPosCols[1] < 0f)
             {
                 correction = textureBounds.Width / (textureBounds.Width - gridCenter.Width) * absScaleX;
                 sPadding.Left *= correction;
                 sPosCols[0] *= correction;
-                sPosCols[1] = 0.0001f; // losing the column altogether would mix up texture coords
+                sPosCols[1] = 0f;
                 sPosCols[2] *= correction;
             }
 
-            if (sPosRows[1] < 0)
+            if (sPosRows[1] < 0f)
             {
                 correction = textureBounds.Height / (textureBounds.Height - gridCenter.Height) * absScaleY;
                 sPadding.Top *= correction;
                 sPosRows[0] *= correction;
-                sPosRows[1] = 0.0001f; // losing the row altogether would mix up texture coords
+                sPosRows[1] = 0f;
                 sPosRows[2] *= correction;
             }
-
-            numVertices = SetupScale9GridAttributes(
-                sPadding.Left, sPadding.Top, sPosCols, sPosRows, SetupScale9GridVertexPosition);
 
             // now set the texture coordinates
             float[] sTexCols = new float[3];
@@ -294,7 +301,8 @@ namespace Sparrow.Display
             sTexRows[2] = sBasRows[2] / pixelBounds.Height;
             sTexRows[1] = 1.0f - sTexRows[0] - sTexRows[2];
 
-            SetupScale9GridAttributes(0, 0, sTexCols, sTexRows, SetupScale9GridVertexTexCoords);
+            numVertices = SetupScale9GridAttributes(
+               sPadding.Left, sPadding.Top, sPosCols, sPosRows, sTexCols, sTexRows);
 
             // update indices
 
@@ -310,7 +318,7 @@ namespace Sparrow.Display
 
             if (numVertices != prevNumVertices)
             {
-                uint color   = prevNumVertices != 0 ? vertexData.GetColor(0) : 0xffffff;
+                uint color  = prevNumVertices != 0 ? vertexData.GetColor(0) : 0xffffff;
                 float alpha = prevNumVertices != 0 ? vertexData.GetAlpha(0) : 1.0f;
                 vertexData.Colorize(color, alpha);
             }
@@ -318,51 +326,65 @@ namespace Sparrow.Display
             SetRequiresRedraw();
         }
 
-        private void SetupScale9GridVertexPosition(VertexData vertexData, Texture texture,
-                                                   int vertexID, float x, float y)
-        {
-            vertexData.SetPoint(vertexID, x, y);
-        }
-       
-        private void SetupScale9GridVertexTexCoords(VertexData vertexData, Texture texture,
-                                                    int vertexID, float x, float y)
-        {
-            texture.SetTexCoords(vertexData, vertexID, x, y);
-        }
-
         private int SetupScale9GridAttributes(float startX, float startY,
-                                              float[] colWidths,
-                                              float[] rowHeights,
-                                              SetupScale9GridDelegate callback)
+                                              float[] posCols,
+                                              float[] posRows,
+                                              float[] texCols,
+                                              float[] texRows)
         {
             int row, col;
-            float colWidth, rowHeight;
+            float colWidthPos, rowHeightPos;
+            float colWidthTex, rowHeightTex;
             VertexData vertexData = VertexData;
             Texture texture = Texture;
             float currentX = startX;
             float currentY = startY;
+            float currentU = 0f;
+            float currentV = 0f;
             int vertexID = 0;
 
             for (row = 0; row < 3; ++row)
             {
-                rowHeight = rowHeights[row];
-                if (rowHeight > 0)
+                rowHeightPos = posRows[row];
+                rowHeightTex = texRows[row];
+
+                if (rowHeightPos > 0)
                 {
                     for (col = 0; col < 3; ++col)
                     {
-                        colWidth = colWidths[col];
-                        if (colWidth > 0)
+                        colWidthPos = posCols[col];
+                        colWidthTex = texCols[col];
+
+                        if (colWidthPos > 0)
                         {
-                            callback(vertexData, texture, vertexID++, currentX, currentY);
-                            callback(vertexData, texture, vertexID++, currentX + colWidth, currentY);
-                            callback(vertexData, texture, vertexID++, currentX, currentY + rowHeight);
-                            callback(vertexData, texture, vertexID++, currentX + colWidth, currentY + rowHeight);
-                            currentX += colWidth;
+                            vertexData.SetPoint(vertexID, currentX, currentY);
+                            texture.SetTexCoords(vertexData, vertexID, currentU, currentV);
+                            vertexID++;
+
+                            vertexData.SetPoint(vertexID, currentX + colWidthPos, currentY);
+                            texture.SetTexCoords(vertexData, vertexID, currentU + colWidthTex, currentV);
+                            vertexID++;
+
+                            vertexData.SetPoint(vertexID, currentX, currentY + rowHeightPos);
+                            texture.SetTexCoords(vertexData, vertexID, currentU, currentV + rowHeightTex);
+                            vertexID++;
+
+                            vertexData.SetPoint(vertexID, currentX + colWidthPos, currentY + rowHeightPos);
+                            texture.SetTexCoords(vertexData, vertexID, currentU + colWidthTex, currentV + rowHeightTex);
+                            vertexID++;
+
+                            currentX += colWidthPos;
                         }
+
+                        currentU += colWidthTex;
                     }
-                    currentY += rowHeight;
+
+                    currentY += rowHeightPos;
                 }
+
                 currentX = startX;
+                currentU = 0f;
+                currentV += rowHeightTex;
             }
 
             return vertexID;

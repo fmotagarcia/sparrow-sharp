@@ -125,5 +125,11 @@ namespace Sparrow.Utils
             vector[2] = vector[2] / vector[3];
             return vector;
         }
+
+        /** Indicates if two float values are equal, give or take <code>epsilon</code>. */
+        public static bool IsEquivalent(float a, float b, float epsilon = 0.0001f)
+        {
+            return (a - epsilon<b) && (a + epsilon > b);
+        }
 }
 }
