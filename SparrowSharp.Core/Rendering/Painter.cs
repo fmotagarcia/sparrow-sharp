@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using Sparrow.Textures;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
 #endif
 
 namespace Sparrow.Rendering

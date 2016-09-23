@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 using OpenTK;
-using OpenTK.Graphics.ES20;
 using Sparrow;
 using Sparrow.Core;
 using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Filters
 {

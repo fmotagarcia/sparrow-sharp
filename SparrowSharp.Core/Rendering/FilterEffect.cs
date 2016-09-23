@@ -2,6 +2,7 @@
 using Sparrow.Textures;
 using Sparrow.Utils;
 using System;
+using System.Text;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -33,6 +34,26 @@ namespace Sparrow.Rendering
             _textureSmoothing = TextureSmoothing.Bilinear;
         }
 
+        public static string StdVertexShader
+        {
+            get
+            {
+                StringBuilder source = new StringBuilder("");
+                // vertex shader
+                AddShaderInitCode(source);
+                source.AppendLine("attribute vec4 aPosition;");
+                source.AppendLine("attribute vec2 aTexCoords;");
+                source.AppendLine("uniform mat4 uMvpMatrix;");
+                source.AppendLine("varying lowp vec2 vTexCoords;");
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
+                source.AppendLine("  vTexCoords  = aTexCoords;");
+                source.Append("}");
+
+                return source.ToString();
+            }
+        }
         /** Override this method if the effect requires a different program depending on the
          *  current settings. Ideally, you do this by creating a bit mask encoding all the options.
          *  This method is called often, so do not allocate any temporary objects when overriding.
@@ -48,7 +69,23 @@ namespace Sparrow.Rendering
         {
             if (_texture != null)
             {
-                throw new NotImplementedException();
+                StringBuilder source = new StringBuilder("");
+
+                string vertexShader = StdVertexShader;
+
+                // fragment shader
+                source = new StringBuilder("");
+                AddShaderInitCode(source);
+                // variables
+                source.AppendLine("varying lowp vec2 vTexCoords;");
+                source.AppendLine("uniform lowp sampler2D uTexture;");
+                // main
+                source.AppendLine("void main() {");
+                source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords);");
+                source.Append("}");
+
+                string fragmentShader = source.ToString();
+                return new Program(vertexShader, fragmentShader);
             }
             else
             {
@@ -95,21 +132,6 @@ namespace Sparrow.Rendering
                 // do we need to unbind anything else?
             }
             base.AfterDraw();
-        }
-
-        /** Creates an AGAL source string with a <code>tex</code> operation, including an options
-         *  list with the appropriate format flag. This is just a convenience method forwarding
-         *  to the respective RenderUtil method.
-         *
-         *  @see starling.utils.RenderUtil#createAGALTexOperation()
-         */
-        protected static string Tex(string resultReg, string uvReg, int sampler, Texture texture,
-                                    bool convertToPmaIfRequired= true)
-        {
-            // return RenderUtil.createAGALTexOperation(resultReg, uvReg, sampler, texture,
-            //     convertToPmaIfRequired);
-            throw new NotImplementedException();
-           // return "";
         }
 
         /** The texture to be mapped onto the vertices. */

@@ -1,6 +1,10 @@
-﻿using OpenTK.Graphics.ES20;
-using Sparrow.Core;
+﻿
 using System.Collections.Generic;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Utils
 {

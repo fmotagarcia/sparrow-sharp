@@ -1,10 +1,15 @@
-﻿using System;
+﻿
+using System;
 using OpenTK;
-using OpenTK.Graphics.ES20;
 using Sparrow;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Filters
 {

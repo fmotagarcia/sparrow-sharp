@@ -1,10 +1,9 @@
 ﻿using System;
-using Sparrow.Core;
 
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
-using OpenTK.Graphics.ES20;
+using OpenTK.Graphics.ES30;
 #endif
 
 namespace Sparrow.Rendering

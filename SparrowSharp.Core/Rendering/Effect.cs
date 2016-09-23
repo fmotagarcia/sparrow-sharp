@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Text;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
 #endif
 
 namespace Sparrow.Rendering
@@ -269,18 +271,13 @@ namespace Sparrow.Rendering
         {
             StringBuilder source = new StringBuilder("");
 
-            // variables
+            // vertex shader
             AddShaderInitCode(source);
             source.AppendLine("attribute vec4 aPosition;");
-            source.AppendLine("attribute vec4 aColor;");
             source.AppendLine("uniform mat4 uMvpMatrix;");
-            source.AppendLine("uniform vec4 uAlpha;");
-            source.AppendLine("varying lowp vec4 vColor;");
-
             // main
             source.AppendLine("void main() {");
             source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-            source.AppendLine("  vColor = aColor * uAlpha;");
             source.Append("}");
 
             string vertexShader = source.ToString();
@@ -288,11 +285,9 @@ namespace Sparrow.Rendering
             // fragment shader
             source = new StringBuilder("");
             AddShaderInitCode(source);
-            // variables
-            source.AppendLine("varying lowp vec4 vColor;");
             // main
             source.AppendLine("void main() {");
-            source.AppendLine("  gl_FragColor = vColor;");
+            source.AppendLine("  gl_FragColor = vec4(1, 1, 1, 1);");
             source.Append("}");
 
             string fragmentShader = source.ToString();
@@ -300,7 +295,11 @@ namespace Sparrow.Rendering
             return new Program(vertexShader, fragmentShader);
         }
 
-        protected void AddShaderInitCode(StringBuilder source)
+        /// <summary>
+        /// Appends OpenGL shader defines, this is needed for shaders to work on both
+        /// desktop OpenGL and OpenGL ES 2+.
+        /// </summary>
+        public static void AddShaderInitCode(StringBuilder source)
         {
 #if __WINDOWS__
             source.AppendLine("#version 110");

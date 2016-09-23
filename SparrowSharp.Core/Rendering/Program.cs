@@ -1,7 +1,11 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using OpenTK.Graphics.ES20;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Rendering
 {
@@ -78,11 +82,11 @@ namespace Sparrow.Rendering
 
 #if DEBUG
             int linked;
-            GL.GetProgram(program, ProgramParameter.LinkStatus, out linked);
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out linked);
             if (linked == 0)
             {
                 int logLength;
-                GL.GetProgram(program, ProgramParameter.InfoLogLength, out logLength);
+                GL.GetProgram(program, GetProgramParameterName.InfoLogLength, out logLength);
 
                 if (logLength != 0)
                 {
@@ -153,7 +157,7 @@ namespace Sparrow.Rendering
         private void UpdateUniforms()
         {
             int numUniforms;
-            GL.GetProgram(Name, ProgramParameter.ActiveUniforms, out numUniforms);
+            GL.GetProgram(Name, GetProgramParameterName.ActiveUniforms, out numUniforms);
 
             Uniforms.Clear();
             for (int i = 0; i < numUniforms; i++)
@@ -168,7 +172,7 @@ namespace Sparrow.Rendering
         private void UpdateAttributes()
         {
             int numAttributes;
-            GL.GetProgram(Name, ProgramParameter.ActiveAttributes, out numAttributes);
+            GL.GetProgram(Name, GetProgramParameterName.ActiveAttributes, out numAttributes);
 
             Attributes.Clear();
             for (int i = 0; i < numAttributes; i++)

@@ -1,5 +1,4 @@
 ﻿
-using Sparrow.Core;
 using System;
 using System.Text;
 #if __WINDOWS__
@@ -116,14 +115,10 @@ namespace Sparrow.Rendering
         override protected void BeforeDraw()
         {
             base.BeforeDraw();
-            //sRenderAlpha[0] = sRenderAlpha[1] = sRenderAlpha[2] = sRenderAlpha[3] = _alpha;
-            //context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, sRenderAlpha);
 
             int _uAlpha = Program.Uniforms["uAlpha"];
             GL.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
 
-            //if (_tinted || _alpha != 1.0 || !_optimizeIfNotTinted || texture == null)
-            //    vertexFormat.setVertexBufferAt(2, vertexBuffer, "color");
             int attribColor = Program.Attributes["aColor"];
             GL.EnableVertexAttribArray(attribColor);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
