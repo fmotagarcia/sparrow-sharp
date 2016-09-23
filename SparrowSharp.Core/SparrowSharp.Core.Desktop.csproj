@@ -30,8 +30,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.1.1.2225.0\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -83,7 +83,7 @@
     <Compile Include="Utils\MatrixUtil.cs" />
     <Compile Include="Utils\MeshSubset.cs" />
     <Compile Include="Utils\MeshUtil.cs" />
-    <Compile Include="Utils\NumberUtil.cs" />
+    <Compile Include="Utils\MathUtil.cs" />
     <Compile Include="Utils\Padding.cs" />
     <Compile Include="Utils\RenderUtil.cs" />
     <Compile Include="Utils\VAlign.cs" />
