@@ -121,13 +121,12 @@ namespace Sparrow.Core
                 
                 _painter.Present();
             }
-            /*
+            
             if (stats != null)
             {
                 stats.DrawCount = _painter.DrawCount;
                 if (!doRedraw) stats.MarkFrameAsSkipped();
             }
-            */
 
 #if DEBUG
             GPUInfo.CheckForOpenGLError();
