@@ -46,12 +46,12 @@ namespace Sparrow.Geom
 
         public void Append(Matrix3D other)
         {
-            rawData = other.rawData * rawData;
+            rawData = rawData * other.rawData;
         }
 
         public void Prepend(Matrix3D other)
         {
-            rawData = rawData * other.rawData;
+            rawData = other.rawData * rawData;
         }
 
         public void CopyFrom(Matrix3D src)
