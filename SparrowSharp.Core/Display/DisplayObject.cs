@@ -877,6 +877,12 @@ namespace Sparrow.Display
             }
         }
 
+        virtual public float Scale
+        {
+            get { return ScaleX; }
+            set { ScaleX = ScaleY = value; }
+        }
+
         /// <summary>
         /// The horizontal skew angle in radians.
         /// </summary>

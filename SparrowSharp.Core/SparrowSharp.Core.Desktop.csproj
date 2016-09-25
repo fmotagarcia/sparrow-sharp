@@ -43,6 +43,9 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Fonts\ITextCompositor.cs" />
+    <Compile Include="Fonts\TextFieldAutoSize.cs" />
+    <Compile Include="Fonts\TextFormat.cs" />
+    <Compile Include="Fonts\TextOptions.cs" />
     <Compile Include="Rendering\Program.cs" />
     <Compile Include="Rendering\RenderState.cs" />
     <Compile Include="Display\BlendMode.cs" />
@@ -107,7 +110,6 @@
     <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\FragmentFilter.cs" />
     <Compile Include="Filters\FragmentFilterMode.cs" />
-    <Compile Include="Textures\TextureProperties.cs" />
     <Compile Include="Textures\TextureFormat.cs" />
     <Compile Include="Fonts\CharLocation.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />

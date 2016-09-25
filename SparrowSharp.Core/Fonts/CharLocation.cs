@@ -6,7 +6,7 @@ namespace Sparrow.Fonts
     {
         private static readonly ObjectPool _pool = new ObjectPool(new CreateObject<PooledObject>(Init), 1000);
 
-        public BitmapChar BitmapChar { get; private set; }
+        public BitmapChar Char { get; private set; }
 
         public float Scale;
         public float X;
@@ -19,7 +19,7 @@ namespace Sparrow.Fonts
         internal static CharLocation Create(BitmapChar bitmapChar, float scale = 1, float x = 0, float y = 0)
         {
             CharLocation charLocation = (CharLocation)_pool.GetObject();
-            charLocation.BitmapChar = bitmapChar;
+            charLocation.Char = bitmapChar;
             charLocation.Scale = scale;
             charLocation.X = x;
             charLocation.Y = y;

@@ -5,6 +5,7 @@ using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
 using Sparrow.Textures;
+using Sparrow.Fonts;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -50,7 +51,7 @@ namespace Sparrow.Rendering
 
         // members
         private Dictionary<string, Program> programs;
-        
+      
         private int _drawCount;
         private uint _frameID;
         private float _pixelSize;
@@ -696,6 +697,8 @@ namespace Sparrow.Rendering
                 return programs;
             }
         }
-       
-}
+
+        public Dictionary<string, ITextCompositor> Compositors;
+
+    }
 }

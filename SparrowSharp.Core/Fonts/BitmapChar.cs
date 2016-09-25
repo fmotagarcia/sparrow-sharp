@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using Sparrow.Textures;
 using Sparrow.Display;
@@ -8,32 +9,10 @@ namespace Sparrow.Fonts
     /// A BitmapChar contains the information about one char of a bitmap font.
     ///
     /// _You don't have to use this class directly in most cases._
+    /// The TextField class contains methods that handle bitmap fonts for you.
     /// </summary>
     public class BitmapChar
     {
-        /// <summary>
-        /// The texture of the character.
-        /// </summary>
-        public readonly Texture Texture;
-
-        /// <summary>
-        ///  The unicode ID of the char.
-        /// </summary>
-        public readonly int CharID;
-
-        /// <summary>
-        /// The number of pixels to move the char in x direction on character arrangement.
-        /// </summary>
-        public readonly float XOffset;
-        /// <summary>
-        /// The number of pixels to move the char in y direction on character arrangement.
-        /// </summary>
-        public readonly float YOffset;
-        /// <summary>
-        /// The number of pixels the cursor has to be moved to the right for the next char.
-        /// </summary>
-        public readonly float XAdvance;
-
         private Dictionary<int, float> _kernings;
         
 
@@ -79,7 +58,7 @@ namespace Sparrow.Fonts
         /// </summary>
         public float GetKerning(int charId)
         {
-            float kerning = 1.0f;
+            float kerning = 0.0f;
             if (_kernings != null)
             {
                 _kernings.TryGetValue(charId, out kerning);
@@ -94,7 +73,27 @@ namespace Sparrow.Fonts
         {
             return new Image(Texture);
         }
-        
+
+        /// <summary>
+        ///  The unicode ID of the char.
+        /// </summary>
+        public readonly int CharID;
+        /// <summary>
+        /// The number of pixels to move the char in x direction on character arrangement.
+        /// </summary>
+        public readonly float XOffset;
+        /// <summary>
+        /// The number of pixels to move the char in y direction on character arrangement.
+        /// </summary>
+        public readonly float YOffset;
+        /// <summary>
+        /// The number of pixels the cursor has to be moved to the right for the next char.
+        /// </summary>
+        public readonly float XAdvance;
+        /// <summary>
+        /// The texture of the character.
+        /// </summary>
+        public readonly Texture Texture;
         /// <summary>
         /// The width of the character in points.
         /// </summary>
@@ -102,7 +101,6 @@ namespace Sparrow.Fonts
         {
             get { return Texture.Width; }
         }
-
         /// <summary>
         /// The height of the character in points.
         /// </summary>

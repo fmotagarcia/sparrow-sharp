@@ -5,56 +5,81 @@ using System.Xml;
 using System.IO;
 using Sparrow.Geom;
 using Sparrow.Display;
-using Sparrow.Core;
 using Sparrow.ResourceLoading;
+using Sparrow.Utils;
 
 namespace Sparrow.Fonts
 {
-    /// <summary>
-    /// The BitmapFont class parses bitmap font files and arranges the glyphs in the form of a text.
-    /// 
-    /// The class parses the XML format as it is used in the AngelCode Bitmap Font Generator. This is what
-    /// the file format looks like:
-    /// 
-    /// <font>
-    /// <info face="BranchingMouse" size="40" />
-    ///    <common lineHeight="40" />
-    ///    <pages>  <!-- currently, only one page is supported -->
-    ///     <page id="0" file="texture.png" />
-    ///    </pages>
-    ///    <chars>
-    ///       <char id="32" x="60" y="29" width="1" height="1" xoffset="0" yoffset="27" xadvance="8" />
-    ///       <char id="33" x="155" y="144" width="9" height="21" xoffset="0" yoffset="6" xadvance="9" />
-    ///    </chars>
-    ///    <kernings> <!-- Kerning is optional -->
-    ///       <kerning first="83" second="83" amount="-4"/>
-    ///    </kernings>
-    /// </font>
-    /// 
-    ///     _You don't have to use this class directly in most cases. TextField contains methods that
-    ///    handle bitmap fonts for you._
-    /// </summary>
-    public class BitmapFont
+    /** The BitmapFont class parses bitmap font files and arranges the glyphs
+     *  in the form of a text.
+     *
+     *  The class parses the XML format as it is used in the 
+     *  <a href="http://www.angelcode.com/products/bmfont/">AngelCode Bitmap Font Generator</a> or
+     *  the <a href="http://glyphdesigner.71squared.com/">Glyph Designer</a>. 
+     *  This is what the file format looks like:
+     *
+     *  <pre> 
+     *  &lt;font&gt;
+     *    &lt;info face="BranchingMouse" size="40" /&gt;
+     *    &lt;common lineHeight="40" /&gt;
+     *    &lt;pages&gt;  &lt;!-- currently, only one page is supported --&gt;
+     *      &lt;page id="0" file="texture.png" /&gt;
+     *    &lt;/pages&gt;
+     *    &lt;chars&gt;
+     *      &lt;char id="32" x="60" y="29" width="1" height="1" xoffset="0" yoffset="27" xadvance="8" /&gt;
+     *      &lt;char id="33" x="155" y="144" width="9" height="21" xoffset="0" yoffset="6" xadvance="9" /&gt;
+     *    &lt;/chars&gt;
+     *    &lt;kernings&gt; &lt;!-- Kerning is optional --&gt;
+     *      &lt;kerning first="83" second="83" amount="-4"/&gt;
+     *    &lt;/kernings&gt;
+     *  &lt;/font&gt;
+     *  </pre>
+     *  
+     *  Pass an instance of this class to the method <code>registerBitmapFont</code> of the
+     *  TextField class. Then, set the <code>fontName</code> property of the text field to the 
+     *  <code>name</code> value of the bitmap font. This will make the text field use the bitmap
+     *  font.  
+     */
+    public class BitmapFont : ITextCompositor
     {
-        /*
-        private const uint MAX_TEXT_CHAR_COUNT = 8192;
-        private Image _helperImage;
-        private Texture _fontTexture;
-        private Dictionary<int, BitmapChar> _chars;
-        private string _name;
-        public string Name { get { return _name; } }
-        private float _size;
-        private float _lineHeight;
-        private float _baseline;
+        /** Use this constant for the <code>fontSize</code> property of the TextField class to 
+         *  render the bitmap font in exactly the size it was created. */
+        public static readonly int NATIVE_SIZE = -1;
+        
+        /** The font name of the embedded minimal bitmap font. Use this e.g. for debug output. */
+        public const string MINI = "mini";
+        
+        private const int CHAR_SPACE = 32;
+        private const int CHAR_TAB = 9;
+        private const int CHAR_NEWLINE = 10;
+        private const int CHAR_CARRIAGE_RETURN = 13;
 
-        /// <summary>
-        /// The smoothing filter used for the texture.
-        /// </summary>
-        public TextureSmoothing Smoothing
-        {
-            get { return _fontTexture.Smoothing; }
-            private set { _fontTexture.Smoothing = value; }
-        }
+
+        public Texture _texture { get; private set; }
+        private Dictionary<int, BitmapChar> _chars;
+        /** The name of the font as it was parsed from the font file. */
+        public string Name { get; private set; }
+        public float Size { get; private set; }
+        /** The height of one line in points. */
+        public float LineHeight { get; private set; }
+        /** The baseline of the font. This property does not affect text rendering;
+        *  it's just an information that may be useful for exact text placement. */
+        public float Baseline { get; private set; }
+        /** An offset that moves any generated text along the x-axis (in points).
+         *  Useful to make up for incorrect font data. @default 0. */
+        public float OffsetX { get; private set; }
+        /** An offset that moves any generated text along the y-axis (in points).
+         *  Useful to make up for incorrect font data. @default 0. */
+        public float OffsetY { get; private set; }
+        /** The width of a "gutter" around the composed text area, in points.
+         *  This can be used to bring the output more in line with standard TrueType rendering:
+         *  Flash always draws them with 2 pixels of padding. @default 0.0 */
+        public float Padding { get; private set; }
+        private Image _helperImage;
+
+        // helper objects
+        private static List<List<CharLocation>> sLines = new List<List<CharLocation>>();
+        private static TextOptions sDefaultOptions = new TextOptions();
 
         /// <summary>
         /// Initializes a new instance with an embedded mini font. This font's characters have a height of 5 pixels and a maximum
@@ -79,116 +104,88 @@ namespace Sparrow.Fonts
             {
                 throw new InvalidOperationException("Font parsing requires texture and font XML to be set");
             }
-            TextureLoader texLoader = new TextureLoader();
-            GLTexture tex = texLoader.LoadFromStream(fontTextureData);
-            _fontTexture = new SubTexture(tex);
 
-            _chars = new Dictionary<int,BitmapChar>();
-            _helperImage = new Image(_fontTexture);
+            Name = "unknown";
+            LineHeight = Size = Baseline = 14;
+            OffsetX = OffsetY = Padding = 0.0f;
+            
+            _texture = new TextureLoader().LoadFromStream(fontTextureData);
+            _chars = new Dictionary<int, BitmapChar>();
+            _helperImage = new Image(_texture);
 
             XmlDocument xml = new XmlDocument();
             xml.Load(fontXmlData);
 
-            float scale = _fontTexture.Scale;
-            ParseAndLoadChars(xml, scale);
-            ParseAndLoadKerning(xml, scale);
-            ParseAndLoadInfo(xml);
-            ParseAndLoadCommon(xml);
+
+            ParseFontXml(xml);
         }
 
-        /// <summary>
-        ///  Draws text into a quad batch.
-        /// </summary>
-        public void FillQuadBatch(QuadBatch quadBatch, float width, float height, string text, float size, uint color, HAlign hAlign, VAlign vAlign, bool autoScale, bool kerning)
+        /** Disposes the texture of the bitmap font. */
+        public void Dispose()
         {
-            List<CharLocation> charLocations = ArrangeCharsInArea(width, height, text, size, hAlign, vAlign, autoScale, kerning);
-            _helperImage.Color = color;
-
-            if (charLocations.Count > MAX_TEXT_CHAR_COUNT)
-            {
-                throw new InvalidDataException(string.Format("Bitmap font text is limited to {0} characters", MAX_TEXT_CHAR_COUNT));
-            }
-
-            CharLocation charLocation;
-            for (int i = 0; i < charLocations.Count; i++)
-            {
-                charLocation = charLocations[i];
-                _helperImage.Texture = charLocation.BitmapChar.Texture;
-                _helperImage.X = charLocation.X;
-                _helperImage.Y = charLocation.Y;
-                _helperImage.ScaleX = _helperImage.ScaleY = charLocation.Scale;
-                _helperImage.ReadjustSize();
-                quadBatch.AddQuad(_helperImage);
-            }
-
+            if (_texture != null)
+                _texture.Dispose();
         }
 
-        private Texture TextureReferencedByXmlData(TextureLoader textureLoader, Stream fontXmlData)
+        private void ParseFontXml(XmlDocument xml)
         {
-            XmlDocument xml = new XmlDocument();
-            xml.Load(fontXmlData);
+            float scale = _texture.Scale;
+            Rectangle frame = _texture.Frame;
+            float frameX = frame != null ? frame.X : 0f;
+            float frameY = frame != null ? frame.Y : 0f;
 
-            Texture texture = null;
-            XmlNodeList pageNodes = xml.GetElementsByTagName("page");
-            for (int i = 0; i < pageNodes.Count; i++)
+            // parse info
+            XmlNodeList infoNodes = xml.GetElementsByTagName("info");
+            if (infoNodes.Count > 0)
             {
-                XmlAttributeCollection attributes = pageNodes[i].Attributes;
-                int id = Convert.ToInt32(attributes["id"]);
-                if (id != 0)
+                XmlAttributeCollection attributes = infoNodes[0].Attributes;
+                Name = attributes["face"].Value;
+                Size = Convert.ToSingle(attributes["size"].Value) / scale;
+                if (attributes["smooth"].Value == "0")
                 {
-                    throw new Exception("Bitmap fonts with multiple pages are not supported");
+                    Smoothing = TextureSmoothing.None;
                 }
-
-                string filename = attributes["file"].Value;
-                string absolutePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Resources), filename); // NSBundle.MainBundle.BundlePath
-                texture = textureLoader.LoadLocalImage(absolutePath);
             }
 
-            if (texture == null)
+            // parse common
+            XmlNodeList commonNode = xml.GetElementsByTagName("common");
+            if (commonNode.Count > 0)
             {
-                throw new InvalidDataException("Font XML doesn't contain path to texture");
+                XmlAttributeCollection attributes = commonNode[0].Attributes;
+                LineHeight = Convert.ToSingle(attributes["lineHeight"].Value) / scale;
+                Baseline = Convert.ToSingle(attributes["base"].Value) / scale;
             }
 
-            return texture;
-        }
+            if (Size <= 0)
+            {
+                Console.WriteLine("[Sparrow] Warning: invalid font size in '" + Name + "' font.");
+                Size = (Size == 0.0f ? 16.0f : Size * -1.0f);
+            }
 
-        private void ParseAndLoadChars(XmlDocument xml, float scale)
-        {
+            // parse chars
             XmlNodeList charNodes = xml.GetElementsByTagName("char");
             for (int i = 0; i < charNodes.Count; i++)
             {
                 XmlAttributeCollection attributes = charNodes[i].Attributes;
 
-                float x = Convert.ToSingle(attributes["x"].Value);
-                float y = Convert.ToSingle(attributes["y"].Value);
-                float width = Convert.ToSingle(attributes["width"].Value);
-                float height = Convert.ToSingle(attributes["height"].Value);
-                float frameX = 0;
-                if (_fontTexture.Frame != null)
-                {
-                    frameX = _fontTexture.Frame.X;
-                }
-                float frameY = 0;
-                if (_fontTexture.Frame != null)
-                {
-                    frameY = _fontTexture.Frame.Y;
-                }
-
-                Rectangle region = new Rectangle(x / scale + frameX, y / scale + frameY, width / scale, height / scale);
-                SubTexture texture = new SubTexture(_fontTexture, region);
-
                 int charId = Convert.ToInt32(attributes["id"].Value);
-                float xOffset = Convert.ToSingle(attributes["xoffset"].Value);
-                float yOffset = Convert.ToSingle(attributes["yoffset"].Value);
-                float xAdvance = Convert.ToSingle(attributes["xadvance"].Value);
+                float xOffset = Convert.ToSingle(attributes["xoffset"].Value) / scale;
+                float yOffset = Convert.ToSingle(attributes["yoffset"].Value) / scale;
+                float xAdvance = Convert.ToSingle(attributes["xadvance"].Value) / scale;
 
+                Rectangle region = Rectangle.Create();
+                region.X = Convert.ToSingle(attributes["x"].Value) / scale + frameX;
+                region.Y = Convert.ToSingle(attributes["y"].Value) / scale + frameY;
+                region.Width = Convert.ToSingle(attributes["width"].Value) / scale;
+                region.Height = Convert.ToSingle(attributes["height"].Value) / scale;
+
+                Texture texture = Texture.FromTexture(_texture, region);
+                
                 BitmapChar bitmapChar = new BitmapChar(charId, texture, xOffset, yOffset, xAdvance);
-                _chars.Add(charId, bitmapChar);
+                AddChar(charId, bitmapChar);
             }
-        }
 
-        private void ParseAndLoadKerning(XmlDocument xml, float scale)
-        {
+            //kerning
             XmlNodeList kerningNodes = xml.GetElementsByTagName("kerning");
             for (int i = 0; i < kerningNodes.Count; i++)
             {
@@ -198,146 +195,187 @@ namespace Sparrow.Fonts
                 int second = Convert.ToInt32(attributes["second"].Value);
                 float amount = Convert.ToSingle(attributes["ammount"].Value) / scale;
 
-                _chars[second].AddKerning(amount, first);
-            }
-        }
-
-        private void ParseAndLoadInfo(XmlDocument xml)
-        {
-            XmlNodeList infoNodes = xml.GetElementsByTagName("info");
-            if (infoNodes.Count > 0)
-            {
-                XmlAttributeCollection attributes = infoNodes[0].Attributes;
-
-                _name = attributes["face"].Value;
-                _size = Convert.ToSingle(attributes["size"].Value);
-
-                if (attributes["smooth"].Value == "0")
+                BitmapChar sec = GetChar(second);
+                if (sec != null)
                 {
-                    Smoothing = TextureSmoothing.None;
+                    sec.AddKerning(amount, first);
                 }
             }
+           
         }
 
-        private void ParseAndLoadCommon(XmlDocument xml)
-        {
-            XmlNodeList commonNode = xml.GetElementsByTagName("common");
-            if (commonNode.Count > 0)
-            {
-                XmlAttributeCollection attributes = commonNode[0].Attributes;
-                _lineHeight = Convert.ToSingle(attributes["lineHeight"].Value);
-                _baseline = Convert.ToSingle(attributes["base"].Value);
-            }
-        }
-
-        /// <summary>
-        /// Returns a single bitmap char with a certain character ID.
-        /// </summary>
-        public BitmapChar CharById(int charId)
+        /** Returns a single bitmap char with a certain character ID. */
+        public BitmapChar GetChar(int charID)
         {
             BitmapChar ret;
-            _chars.TryGetValue(charId, out ret);
+            _chars.TryGetValue(charID, out ret);
             return ret;
         }
 
-        private List<CharLocation> ArrangeCharsInArea(float width, float height, string text, float size, HAlign hAlign, VAlign vAlign, bool autoScale, bool kerning)
+        /** Adds a bitmap char with a certain character ID. */
+        public void AddChar(int charID, BitmapChar bitmapChar)
+        {
+            _chars.Add(charID, bitmapChar);
+        }
+
+        /** Draws text into a QuadBatch. */
+        public void FillMeshBatch(MeshBatch meshBatch, float width, float height, string text,
+                                 TextFormat format, TextOptions options= null)
+        {
+            List<CharLocation> charLocations = ArrangeChars(
+                    width, height, text, format, options);
+            int numChars = charLocations.Count;
+            _helperImage.Color = format.Color;
+            
+            for (int i = 0; i < numChars; ++i)
+            {
+                CharLocation charLocation = charLocations[i];
+                _helperImage.Texture = charLocation.Char.Texture;
+                _helperImage.ReadjustSize();
+                _helperImage.X = charLocation.X;
+                _helperImage.Y = charLocation.Y;
+                _helperImage.Scale = charLocation.Scale;
+                meshBatch.AddMesh(_helperImage);
+            }
+        }
+
+        /** @inheritDoc */
+        public void ClearMeshBatch(MeshBatch meshBatch)
+        {
+            meshBatch.Clear();
+        }
+
+        private List<CharLocation> ArrangeChars(float width, float height, string text, TextFormat format, TextOptions options)
         {
             if (text.Length == 0)
             {
                 return new List<CharLocation>();
             }
+            if (options == null) options = sDefaultOptions;
 
-            if (size < 0)
-            {
-                size *= -_size;
-            }
+            bool kerning = format.Kerning;
+            float leading = format.Leading;
+            HAlign hAlign = format.HorizontalAlign;
+            VAlign vAlign = format.VerticalAlign;
+            float fontSize = format.Size;
+            bool autoScale = options.AutoScale;
+            bool wordWrap = options.WordWrap;
 
-            bool isFinished = false;
-            float scale = 0;
+            bool finished = false;
+            CharLocation charLocation;
+            int numChars;
             float containerWidth = 0;
             float containerHeight = 0;
+            float scale = 0;
+            int i, j;
 
-            List<List<CharLocation>> lines = new List<List<CharLocation>>();
-            while (!isFinished)
+            if (fontSize < 0f) fontSize *= -Size;
+
+            float currentY = 0;
+
+            while (!finished)
             {
-                scale = size / _size;
-                containerWidth = width / scale;
-                containerHeight = height / scale;
+                sLines.Clear();
+                scale = fontSize / Size;
+                containerWidth = (width - 2 * Padding) / scale;
+                containerHeight = (height - 2 * Padding) / scale;
 
-                if (_lineHeight <= containerHeight)
+                if (LineHeight <= containerHeight)
                 {
                     int lastWhiteSpace = -1;
                     int lastCharId = -1;
-                    int numChars = text.Length;
                     float currentX = 0;
-                    float currentY = 0;
+                    currentY = 0;
                     List<CharLocation> currentLine = new List<CharLocation>();
 
-                    for (int i = 0; i < numChars; i++)
+                    numChars = text.Length;
+                    for (i = 0; i < numChars; i++)
                     {
-                        bool isLineFull = false;
-                        int charId = text[i];
-                        BitmapChar bitmapChar = CharById(charId);
+                        bool lineFull = false;
+                        int charID = text[i]; // casting to int automatically returns the ASCII value
+                        BitmapChar bitmapChar = GetChar(charID);
 
-                        if (charId == NewLineAsciiCode || charId == CarriageReturnAsciiCode)
+                        if (charID == CHAR_NEWLINE || charID == CHAR_CARRIAGE_RETURN)
                         {
-                            isLineFull = true;
+                            lineFull = true;
                         }
                         else if (bitmapChar == null)
                         {
-                            Console.WriteLine("Missing character: " + charId);
+                            Console.WriteLine("font " + Name + " missing character: " + text[i] + " ID:" + charID);
                         }
                         else
                         {
-                            if (charId == SpaceAsciiCode || charId == TabAsciiCode)
+                            if (charID == CHAR_SPACE || charID == CHAR_TAB)
                             {
                                 lastWhiteSpace = i;
                             }
                                 
                             if (kerning)
                             {
-                                currentX += bitmapChar.KerningToChar(lastCharId);
+                                currentX += bitmapChar.GetKerning(lastCharId);
                             }
-                            CharLocation charLocation = CharLocation.Create(bitmapChar, 1.0f, currentX + bitmapChar.XOffset, currentY + bitmapChar.YOffset);
+                            charLocation = CharLocation.Create(bitmapChar, 1.0f, currentX + bitmapChar.XOffset, currentY + bitmapChar.YOffset);
                             currentLine.Add(charLocation);
+
                             currentX += bitmapChar.XAdvance;
-                            lastCharId = charId;
+                            lastCharId = charID;
 
                             if (charLocation.X + bitmapChar.Width > containerWidth)
                             {
-                                int numCharsToRemove = (lastWhiteSpace == -1) ? 1 : i - lastWhiteSpace;
-                                int removeIndex = currentLine.Count - numCharsToRemove;
-                                currentLine.RemoveRange(removeIndex, numCharsToRemove);
-
-                                if (currentLine.Count == 0)
+                                if (wordWrap)
                                 {
-                                    break;
+                                    // when autoscaling, we must not split a word in half -> restart
+                                    if (autoScale && lastWhiteSpace == -1)
+                                    {
+                                        break;
+                                    }
+
+                                    // remove characters and add them again to next line
+                                    int numCharsToRemove = lastWhiteSpace == -1 ? 1 : i - lastWhiteSpace;
+
+                                    currentLine.RemoveRange(currentLine.Count - numCharsToRemove, numCharsToRemove);
+
+                                    if (currentLine.Count == 0)
+                                    {
+                                        break;
+                                    }
+                                    i -= numCharsToRemove;
+                                }
+                                else
+                                {
+                                    if (autoScale) break;
+                                    currentLine.RemoveAt(currentLine.Count - 1);
+
+                                    // continue with next line, if there is one
+                                    while (i < numChars - 1 && text[i] != CHAR_NEWLINE)
+                                    {
+                                        ++i;
+                                    } 
                                 }
 
-                                i -= numCharsToRemove;
-                                isLineFull = true;
+                                lineFull = true;
                             }
                         }
 
                         if (i == numChars - 1)
                         {
-                            lines.Add(currentLine);
-                            isFinished = true;
+                            sLines.Add(currentLine);
+                            finished = true;
                         }
-                        else if (isLineFull)
+                        else if (lineFull)
                         {
-                            lines.Add(currentLine);
+                            sLines.Add(currentLine);
 
                             if (lastWhiteSpace == i)
                             {
                                 currentLine.RemoveAt(currentLine.Count - 1);
                             }
 
-                            if (currentY + 2 * _lineHeight <= containerHeight)
+                            if (currentY + leading + 2 * LineHeight <= containerHeight)
                             {
                                 currentLine = new List<CharLocation>();
                                 currentX = 0;
-                                currentY += _lineHeight;
+                                currentY += LineHeight + leading;
                                 lastWhiteSpace = -1;
                                 lastCharId = -1;
                             }
@@ -349,20 +387,19 @@ namespace Sparrow.Fonts
                     }
                 }
 
-                if (autoScale && !isFinished)
+                if (autoScale && !finished && fontSize > 3)
                 {
-                    size -= 1;
-                    lines.Clear();
+                    fontSize -= 1;
                 }
                 else
                 {
-                    isFinished = true;
+                    finished = true;
                 }
             }
 
             List<CharLocation> finalLocations = new List<CharLocation>();
-            int numLines = lines.Count;
-            float bottom = numLines * _lineHeight;
+            int numLines = sLines.Count;
+            float bottom = currentY + LineHeight;
             int yOffset = 0;
 
             if (vAlign == VAlign.Bottom)
@@ -375,10 +412,10 @@ namespace Sparrow.Fonts
             }
 
             List<CharLocation> line;
-            for (int i = 0; i < lines.Count; i++)
+            for (int lineID = 0; lineID < numLines; ++lineID)
             {
-                line = lines[i];
-                int numChars = line.Count;
+                line = sLines[lineID];
+                numChars = line.Count;
                 if (numChars == 0)
                 {
                     continue;
@@ -386,7 +423,7 @@ namespace Sparrow.Fonts
 
                 int xOffset = 0;
                 CharLocation lastLocation = line[line.Count - 1];
-                float right = lastLocation.X - lastLocation.BitmapChar.XOffset + lastLocation.BitmapChar.XAdvance;
+                float right = lastLocation.X - lastLocation.Char.XOffset + lastLocation.Char.XAdvance;
 
                 if (hAlign == HAlign.Right)
                 {
@@ -396,16 +433,15 @@ namespace Sparrow.Fonts
                 {
                     xOffset = (int)((containerWidth - right) / 2);
                 }
-
-                CharLocation charLocation;
-                for (int j = 0; j < line.Count; j++)
+                
+                for (int c = 0; c < numChars; ++c)
                 {
-                    charLocation = line[j];
-                    charLocation.X = scale * (charLocation.X + xOffset);
-                    charLocation.Y = scale * (charLocation.Y + yOffset);
+                    charLocation = line[c];
+                    charLocation.X = scale * (charLocation.X + xOffset + OffsetX) + Padding;
+                    charLocation.Y = scale * (charLocation.Y + yOffset + OffsetY) + Padding;
                     charLocation.Scale = scale;
 
-                    if (charLocation.BitmapChar.Width > 0 && charLocation.BitmapChar.Height > 0)
+                    if (charLocation.Char.Width > 0 && charLocation.Char.Height > 0)
                     {
                         finalLocations.Add(charLocation);
                     }
@@ -415,15 +451,11 @@ namespace Sparrow.Fonts
             return finalLocations;
         }
 
-        #region ASCII Codes
-
-        private const int SpaceAsciiCode = 32;
-        private const int TabAsciiCode = 39;
-        private const int NewLineAsciiCode = 10;
-        private const int CarriageReturnAsciiCode = 13;
-
-        #endregion
-        */
+        public TextureSmoothing Smoothing
+        {
+            get { return _helperImage.TextureSmoothing; }
+            set { _helperImage.TextureSmoothing = value; }
+        }
     }
 }
 

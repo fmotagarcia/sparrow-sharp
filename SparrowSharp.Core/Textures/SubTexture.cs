@@ -96,7 +96,7 @@ namespace Sparrow.Textures
             }
 
             _transformationMatrix.Scale(_region.Width  / _parent.Width,
-                                                _region.Height / _parent.Height);
+                                        _region.Height / _parent.Height);
             _transformationMatrix.Translate(_region.X  / _parent.Width,
                                             _region.Y  / _parent.Height);
 

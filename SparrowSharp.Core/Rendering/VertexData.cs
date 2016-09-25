@@ -191,6 +191,11 @@ namespace Sparrow.Utils
         /// </summary>
         public void CopyTo(VertexData target, int sourceOffset, int targetOffset, int numVertices, Matrix matrix = null)
         {
+            if (numVertices < 0 || sourceOffset + numVertices > _numVertices)
+            {
+                numVertices = _numVertices - sourceOffset;
+            }
+
             if (target.NumVertices < targetOffset + numVertices)
             {
                 target.NumVertices = targetOffset + numVertices;

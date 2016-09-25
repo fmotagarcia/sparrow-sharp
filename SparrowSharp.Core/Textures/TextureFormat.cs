@@ -17,6 +17,7 @@ namespace Sparrow.Textures
         //public static readonly TextureFormat CompressedRgbaPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbaPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat CompressedRgbPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 16, false, PixelType.UnsignedShort565);
+        public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgba8, 16, false, PixelType.UnsignedShort565);
         //public static readonly TextureFormat Rgb888 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 24, false, PixelType.UnsignedByte);
         public static readonly TextureFormat Rgba5551 = new TextureFormat(PixelFormat.Rgba, SizedInternalFormat.Rgba8, 16, false, PixelType.UnsignedShort5551);
         public static readonly TextureFormat Rgba4444 = new TextureFormat(PixelFormat.Rgba, SizedInternalFormat.Rgba8, 16, false, PixelType.UnsignedShort4444);

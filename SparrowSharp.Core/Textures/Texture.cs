@@ -167,8 +167,7 @@ namespace Sparrow.Textures
             }
             else
             {
-                throw new NotImplementedException();
-//                return new SubTexture(concreteTexture, new Rectangle(0.0f, 0.0f, width, height), true);
+                return new SubTexture(concreteTexture, Rectangle.Create(0.0f, 0.0f, width, height), true);
             }
         }
 
@@ -197,8 +196,7 @@ namespace Sparrow.Textures
                                           Rectangle frame = null, bool rotated = false,
                                           float scaleModifier = 1.0f)
         {
-            throw new NotImplementedException();
-//            return new SubTexture(texture, region, false, frame, rotated, scaleModifier);
+            return new SubTexture(texture, region, false, frame, rotated, scaleModifier);
         }
 
         /** Sets up a VertexData instance with the correct positions for 4 vertices so that
