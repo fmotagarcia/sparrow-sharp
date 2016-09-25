@@ -46,7 +46,7 @@ namespace Sparrow.Core
 
         private static readonly Stopwatch watch = new Stopwatch();
 
-        private static StatsDisplay stats;
+        private static StatsDisplay _statsDisplay;
 
         private static uint _width;
         private static uint _height;
@@ -122,10 +122,10 @@ namespace Sparrow.Core
                 _painter.Present();
             }
             
-            if (stats != null)
+            if (_statsDisplay != null)
             {
-                stats.DrawCount = _painter.DrawCount;
-                if (!doRedraw) stats.MarkFrameAsSkipped();
+                _statsDisplay.DrawCount = _painter.DrawCount;
+                if (!doRedraw) _statsDisplay.MarkFrameAsSkipped();
             }
 
 #if DEBUG
@@ -161,21 +161,42 @@ namespace Sparrow.Core
         {
             Stage.SetRequiresRedraw();
         }
-    
-        public static bool ShowStats
+        
+        public static void HideStats()
         {
-            set {
-                if (stats == null) {
-                    stats = new StatsDisplay();
-                    Stage.AddChild(stats);
-                }
-                stats.Visible = value;
+            if (_statsDisplay != null)
+            {
+                _statsDisplay.RemoveFromParent();
             }
+        }
+
+        public static void ShowStats(HAlign horizontalAlign = HAlign.Left, 
+                                     VAlign verticalAlign = VAlign.Top, float scale = 1f)
+        {
+            float stageWidth  = Stage.Width;
+            float stageHeight = Stage.Height;
+
+            if (_statsDisplay == null)
+            {
+                _statsDisplay = new StatsDisplay();
+                _statsDisplay.Touchable = false;
+            }
+
+            Stage.AddChild(_statsDisplay);
+            _statsDisplay.ScaleX = _statsDisplay.ScaleY = scale;
+
+            if (horizontalAlign == HAlign.Left) _statsDisplay.X = 0f;
+            else if (horizontalAlign == HAlign.Right) _statsDisplay.X = stageWidth - _statsDisplay.Width;
+            else if (horizontalAlign == HAlign.Center) _statsDisplay.X = (stageWidth - _statsDisplay.Width) / 2;
+
+            if (verticalAlign == VAlign.Top) _statsDisplay.Y = 0f;
+            else if (verticalAlign == VAlign.Bottom) _statsDisplay.Y = stageHeight - _statsDisplay.Height;
+            else if (verticalAlign == VAlign.Center) _statsDisplay.Y = (stageHeight - _statsDisplay.Height) / 2;
         }
 
         public static void Destroy()
         {
-            stats = null;
+            _statsDisplay = null;
             Stage.RemoveAllChildren();
             Stage = null;
             Root = null;

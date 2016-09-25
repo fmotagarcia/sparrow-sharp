@@ -5,6 +5,11 @@ using Sparrow.Core;
 using Sparrow.Styles;
 using System.Diagnostics;
 using Sparrow.Rendering;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Utils
 {
@@ -28,6 +33,13 @@ namespace Sparrow.Utils
         public int DrawCount = 0;
         private int _skipCount = 0;
 
+        /// <summary>
+        /// Constant used by a Desktop Nvidia experimental GPU info extension
+        /// the returns the dedicated video memory (in kb) of the GPU memory
+        /// </summary>
+        private int GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX = 0x9047;
+        private int GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX = 0x9049;
+
         /** Creates a new Statistics Box. */
         public StatsDisplay()
         {
@@ -49,6 +61,7 @@ namespace Sparrow.Utils
             _values.Batchable = true;
 
             _background = new Quad(width, height, 0x0);
+            _background.Alpha = 0.75f;
 
             // make sure that rendering takes 2 draw calls
             if (_background.Style.Type != typeof(MeshStyle)) _background.Style = new MeshStyle();
@@ -94,8 +107,8 @@ namespace Sparrow.Utils
             _background.Color = _skipCount > (_frameCount / 2) ? (uint)0x003F00 : 0x0;
             Fps = _totalTime > 0 ? _frameCount / _totalTime : 0;
             Process currentProc = Process.GetCurrentProcess();
-            Memory = currentProc.PrivateMemorySize64 * B_TO_MB; 
-            GpuMemory = 0 * B_TO_MB;// TODO
+            Memory = currentProc.PrivateMemorySize64 * B_TO_MB;
+            GpuMemory = GetGPUMemory();
 
             string fpsText = Fps < 100 ? Fps.ToString("N1") : Fps.ToString("N0");
             string memText = Memory < 100 ? Memory.ToString("N1") : Memory.ToString("N0");
@@ -122,6 +135,21 @@ namespace Sparrow.Utils
             painter.FinishMeshBatch();
             base.Render(painter);
         }
+
+        /// <summary>
+        /// Returns the currently used GPU memory in bytes. Might not work in all platforms!
+        /// </summary>
+        private int GetGPUMemory()
+        {
+            if (GLExtensions.DeviceSupportsOpenGLExtension("GL_NVX_gpu_memory_info"))
+            {
+                // this returns in Kb
+                return (GL.GetInteger((GetPName)GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX) -
+                        GL.GetInteger((GetPName)GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX) )/ 1024;
+            }
+            return 0;
+        }
+
 
 }
 }
