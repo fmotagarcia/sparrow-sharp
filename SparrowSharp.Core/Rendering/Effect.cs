@@ -374,7 +374,7 @@ namespace Sparrow.Rendering
             get
             {
                 string name = ProgramName;
-                Painter painter = SparrowSharpApp.Painter;
+                Painter painter = Core.SparrowSharp.Painter;
                 Program program = painter.GetProgram(name);
 
                 if (program == null)

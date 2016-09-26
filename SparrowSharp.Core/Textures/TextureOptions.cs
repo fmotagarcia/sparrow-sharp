@@ -50,7 +50,7 @@ namespace Sparrow.Textures
          public float Scale
         {
             get { return _scale; }
-            set { _scale = value > 0 ? value : SparrowSharpApp.ContentScaleFactor; }
+            set { _scale = value > 0 ? value : SparrowSharp.ContentScaleFactor; }
         }
         
     }

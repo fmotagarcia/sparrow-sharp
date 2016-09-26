@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
-    internal class MiniFont
+    internal class MiniBitmapFont
     {
         // 128 x 64 png image, characters are max. is 5x5 pixels
         internal static readonly string MiniFontImageDataBase64 = 

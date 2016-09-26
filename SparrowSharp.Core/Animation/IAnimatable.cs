@@ -1,4 +1,5 @@
-namespace SparrowSharp.Display
+
+namespace Sparrow.Animation
 {
     /// <summary>
     /// The Animatable interface describes objects that are animated depending on the passed time. 
@@ -18,7 +19,7 @@ namespace SparrowSharp.Display
         /// <summary>
         /// Dispatch if you want this removed from its Juggler
         /// </summary>
-        event Sparrow.Utils.Juggler.RemoveFromJugglerHandler RemoveFromJugglerEvent;
+        event Juggler.RemoveFromJugglerHandler RemoveFromJugglerEvent;
 
     }
 }

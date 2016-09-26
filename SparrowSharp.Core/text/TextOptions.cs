@@ -2,7 +2,7 @@
 using Sparrow.Core;
 using Sparrow.Textures;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     
     public class TextOptions
@@ -33,7 +33,7 @@ namespace Sparrow.Fonts
             WordWrap = wordWrap;
             AutoScale = autoScale;
             AutoSize = TextFieldAutoSize.NONE;
-            TextureScale = SparrowSharpApp.ContentScaleFactor;
+            TextureScale = SparrowSharp.ContentScaleFactor;
             TextureFormat = TextureFormat.RGB565; // likely wrong
         }
 

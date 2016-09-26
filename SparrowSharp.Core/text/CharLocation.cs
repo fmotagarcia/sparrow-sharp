@@ -1,6 +1,6 @@
-﻿using SparrowSharp.Pool;
+﻿using Sparrow.Pool;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     internal sealed class CharLocation : PooledObject
     {

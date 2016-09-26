@@ -5,7 +5,7 @@ using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
 using Sparrow.Textures;
-using Sparrow.Fonts;
+using Sparrow.Text;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__

@@ -1,10 +1,9 @@
 ﻿using System;
 using Sparrow.Core;
-using Sparrow.Samples;
 using OpenTK.Graphics;
 using OpenTK;
 
-namespace SparrowSharp.Samples.Desktop
+namespace Sparrow.Samples.Desktop
 {
 	class MainClass
 	{

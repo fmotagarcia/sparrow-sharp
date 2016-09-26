@@ -1,7 +1,7 @@
 ﻿
 using Sparrow.Display;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     /// <summary>
     /// A text compositor arranges letters for Sparrow's TextField.

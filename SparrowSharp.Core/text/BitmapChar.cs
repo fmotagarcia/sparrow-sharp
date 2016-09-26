@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sparrow.Textures;
 using Sparrow.Display;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     /// <summary>
     /// A BitmapChar contains the information about one char of a bitmap font.

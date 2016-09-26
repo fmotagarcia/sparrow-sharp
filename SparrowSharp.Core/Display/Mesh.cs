@@ -1,11 +1,11 @@
-﻿using Sparrow.Display;
-using Sparrow.Geom;
+﻿using Sparrow.Geom;
 using Sparrow.Utils;
 using System;
 using Sparrow.Styles;
 using Sparrow.Textures;
+using Sparrow.Rendering;
 
-namespace Sparrow.Rendering
+namespace Sparrow.Display
 {
 
     /// <summary>

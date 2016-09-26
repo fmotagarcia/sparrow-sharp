@@ -7,7 +7,7 @@ using Sparrow.Styles;
 using Sparrow.Textures;
 using Sparrow.Rendering;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     public class TextField : DisplayObjectContainer
     {
@@ -112,7 +112,7 @@ namespace Sparrow.Fonts
             if (IsVerticalAutoSize) height = 100000;
 
             _meshBatch.X = _meshBatch.Y = 0f;
-            _options.TextureScale = SparrowSharpApp.ContentScaleFactor;
+            _options.TextureScale = SparrowSharp.ContentScaleFactor;
             _options.TextureFormat = sDefaultTextureFormat;
             _compositor.FillMeshBatch(_meshBatch, width, height, _text, format, _options);
 
@@ -453,12 +453,12 @@ namespace Sparrow.Fonts
         {
             get
             {
-                Dictionary<string, ITextCompositor> compositors = SparrowSharpApp.Painter.Compositors;
+                Dictionary<string, ITextCompositor> compositors = SparrowSharp.Painter.Compositors;
 
                 if (compositors == null)
                 {
                     compositors = new Dictionary<string, ITextCompositor>();
-                    SparrowSharpApp.Painter.Compositors = compositors;
+                    SparrowSharp.Painter.Compositors = compositors;
                 }
 
                 return compositors;

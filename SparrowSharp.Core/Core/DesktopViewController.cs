@@ -39,8 +39,8 @@ namespace Sparrow.Core
         private void OnMouseButtonChange(object sender, MouseButtonEventArgs e)
         {
             double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            float xConversion = SparrowSharpApp.Stage.Width / Size.Width;
-            float yConversion = SparrowSharpApp.Stage.Height / Size.Height;
+            float xConversion = SparrowSharp.Stage.Width / Size.Width;
+            float yConversion = SparrowSharp.Stage.Height / Size.Height;
             Touch touchInFocus;
 
             if (e.Mouse.LeftButton == ButtonState.Pressed)
@@ -54,7 +54,7 @@ namespace Sparrow.Core
                 newTouch.InitialGlobalY = newTouch.GlobalY;
                 newTouch.Phase = TouchPhase.Began;
                 Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
-                newTouch.Target = SparrowSharpApp.Stage.HitTest(touchPosition);
+                newTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
 
                 _touches.Add(newTouch.TouchID, newTouch);
             }
@@ -85,8 +85,8 @@ namespace Sparrow.Core
             if (e.Mouse.LeftButton == ButtonState.Pressed && _touches.Count > 0)
             {
                 double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                float xConversion = SparrowSharpApp.Stage.Width / Size.Width;
-                float yConversion = SparrowSharpApp.Stage.Height / Size.Height;
+                float xConversion = SparrowSharp.Stage.Width / Size.Width;
+                float yConversion = SparrowSharp.Stage.Height / Size.Height;
 
                 Touch movedTouch = _touches[pointerId];
                 movedTouch.PreviousGlobalX = movedTouch.GlobalX;
@@ -108,7 +108,7 @@ namespace Sparrow.Core
                 {
                     // target could have been removed from stage -> find new target in that case
                     Point updatedTouchPosition = Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
-                    movedTouch.Target = SparrowSharpApp.Root.HitTest(updatedTouchPosition);
+                    movedTouch.Target = SparrowSharp.Root.HitTest(updatedTouchPosition);
                 }
             }
             processTouch();
@@ -139,7 +139,7 @@ namespace Sparrow.Core
 
         private void HandleRenderFrame(object sender, FrameEventArgs e)
         {
-            bool needsSwap = SparrowSharpApp.Step(e.Time);
+            bool needsSwap = SparrowSharp.Step(e.Time);
             if (needsSwap)
             {
                 SwapBuffers();
@@ -149,7 +149,7 @@ namespace Sparrow.Core
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            SparrowSharpApp.Stage.SetDrawableArea((uint)Width, (uint)Height);
+            SparrowSharp.Stage.SetDrawableArea((uint)Width, (uint)Height);
         }
 
         private void HandleLoad(object sender, EventArgs e)
@@ -167,8 +167,8 @@ namespace Sparrow.Core
             {
                 Console.WriteLine("Framebuffer error: " + status);
             }
-            SparrowSharpApp.NativeWindow = this;
-            SparrowSharpApp.Start((uint)Width, (uint)Height, _rootClass);
+            SparrowSharp.NativeWindow = this;
+            SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
         }
     }
 }

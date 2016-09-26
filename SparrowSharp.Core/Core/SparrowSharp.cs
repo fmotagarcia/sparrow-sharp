@@ -5,15 +5,16 @@ using Sparrow.Display;
 using Sparrow.Utils;
 using Sparrow.Rendering;
 using Sparrow.Geom;
+using Sparrow.Animation;
 
 namespace Sparrow.Core
 {
-    public static class SparrowSharpApp
+    public static class SparrowSharp
     {
 
         private static Painter _painter;
         private static uint _frameID;
-        public static readonly float ContentScaleFactor = 1.0f;
+        public static readonly float ContentScaleFactor = 1.0f;// TODO
 
         private static Rectangle _viewPort;
         private static Rectangle _previousViewPort;

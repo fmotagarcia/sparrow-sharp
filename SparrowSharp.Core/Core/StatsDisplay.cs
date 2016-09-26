@@ -1,17 +1,17 @@
 ﻿
 using Sparrow.Display;
-using Sparrow.Fonts;
-using Sparrow.Core;
+using Sparrow.Text;
 using Sparrow.Styles;
 using System.Diagnostics;
 using Sparrow.Rendering;
+using Sparrow.Utils;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
 using OpenTK.Graphics.ES30;
 #endif
 
-namespace Sparrow.Utils
+namespace Sparrow.Core
 {
     /** A small, lightweight box that displays the current framerate, memory consumption and
      *  the number of draw calls per frame. The display is updated automatically once per frame. */

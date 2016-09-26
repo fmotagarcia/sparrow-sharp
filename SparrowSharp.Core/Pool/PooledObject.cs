@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparrowSharp.Pool
+namespace Sparrow.Pool
 {
     public class PooledObject
     {

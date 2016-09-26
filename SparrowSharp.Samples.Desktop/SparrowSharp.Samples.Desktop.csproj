@@ -5,9 +5,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SparrowSharp.Samples.Desktop</RootNamespace>
-    <AssemblyName>SparrowSharp.Samples.Desktop</AssemblyName>
-    <StartupObject>SparrowSharp.Samples.Desktop.MainClass</StartupObject>
+    <RootNamespace>Sparrow.Samples.Desktop</RootNamespace>
+    <AssemblyName>Sparrow.Samples.Desktop</AssemblyName>
+    <StartupObject>Sparrow.Samples.Desktop.MainClass</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>

@@ -72,9 +72,9 @@ namespace Sparrow.Textures
                     (byte)((float)(ColorUtil.GetG(color)) * alpha),
                     (byte)((float)(ColorUtil.GetB(color)) * alpha));
             }
-                
 
-            Painter painter = SparrowSharpApp.Painter;
+
+            Painter painter = SparrowSharp.Painter;
             painter.PushState();
             painter.State.RenderTarget = this;
 

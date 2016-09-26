@@ -440,7 +440,7 @@ namespace Sparrow.Display
         public void SetRequiresRedraw()
         {
             DisplayObject parent = _parent;
-            uint frameID = SparrowSharpApp.FrameID;
+            uint frameID = SparrowSharp.FrameID;
 
             _hasVisibleArea = _alpha != 0.0f && _visible && !_isMask && _scaleX != 0.0f && _scaleY != 0.0f;
             _lastParentOrSelfChangeFrameID = frameID;
@@ -452,14 +452,14 @@ namespace Sparrow.Display
                 parent = parent._parent;
             }
 
-            if (_isMask) SparrowSharpApp.SetRequiresRedraw(); // notify 'skipUnchangedFrames'
+            if (_isMask) SparrowSharp.SetRequiresRedraw(); // notify 'skipUnchangedFrames'
             else if (_mask != null) _mask.SetRequiresRedraw(); // propagate into mask
         }
 
         public bool RequiresRedraw
         {
             get {
-                uint frameID = SparrowSharpApp.FrameID;
+                uint frameID = SparrowSharp.FrameID;
                 return _lastParentOrSelfChangeFrameID == frameID ||
                        _lastChildChangeFrameID == frameID;
             }

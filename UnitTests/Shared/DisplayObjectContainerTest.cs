@@ -15,16 +15,16 @@ namespace Tests
         [SetUp]
         protected void SetUp()
         {
-            SparrowSharpApp.Start(12, 12, typeof(Sprite));
+            Sparrow.Core.SparrowSharp.Start(12, 12, typeof(Sprite));
             testRoot = new Sprite();
-            SparrowSharpApp.Stage.AddChild(testRoot);
+            Sparrow.Core.SparrowSharp.Stage.AddChild(testRoot);
         }
 
         [TearDown]
         protected void TearDown()
         {
             testRoot.RemoveAllChildren();
-            SparrowSharpApp.Destroy();
+            Sparrow.Core.SparrowSharp.Destroy();
         }
 
         [Test]

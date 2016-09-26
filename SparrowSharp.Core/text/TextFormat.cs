@@ -1,7 +1,7 @@
 ﻿
 using Sparrow.Utils;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     /** The TextFormat class represents character formatting information. It is used by the
      *  TextField and BitmapFont classes to characterize the way the glyphs will be rendered.

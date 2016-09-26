@@ -1,4 +1,4 @@
-﻿namespace Sparrow.Fonts
+﻿namespace Sparrow.Text
 {
     /** This class is an enumeration of constant values used in setting the 
      *  autoSize property of the TextField class. */

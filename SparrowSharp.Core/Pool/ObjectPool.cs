@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 
-namespace SparrowSharp.Pool
+namespace Sparrow.Pool
 {
     public delegate T CreateObject<T>() where T : PooledObject;
     public delegate void ReturnObject<PooledObject>(PooledObject pooledObject);

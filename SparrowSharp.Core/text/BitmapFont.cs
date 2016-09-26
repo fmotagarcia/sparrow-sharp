@@ -8,7 +8,7 @@ using Sparrow.Display;
 using Sparrow.ResourceLoading;
 using Sparrow.Utils;
 
-namespace Sparrow.Fonts
+namespace Sparrow.Text
 {
     /** The BitmapFont class parses bitmap font files and arranges the glyphs
      *  in the form of a text.
@@ -87,8 +87,8 @@ namespace Sparrow.Fonts
         /// </summary>
         public BitmapFont()
         {
-            Stream fontTextureData = new MemoryStream(Convert.FromBase64String(MiniFont.MiniFontImageDataBase64));
-            MemoryStream fontXmlData = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(MiniFont.FontXML));
+            Stream fontTextureData = new MemoryStream(Convert.FromBase64String(MiniBitmapFont.MiniFontImageDataBase64));
+            MemoryStream fontXmlData = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(MiniBitmapFont.FontXML));
 
             ParseFontData(fontTextureData, fontXmlData);
         }

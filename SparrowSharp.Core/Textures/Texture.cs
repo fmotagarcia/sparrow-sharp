@@ -131,7 +131,7 @@ namespace Sparrow.Textures
                                     float scale = -1, TextureFormat format = null)
         {
             if (format == null) format = TextureFormat.Rgba4444;
-            if (scale <= 0.0f) scale = SparrowSharpApp.ContentScaleFactor;
+            if (scale <= 0.0f) scale = SparrowSharp.ContentScaleFactor;
 
             int actualWidth;
             int actualHeight;
