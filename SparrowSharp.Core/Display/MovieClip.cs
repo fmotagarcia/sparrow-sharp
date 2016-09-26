@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Sparrow.Display;
 using Sparrow.Textures;
-using Sparrow.Utils;
 using Sparrow.Animation;
 
 namespace Sparrow.Display
@@ -42,7 +40,7 @@ namespace Sparrow.Display
         private float _currentTime;
         private int _currentFrameID;
         private bool _playing;
-        private bool _muted;
+        //private bool _muted;
         private bool _wasStopped;
         //private SoundTransform _soundTransform;
 
