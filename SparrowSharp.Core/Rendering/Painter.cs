@@ -62,7 +62,7 @@ namespace Sparrow.Rendering
         private BatchProcessor _batchCache;
         private List<DisplayObject> _batchCacheExclusions;
 
-       private int _actualRenderTarget;
+        private int _actualRenderTarget;
         private string _actualCulling;
         private uint _actualBlendMode;
 
@@ -697,8 +697,5 @@ namespace Sparrow.Rendering
                 return programs;
             }
         }
-
-        public Dictionary<string, ITextCompositor> Compositors;
-
     }
 }

@@ -307,7 +307,7 @@ namespace Sparrow.Textures
         public Point GetTexCoords(VertexData vertexData, int vertexID)
         {
             Point outP = Point.Create();
-            outP = vertexData.TexCoordsAt(vertexID);
+            outP = vertexData.GetTexCoords(vertexID);
             return GlobalToLocal(outP.X, outP.Y);
         }
 

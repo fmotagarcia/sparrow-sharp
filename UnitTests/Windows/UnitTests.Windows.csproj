@@ -42,21 +42,31 @@
       <HintPath>..\..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="OpenTK">
-      <HintPath>..\..\SparrowSharp.Samples.Desktop\libs\OpenTK.dll</HintPath>
+    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Shared\DisplayObjectContainerTest.cs" />
-    <Compile Include="..\Shared\DisplayObjectTest.cs" />
-    <Compile Include="..\Shared\MatrixTest.cs" />
+    <Compile Include="..\Shared\DisplayObjectContainerTest.cs">
+      <Link>display\DisplayObjectContainerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\DisplayObjectTest.cs">
+      <Link>display\DisplayObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\MatrixTest.cs">
+      <Link>geom\MatrixTest.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\TestBase.cs" />
-    <Compile Include="..\Shared\VertexDataTest.cs" />
-    <Compile Include="IndexDataTest.cs" />
-    <Compile Include="MeshStyleTest.cs" />
-    <Compile Include="MeshTest.cs" />
-    <Compile Include="QuadTest.cs" />
+    <Compile Include="..\Shared\VertexDataTest.cs">
+      <Link>rendering\VertexDataTest.cs</Link>
+    </Compile>
+    <Compile Include="rendering\IndexDataTest.cs" />
+    <Compile Include="rendering\MeshStyleTest.cs" />
+    <Compile Include="display\MeshTest.cs" />
+    <Compile Include="display\QuadTest.cs" />
+    <Compile Include="text\TextFieldTest.cs" />
     <Compile Include="utils\MockTexture.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +80,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -101,6 +113,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

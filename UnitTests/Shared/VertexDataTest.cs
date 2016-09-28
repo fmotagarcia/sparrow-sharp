@@ -102,8 +102,8 @@ namespace Tests
 
             vertexData.NumVertices = 4;
 
-            CompareVertex(defaultVertex, vertexData.Vertices[2]);
-            CompareVertex(defaultVertex, vertexData.Vertices[3]);
+            CompareVertex(defaultVertex, vertexData.Vertices[0]);
+            CompareVertex(vertex, vertexData.Vertices[1]);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace Tests
         [Test]
         public void TestScaleAlphaWithoutPMA()
         {
-            VertexData vertexData = new VertexData(1);
+            VertexData vertexData = new VertexData(1, false);
 
             vertexData.SetColor(ColorUtil.GetRGB(80, 60, 40), 128/255.0f);
 

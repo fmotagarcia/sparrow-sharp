@@ -267,7 +267,7 @@ namespace Sparrow.Text
             float containerWidth = 0;
             float containerHeight = 0;
             float scale = 0;
-            int i, j;
+            int i;
 
             if (fontSize < 0f) fontSize *= -Size;
 

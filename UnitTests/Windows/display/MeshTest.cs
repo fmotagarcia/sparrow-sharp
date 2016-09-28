@@ -3,6 +3,8 @@ using Sparrow.Geom;
 using Sparrow.Utils;
 using Sparrow.Rendering;
 using System;
+using Sparrow.Display;
+using Sparrow.Textures;
 
 namespace Tests
 {
@@ -78,7 +80,6 @@ namespace Tests
         [Test]
         public void TestTexCoords()
         {
-            /* TODO
             Texture rootTexture = new MockTexture(100, 100);
             Texture subTexture = Texture.FromTexture(rootTexture, Rectangle.Create(50, 50, 50, 50));
 
@@ -104,24 +105,23 @@ namespace Tests
 
             ComparePoints(Point.Create(0, 0), mesh.GetTexCoords(0));
             ComparePoints(Point.Create(1, 1), mesh.GetTexCoords(3));
-
-            ComparePoints(Point.Create(0.5f, 0.5f), vertexData.GetPoint(0, "texCoords"));
-            ComparePoints(Point.Create(1.0f, 1.0f), vertexData.GetPoint(3, "texCoords"));
+          
+            ComparePoints(Point.Create(0.5f, 0.5f), vertexData.GetTexCoords(0));
+            ComparePoints(Point.Create(1.0f, 1.0f), vertexData.GetTexCoords(3));
 
             mesh.SetTexCoords(2, 0.25f, 0.75f);
 
             ComparePoints(Point.Create(0.25f,  0.75f),  mesh.GetTexCoords(2));
-            ComparePoints(Point.Create(0.625f, 0.875f), vertexData.GetPoint(2, "texCoords"));
+            ComparePoints(Point.Create(0.625f, 0.875f), vertexData.GetTexCoords(2));
 
             mesh.Texture = rootTexture;
 
             ComparePoints(Point.Create(0f, 0f), mesh.GetTexCoords(0));
             ComparePoints(Point.Create(1f, 1f), mesh.GetTexCoords(3));
 
-            ComparePoints(Point.Create(0f, 0f), vertexData.GetPoint(0, "texCoords"));
-            ComparePoints(Point.Create(1f, 1f), vertexData.GetPoint(3, "texCoords"));
-            ComparePoints(Point.Create(0.25f,  0.75f),  vertexData.GetPoint(2, "texCoords"));
-            */
+            ComparePoints(Point.Create(0f, 0f), vertexData.GetTexCoords(0));
+            ComparePoints(Point.Create(1f, 1f), vertexData.GetTexCoords(3));
+            ComparePoints(Point.Create(0.25f,  0.75f),  vertexData.GetTexCoords(2));
         }
 
         [Test]

@@ -8,6 +8,7 @@ using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
+using Sparrow.Rendering;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -16,32 +17,78 @@ using OpenTK.Graphics.ES30;
 
 namespace Sparrow.Filters
 {
-    /// <summary>
-    /// The FragmentFilter class is the base class for all filter effects in Sparrow.
-    /// <para></para> 
-    /// All other filters of this package extend this class. You can attach them to any display object
-    /// through the 'filter' property.
-    /// <para></para> 
-    /// <para>A fragment filter works in the following way:</para> 
-    /// <para>* The object that is filtered is rendered into a texture (in stage coordinates).</para>
-    /// <para>* That texture is passed to the first filter pass.</para>
-    /// <para>* Each pass processes the texture using a fragment shader (and optionally a vertex shader) to
-    ///   achieve a certain effect.</para>
-    /// <para>* The output of each pass is used as the input for the next pass; if it's the final pass, it will
-    ///   be rendered directly to the back buffer.</para>
-    /// <para></para>
-    /// All of this is set up by the abstract FragmentFilter class. Concrete subclasses just need to 
-    /// override the protected methods 'createPrograms', 'activateWithPass' and (optionally) 
-    /// 'deactivateWithPass' to create and execute its custom shader code. Each filter can be configured to 
-    /// either replace the original object, or be drawn below or above it. This can be done through the 
-    /// 'mode' property, which accepts one of the enums defined in the 'SPFragmentFilterMode' enum.
-    /// <para></para>
-    /// Beware that each filter should be used only on one object at a time. Otherwise, it will get slower
-    /// and require more resources; and caching will lead to undefined results.
-    /// </summary>
+    /** The FragmentFilter class is the base class for all filter effects in Starling.
+        *  All filters must extend this class. You can attach them to any display object through the
+        *  <code>filter</code> property.
+        *
+        *  <p>A fragment filter works in the following way:</p>
+        *  <ol>
+        *    <li>The object to be filtered is rendered into a texture.</li>
+        *    <li>That texture is passed to the <code>process</code> method.</li>
+        *    <li>This method processes the texture using a <code>FilterEffect</code> subclass
+        *        that processes the input via fragment and vertex shaders to achieve a certain
+        *        effect.</li>
+        *    <li>If the filter requires several passes, the process method may execute the
+        *        effect several times, or even make use of other filters in the process.</li>
+        *    <li>In the end, a quad with the output texture is added to the batch renderer.
+        *        In the next frame, if the object hasn't changed, the filter is drawn directly
+        *        from the render cache.</li>
+        *    <li>Alternatively, the last pass may be drawn directly to the back buffer. That saves
+        *        one draw call, but means that the object may not be drawn from the render cache in
+        *        the next frame. Starling makes an educated guess if that makes sense, but you can
+        *        also force it to do so via the <code>alwaysDrawToBackBuffer</code> property.</li>
+        *  </ol>
+        *
+        *  <p>All of this is set up by the basic FragmentFilter class. Concrete subclasses
+        *  just need to override the protected method <code>createEffect</code> and (optionally)
+        *  <code>process</code>. Multi-pass filters must also override <code>numPasses</code>.</p>
+        *
+        *  <p>Typically, any properties on the filter are just forwarded to an effect instance,
+        *  which is then used automatically by <code>process</code> to render the filter pass.
+        *  For a simple example on how to write a single-pass filter, look at the implementation of
+        *  the <code>ColorMatrixFilter</code>; for a composite filter (i.e. a filter that combines
+        *  several others), look at the <code>GlowFilter</code>.
+        *  </p>
+        *
+        *  <p>Beware that a filter instance may only be used on one object at a time!</p>
+        *
+        *  <p><strong>Animated filters</strong></p>
+        *
+        *  <p>The <code>process</code> method of a filter is only called when it's necessary, i.e.
+        *  when the filter properties or the target display object changes. This means that you cannot
+        *  rely on the method to be called on a regular basis, as needed when creating an animated
+        *  filter class. Instead, you can do so by listening for an <code>ENTER_FRAME</code>-event.
+        *  It is dispatched on the filter once every frame, as long as the filter is assigned to
+        *  a display object that is connected to the stage.</p>
+        *
+        *  <p><strong>Caching</strong></p>
+        *
+        *  <p>Per default, whenever the target display object is changed in any way (i.e. the render
+        *  cache fails), the filter is reprocessed. However, you can manually cache the filter output
+        *  via the method of the same name: this will let the filter redraw the current output texture,
+        *  even if the target object changes later on. That's especially useful if you add a filter
+        *  to an object that changes only rarely, e.g. a TextField or an Image. Keep in mind, though,
+        *  that you have to call <code>cache()</code> again in order for any changes to show up.</p>
+        *
+        *  @see starling.rendering.FilterEffect
+        */
     public abstract class FragmentFilter
     {
-        /*
+ /*
+        private FilterQuad _quad;
+        private DisplayObject _target;
+        private FilterEffect _effect;
+        private VertexData _vertexData;
+        private IndexData _indexData;
+        private Padding _padding;
+        private FilterHelper _helper;
+        private float _resolution;
+        private string _textureFormat;
+        private string _textureSmoothing;
+        private bool _alwaysDrawToBackBuffer;
+        private bool _cacheRequested;
+        private bool _cached;
+       
         protected const int MIN_TEXTURE_SIZE = 64;
         private bool _cached;
 

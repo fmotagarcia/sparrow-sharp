@@ -265,7 +265,7 @@ namespace Sparrow.Utils
         /// <summary>
         /// Returns the texture coordinates of a vertex.
         /// </summary>
-        public Point TexCoordsAt(int index)
+        public Point GetTexCoords(int index)
         {
             if (index < 0 || index >= _numVertices)
             {

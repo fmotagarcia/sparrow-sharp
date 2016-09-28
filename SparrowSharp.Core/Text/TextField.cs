@@ -25,7 +25,7 @@ namespace Sparrow.Text
 
         // helper objects
         private static Matrix sMatrix = Matrix.Create();
-        private static ITextCompositor sDefaultCompositor = new BitmapFont();
+        private static ITextCompositor sDefaultCompositor;
         private static TextureFormat sDefaultTextureFormat = TextureFormat.RGB565;
         private TextFormat _helperFormat = new TextFormat();
 
@@ -34,7 +34,7 @@ namespace Sparrow.Text
             _text = text != null ? text : "";
             _hitArea = Rectangle.Create(0, 0, width, height);
             _requiresRecomposition = true;
-            _compositor = sDefaultCompositor;
+            _compositor = DefaultCompositor;
             _options = new TextOptions();
 
             _format = format != null ? format.Clone() : new TextFormat();
@@ -79,7 +79,7 @@ namespace Sparrow.Text
                     RegisterCompositor(compositor, fontName);
                 }
 
-                _compositor = compositor != null ? compositor : sDefaultCompositor;
+                _compositor = compositor != null ? compositor : DefaultCompositor;
 
                 UpdateText();
                 UpdateBorder();
@@ -222,7 +222,8 @@ namespace Sparrow.Text
                 // different to ordinary display objects, changing the size of the text field should
                 // not change the scaling, but make the texture bigger/smaller, while the size 
                 // of the text/font stays the same (this applies to the height, as well).
-                _hitArea.Width = value / Math.Max(ScaleX, 1.0f);
+                float sc = ScaleX == 0f ? 1.0f : ScaleX;
+                _hitArea.Width = value / sc;
                 SetRequiresRecomposition();
             }
         }
@@ -231,7 +232,8 @@ namespace Sparrow.Text
         {
             set
             {
-                _hitArea.Height = value / Math.Max(ScaleY, 1.0f);
+                float sc = ScaleX == 0f ? 1.0f : ScaleX;
+                _hitArea.Height = value / sc;
                 SetRequiresRecomposition();
             }
         }
@@ -401,8 +403,22 @@ namespace Sparrow.Text
          *  @default TrueTypeCompositor
          */
         public static ITextCompositor DefaultCompositor { 
-            get { return sDefaultCompositor; }
-            set { sDefaultCompositor = value; }
+            get
+            {
+                if (sDefaultCompositor == null)
+                {
+                    sDefaultCompositor = new BitmapFont();
+                }
+                return sDefaultCompositor;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new ArgumentNullException("Default compositor cannot be null");
+                }
+                sDefaultCompositor = value;
+            }
         }
 
         // compositor registration
@@ -453,18 +469,15 @@ namespace Sparrow.Text
         {
             get
             {
-                Dictionary<string, ITextCompositor> compositors = SparrowSharp.Painter.Compositors;
-
-                if (compositors == null)
+                if (_compositors == null)
                 {
-                    compositors = new Dictionary<string, ITextCompositor>();
-                    SparrowSharp.Painter.Compositors = compositors;
+                    _compositors = new Dictionary<string, ITextCompositor>();
                 }
-
-                return compositors;
+                return _compositors;
             }
         }
 
+        private static Dictionary<string, ITextCompositor> _compositors;
     }
 }
 

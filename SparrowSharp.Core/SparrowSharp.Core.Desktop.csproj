@@ -42,10 +42,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="text\ITextCompositor.cs" />
-    <Compile Include="text\TextFieldAutoSize.cs" />
-    <Compile Include="text\TextFormat.cs" />
-    <Compile Include="text\TextOptions.cs" />
+    <Compile Include="Filters\FilterHelper.cs" />
+    <Compile Include="Text\ITextCompositor.cs" />
+    <Compile Include="Text\TextFieldAutoSize.cs" />
+    <Compile Include="Text\TextFormat.cs" />
+    <Compile Include="Text\TextOptions.cs" />
     <Compile Include="Rendering\Program.cs" />
     <Compile Include="Rendering\RenderState.cs" />
     <Compile Include="Display\BlendMode.cs" />
@@ -58,8 +59,8 @@
     <Compile Include="Display\Quad.cs" />
     <Compile Include="Display\Sprite.cs" />
     <Compile Include="Display\Stage.cs" />
-    <Compile Include="text\BitmapChar.cs" />
-    <Compile Include="text\BitmapFont.cs" />
+    <Compile Include="Text\BitmapChar.cs" />
+    <Compile Include="Text\BitmapFont.cs" />
     <Compile Include="Geom\Matrix.cs" />
     <Compile Include="Geom\Matrix3D.cs" />
     <Compile Include="Geom\Point.cs" />
@@ -111,16 +112,16 @@
     <Compile Include="Filters\FragmentFilter.cs" />
     <Compile Include="Filters\FragmentFilterMode.cs" />
     <Compile Include="Textures\TextureFormat.cs" />
-    <Compile Include="text\CharLocation.cs" />
+    <Compile Include="Text\CharLocation.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />
     <Compile Include="Filters\ColorMatrixFilter.cs" />
     <Compile Include="Touches\Touch.cs" />
     <Compile Include="Touches\TouchEvent.cs" />
     <Compile Include="Touches\TouchPhase.cs" />
-    <Compile Include="text\TextField.cs" />
+    <Compile Include="Text\TextField.cs" />
     <Compile Include="Textures\RenderTexture.cs" />
     <Compile Include="Core\StatsDisplay.cs" />
-    <Compile Include="text\MiniBitmapFont.cs" />
+    <Compile Include="Text\MiniBitmapFont.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
