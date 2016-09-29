@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Sparrow.Utils;
 
-namespace SparrowSharp.Samples.Android
+namespace Sparrow.Samples
 {
     public class TrigonometryTest
     {

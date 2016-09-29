@@ -1,5 +1,6 @@
 ﻿using System;
 using Sparrow.Core;
+using Sparrow.Utils;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 using System.Runtime.InteropServices;
@@ -58,7 +59,7 @@ namespace Sparrow.Core
 
         public OpenGLDebugCallback()
         {
-            if (Context.DeviceSupportsOpenGLExtension("GL_KHR_debug"))
+            if (GLExtensions.DeviceSupportsOpenGLExtension("GL_KHR_debug"))
             {
                 try
                 {

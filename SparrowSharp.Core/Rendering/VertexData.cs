@@ -1,8 +1,11 @@
 using System;
 using Sparrow.Geom;
 using OpenTK;
+using Sparrow.Rendering;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
 #endif
 
 namespace Sparrow.Utils
@@ -606,15 +609,21 @@ namespace Sparrow.Utils
 
         /** Creates a vertex buffer object with the right size to fit the complete data.
          *  Optionally, the current data is uploaded right away. */
-        public int[] CreateVertexBuffer(bool upload = false,
-                                      BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
+        public int[] CreateVertexBuffer(bool upload = false)
+        {
+            return CreateVertexBuffer(upload, BufferUsageType.StaticDraw);
+        }
+
+        /** Creates a vertex buffer object with the right size to fit the complete data.
+         *  Optionally, the current data is uploaded right away. */
+        public int[] CreateVertexBuffer(bool upload, BufferUsageType bufferUsage)
         {
             if (_numVertices == 0) return new int[] { 0, 0 };
             
             int _vertexBufferName;
             int _vertexColorsBufferName;
-            _vertexBufferName = GL.GenBuffer();
-            _vertexColorsBufferName = GL.GenBuffer();
+            GL.GenBuffers(1, out _vertexBufferName);
+            GL.GenBuffers(1, out _vertexColorsBufferName);
 
             if (upload)
             {
@@ -624,15 +633,15 @@ namespace Sparrow.Utils
             return ret;
         }
 
-        public void UploadToVertexBuffer(int vertexBufferName, int vertexColorsBufferName, BufferUsageHint hint)
+        public void UploadToVertexBuffer(int vertexBufferName, int vertexColorsBufferName, BufferUsageType hint)
         {
             if (_numVertices > 0)
             {
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferName);
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * 4 * sizeof(float)), _vertices, hint);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * 4 * sizeof(float)), _vertices, hint.Usage);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vertexColorsBufferName);
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * sizeof(byte) * 4), VertexColors, hint);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * sizeof(byte) * 4), VertexColors, hint.Usage);
             }
         }
 

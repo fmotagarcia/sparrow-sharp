@@ -26,7 +26,7 @@ namespace Sparrow.ResourceLoading
         }
 
 #if __ANDROID__
-        public static GLTexture LoadAndroidResource(int AndroidResourceId)
+        public static Texture LoadAndroidResource(int AndroidResourceId)
         {
             return new TextureLoader().LoadAndroidResource(AndroidResourceId);
         }

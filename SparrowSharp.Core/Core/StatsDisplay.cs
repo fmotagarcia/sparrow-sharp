@@ -144,8 +144,13 @@ namespace Sparrow.Core
             if (GLExtensions.DeviceSupportsOpenGLExtension("GL_NVX_gpu_memory_info"))
             {
                 // this returns in Kb
-                return (GL.GetInteger((GetPName)GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX) -
-                        GL.GetInteger((GetPName)GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX) )/ 1024;
+                int dedicated;
+                GL.GetInteger((GetPName)GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, out dedicated);
+
+                int available;
+                GL.GetInteger((GetPName)GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, out available);
+
+                return (dedicated - available) / 1024;
             }
             return 0;
         }

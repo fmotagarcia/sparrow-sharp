@@ -82,11 +82,21 @@ namespace Sparrow.Rendering
 
 #if DEBUG
             int linked;
-            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out linked);
+#if __WINDOWS__
+            GetProgramParameterName status = GetProgramParameterName.LinkStatus;
+#elif __ANDROID__
+            ProgramParameter status = ProgramParameter.LinkStatus;
+#endif
+            GL.GetProgram(program, status, out linked);
             if (linked == 0)
             {
                 int logLength;
-                GL.GetProgram(program, GetProgramParameterName.InfoLogLength, out logLength);
+#if __WINDOWS__
+                GetProgramParameterName logLen = GetProgramParameterName.InfoLogLength;
+#elif __ANDROID__
+            ProgramParameter logLen = ProgramParameter.InfoLogLength;
+#endif
+                GL.GetProgram(program, logLen, out logLength);
 
                 if (logLength != 0)
                 {
@@ -157,7 +167,12 @@ namespace Sparrow.Rendering
         private void UpdateUniforms()
         {
             int numUniforms;
-            GL.GetProgram(Name, GetProgramParameterName.ActiveUniforms, out numUniforms);
+#if __WINDOWS__
+            GetProgramParameterName paramName = GetProgramParameterName.ActiveUniforms;
+#elif __ANDROID__
+            ProgramParameter paramName = ProgramParameter.ActiveUniforms;
+#endif
+            GL.GetProgram(Name, paramName, out numUniforms);
 
             Uniforms.Clear();
             for (int i = 0; i < numUniforms; i++)
@@ -172,7 +187,12 @@ namespace Sparrow.Rendering
         private void UpdateAttributes()
         {
             int numAttributes;
-            GL.GetProgram(Name, GetProgramParameterName.ActiveAttributes, out numAttributes);
+#if __WINDOWS__
+            GetProgramParameterName paramName = GetProgramParameterName.ActiveAttributes;
+#elif __ANDROID__
+            ProgramParameter paramName = ProgramParameter.ActiveAttributes;
+#endif
+            GL.GetProgram(Name, paramName, out numAttributes);
 
             Attributes.Clear();
             for (int i = 0; i < numAttributes; i++)

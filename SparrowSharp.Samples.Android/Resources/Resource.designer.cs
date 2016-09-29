@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("SparrowSharp.Samples.Android.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Sparrow.Samples.Resource", IsApplication=true)]
 
-namespace SparrowSharp.Samples.Android
+namespace Sparrow.Samples
 {
 	
 	

@@ -5,12 +5,9 @@ using Sparrow.Core;
 using Android.Widget;
 using Android.Views;
 
-namespace Sparrow.Samples.Android
+namespace Sparrow.Samples
 {
     [Activity(Label = "sparrow-sharp benchmark", Name = "awesome.demo.activity",
-        #if __ANDROID_11__
-        HardwareAccelerated=false,
-        #endif
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden,
         MainLauncher = true)]
     public class MainActivity : Activity

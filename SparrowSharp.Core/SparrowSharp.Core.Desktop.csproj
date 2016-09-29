@@ -43,6 +43,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Filters\FilterHelper.cs" />
+    <Compile Include="Rendering\BufferUsageType.cs" />
     <Compile Include="Text\ITextCompositor.cs" />
     <Compile Include="Text\TextFieldAutoSize.cs" />
     <Compile Include="Text\TextFormat.cs" />

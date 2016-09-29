@@ -2,6 +2,8 @@
 using System;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
 #endif
 
 namespace Sparrow.Rendering
@@ -443,13 +445,23 @@ namespace Sparrow.Rendering
         /// Optionally, the current data is uploaded right away.
         /// </summary>
         /// <returns>the name of the created buffer</returns>
-        public int CreateIndexBuffer(bool upload = false,
-                                     BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
+        public int CreateIndexBuffer(bool upload = false)
+        {
+            return CreateIndexBuffer(upload, BufferUsageType.StaticDraw);
+        }
+
+        /// <summary>
+        /// Creates an index buffer object with the right size to fit the complete data.
+        /// Optionally, the current data is uploaded right away.
+        /// </summary>
+        /// <returns>the name of the created buffer</returns>
+        public int CreateIndexBuffer(bool upload, BufferUsageType bufferUsage)
         {
             if (_numIndices == 0) return -1;
 
             //IndexBuffer3D buffer = context.createIndexBuffer(_numIndices, bufferUsage);
-            int buffer = GL.GenBuffer();
+            int buffer;
+            GL.GenBuffers(1, out buffer);
             GL.BindBuffer(BufferTarget.ArrayBuffer, buffer);
             if (upload) UploadToIndexBuffer(buffer, bufferUsage);
             return buffer;
@@ -458,7 +470,7 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Uploads the complete data (or a section of it) to the given buffer.
         /// </summary>
-        public void UploadToIndexBuffer(int buffer, BufferUsageHint hint, int numIndices = -1)
+        public void UploadToIndexBuffer(int buffer, BufferUsageType hint, int numIndices = -1)
         {
             if (numIndices < 0 || numIndices > _numIndices)
             {
@@ -467,7 +479,7 @@ namespace Sparrow.Rendering
             if (numIndices > 0)
             {
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, buffer);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(sizeof(short) * numIndices), RawData, hint);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(sizeof(short) * numIndices), RawData, hint.Usage);
                 
             }
         }

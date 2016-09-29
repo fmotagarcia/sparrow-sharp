@@ -89,9 +89,9 @@ namespace Sparrow.Core
             base.OnLoad(e);
             MakeCurrent();
 
-            if (SparrowSharpApp.Root == null)
+            if (SparrowSharp.Root == null)
             {
-                SparrowSharpApp.Start((uint)Size.Width, (uint)Size.Height, _rootClass);
+                SparrowSharp.Start((uint)Size.Width, (uint)Size.Height, _rootClass);
             }
             // Run the render loop
             Run();
@@ -101,7 +101,7 @@ namespace Sparrow.Core
         {
             base.OnRenderFrame(e);
 
-            SparrowSharpApp.Step(e.Time);
+            SparrowSharp.Step(e.Time);
 
             SwapBuffers();
         }
@@ -109,7 +109,7 @@ namespace Sparrow.Core
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
-            SparrowSharpApp.Stage.SetDrawableArea((uint)Size.Width, (uint)Size.Height);
+            SparrowSharp.Stage.SetDrawableArea((uint)Size.Width, (uint)Size.Height);
         }
 
         protected override void DestroyFrameBuffer()
@@ -124,8 +124,8 @@ namespace Sparrow.Core
         /// </summary>
         override public bool OnTouchEvent(MotionEvent e)
         {
-            float xConversion = SparrowSharpApp.Stage.Width / Size.Width;
-            float yConversion = SparrowSharpApp.Stage.Height / Size.Height;
+            float xConversion = SparrowSharp.Stage.Width / Size.Width;
+            float yConversion = SparrowSharp.Stage.Height / Size.Height;
 
             // get pointer index from the event object
             int pointerIndex = e.ActionIndex;
@@ -152,7 +152,7 @@ namespace Sparrow.Core
                     newTouch.InitialGlobalY = newTouch.GlobalY;
                     newTouch.Phase = TouchPhase.Began;
                     Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
-                    newTouch.Target = SparrowSharpApp.Stage.HitTest(touchPosition);
+                    newTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
 
                     _touches.Add(newTouch.TouchID, newTouch);
                     break;
@@ -183,7 +183,7 @@ namespace Sparrow.Core
                             {
                                 // target could have been removed from stage -> find new target in that case
                                 Point updatedTouchPosition = Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
-                                movedTouch.Target = SparrowSharpApp.Root.HitTest(updatedTouchPosition);
+                                movedTouch.Target = SparrowSharp.Root.HitTest(updatedTouchPosition);
                             }
                         }
                     }

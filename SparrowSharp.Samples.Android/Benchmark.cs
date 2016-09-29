@@ -1,19 +1,14 @@
 using System;
-using System.Collections.Generic;
 using Sparrow.Display;
-using Sparrow;
-using OpenTK.Graphics.ES20;
-using Android.Graphics;
 using Sparrow.Textures;
-using Android.Opengl;
-using Android.App;
-using Android.Widget;
-using SparrowSharp.Display;
 using Sparrow.ResourceLoading;
+using Sparrow.Text;
 using Sparrow.Core;
-using SparrowSharp.Filters;
+using Sparrow.Utils;
+using Sparrow.Geom;
+using System.Collections.Generic;
 
-namespace Sparrow.Samples.Android
+namespace Sparrow.Samples
 {
     public class Benchmark : Sprite
     {
@@ -25,13 +20,14 @@ namespace Sparrow.Samples.Android
         private int _waitFrames = 0;
         private Texture[] textures;
 
+        public TextField eee;
+
         public Benchmark()
         {
-            GLTexture star = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.star);
-            GLTexture bird = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.benchmark_object);
-            GLTexture bigstar = SimpleTextureLoader.LoadAndroidResource(SparrowSharp.Samples.Android.Resource.Drawable.bigstar);
-            textures = new Texture[] { bird, bigstar, star };
-
+            SparrowSharp.EnableErrorChecking();
+            Texture star = SimpleTextureLoader.LoadAndroidResource(Resource.Drawable.bigstar);
+            Texture bird = SimpleTextureLoader.LoadAndroidResource(Resource.Drawable.benchmark_object);
+            textures = new Texture[] { star, bird };
 
             // the container will hold all test objects
             _container = new Sprite();
@@ -39,18 +35,75 @@ namespace Sparrow.Samples.Android
 
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
+            //SparrowSharpApp.SkipUnchangedFrames = true;
+            SparrowSharp.Stage.Color = 0x432323;
+        }
+
+        private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
+        {
+            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            _started = true;
+            _waitFrames = 3;
+
+            AddTestObjects(16);
+
+            TextField tf = new TextField(100, 100, "abcdefg");
+            tf.Format.Size = 32;
+            tf.Border = true;
+            AddChild(tf);
+            tf.Y = 85;
+            tf.X = 45;
+
+            Image im = new Image(textures[0]);
+            im.Scale9Grid = Rectangle.Create(68, 0, 55, 128);
+            im.Width = 256;
+            im.X = 523;
+            im.Y = 23;
+            _container.AddChild(im);
+
+            for (int i = 0; i < 10; i++)
+            {
+                Quad q1 = new Quad(40, 36, 0xff0000);
+                _container.AddChild(q1);
+                q1.X = i * 30;
+                q1.Y = 5;
+                q1.Alpha = i / 10f;
+            }
+
+            List<Texture> li = new List<Texture>();
+            li.Add(textures[0]);
+            li.Add(textures[1]);
+            MovieClip mc = new MovieClip(li, 3);
+            AddChild(mc);
+            mc.X = mc.Y = 444;
+            SparrowSharp.DefaultJuggler.Add(mc);
         }
 
         private void AddTestObjects(int numObjects)
         {
-            int border = 15;
+
+            int border = 40;
 
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
-            {   
-                Image egg = new Image(textures[0]);
+            {
+                Quad egg = new Quad();
+                egg.Texture = textures[1];
+                egg.Width = textures[1].Width;
+                egg.Height = textures[1].Height;
+                egg.AlignPivot(HAlign.Center, VAlign.Center);
+                if (i < 5)
+                {
+                    //ColorMatrix cm = new ColorMatrix();
+                    //cm.AdjustSaturation(-0.8f);
+                    //ColorMatrixFilter fi = new ColorMatrixFilter (cm);
+                    //EmptyFilter fi = new EmptyFilter();
+                    //BlurFilter fi = new BlurFilter(4, 1.1f);
+                    //egg.Filter = fi;
+                    //egg.Filter.Cache();
+                }
                 //MovieClip egg = new MovieClip (textures, 3);
-                //SparrowSharpApp.DefaultJuggler.Add (egg);
+                //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
                 egg.Y = r.Next(border, (int)Stage.Height - border);
                 egg.Rotation = (float)(r.Next(0, 100) / 100.0f * Math.PI);
@@ -63,32 +116,8 @@ namespace Sparrow.Samples.Android
             Console.WriteLine("benchmark complete!");
             Console.WriteLine("number of objects: " + _container.NumChildren);
 
-            Toast.MakeText(AndroidViewController.AndroidContext, "number of objects: " + _container.NumChildren, ToastLength.Long).Show();
-
             _started = false;
             _container.RemoveAllChildren();
-        }
-
-        private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
-        {
-            /*
-            RenderTexture tex = new RenderTexture (400, 300, 0xf1ff00ff);
-            tex.DrawBundled(delegate
-                {
-                    for (int i=0; i<12; ++i)
-                    {
-                        Image img = new Image(textures[i%3]);
-                        //img.Rotation = (2 * (float)Math.PI / 12) * i;
-                        img.X = i * 30;
-                        tex.DrawObject(img);            
-                    }             
-                });
-            AddChild (new Image(tex));*/
-            _started = true;
-            _waitFrames = 3;
-            AddTestObjects(1);
-
-            ///SparrowSharpApp.ShowStats = true;
         }
 
         private void EnterFrameHandler(DisplayObject target, float passedTime)
@@ -98,7 +127,7 @@ namespace Sparrow.Samples.Android
 
             _elapsed += passedTime / 1000;
             ++_frameCount;
-
+            /*
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
@@ -124,12 +153,12 @@ namespace Sparrow.Samples.Android
 
                 _elapsed = _frameCount = 0;
             }
-
+            */
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
-                child.Rotation += 0.05f;    
-            } 
+                child.Rotation += 0.05f;
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿
 using OpenTK;
-using Sparrow;
-using Sparrow.Core;
 using Sparrow.Utils;
 using Sparrow.Geom;
 using System;
@@ -146,7 +144,19 @@ namespace Sparrow.Rendering
          *                     <code>Context3DBufferUsage</code>. Only used when the method call
          *                     causes the creation of a new index buffer.
          */
-        public void UploadIndexData(IndexData indexData, BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
+        public void UploadIndexData(IndexData indexData)
+        {
+            UploadIndexData(indexData, BufferUsageType.StaticDraw);
+        }
+        /** Uploads the given index data to the internal index buffer. If the buffer is too
+         *  small, a new one is created automatically.
+         *
+         *  @param indexData   The IndexData instance to upload.
+         *  @param bufferUsage The expected buffer usage. Use one of the constants defined in
+         *                     <code>Context3DBufferUsage</code>. Only used when the method call
+         *                     causes the creation of a new index buffer.
+         */
+        public void UploadIndexData(IndexData indexData, BufferUsageType bufferUsage)
         {
             int numIndices = indexData.NumIndices;
             bool isQuadLayout = indexData.UseQuadLayout;
@@ -179,11 +189,20 @@ namespace Sparrow.Rendering
          *  small, a new one is created automatically.
          *
          *  @param vertexData  The VertexData instance to upload.
+         */
+        public void UploadVertexData(VertexData vertexData)
+        {
+            UploadVertexData(vertexData, BufferUsageType.StaticDraw);
+        }
+        /** Uploads the given vertex data to the internal vertex buffer. If the buffer is too
+         *  small, a new one is created automatically.
+         *
+         *  @param vertexData  The VertexData instance to upload.
          *  @param bufferUsage The expected buffer usage. Use one of the constants defined in
          *                     <code>Context3DBufferUsage</code>. Only used when the method call
          *                     causes the creation of a new vertex buffer.
          */
-        public void UploadVertexData(VertexData vertexData, BufferUsageHint bufferUsage = BufferUsageHint.StaticDraw)
+        public void UploadVertexData(VertexData vertexData, BufferUsageType bufferUsage)
         {
             if (_vertexBufferName != 0)
             {
@@ -218,7 +237,7 @@ namespace Sparrow.Rendering
             
             BeforeDraw();
             GPUInfo.CheckForOpenGLError();
-            GL.DrawElements(PrimitiveType.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
+            GL.DrawElements(BeginMode.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, 0);
             AfterDraw();
         }
 
