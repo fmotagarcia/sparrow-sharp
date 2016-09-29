@@ -17,9 +17,12 @@ namespace Sparrow.Core
         private static OpenGLDebugCallback instance;
         private DebugProc PCCallbackInstance = PCCallbackHandler; // The callback delegate must be stored to avoid GC
 
-        public static void Init()
+        internal static void Init()
         {
-            instance = new OpenGLDebugCallback();
+            if (instance == null)
+            {
+                instance = new OpenGLDebugCallback();
+            }
         }
 
         private OpenGLDebugCallback()
@@ -45,9 +48,12 @@ namespace Sparrow.Core
             
         private static OpenGLDebugCallback instance;
         
-        public static void Init()
+        internal static void Init()
         {
-            instance = new OpenGLDebugCallback();
+            if (instance == null)
+            {
+                instance = new OpenGLDebugCallback();
+            }
         }
 
         public OpenGLDebugCallback()
@@ -75,6 +81,6 @@ namespace Sparrow.Core
             Console.Out.WriteLine("OpenGL msg: " + source + " " + message);
         }
 #endif
-        }
+    }
 
 }

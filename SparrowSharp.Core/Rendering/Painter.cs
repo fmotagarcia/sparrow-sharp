@@ -55,7 +55,6 @@ namespace Sparrow.Rendering
         private int _drawCount;
         private uint _frameID;
         private float _pixelSize;
-        private bool _enableErrorChecking;
         private Dictionary<int, int> _stencilReferenceValues;
         private Stack<Rectangle> _clipRectStack;
         private BatchProcessor _batchProcessor;
@@ -63,7 +62,6 @@ namespace Sparrow.Rendering
         private List<DisplayObject> _batchCacheExclusions;
 
         private int _actualRenderTarget;
-        private string _actualCulling;
         private uint _actualBlendMode;
 
         private float _backBufferWidth;
@@ -86,7 +84,6 @@ namespace Sparrow.Rendering
         public Painter(float width, float height)
         {
             _actualBlendMode = 0;
-            _actualCulling = null;
 
             _backBufferWidth = width;
             _backBufferHeight = height;
@@ -398,7 +395,6 @@ namespace Sparrow.Rendering
         {
             // enforce reset of basic context settings
             _actualBlendMode = 0;
-            _actualCulling = null;
 
             // reset everything else
             _clipRectStack.Clear();
@@ -659,18 +655,6 @@ namespace Sparrow.Rendering
         {
             get { return _pixelSize; }
             set { _pixelSize = value; }
-        }
-
-        /** Indicates if Stage3D render methods will report errors. Activate only when needed,
-         *  as this has a negative impact on performance. @default false */
-        public bool EnableErrorChecking
-        {
-            get { return _enableErrorChecking; }
-            set
-            {
-                _enableErrorChecking = value;
-                // TODO
-            }
         }
 
         /** Returns the current width of the back buffer. In most cases, this value is in pixels;

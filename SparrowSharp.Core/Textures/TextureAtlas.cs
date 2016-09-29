@@ -45,7 +45,7 @@ namespace Sparrow.Textures
     /// </summary>
     public class TextureAtlas
     {
-        /*
+        
         private readonly Texture _atlasTexture;
         private readonly Dictionary<string, TextureInfo> _textureInfos;
 
@@ -58,27 +58,17 @@ namespace Sparrow.Textures
         /// <summary>
         /// All texture names of the atlas, sorted alphabetically.
         /// </summary>
-        public List<string> Names { get { return GetNamesStartingWith(null); } }
+        public List<string> Names { get { return GetNames(null); } }
 
         /// <summary>
         /// All textures of the atlas, sorted alphabetically.
         /// </summary>
-        public List<Texture> Textures { get { return GetTexturesStartingWith(null); } }
+        public List<Texture> Textures { get { return GetTextures(null); } }
 
         /// <summary>
         /// The base texture that makes up the atlas.
         /// </summary>
         public Texture Texture{ get { return _atlasTexture; } }
-
-        /// <summary>
-        /// Initializes a texture atlas from an XML file and a custom texture.
-        /// </summary>
-        public TextureAtlas(string xml, Texture texture)
-        {
-            _textureInfos = new Dictionary<string, TextureInfo>();
-            _atlasTexture = texture;
-            ParseAtlasXml(xml);
-        }
 
         /// <summary>
         /// Initializes a teture atlas from a texture. Add the regions manually with 'AddRegion'.
@@ -88,91 +78,13 @@ namespace Sparrow.Textures
         }
 
         /// <summary>
-        /// Retrieve a subtexture by name. Returns 'null' if it is not found.
+        /// Initializes a texture atlas from an XML file and a custom texture.
         /// </summary>
-        public SubTexture GetTextureByName(string name)
+        public TextureAtlas(string xml, Texture texture)
         {
-            TextureInfo info = _textureInfos[name];
-            if (info != null)
-            {
-                return new SubTexture(_atlasTexture, info.Region, info.Frame, info.Rotated);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// The region rectangle associated with a specific name.
-        /// </summary>
-        public Rectangle GetRegionByName(string name)
-        {
-            return _textureInfos[name].Region;
-        }
-
-        /// <summary>
-        /// The frame rectangle of a specific region, or 'null' if that region has no frame.
-        /// </summary>
-        public Rectangle GetFrameByName(String name)
-        {
-            return _textureInfos[name].Frame;
-        }
-
-        /// <summary>
-        /// Returns all textures that start with a certain string, sorted alphabetically
-        /// (especially useful for 'MovieClip').
-        /// </summary>
-        public List<Texture> GetTexturesStartingWith(string prefix)
-        {
-            List<string> names = GetNamesStartingWith(prefix);
-            List<Texture> textures = new List<Texture>();
-            foreach (string name in names)
-            {
-                textures.Add(GetTextureByName(name));
-            }
-            return textures;
-        }
-
-        /// <summary>
-        /// Returns all texture names that start with a certain string, sorted alphabetically.
-        /// </summary>
-        public List<string> GetNamesStartingWith(string prefix)
-        {
-            List<string> names = new List<string>();
-            if (prefix != null)
-            {
-                foreach (string name in _textureInfos.Keys)
-                {
-                    if (name.IndexOf(prefix) == 0)
-                    {
-                        names.Add(name);
-                    }
-                }
-            }
-            else
-            {
-                names.AddRange(_textureInfos.Keys);
-            }
-
-            names.Sort(new AlphanumComparatorFast());
-
-            return names;
-        }
-
-        /// <summary>
-        /// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
-        /// the subtexture will show the region rotated by 90 degrees (CCW).
-        /// </summary>
-        public void AddRegion(Rectangle region, string name, Rectangle frame = null, bool rotated = false)
-        {
-            TextureInfo info = new TextureInfo(region, frame, rotated);
-            _textureInfos[name] = info;
-        }
-
-        /// <summary>
-        /// Removes a region with a certain name.
-        /// </summary>
-        public void RemoveRegion(string name)
-        {
-            _textureInfos.Remove(name);
+            _textureInfos = new Dictionary<string, TextureInfo>();
+            _atlasTexture = texture;
+            ParseAtlasXml(xml);
         }
 
         protected void ParseAtlasXml(string xmlString)
@@ -197,11 +109,11 @@ namespace Sparrow.Textures
                 bool rotated = GetBool(subTexture, "rotated");
                 string name = GetString(subTexture, "name");
 
-                Rectangle region = new Rectangle(x, y, width, height);
+                Rectangle region = Rectangle.Create(x, y, width, height);
                 Rectangle frame = null;
                 if (frameWidth > 0.0f && frameHeight > 0.0f)
                 {
-                    frame = new Rectangle(frameX, frameY, frameWidth, frameHeight);
+                    frame = Rectangle.Create(frameX, frameY, frameWidth, frameHeight);
                 }
                 AddRegion(region, name, frame, rotated);
                 parsed = true;
@@ -220,6 +132,94 @@ namespace Sparrow.Textures
             {
                 throw new Exception("could not parse texture atlas");
             }
+        }
+
+        /// <summary>
+        /// Retrieve a subtexture by name. Returns 'null' if it is not found.
+        /// </summary>
+        public SubTexture GetTexture(string name)
+        {
+            TextureInfo info = _textureInfos[name];
+            if (info != null)
+            {
+                return new SubTexture(_atlasTexture, info.Region, false, info.Frame, info.Rotated);
+            }
+            return null;
+        }
+        
+        /// <summary>
+        /// Returns all textures that start with a certain string, sorted alphabetically
+        /// (especially useful for 'MovieClip').
+        /// </summary>
+        public List<Texture> GetTextures(string prefix)
+        {
+            List<string> names = GetNames(prefix);
+            List<Texture> textures = new List<Texture>();
+            foreach (string name in names)
+            {
+                textures.Add(GetTexture(name));
+            }
+            return textures;
+        }
+
+        /// <summary>
+        /// Returns all texture names that start with a certain string, sorted alphabetically.
+        /// </summary>
+        public List<string> GetNames(string prefix)
+        {
+            List<string> names = new List<string>();
+            if (prefix != null)
+            {
+                foreach (string name in _textureInfos.Keys)
+                {
+                    if (name.IndexOf(prefix) == 0)
+                    {
+                        names.Add(name);
+                    }
+                }
+            }
+            else
+            {
+                names.AddRange(_textureInfos.Keys);
+            }
+
+            names.Sort(new AlphanumComparatorFast());
+
+            return names;
+        }
+
+        /// <summary>
+        /// The region rectangle associated with a specific name.
+        /// </summary>
+        public Rectangle GetRegion(string name)
+        {
+            return _textureInfos[name].Region;
+        }
+
+        /// <summary>
+        /// The frame rectangle of a specific region, or 'null' if that region has no frame.
+        /// </summary>
+        public Rectangle GetFrame(String name)
+        {
+            return _textureInfos[name].Frame;
+        }
+
+        /// <summary>
+        /// Creates a region for a subtexture with a frame and gives it a name. If 'rotated' is 'true',
+        /// the subtexture will show the region rotated by 90 degrees (CCW).
+        /// </summary>
+        public void AddRegion(Rectangle region, string name, Rectangle frame = null, bool rotated = false)
+        {
+            TextureInfo info = new TextureInfo(region, frame, rotated);
+            _textureInfos[name] = info;
+        }
+
+        /// <summary>
+        /// Removes a region with a certain name.
+        /// </summary>
+        public void RemoveRegion(string name)
+        {
+            _textureInfos.Remove(name);
         }
 
         float GetFloat(XmlNode node, string attribute)
@@ -342,6 +342,5 @@ namespace Sparrow.Textures
             }
             return len1 - len2;
         }
-        */
     }
 }

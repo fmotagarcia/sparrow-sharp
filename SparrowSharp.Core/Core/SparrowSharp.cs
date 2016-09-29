@@ -19,6 +19,7 @@ namespace Sparrow.Core
         private static Rectangle _viewPort;
         private static Rectangle _previousViewPort;
         private static Rectangle _clippedViewPort;
+        private static bool _enableErrorChecking;
 
         public static Stage Stage { get; private set; }
 
@@ -59,9 +60,7 @@ namespace Sparrow.Core
             _viewPort = Rectangle.Create(0, 0, _width, _height);
             _previousViewPort = Rectangle.Create();
             GPUInfo.PrintGPUInfo();
-#if DEBUG
-            OpenGLDebugCallback.Init();
-#endif
+
             if (rootType == null)
             {
                 throw new InvalidOperationException("Root cannot be null!");
@@ -130,7 +129,10 @@ namespace Sparrow.Core
             }
 
 #if DEBUG
-            GPUInfo.CheckForOpenGLError();
+            if (_enableErrorChecking)
+            {
+                GPUInfo.CheckForOpenGLError();
+            }
 #endif
         }
 
@@ -193,6 +195,17 @@ namespace Sparrow.Core
             if (verticalAlign == VAlign.Top) _statsDisplay.Y = 0f;
             else if (verticalAlign == VAlign.Bottom) _statsDisplay.Y = stageHeight - _statsDisplay.Height;
             else if (verticalAlign == VAlign.Center) _statsDisplay.Y = (stageHeight - _statsDisplay.Height) / 2;
+        }
+
+
+        /** Indicates if Stage3D render methods will report errors. Activate only when needed,
+         *  as this has a negative impact on performance. @default false */
+        public static void EnableErrorChecking()
+        {
+                _enableErrorChecking = true;
+#if DEBUG
+                OpenGLDebugCallback.Init();
+#endif
         }
 
         public static void Destroy()
