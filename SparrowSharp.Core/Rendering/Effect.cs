@@ -237,7 +237,12 @@ namespace Sparrow.Rendering
             
             BeforeDraw();
             GPUInfo.CheckForOpenGLError();
-            GL.DrawElements(BeginMode.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, 0);
+
+#if __WINDOWS__
+            GL.DrawElements(PrimitiveType.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
+#elif __ANDROID__
+            GL.DrawElements(BeginMode.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
+#endif
             AfterDraw();
         }
 

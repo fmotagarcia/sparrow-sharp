@@ -242,7 +242,7 @@ namespace Sparrow.Geom
             return Point.Create(A * x + C * y + Tx, B * x + D * y + Ty);
         }
 
-        public void Invert()
+        public Matrix Invert()
         {
             float det = Determinant;
 
@@ -259,6 +259,7 @@ namespace Sparrow.Geom
             D = d;
             Tx = tx;
             Ty = ty;
+            return this;
         }
 
         public void CopyFromMatrix(Matrix matrix)

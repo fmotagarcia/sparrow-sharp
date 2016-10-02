@@ -29,9 +29,9 @@ namespace Sparrow.Utils
         /// <summary>
         /// checks if two numbers are equal with a small margin of error
         /// </summary>
-        public static bool Equals(float a, float b)
+        public static bool Equals(float a, float b, float E = 0.000005f)
         {
-            return Math.Abs(a - b) < 0.000005f;
+            return Math.Abs(a - b) < E;
         }
 
         public static float Clamp(float value, float min, float max)

@@ -247,7 +247,9 @@ namespace Sparrow.Geom
             return outRect;
         }
 
-        /** Returns a vector containing the positions of the four edges of the given rectangle. */
+        /// <summary>
+        /// Returns a vector containing the positions of the four edges of the given rectangle. 
+        /// </summary>
         public Point[] GetPositions()
         {
             Point[] outP = new Point[4];
@@ -266,6 +268,18 @@ namespace Sparrow.Geom
         public Rectangle Clone()
         {
             return Create(X, Y, Width, Height);
+        }
+
+        /// <summary>
+        /// Extends the bounds of the rectangle in all four directions.
+        /// </summary>
+        public void Extend(float left = 0f, float right = 0f,
+                           float top = 0f, float bottom = 0f)
+        {
+            X -= left;
+            Y -= top;
+            Width += left + right;
+            Height += top + bottom;
         }
 
         // static functions 
