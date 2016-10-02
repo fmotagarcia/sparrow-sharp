@@ -252,9 +252,9 @@ namespace Sparrow.Filters
 
                 GL.UseProgram(Program.Name);
 
-                int uOffsets = Program.Attributes["uOffsets"];
+                int uOffsets = Program.Uniforms["uOffsets"];
                 GL.Uniform4(uOffsets, 1, _offsets);
-                int uWeights = Program.Attributes["uWeights"];
+                int uWeights = Program.Uniforms["uWeights"];
                 GL.Uniform4(uWeights, 1, _weights);
             }
         }

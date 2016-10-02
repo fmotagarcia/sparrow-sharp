@@ -62,13 +62,19 @@ namespace Sparrow.Filters
             SubTexture subTexture;
 
             if (_numPasses >= 0)
+            {
                 if (_numPasses-- == 0) return null;
+            }
 
             if (_pool.Count > 0)
+            {
                 texture = _pool.Pop();
+            }
             else
+            {
                 texture = Texture.Empty(_nativeWidth / _scale, _nativeHeight / _scale,
                     true, 0, true, _scale, TextureFormat);
+            }
 
             if (!MathUtil.Equals(texture.Width, _width, 0.1f) ||
                 !MathUtil.Equals(texture.Height, _height, 0.1f) ||
@@ -78,11 +84,14 @@ namespace Sparrow.Filters
                 subTexture = texture as SubTexture;
 
                 if (subTexture != null)
+                {
                     subTexture.SetTo(texture.Root, sRegion, true, null, false, resolution);
+                }
                 else
+                {
                     texture = new SubTexture(texture.Root, sRegion, true, null, false, resolution);
+                }
             }
-
             texture.Root.Clear();
             return texture;
         }
@@ -92,9 +101,13 @@ namespace Sparrow.Filters
             if (texture != null)
             {
                 if (texture.Root.NativeWidth == _nativeWidth && texture.Root.NativeHeight == _nativeHeight)
+                {
                     _pool.Push(texture);
+                }
                 else
+                {
                     texture.Dispose();
+                }
             }
         }
 
@@ -143,8 +156,7 @@ namespace Sparrow.Filters
 
         private int GetNativeSize(float size, float textureScale)
         {
-            float maxSize = size * textureScale / _sizeStep;
-            return (int)Math.Ceiling(maxSize) * _sizeStep;
+            return (int)Math.Ceiling(size * textureScale / _sizeStep) * _sizeStep;
         }
 
         /** The projection matrix that was active when the filter started processing. */

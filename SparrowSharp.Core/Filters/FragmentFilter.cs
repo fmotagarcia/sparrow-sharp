@@ -276,7 +276,7 @@ namespace Sparrow.Filters
                                        Texture input0 = null, Texture input1 = null,
                                        Texture input2 = null, Texture input3 = null)
         {
-            FilterEffect effect = this.Effect;
+            FilterEffect effect = Effect;
             Texture output = helper.GetTexture(_resolution);
             Matrix3D projectionMatrix;
             Rectangle bounds = null;

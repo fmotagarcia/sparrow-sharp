@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using Sparrow.Textures;
 using Sparrow.Text;
+using System.Diagnostics;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -51,7 +52,8 @@ namespace Sparrow.Rendering
 
         // members
         private Dictionary<string, Program> programs;
-      
+        private readonly Dictionary<int, uint> framebufferCache;
+
         private int _drawCount;
         private uint _frameID;
         private float _pixelSize;
@@ -83,6 +85,7 @@ namespace Sparrow.Rendering
          *  painters; instead, use the global painter found on the Starling instance. */
         public Painter(float width, float height)
         {
+            framebufferCache = new Dictionary<int, uint>();
             _actualBlendMode = 0;
 
             _backBufferWidth = width;
@@ -536,20 +539,25 @@ namespace Sparrow.Rendering
             {
                 if (target != 0)
                 {
-                    uint antiAlias  = _state.RenderTargetAntiAlias;
-                    //bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
-                    //_context.setRenderToTexture(target, depthAndStencil, antiAlias);
-                    /*
+                    // TODO set this uint antiAlias  = _state.RenderTargetAntiAlias;
                     uint framebuffer;
-                    if (!FramebufferCache.TryGetValue(target.Name, out framebuffer))
+                    if (!framebufferCache.TryGetValue(target, out framebuffer))
                     {
-                        framebuffer = CreateFramebufferForTexture(target);
-                        FramebufferCache.Add(target.Name, framebuffer);
+                        GL.GenFramebuffers(1, out framebuffer);
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+                        GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
+                                                TextureTarget.Texture2D, target, 0);
+
+                        if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+                        {
+                            Debug.WriteLine("Failed to create framebuffer for render texture");
+                        }
+                        framebufferCache.Add(target, framebuffer);
                     }
-                    */
+                    
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 
-                    GL.Viewport(0, 0, (int)target.NativeWidth, (int)target.NativeHeight);
+                    GL.Viewport(0, 0, (int)_state.RenderTarget.NativeWidth, (int)_state.RenderTarget.NativeHeight);
                 }
                 else
                 { 
@@ -563,6 +571,16 @@ namespace Sparrow.Rendering
                     GL.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
                 }
                 _actualRenderTarget = target;
+            }
+        }
+
+        private void DestroyFramebufferForTexture(Texture texture) // TODO call this
+        {
+            uint framebuffer;
+            if (framebufferCache.TryGetValue(texture.Base, out framebuffer))
+            {
+                GL.DeleteFramebuffers(1, ref framebuffer);
+                framebufferCache.Remove(texture.Base);
             }
         }
 

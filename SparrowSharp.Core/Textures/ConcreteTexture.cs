@@ -3,6 +3,11 @@ using Sparrow.Utils;
 using Sparrow.Rendering;
 using System;
 using Sparrow.Core;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Textures
 {
@@ -57,7 +62,7 @@ namespace Sparrow.Textures
         {
             if (_base != 0)
             {
-                throw new NotImplementedException();
+                GL.DeleteTexture(_base);
             }
         }
         
@@ -68,9 +73,9 @@ namespace Sparrow.Textures
             if (_premultipliedAlpha && alpha< 1.0f)
             {
                 color = ColorUtil.GetRGB(
-                    (byte)((float)(ColorUtil.GetR(color)) * alpha),
-                    (byte)((float)(ColorUtil.GetG(color)) * alpha),
-                    (byte)((float)(ColorUtil.GetB(color)) * alpha));
+                    (byte)((ColorUtil.GetR(color)) * alpha),
+                    (byte)((ColorUtil.GetG(color)) * alpha),
+                    (byte)((ColorUtil.GetB(color)) * alpha));
             }
 
 
