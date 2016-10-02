@@ -287,7 +287,7 @@ namespace Sparrow.Display
             for (int i = 0; i < numChildren; ++i)
             {
                 DisplayObject child = _children[i];
-        //TODO        FragmentFilter filter = child._filter;
+                FragmentFilter filter = child._filter;
                 DisplayObject mask = child._mask;
 
                 if (child._hasVisibleArea)
@@ -315,8 +315,8 @@ namespace Sparrow.Display
 
                         if (mask != null) painter.DrawMask(mask, child);
 
-               //  TODO       if (filter != null) filter.Render(painter);
-                        /*else*/ child.Render(painter);
+                        if (filter != null) filter.Render(painter);
+                        else child.Render(painter);
 
                         if (mask != null) painter.EraseMask(mask, child);
 

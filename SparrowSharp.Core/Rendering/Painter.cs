@@ -536,24 +536,20 @@ namespace Sparrow.Rendering
             {
                 if (target != 0)
                 {
-                    throw new NotImplementedException();
+                    uint antiAlias  = _state.RenderTargetAntiAlias;
+                    //bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
+                    //_context.setRenderToTexture(target, depthAndStencil, antiAlias);
                     /*
-                    int antiAlias  = _state.RenderTargetAntiAlias;
-                    bool depthAndStencil = _state.RenderTargetSupportsDepthAndStencil;
-                    _context.setRenderToTexture(target, depthAndStencil, antiAlias);
-                    
                     uint framebuffer;
                     if (!FramebufferCache.TryGetValue(target.Name, out framebuffer))
                     {
                         framebuffer = CreateFramebufferForTexture(target);
                         FramebufferCache.Add(target.Name, framebuffer);
                     }
-                    
+                    */
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 
                     GL.Viewport(0, 0, (int)target.NativeWidth, (int)target.NativeHeight);
-                    */
-                   
                 }
                 else
                 { 

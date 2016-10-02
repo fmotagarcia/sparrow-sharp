@@ -74,482 +74,533 @@ namespace Sparrow.Filters
         */
     public abstract class FragmentFilter
     {
- /*
+        public event DisplayObject.EnterFrameEventHandler EnterFrame;
+
+        public delegate void OnChanged();
+        public OnChanged OnChangedEvent;
+
         private FilterQuad _quad;
         private DisplayObject _target;
         private FilterEffect _effect;
         private VertexData _vertexData;
         private IndexData _indexData;
+        private BatchToken _token;
         private Padding _padding;
         private FilterHelper _helper;
         private float _resolution;
-        private string _textureFormat;
-        private string _textureSmoothing;
+        private TextureFormat _textureFormat;//was BGRA
+        private TextureSmoothing _textureSmoothing;
         private bool _alwaysDrawToBackBuffer;
         private bool _cacheRequested;
         private bool _cached;
-       
-        protected const int MIN_TEXTURE_SIZE = 64;
-        private bool _cached;
 
-        /// <summary>
-        /// Indicates if the filter is cached (via the "Cache()" method).
-        /// </summary>
-        /// <value><c>true</c> if cached; otherwise, <c>false</c>.</value>
-        public bool Cached { get { return _cached; } }
+        // helpers
+        private static Matrix3D sMatrix3D;
 
-        /// <summary>
-        /// The resolution of the filter texture. "1" means stage resolution, "0.5" half the stage
-        /// resolution. A lower resolution saves memory and execution time(depending on the GPU), but
-        /// results in a lower output quality. Values greater than 1 are allowed; such values might make
-        /// sense for a cached filter when it is scaled up. default 1
-        /// </summary>
-        public readonly float Resolution;
-        /// <summary>
-        /// The filter mode, which is one of the constants defined in the 'FragmentFilterMode' enum.
-        /// (default: FragmentFilterMode.Replace)
-        /// </summary>
-        public FragmentFilterMode Mode;
-        /// <summary>
-        /// Use the x-offset to move the filter output to the right or left.
-        /// </summary>
-        public float OffsetX;
-        /// <summary>
-        /// Use the y-offset to move the filter output to the top or bottom.
-        /// </summary>
-        public float OffsetY;
-        /// <summary>
-        /// The x-margin will extend the size of the filter texture along the x-axis.
-        /// Useful when the filter will "grow" the rendered object.
-        /// </summary>
-        public float MarginX;
-        /// <summary>
-        /// The y-margin will extend the size of the filter texture along the y-axis.
-        /// Useful when the filter will "grow" the rendered object.
-        /// </summary>
-        public float MarginY;
-        /// <summary>
-        /// The number of passes the filter is applied. The "activate" and "deactivate" methods will be
-        /// called that often.
-        /// </summary>
-        protected int NumPasses;
-        /// <summary>
-        /// The ID of the vertex buffer attribute that stores the Vertex position.
-        /// </summary>
-        protected int VertexPosID;
-        /// <summary>
-        /// The ID of the vertex buffer attribute that stores the Texture coordinates.
-        /// </summary>
-        protected int TexCoordsID;
-        private readonly List<Texture> _passTextures;
-        private readonly Matrix _projMatrix;
-        private QuadBatch _cache;
-        private bool _cacheRequested;
-        private readonly VertexData _vertexData;
-        private readonly ushort[] _indexData = new ushort[6];
-        private uint _vertexBufferName;
-        private uint _indexBufferName;
-
-        /// <summary>
-        /// Initializes a fragment filter with the specified number of passes and resolution.
-        /// </summary>
-        protected FragmentFilter(int numPasses = 1, float resolution = 1.0f)
+        /** Creates a new instance. The base class' implementation just draws the unmodified
+         *  input texture. */
+        public FragmentFilter()
         {
-            NumPasses = numPasses;
-            Resolution = resolution;
-            Mode = FragmentFilterMode.Replace;
-            _passTextures = new List<Texture>(numPasses);
-            _projMatrix = Matrix.Create(0, 0, 0, 0, 0, 0);
+            _resolution = 1.0f;
+            _textureFormat = TextureFormat.Rgba4444;
+            _textureSmoothing = TextureSmoothing.Bilinear;
 
-            _vertexData = new VertexData(4, true);
-            _vertexData.Vertices[1].TexCoords.X = 1.0f;
-            _vertexData.Vertices[2].TexCoords.Y = 1.0f;
-            _vertexData.Vertices[3].TexCoords.X = 1.0f;
-            _vertexData.Vertices[3].TexCoords.Y = 1.0f;
-
-            _indexData[0] = 0;
-            _indexData[1] = 1;
-            _indexData[2] = 2;
-            _indexData[3] = 1;
-            _indexData[4] = 3;
-            _indexData[5] = 2;
-
-            CreatePrograms();
+            SetRequiresRedraw();
         }
 
-        /// <summary>
-        /// Caches the filter output into a Texture. An uncached filter is rendered in every frame; a
-        /// cached filter only once. However, if the filtered object or the filter settings change, it has
-        /// to be updated manually; to do that, call "cache" again.
-        /// </summary>
+        /** Disposes all resources that have been created by the filter. */
+        public void Dispose()
+        {
+
+            if (_helper != null) _helper.Dispose();
+            if (_effect != null) _effect.Dispose();
+            if (_quad != null)   _quad.Dispose();
+
+            _effect = null;
+            _quad = null;
+        }
+
+        /** Renders the filtered target object. Most users will never have to call this manually;
+         *  it's executed automatically in the rendering process of the filtered display object.
+         */
+        public void Render(Painter painter)
+        {
+            if (_target == null)
+                throw new InvalidOperationException("Cannot render filter without target");
+
+            if (_target.Is3D)
+                _cached = _cacheRequested = false;
+
+            if (!_cached || _cacheRequested)
+            {
+                RenderPasses(painter, _cacheRequested);
+                _cacheRequested = false;
+            }
+            else if (_quad.Visible)
+            {
+                _quad.Render(painter);
+            }
+        }
+
+        private void RenderPasses(Painter painter, bool forCache)
+        {
+            if (_token == null) _token = new BatchToken();
+            if (_helper  == null) _helper = new FilterHelper(_textureFormat);
+            if (_quad  == null) _quad  = new FilterQuad(_textureSmoothing);
+            else { _helper.PutTexture(_quad.Texture); _quad.Texture = null; }
+
+            Rectangle bounds = Rectangle.Create();
+            bool drawLastPassToBackBuffer = false;
+            float origResolution = _resolution;
+            DisplayObject renderSpace = _target.Stage != null ? _target.Stage : _target.Parent;
+            bool isOnStage = renderSpace is Stage;
+            Stage stage = SparrowSharp.Stage;
+            Rectangle stageBounds;
+
+            if (!forCache && (_alwaysDrawToBackBuffer || _target.RequiresRedraw))
+            {
+                // If 'requiresRedraw' is true, the object is non-static, and we guess that this
+                // will be the same in the next frame. So we render directly to the back buffer.
+                //
+                // -- That, however, is only possible for full alpha values, because
+                // (1) 'FilterEffect' can't handle alpha (and that will do the rendering)
+                // (2) we don't want lower layers (CompositeFilter!) to shine through.
+
+                drawLastPassToBackBuffer = painter.State.Alpha == 1.0f;
+                painter.ExcludeFromCache(_target);
+            }
+
+            if (_target == SparrowSharp.Root)
+            {
+                // full-screen filters use exactly the stage bounds
+                bounds = stage.GetStageBounds(_target);
+            }
+            else
+            {
+                // Unfortunately, the following bounds calculation yields the wrong result when
+                // drawing a filter to a RenderTexture using a custom matrix. The 'modelviewMatrix'
+                // should be used for the bounds calculation, but the API doesn't support this.
+                // A future version should change this to: "getBounds(modelviewMatrix, bounds)"
+
+                bounds = _target.GetBounds(renderSpace);
+
+                if (!forCache && isOnStage) // normally, we don't need anything outside
+                {
+                    stageBounds = stage.GetStageBounds(null);
+                    bounds = bounds.Intersection(stageBounds);
+                }
+            }
+
+            _quad.Visible = !bounds.IsEmpty();
+            if (!_quad.Visible) { return; }
+
+            if (_padding != null) bounds.Extend(_padding.Left, _padding.Right, _padding.Top, _padding.Bottom);
+
+            // integer bounds for maximum sharpness + to avoid jiggling
+            bounds.SetTo((float)Math.Floor(bounds.X), (float)Math.Floor(bounds.Y),
+                         (float)Math.Ceiling(bounds.Width), (float)Math.Ceiling(bounds.Height));
+
+            _helper.TextureScale = SparrowSharp.ContentScaleFactor * _resolution;
+            _helper.ProjectionMatrix3D = painter.State.ProjectionMatrix3D;
+            _helper.RenderTarget = painter.State.RenderTarget;
+            _helper.TargetBounds = bounds;
+            _helper.Target = _target;
+            _helper.Start(NumPasses, drawLastPassToBackBuffer);
+
+            _quad.setBounds(bounds);
+            _resolution = 1.0f; // applied via '_helper.textureScale' already;
+                                // only 'child'-filters use resolution directly (in 'process')
+
+            
+            Texture input = _helper.GetTexture();
+            uint frameID = painter.FrameID;
+            Texture output;
+
+            painter.FrameID = 0;
+            painter.PushState(_token);
+            painter.State.Alpha = 1.0f;
+            painter.State.RenderTarget = input;
+            painter.State.SetProjectionMatrix(bounds.X, bounds.Y,
+                input.Root.Width, input.Root.Height,
+                stage.Width, stage.Height, stage.CameraPosition);
+
+            _target.Render(painter); // -> draw target object into 'input'
+
+            painter.FinishMeshBatch();
+            painter.State.SetModelviewMatricesToIdentity();
+            painter.State.ClipRect = null;
+
+            output = Process(painter, _helper, input); // -> feed 'input' to actual filter code
+
+            painter.PopState();
+            painter.FrameID = frameID;
+            painter.RewindCacheTo(_token); // -> render cache forgets all that happened above :)
+
+            if (output != null) // indirect rendering
+            {
+                painter.PushState();
+
+                if (_target.Is3D) painter.State.SetModelviewMatricesToIdentity(); // -> stage coords
+                else              _quad.moveVertices(renderSpace, _target);       // -> local coords
+
+                _quad.Texture = output;
+                _quad.Render(painter);
+
+                painter.FinishMeshBatch();
+                painter.PopState();
+            }
+
+            _helper.Target = null;
+            _helper.PutTexture(input);
+            _resolution = origResolution;
+        }
+
+        /** Does the actual filter processing. This method will be called with up to four input
+         *  textures and must return a new texture (acquired from the <code>helper</code>) that
+         *  contains the filtered output. To to do this, it configures the FilterEffect
+         *  (provided via <code>createEffect</code>) and calls its <code>render</code> method.
+         *
+         *  <p>In a standard filter, only <code>input0</code> will contain a texture; that's the
+         *  object the filter was applied to, rendered into an appropriately sized texture.
+         *  However, filters may also accept multiple textures; that's useful when you need to
+         *  combine the output of several filters into one. For example, the DropShadowFilter
+         *  uses a BlurFilter to create the shadow and then feeds both input and shadow texture
+         *  into a CompositeFilter.</p>
+         *
+         *  <p>Never create or dispose any textures manually within this method; instead, get
+         *  new textures from the provided helper object, and pass them to the helper when you do
+         *  not need them any longer. Ownership of both input textures and returned texture
+         *  lies at the caller; only temporary textures should be put into the helper.</p>
+         */
+        virtual public Texture Process(Painter painter, IFilterHelper helper,
+                                       Texture input0 = null, Texture input1 = null,
+                                       Texture input2 = null, Texture input3 = null)
+        {
+            FilterEffect effect = this.Effect;
+            Texture output = helper.GetTexture(_resolution);
+            Matrix3D projectionMatrix;
+            Rectangle bounds = null;
+            Texture renderTarget;
+
+            if (output != null) // render to texture
+            {
+                renderTarget = output;
+                projectionMatrix = MatrixUtil.CreatePerspectiveProjectionMatrix(0, 0,
+                    output.Root.Width / _resolution, output.Root.Height / _resolution,
+                    0, 0, null);
+            }
+            else // render to back buffer
+            {
+                bounds = helper.TargetBounds;
+                renderTarget = (helper as FilterHelper).RenderTarget;
+                projectionMatrix = (helper as FilterHelper).ProjectionMatrix3D;
+                effect.TextureSmoothing = _textureSmoothing;
+            }
+
+            painter.State.RenderTarget = renderTarget;
+            painter.PrepareToDraw();
+            painter.DrawCount += 1;
+
+            input0.SetupVertexPositions(VertexData, 0, bounds);
+            input0.SetupTextureCoordinates(VertexData);
+
+            effect.Texture = input0;
+            effect.MvpMatrix3D = projectionMatrix;
+            effect.UploadVertexData(VertexData);
+            effect.UploadIndexData(IndexData);
+            effect.Render(0, IndexData.NumTriangles);
+
+            return output;
+        }
+
+        /** Creates the effect that does the actual, low-level rendering.
+         *  Must be overridden by all subclasses that do any rendering on their own (instead
+         *  of just forwarding processing to other filters).
+         */
+        virtual protected FilterEffect CreateEffect()
+        {
+            return new FilterEffect();
+        }
+
+        /** Caches the filter output into a texture.
+        *
+        *  <p>An uncached filter is rendered every frame (except if it can be rendered from the
+        *  global render cache, which happens if the target object does not change its appearance
+        *  or location relative to the stage). A cached filter is only rendered once; the output
+        *  stays unchanged until you call <code>cache</code> again or change the filter settings.
+        *  </p>
+        *
+        *  <p>Beware: you cannot cache filters on 3D objects; if the object the filter is attached
+        *  to is a Sprite3D or has a Sprite3D as (grand-) parent, the request will be silently
+        *  ignored. However, you <em>can</em> cache a 2D object that has 3D children!</p>
+        */
         public void Cache()
         {
-            _cacheRequested = true;
-            DisposeCache();
-            _cached = true;
+            _cached = _cacheRequested = true;
+            SetRequiresRedraw();
         }
 
-        /// <summary>
-        /// Clears the cached output of the filter. After calling this method, the filter will be executed
-        /// once per frame again.
-        /// </summary>
+        /** Clears the cached output of the filter. After calling this method, the filter will be
+        *  processed once per frame again. */
         public void ClearCache()
         {
-            _cacheRequested = false;
-            DisposeCache();
-            _cached = false;
+            _cached = _cacheRequested = false;
+            SetRequiresRedraw();
         }
 
-        /// <summary>
-        /// Applies the filter on a certain display object, rendering the output into the current render
-        /// target. This method is called automatically by Sparrow's rendering system for the object the
-        /// filter is attached to.
-        /// </summary>
-        public void RenderObject(DisplayObject obj, RenderSupport support)
+        // enter frame event
+        private void OnEnterFrame(DisplayObject target, float passedTime)
         {
-            // bottom layer
-            if (Mode == FragmentFilterMode.Above)
-            {
-                obj.Render(support);
-            }
-                
-            // center layer
-            if (_cacheRequested)
-            {
-                _cacheRequested = false;
-                _cache = RenderPasses(obj, support, true);
-                DisposePassTextures();
-            }
+            EnterFrame?.Invoke(target, passedTime);
+        }
+        
+        // + here was some code so users can add enterFrame events to this one
+        
+        // properties
 
-            if (_cache != null)
+        /** The effect instance returning the FilterEffect created via <code>createEffect</code>. */
+        protected FilterEffect Effect
+        {
+            get
             {
-                _cache.Render(support);
+                if (_effect == null) _effect = CreateEffect();
+                return _effect;
             }
-            else
-            {
-                RenderPasses(obj, support, false);
-            }
-
-            // top layer
-            if (Mode == FragmentFilterMode.Below)
-            {
-                obj.Render(support);
-            }
+           
         }
 
-        /// <summary>
-        /// Subclasses must override this method and use it to create their fragment and vertex shaders.
-        /// </summary>
-        protected abstract void CreatePrograms();
-
-        /// <summary>
-        /// Subclasses must override this method and use it to activate their shader program.
-        /// The 'ActivateWithPass' call directly precedes the call to 'GL.DrawElements'.
-        /// </summary>
-        protected abstract void ActivateWithPass(int pass, Texture texture, Matrix mvpMatrix);
-
-        /// <summary>
-        /// This method is called directly after 'GL.DrawElements'.
-        /// If you need to clean up any resources, you can do so in this method
-        /// </summary>
-        protected void DeactivateWithPass(int pass, Texture texture)
+        /** The VertexData used to process the effect. Per default, uses the format provided
+         *  by the effect, and contains four vertices enclosing the target object. */
+        protected VertexData VertexData
         {
-            // override in subclass
-        }
-
-        /// <summary>
-        /// The standard vertex shader code.
-        /// </summary>
-        protected static String StandardVertexShader()
-        {
-            StringBuilder source = new StringBuilder("");
-#if __WINDOWS__
-            source.AppendLine("#version 110");
-            source.AppendLine("#define highp  ");
-            source.AppendLine("#define mediump  ");
-            source.AppendLine("#define lowp  ");
-#else
-            source.AppendLine("#version 100");
-#endif
-            source.AppendLine("attribute vec4 aPosition;");
-            source.AppendLine("attribute lowp vec2 aTexCoords;");
-            source.AppendLine("uniform mat4 uMvpMatrix;");
-            source.AppendLine("varying lowp vec2 vTexCoords;");
-            source.AppendLine("void main() {");
-            source.AppendLine("    gl_Position = uMvpMatrix * aPosition;");
-            source.AppendLine("    vTexCoords  = aTexCoords;");
-            source.AppendLine("}");
-            return source.ToString();
-        }
-
-        /// <summary>
-        /// The standard fragment shader code. It just forwards the texture color to the output.
-        /// </summary>
-        protected static String StandardFragmentShader()
-        {
-            StringBuilder source = new StringBuilder("");
-#if __WINDOWS__
-            source.AppendLine("#version 110");
-            source.AppendLine("#define highp  ");
-            source.AppendLine("#define mediump  ");
-            source.AppendLine("#define lowp  ");
-#else
-            source.AppendLine("#version 100");
-#endif
-            source.AppendLine("uniform lowp sampler2D uTexture;");
-            source.AppendLine("varying lowp vec2 vTexCoords;");
-            source.AppendLine("void main() {");
-            source.AppendLine("    gl_FragColor = texture2D(uTexture, vTexCoords);");
-            source.AppendLine("}");
-            return source.ToString();
-        }
-
-        private void CalcBounds(DisplayObject obj,
-                           Stage stage, 
-                           float scale,
-                           bool intersectWithStage,
-                           out Rectangle bounds,
-                           out Rectangle boundsPOT)
-        {
-            float marginX;
-            float marginY;
-
-            // optimize for full-screen effects
-            if (obj == stage || obj == SparrowSharpApp.Root)
+            get
             {
-                marginX = marginY = 0;
-                bounds = new Rectangle(0, 0, stage.Width, stage.Height);
+                if (_vertexData == null) _vertexData = new VertexData(4);
+                return _vertexData;
             }
-            else
-            {
-                marginX = MarginX;
-                marginY = MarginY;
-                bounds = obj.GetBounds(stage);
-            }
-
-            if (intersectWithStage)
-                bounds = bounds.Intersection(stage.Bounds);
-            boundsPOT = null;
-            Rectangle result = bounds;
-            if (!result.IsEmpty())
-            {
-                // the bounds are a rectangle around the object, in stage coordinates,
-                // and with an optional margin.
-                bounds.Inflate(marginX, marginY);
-
-                // To fit into a POT-texture, we extend it towards the right and bottom.
-                int minSize = (int)(MIN_TEXTURE_SIZE / scale);
-                float minWidth = result.Width > minSize ? result.Width : minSize;
-                float minHeight = result.Height > minSize ? result.Height : minSize;
-
-                boundsPOT = new Rectangle(result.X,
-                    result.Top,
-                    MathUtil.NextPowerOfTwo(minWidth * scale) / scale,
-                    MathUtil.NextPowerOfTwo(minHeight * scale) / scale);
-            }
+           
         }
 
-        private void DisposeCache()
+        /** The IndexData used to process the effect. Per default, references a quad (two triangles)
+         *  of four vertices. */
+        protected IndexData IndexData
         {
-            _cache = null;
-        }
-
-        private void DisposePassTextures()
-        {
-            _passTextures.Clear();
-        }
-
-        private Texture PassTextureForPass(int pass)
-        {
-            return _passTextures[pass % 2];
-        }
-
-        private QuadBatch RenderPasses(DisplayObject obj, RenderSupport support, bool intoCache)
-        {
-            Texture cacheTexture = null;
-            Stage stage = obj.Stage;
-            float scale = Resolution;
-
-            if (stage == null)
+            get
             {
-                throw new InvalidOperationException("Filtered object must be on the stage.");
-            }
-            // the bounds of the object in stage coordinates
-            Rectangle boundsPOT;
-            Rectangle bounds;
-            CalcBounds(obj, stage, scale, !intoCache, out bounds, out boundsPOT);
-
-            if (bounds.IsEmpty())
-            {
-                DisposePassTextures();
-                return intoCache ? new QuadBatch() : null;
-            }
-
-            UpdateBuffers(boundsPOT);
-            UpdatePassTextures((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
-
-            support.FinishQuadBatch();
-            support.AddDrawCalls(NumPasses);
-            support.PushState(Matrix.Create(), 1.0f, BlendMode.AUTO);
-
-            // save original projection matrix and render target
-            _projMatrix.CopyFromMatrix(support.ProjectionMatrix);
-            Texture previousRenderTarget = support.RenderTarget;
-
-            // use cache?
-            if (intoCache)
-            {
-                cacheTexture = CreateTexture((int)boundsPOT.Width, (int)boundsPOT.Height, scale);
-            }
-
-            // draw the original object into a texture
-            support.RenderTarget = _passTextures[0];
-            SparrowSharpApp.Context.ScissorBox = null; // we want the entire texture cleared
-            support.Clear();
-            support.BlendMode = BlendMode.NORMAL;
-            support.SetupOrthographicProjection(boundsPOT.Left, boundsPOT.Right, boundsPOT.Bottom, boundsPOT.Top);
-            obj.Render(support);
-            support.FinishQuadBatch();
-
-            // prepare drawing of actual filter passes
-            support.ApplyBlendMode(true);
-            support.ModelViewMatrix.Identity();
-            support.PushClipRect(bounds);
-
-            GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
-            GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
-
-            GL.EnableVertexAttribArray (VertexPosID);
-            GL.VertexAttribPointer (VertexPosID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
-
-            GL.EnableVertexAttribArray (TexCoordsID);
-            GL.VertexAttribPointer (TexCoordsID, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
-
-            // draw all passes
-            for (int i = 0; i < NumPasses; ++i)
-            {
-                if (i < NumPasses - 1)
-                { // intermediate pass
-                    // draw into pass texture
-                    support.RenderTarget = PassTextureForPass(i + 1);
-                    support.Clear();
-                }
-                else
-                { // final pass
-                    if (intoCache)
-                    {
-                        // draw into cache texture
-                        support.RenderTarget = cacheTexture;
-                        support.Clear();
-                    }
-                    else
-                    {
-                        // draw into back buffer, at original (stage) coordinates
-                        support.RenderTarget = previousRenderTarget;
-                        support.ProjectionMatrix = _projMatrix;
-                        support.ModelViewMatrix.Translate(OffsetX, OffsetY);
-                        support.BlendMode = obj.BlendMode;
-                        support.ApplyBlendMode(true);
-                    }
+                if (_indexData == null)
+                {
+                    _indexData = new IndexData();
+                    _indexData.AddQuad(0, 1, 2, 3);
                 }
 
-                Texture passTexture = PassTextureForPass(i);
-
-                GL.ActiveTexture (TextureUnit.Texture0);
-                GL.BindTexture (TextureTarget.Texture2D, passTexture.Name);
-
-                ActivateWithPass (i, passTexture, support.MvpMatrix);
-                GL.DrawElements (BeginMode.Triangles, 6, DrawElementsType.UnsignedShort, IntPtr.Zero);
-                
-                DeactivateWithPass(i, passTexture);
-            }
-
-            GL.DisableVertexAttribArray(VertexPosID);
-            GL.DisableVertexAttribArray(TexCoordsID);
-
-            support.PopState();
-            support.PopClipRect();
-
-            QuadBatch cache = null;
-            if (intoCache)
-            {
-                // restore support settings
-                support.RenderTarget = previousRenderTarget;
-                support.ProjectionMatrix = _projMatrix;
-
-                // Create an image containing the cache. To have a display object that contains
-                // the filter output in object coordinates, we wrap it in a QuadBatch: that way,
-                // we can modify it with a transformation matrix.
-                cache = new QuadBatch();
-                Image image = new Image(cacheTexture);
-
-                Matrix matrix = stage.GetTransformationMatrix(obj);
-                // Note: the next line was originally:
-                // matrix.Translate (bounds.X + OffsetX, bounds.Y + OffsetY);
-                // this seems like a sparrow-s bug; fix is from Starling
-                matrix.PrependTranslation(bounds.X + OffsetX, bounds.Top + OffsetY);
-                cache.AddQuad(image, 1.0f, BlendMode.AUTO, matrix);
-            }
-
-            return cache;
-        }
-
-        private void UpdateBuffers(Rectangle bounds)
-        {
-            Vertex[] vertices = _vertexData.Vertices;
-            vertices[0].Position = new Vector2(bounds.X, bounds.Top);
-            vertices[1].Position = new Vector2(bounds.Right, bounds.Top);
-            vertices[2].Position = new Vector2(bounds.X, bounds.Bottom);
-            vertices[3].Position = new Vector2(bounds.Right, bounds.Bottom);
-
-            const int indexSize = sizeof(ushort) * 6;
-            const int vertexSize = Vertex.SIZE * 4;
-
-            if (_vertexBufferName == 0) {
-                GL.GenBuffers (1, out _vertexBufferName);
-                GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
-
-                GL.GenBuffers (1, out _indexBufferName);
-                GL.BindBuffer (BufferTarget.ElementArrayBuffer, _indexBufferName);
-                GL.BufferData (BufferTarget.ElementArrayBuffer, (IntPtr)indexSize, _indexData, BufferUsage.StaticDraw);
-            }
-
-            GL.BindBuffer (BufferTarget.ArrayBuffer, _vertexBufferName);
-            GL.BufferData (BufferTarget.ArrayBuffer, (IntPtr)vertexSize, _vertexData.Vertices, BufferUsage.StaticDraw);
-        }
-
-        private void UpdatePassTextures(int width, int height, float scale)
-        {
-            int numPassTextures = NumPasses > 1 ? 2 : 1;
-            bool needsUpdate = _passTextures.Count != numPassTextures ||
-                      _passTextures[0].Width != width ||
-                      _passTextures[0].Height != height;
-
-            if (needsUpdate)
-            {
-                _passTextures.Clear();
-                for (int i = 0; i < numPassTextures; ++i)
-                    _passTextures.Add(CreateTexture(width, height, scale));
+                return _indexData;
             }
         }
 
-        private Texture CreateTexture(int width, int height, float scale)
+        /** Call this method when any of the filter's properties changes.
+         *  This will make sure the filter is redrawn in the next frame. */
+        protected void SetRequiresRedraw()
         {
-            int legalWidth = MathUtil.NextPowerOfTwo(width * scale);
-            int legalHeight = MathUtil.NextPowerOfTwo(height * scale);
+            OnChangedEvent?.Invoke();
+            if (_target != null) _target.SetRequiresRedraw();
+            if (_cached) _cacheRequested = true;
+        }
 
-            TextureProperties texProps = new TextureProperties
+        /** Indicates the number of rendering passes required for this filter.
+         *  Subclasses must override this method if the number of passes is not <code>1</code>. */
+        virtual public int NumPasses
+        {
+            get
             {
-                TextureFormat = TextureFormat.Rgba8888,
-                Scale = scale,
-                Width = legalWidth,
-                Height = legalHeight,
-                NumMipmaps = 0,
-                PremultipliedAlpha = true
-            };
+                return 1;
+            }
+        }
 
-            return new GLTexture(IntPtr.Zero, texProps);
-        }*/
-    }
+        /** Called when assigning a target display object.
+         *  Override to plug in class-specific logic. */
+        virtual protected void OnTargetAssigned(DisplayObject target) { }
+
+        /** Padding can extend the size of the filter texture in all directions.
+        *  That's useful when the filter "grows" the bounds of the object in any direction. */
+        public Padding Padding
+        {
+            get
+            {
+                if (_padding == null)
+                {
+                    _padding = new Padding();
+                    _padding.OnChangedEvent += SetRequiresRedraw;
+                }
+                return _padding;
+            }
+            set
+            {
+                Padding.CopyFrom(value);
+            }
+            
+        }
+
+        /** Indicates if the filter is cached (via the <code>cache</code> method). */
+        public bool IsCached { get { return _cached; } }
+
+        /** The resolution of the filter texture. "1" means stage resolution, "0.5" half the stage
+         *  resolution. A lower resolution saves memory and execution time, but results in a lower
+         *  output quality. Values greater than 1 are allowed; such values might make sense for a
+         *  cached filter when it is scaled up. @default 1
+         */
+        virtual public float Resolution {
+            get { return _resolution; }
+            set
+            {
+                if (value != _resolution)
+                {
+                    if (value > 0) _resolution = value;
+                    else throw new ArgumentException("resolution must be > 0");
+                    SetRequiresRedraw();
+                }
+            }
+        }
+
+        /** The smoothing mode of the filter texture. @default bilinear */
+        public TextureSmoothing TextureSmoothing { 
+            get { return _textureSmoothing; }
+            set
+            {
+                if (value != _textureSmoothing)
+                {
+                    _textureSmoothing = value;
+                    if (_quad != null) _quad.TextureSmoothing = value;
+                    SetRequiresRedraw();
+                }
+            }
+        }
+
+        /** The format of the filter texture. @default BGRA */
+        public TextureFormat TextureFormat { 
+            get { return _textureFormat; }
+            set
+            {
+                if (value != _textureFormat)
+                {
+                    _textureFormat = value;
+                    if (_helper != null) _helper.TextureFormat = value;
+                    SetRequiresRedraw();
+                }
+            }
+        }
+
+        /** Indicates if the last filter pass is always drawn directly to the back buffer.
+         *
+         *  <p>Per default, the filter tries to automatically render in a smart way: objects that
+         *  are currently moving are rendered to the back buffer, objects that are static are
+         *  rendered into a texture first, which allows the filter to be drawn directly from the
+         *  render cache in the next frame (in case the object remains static).</p>
+         *
+         *  <p>However, this fails when filters are added to an object that does not support the
+         *  render cache, or to a container with such a child (e.g. a Sprite3D object or a masked
+         *  display object). In such a case, enable this property for maximum performance.</p>
+         *
+         *  @default false
+         */
+        public bool AlwaysDrawToBackBuffer {
+            get { return _alwaysDrawToBackBuffer; }
+            set { _alwaysDrawToBackBuffer = value; }
+
+        }
+
+        // internal methods
+
+        /** @private */
+        internal void SetTarget(DisplayObject target)
+        {
+            if (target != _target)
+            {
+                DisplayObject prevTarget = _target;
+                _target = target;
+
+                if (target == null)
+                {
+                    if (_helper != null) _helper.Purge();
+                    if (_effect != null) _effect.PurgeBuffers();
+                    if (_quad != null)   _quad.DisposeTexture();
+                }
+
+                if (prevTarget != null)
+                {
+                    prevTarget.Filter = null;
+                    prevTarget.EnterFrame -= OnEnterFrame;
+                }
+
+                if (target != null)
+                {
+                    if (EnterFrame != null)
+                    {
+                        target.EnterFrame += OnEnterFrame;
+                    }
+                    OnTargetAssigned(target);
+                }
+            }
+        }
+
 }
+
+internal class FilterQuad : Mesh
+    {
+        private static Matrix sMatrix = Matrix.Create();
+
+        public FilterQuad(TextureSmoothing smoothing) : base(new VertexData(4), new IndexData())
+        {
+            IndexData.AddQuad(0, 1, 2, 3);
+
+            TextureSmoothing = smoothing;
+            PixelSnapping = false;
+        }
+
+        override public void Dispose()
+        {
+            DisposeTexture();
+            base.Dispose();
+        }
+
+        public void DisposeTexture()
+        {
+            if (Texture != null)
+            {
+                Texture.Dispose();
+                Texture = null;
+            }
+        }
+
+        public void moveVertices(DisplayObject sourceSpace, DisplayObject targetSpace)
+        {
+            if (targetSpace.Is3D)
+                throw new Exception("cannot move vertices into 3D space");
+            else if (sourceSpace != targetSpace)
+            {
+                sMatrix = targetSpace.GetTransformationMatrix(sourceSpace).Invert(); // ss could be null!
+                VertexData.TransformVertices(sMatrix, 0, VertexData.NumVertices);
+            }
+        }
+
+        public void setBounds(Rectangle bounds)
+        {
+            VertexData vertexData = VertexData;
+
+            vertexData.SetPoint(0, bounds.X, bounds.Y);
+            vertexData.SetPoint(1, bounds.Right, bounds.Y);
+            vertexData.SetPoint(2, bounds.X, bounds.Bottom);
+            vertexData.SetPoint(3, bounds.Right, bounds.Bottom);
+        }
+
+        override public Texture Texture
+        {
+            set {
+                base.Texture = value;
+                if (value != null) value.SetupTextureCoordinates(VertexData);
+            }
+           
+        }
+}
+}
+
 

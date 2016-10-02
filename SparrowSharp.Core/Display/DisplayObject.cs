@@ -105,7 +105,7 @@ namespace Sparrow.Display
         internal BatchToken _pushToken = new BatchToken();
         internal BatchToken _popToken = new BatchToken();
         internal bool _hasVisibleArea;
-      //TODO  internal FragmentFilter _filter;
+        internal FragmentFilter _filter;
         internal DisplayObject _mask;
 
         private double _lastTouchTimestamp;
@@ -132,9 +132,9 @@ namespace Sparrow.Display
         /// </summary>
         virtual public void Dispose()
         {
-      //TODO      if (_filter != null) _filter.Dispose();
+            if (_filter != null) _filter.Dispose();
             if (_mask != null) _mask.Dispose();
-            //RemoveEventListeners();
+            //TODO RemoveEventListeners();
             Mask = null; // revert 'isMask' property, just to be sure.
         }
 
@@ -1014,19 +1014,17 @@ namespace Sparrow.Display
         *  @see starling.filters.FilterChain
         */
         public FragmentFilter Filter { 
-            get { throw new NotImplementedException(); return null;/*_filter;*/ }
+            get { return _filter; }
             set
             {
-                throw new NotImplementedException();
-                // TODO
-                /*if (value != _filter)
+                if (value != _filter)
                 {
                     if (_filter != null) _filter.SetTarget(null);
                     if (value != null) value.SetTarget(this);
 
                     _filter = value;
                     SetRequiresRedraw();
-                }*/
+                }
             }
         }
 

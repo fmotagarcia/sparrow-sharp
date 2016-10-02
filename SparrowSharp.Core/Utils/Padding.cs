@@ -8,7 +8,7 @@ namespace Sparrow.Utils
         private float _top;
         private float _bottom;
         public delegate void OnChanged();
-        public OnChanged OnChangedFunction;
+        public OnChanged OnChangedEvent;
 
         /** Creates a new instance with the given properties. */
         public Padding(float left = 0, float right = 0, float top = 0, float bottom = 0)
@@ -28,7 +28,7 @@ namespace Sparrow.Utils
 
             if (changed)
             {
-                OnChangedFunction?.Invoke();
+                OnChangedEvent?.Invoke();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Sparrow.Utils
                 if (_left != value)
                 {
                     _left = value;
-                    OnChangedFunction?.Invoke();
+                    OnChangedEvent?.Invoke();
                 }
 
             }
@@ -68,7 +68,7 @@ namespace Sparrow.Utils
                 if (_right != value)
                 {
                     _right = value;
-                    OnChangedFunction?.Invoke();
+                    OnChangedEvent?.Invoke();
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Sparrow.Utils
                 if (_top != value)
                 {
                     _top = value;
-                    OnChangedFunction?.Invoke();
+                    OnChangedEvent?.Invoke();
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace Sparrow.Utils
                 if (_bottom != value)
                 {
                     _bottom = value;
-                    OnChangedFunction?.Invoke();
+                    OnChangedEvent?.Invoke();
                 }
             }
         }

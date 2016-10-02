@@ -1,10 +1,9 @@
 ﻿
 using System;
-using OpenTK;
-using Sparrow;
-using Sparrow.Geom;
 using Sparrow.Textures;
 using Sparrow.Utils;
+using Sparrow.Rendering;
+using System.Text;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -13,23 +12,101 @@ using OpenTK.Graphics.ES30;
 
 namespace Sparrow.Filters
 {
-    /// <summary>
-    /// <para>The BlurFilter applies a gaussian blur to an object. The strength of the blur can be
-    /// set for x- and y-axis separately (always relative to the stage).</para> 
-    /// <para></para> 
-    ///	<para>A blur filter can also be set up as a drop shadow or glow filter. Use FilterFactory to
-    /// create such a filter.</para> 
-    /// <para></para> 
-    ///	<para>For each blur direction, the number of required passes is ceil(blur).</para> 
-    ///	<para>blur = 0.5: 1 pass</para> 
-    ///	<para>blur = 1.0: 1 pass</para> 
-    ///	<para>blur = 1.5: 2 passes</para> 
-    ///	<para>blur = 2.0: 2 passes</para> 
-    ///	<para>etc.</para> 
-    /// </summary>
+    /** The BlurFilter applies a Gaussian blur to an object. The strength of the blur can be
+     *  set for x- and y-axis separately. */
     public class BlurFilter : FragmentFilter
     {
-        /*private float _blurX;
+        private float _blurX;
+        private float _blurY;
+
+        /// <summary>
+        /// Initializes a blur filter with the specified blur and a resolution.
+        /// </summary>
+        public BlurFilter(float blurX = 1.0f, float blurY = 1.0f, float resolution = 1.0f)
+        {
+            _blurX = blurX;
+            _blurY = blurY;
+            Resolution = resolution;
+        }
+
+        override public Texture Process(Painter painter, IFilterHelper helper,
+                                        Texture input0 = null, Texture input1 = null,
+                                        Texture input2 = null, Texture input3 = null)
+        {
+            BlurEffect effect = Effect as BlurEffect;
+
+            if (_blurX == 0 && _blurY == 0)
+            {
+                effect.Strength = 0;
+                return base.Process(painter, helper, input0);
+            }
+
+            float blurX = Math.Abs(_blurX);
+            float blurY = Math.Abs(_blurY);
+            Texture outTexture = input0;
+            Texture inTexture;
+
+            effect.Direction = BlurEffect.BlurDirection.HORIZONTAL;
+
+            while (blurX > 0)
+            {
+                effect.Strength = (float)Math.Min(1.0, blurX);
+
+                blurX -= effect.Strength;
+                inTexture = outTexture;
+                outTexture = base.Process(painter, helper, inTexture);
+
+                if (inTexture != input0) helper.PutTexture(inTexture);
+            }
+
+            effect.Direction = BlurEffect.BlurDirection.VERTICAL;
+
+            while (blurY > 0)
+            {
+                effect.Strength = (float)Math.Min(1.0, blurY);
+
+                blurY -= effect.Strength;
+                inTexture = outTexture;
+                outTexture = base.Process(painter, helper, inTexture);
+
+                if (inTexture != input0) helper.PutTexture(inTexture);
+            }
+
+            return outTexture;
+        }
+
+        /** @private */
+        override protected FilterEffect CreateEffect()
+        {
+            return new BlurEffect();
+        }
+
+        /** @private */
+        override public float Resolution
+        {
+            set
+            {
+                base.Resolution = value;
+                UpdatePadding();
+            }
+        }
+
+        override public int NumPasses
+        {
+            get {
+                int blurVal = (int)Math.Ceiling(_blurX) + (int)Math.Ceiling(_blurY);
+                int ret = blurVal != 0 ? blurVal : 1;
+                return ret;
+            }
+        }
+
+        private void UpdatePadding()
+        {
+            float paddingX = (_blurX != 0f ? (float)Math.Ceiling(Math.Abs(_blurX)) + 3f : 1f) / Resolution;
+            float paddingY = (_blurY != 0f ? (float)Math.Ceiling(Math.Abs(_blurY)) + 3f : 1f) / Resolution;
+
+            Padding.SetTo(paddingX, paddingX, paddingY, paddingY);
+        }
 
         public float BlurX
         { 
@@ -37,140 +114,197 @@ namespace Sparrow.Filters
             set
             { 
                 _blurX = value;
-                UpdateMarginsAndPasses();
+                UpdatePadding();
             }
         }
 
-        private float _blurY;
-
+        
         public float BlurY
         {
             get { return _blurY; }
             set
             { 
                 _blurY = value;
-                UpdateMarginsAndPasses();
+                UpdatePadding();
             }
         }
 
-        private bool _enableColorUniform;
-        private readonly float[] _offsets = new float[4];
-        private readonly float[] _weights = new float[4];
-        private readonly float[] _color = new float[4];
-        private BlurProgram _program;
-        private BlurProgram _tintedProgram;
+    }
 
-        /// <summary>
-        /// Initializes a blur filter with the specified blur and a resolution.
-        /// </summary>
-        public BlurFilter(float blur = 1.0f, float resolution = 1.0f) : base(1, resolution)
+
+    internal class BlurEffect : FilterEffect
+    {
+
+        public enum BlurDirection
         {
-            _blurX = blur;
-            _blurY = blur;
-            UpdateMarginsAndPasses();
+            HORIZONTAL, VERTICAL
         }
 
-        /// <summary>
-        /// A uniform color will replace the RGB values of the input color, while the alpha value will be
-        /// multiplied with the given factor. Pass false as the first parameter to deactivate the uniform color.
-        /// </summary>
-        public void SetUniformColor(bool enable, uint color = 0x000000, float alpha = 1.0f)
+        private static readonly float MAX_SIGMA = 2.0f;
+
+        private float _strength;
+        private BlurDirection _direction;
+
+        private float[] _offsets = new float[] { 0, 0, 0, 0 };
+        private float[] _weights = new float[] { 0, 0, 0, 0 };
+
+        // helpers
+        private float[] sTmpWeights = new float[5];
+
+        /** Creates a new BlurEffect.
+         *
+         *  @param direction     horizontal or vertical
+         *  @param strength      range 0-1
+         */
+        public BlurEffect(BlurDirection direction = BlurDirection.HORIZONTAL, float strength = 1)
         {
-            _color[0] = ColorUtil.GetR(color) / 255.0f;
-            _color[1] = ColorUtil.GetG(color) / 255.0f;
-            _color[2] = ColorUtil.GetB(color) / 255.0f;
-            _color[3] = alpha;
-            _enableColorUniform = enable;
+            Strength  = strength;
+            Direction = direction;
         }
 
-        override protected void CreatePrograms()
+        override protected Program CreateProgram()
         {
-            if (_program == null)
+            if (_strength == 0) return base.CreateProgram();
+
+            StringBuilder source = new StringBuilder("");
+            // vertex shader
+            AddShaderInitCode(source);
+            // attributes
+            source.AppendLine("attribute vec4 aPosition;");
+            source.AppendLine("attribute lowp vec2 aTexCoords;");
+            // uniforms
+            source.AppendLine("uniform mat4 uMvpMatrix;");
+            source.AppendLine("uniform lowp vec4 uOffsets;");
+            // varying
+            source.AppendLine("varying lowp vec2 v0;");
+            source.AppendLine("varying lowp vec2 v1;");
+            source.AppendLine("varying lowp vec2 v2;");
+            source.AppendLine("varying lowp vec2 v3;");
+            source.AppendLine("varying lowp vec2 v4;");
+
+            // main
+            source.AppendLine("void main() {");
+            source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");     // 4x4 matrix transform to output space
+            source.AppendLine("  v0 = aTexCoords;");                          // pos:  0 |
+            source.AppendLine("  v1 = aTexCoords - uOffsets.zw;");            // pos: -2 |
+            source.AppendLine("  v2 = aTexCoords - uOffsets.xy;");            // pos: -1 | --> kernel positions
+            source.AppendLine("  v3 = aTexCoords + uOffsets.xy;");            // pos: +1 |     (only 1st two parts are relevant)
+            source.AppendLine("  v4 = aTexCoords + uOffsets.zw;");            // pos: +2 |
+            source.AppendLine("}");
+            string vertexShader = source.ToString();
+
+            source = new StringBuilder("");
+            //fragment shader
+            AddShaderInitCode(source);
+            // variables
+            source.AppendLine("varying lowp vec2 v0;");
+            source.AppendLine("varying lowp vec2 v1;");
+            source.AppendLine("varying lowp vec2 v2;");
+            source.AppendLine("varying lowp vec2 v3;");
+            source.AppendLine("varying lowp vec2 v4;");
+            
+            source.AppendLine("uniform sampler2D uTexture;");
+            source.AppendLine("uniform lowp vec4 uWeights;");
+
+            // main
+            source.AppendLine("void main() {");
+
+            source.AppendLine("  lowp vec4 ft0;");
+            source.AppendLine("  lowp vec4 ft1;");
+            source.AppendLine("  lowp vec4 ft2;");
+            source.AppendLine("  lowp vec4 ft3;");
+            source.AppendLine("  lowp vec4 ft4;");
+            source.AppendLine("  lowp vec4 ft5;");
+
+            source.AppendLine("  ft0 = texture2D(uTexture,v0);");  // read center pixel
+            source.AppendLine("  ft5 = ft0 * uWeights.xxxx;");     // multiply with center weight
+
+            source.AppendLine("  ft1 = texture2D(uTexture,v1);");  // read pixel -2
+            source.AppendLine("  ft1 = ft1 * uWeights.zzzz;");     // multiply with weight
+            source.AppendLine("  ft5 = ft5 + ft1;");               // add to output color
+
+            source.AppendLine("  ft2 = texture2D(uTexture,v2);");  // read pixel -1
+            source.AppendLine("  ft2 = ft2 * uWeights.yyyy;");     // multiply with weight
+            source.AppendLine("  ft5 = ft5 + ft2;");               // add to output color
+
+            source.AppendLine("  ft3 = texture2D(uTexture,v3);");  // read pixel +1
+            source.AppendLine("  ft3 = ft3 * uWeights.yyyy;");     // multiply with weight
+            source.AppendLine("  ft5 = ft5 + ft3;");               // add to output color
+
+            source.AppendLine("  ft4 = texture2D(uTexture,v4);");  // read pixel +2
+            source.AppendLine("  ft4 = ft4 * uWeights.zzzz;");     // multiply with weight
+
+            source.AppendLine("  gl_FragColor = ft5 + ft4;");      // add to output color
+
+            source.AppendLine("}");
+            string fragmentShader = source.ToString();
+
+            return new Program(vertexShader, fragmentShader);
+        }
+
+        override protected void BeforeDraw()
+        {
+            base.BeforeDraw();
+
+            if (_strength != 0)
             {
-                string programName = BlurProgram.GetProgramName(false);
-                _program = (BlurProgram)SparrowSharpApp.GetProgram(programName);
-                if (_program == null)
-                {
-                    _program = new BlurProgram(false);
-                    SparrowSharpApp.RegisterProgram(programName, _program);
-                }
-            }
+                UpdateParameters();
 
-            if (_tintedProgram == null)
-            {
-                string programName = BlurProgram.GetProgramName(true);
-                _tintedProgram = (BlurProgram)SparrowSharpApp.GetProgram(programName);
+                GL.UseProgram(Program.Name);
 
-                if (_tintedProgram == null)
-                {
-                    _tintedProgram = new BlurProgram(true);
-                    SparrowSharpApp.RegisterProgram(programName, _tintedProgram);
-                }
-            }
-
-            VertexPosID = _program.APosition;
-            TexCoordsID = _program.ATexCoords;
-        }
-
-        override protected void ActivateWithPass(int pass, Texture texture, Matrix mvpMatrix)
-        {
-            UpdateParamaters(pass, (int)texture.NativeWidth, (int)texture.NativeHeight);
-            bool isColorPass = _enableColorUniform && pass == NumPasses - 1;
-            BlurProgram program = isColorPass ? _tintedProgram : _program;
-
-            GL.UseProgram(program.Name);
-            Matrix4 mvp = mvpMatrix.ConvertToMatrix4();
-            GL.UniformMatrix4(program.UMvpMatrix, false, ref mvp);
-
-            GL.Uniform4(program.UOffsets, 1, _offsets);
-            GL.Uniform4(program.UWeights, 1, _weights);
-
-            if (isColorPass)
-            {
-                GL.Uniform4(program.UColor, 1, _color);
+                int uOffsets = Program.Attributes["uOffsets"];
+                GL.Uniform4(uOffsets, 1, _offsets);
+                int uWeights = Program.Attributes["uWeights"];
+                GL.Uniform4(uWeights, 1, _weights);
             }
         }
 
-        private void UpdateParamaters(int pass, int texWidth, int texHeight)
+        override protected uint ProgramVariantName
         {
-            const float MAX_SIGMA = 2.0f;
+            get
+            {
+                return base.ProgramVariantName | (_strength != 0f ? 1u << 4 : 0);
+            }
+        }
 
+        private void UpdateParameters()
+        {
             // algorithm described here:
             // http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/
             //
-            // Normally, we'd have to use 9 texture lookups in the fragment shader. But by making smart
-            // use of linear texture sampling, we can produce the same output with only 5 lookups.
-            bool horizontal = pass < _blurX;
+            // To run in constrained mode, we can only make 5 texture look-ups in the fragment
+            // shader. By making use of linear texture sampling, we can produce similar output
+            // to what would be 9 look-ups.
+
             float sigma;
             float pixelSize;
 
-            if (horizontal)
+            if (_direction == BlurDirection.HORIZONTAL)
             {
-                sigma = Math.Min(1.0f, _blurX - pass) * MAX_SIGMA;
-                pixelSize = 1.0f / texWidth;
+                sigma = _strength * MAX_SIGMA;
+                pixelSize = 1.0f / Texture.Root.Width;
             }
             else
             {
-                sigma = Math.Min(1.0f, _blurY - (pass - (float)Math.Ceiling(_blurX))) * MAX_SIGMA;
-                pixelSize = 1.0f / texHeight;
+                sigma = _strength * MAX_SIGMA;
+                pixelSize = 1.0f / Texture.Root.Height;
             }
 
-            float twoSigmaSq = 2.0f * sigma * sigma;
-            float multiplier = 1.0f / (float)Math.Sqrt(twoSigmaSq * Math.PI);
+            float twoSigmaSq = 2 * sigma * sigma;
+            float multiplier = 1.0f / (float)Math.Sqrt(twoSigmaSq* Math.PI);
 
-            // get weights on the exact pixels(sTmpWeights) and calculate sums(_weights)
-            float[] sTmpWeights = new float[6];
-
+            // get weights on the exact pixels (sTmpWeights) and calculate sums (_weights)
             for (int i = 0; i < 5; ++i)
+            {
                 sTmpWeights[i] = multiplier * (float)Math.Exp(-i * i / twoSigmaSq);
-
+            }
+            
             _weights[0] = sTmpWeights[0];
             _weights[1] = sTmpWeights[1] + sTmpWeights[2];
             _weights[2] = sTmpWeights[3] + sTmpWeights[4];
 
             // normalize weights so that sum equals "1.0"
-
-            float weightSum = _weights[0] + (2.0f * _weights[1]) + (2.0f * _weights[2]);
+            float weightSum = _weights[0] + 2* _weights[1] + 2* _weights[2];
             float invWeightSum = 1.0f / weightSum;
 
             _weights[0] *= invWeightSum;
@@ -178,13 +312,11 @@ namespace Sparrow.Filters
             _weights[2] *= invWeightSum;
 
             // calculate intermediate offsets
-
-            float offset1 = (pixelSize * sTmpWeights[1] + 2 * pixelSize * sTmpWeights[2]) / _weights[1];
-            float offset2 = (3 * pixelSize * sTmpWeights[3] + 4 * pixelSize * sTmpWeights[4]) / _weights[2];
+            float offset1 = (  pixelSize* sTmpWeights[1] + 2* pixelSize * sTmpWeights[2]) / _weights[1];
+            float offset2 = (3* pixelSize * sTmpWeights[3] + 4* pixelSize * sTmpWeights[4]) / _weights[2];
 
             // depending on pass, we move in x- or y-direction
-
-            if (horizontal)
+            if (_direction == BlurDirection.HORIZONTAL)
             {
                 _offsets[0] = offset1;
                 _offsets[1] = 0;
@@ -200,16 +332,17 @@ namespace Sparrow.Filters
             }
         }
 
-        private void UpdateMarginsAndPasses()
-        {
-            if (_blurX == 0 && _blurY == 0)
-            {
-                _blurX = 0.001f;
-            }
-            NumPasses = (int)Math.Ceiling(_blurX) + (int)Math.Ceiling(_blurY);
-            MarginX = 4.0f + (int)Math.Ceiling(_blurX);
-            MarginY = 4.0f + (int)Math.Ceiling(_blurY);
-        }*/
+        public BlurDirection Direction { 
+            get { return _direction; }
+            set { _direction = value; }
+        }
+
+        public float Strength {
+            get { return _strength; }
+            set { _strength = MathUtil.Clamp(value, 0, 1); }
+        }
+
     }
+
 }
 

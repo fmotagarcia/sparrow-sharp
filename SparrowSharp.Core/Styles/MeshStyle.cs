@@ -77,7 +77,6 @@ namespace Sparrow.Styles
     {
 
         /** Dispatched every frame on styles assigned to display objects connected to the stage. */
-        //[Event(name = "enterFrame", type = "starling.events.EnterFrameEvent")]
         public event DisplayObject.EnterFrameEventHandler EnterFrame;
 
         private Type _type;

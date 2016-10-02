@@ -44,7 +44,7 @@ namespace Sparrow.Display
         /// Changing Stage size does not affect the size of the rendered area. If its the same as the DrawableWidht/DrawableHeight,
         /// 1 unit in the Stage equals 1 pixel.
         /// </summary>
-        override public float Width { get; set; }
+        override public float Width { get; set; } // TODO rename to StageWidth
 
         /// <summary>
         /// The width of the stage's coordinate system.
@@ -108,6 +108,16 @@ namespace Sparrow.Display
             return target;
         }
 
+        /** Returns the stage bounds (i.e. not the bounds of its contents, but the rectangle
+          *  spawned up by 'stageWidth' and 'stageHeight') in another coordinate system. */
+        public Rectangle GetStageBounds(DisplayObject targetSpace)
+        {
+            Rectangle outR = Rectangle.Create(0, 0, Width, Height);
+
+            Matrix sMatrix = GetTransformationMatrix(targetSpace);
+
+            return outR.GetBounds(sMatrix);
+        }
 
         // camera positioning
 
