@@ -109,9 +109,7 @@
     <Compile Include="Utils\GLExtensions.cs" />
     <Compile Include="Filters\BlurFilter.cs" />
     <Compile Include="Filters\EmptyFilter.cs" />
-    <Compile Include="Filters\FilterFactory.cs" />
     <Compile Include="Filters\FragmentFilter.cs" />
-    <Compile Include="Filters\FragmentFilterMode.cs" />
     <Compile Include="Textures\TextureFormat.cs" />
     <Compile Include="Text\CharLocation.cs" />
     <Compile Include="Filters\ColorMatrix.cs" />

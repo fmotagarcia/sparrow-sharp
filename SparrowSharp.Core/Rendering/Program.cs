@@ -94,7 +94,7 @@ namespace Sparrow.Rendering
 #if __WINDOWS__
                 GetProgramParameterName logLen = GetProgramParameterName.InfoLogLength;
 #elif __ANDROID__
-            ProgramParameter logLen = ProgramParameter.InfoLogLength;
+                ProgramParameter logLen = ProgramParameter.InfoLogLength;
 #endif
                 GL.GetProgram(program, logLen, out logLength);
 

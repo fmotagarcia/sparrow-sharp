@@ -1,8 +1,7 @@
 ﻿
-using Sparrow.Core;
 using OpenTK;
-using Sparrow;
 using System.Text;
+using Sparrow.Rendering;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
 #elif __ANDROID__
@@ -11,44 +10,35 @@ using OpenTK.Graphics.ES30;
 
 namespace Sparrow.Filters
 {
-    /// <summary>
-    /// The ColorMatrixFilter class lets you apply a 4x5 matrix transformation on the RGBA color and 
-    /// alpha values of every pixel in the input image to produce a result with a new set of RGBA color and 
-    /// alpha values. It allows saturation changes, hue rotation, luminance to alpha, and various other 
-    /// effects.
-
-    /// The class contains several convenience methods for frequently used color adjustments. All those 
-    ///	methods change the current matrix, which means you can easily combine them in one filter:
-
-    ///	// create an inverted filter with 50% saturation and 180° hue rotation
-    ///	ColorMatrixFilter filter = new ColorMatrixFilter();
-    ///	filter.Invert();
-    /// filter.AdjustSaturation(-0.5);
-    /// filter.AdjustHue(1.0);
-
-    /// If you want to gradually animate one of the predefined color adjustments, either reset the matrix 
-    /// after each step, or use an identical adjustment value for each step; the changes will add up.
-    /// </summary>
+    /** The ColorMatrixFilter class lets you apply a 4x5 matrix transformation to the color
+     *  and alpha values of every pixel in the input image to produce a result with a new set
+     *  of color and alpha values. This allows saturation changes, hue rotation,
+     *  luminance to alpha, and various other effects.
+     *
+     *  <p>The class contains several convenience methods for frequently used color
+     *  adjustments. All those methods change the current matrix, which means you can easily
+     *  combine them in one filter:</p>
+     *
+     *  <listing>
+     *  // create an inverted filter with 50% saturation and 180° hue rotation
+     *  var filter:ColorMatrixFilter = new ColorMatrixFilter();
+     *  filter.Invert();
+     *  filter.AdjustSaturation(-0.5);
+     *  filter.AdjustHue(1.0);</listing>
+     *
+     *  <p>If you want to gradually animate one of the predefined color adjustments, either reset
+     *  the matrix after each step, or use an identical adjustment value for each step; the
+     *  changes will add up.</p>
+     */
     public class ColorMatrixFilter : FragmentFilter
-    {/*
-        /// <summary>
-        /// The color matrix object used to apply the filter.
-        /// </summary>
-        public ColorMatrix ColorMatrix;
-        private static readonly string ColorMatrixProgram = "ColorMatrixProgram";
-        private Program _shaderProgram;
-        private bool _colorMatrixDirty;
-        private Matrix4 _shaderMatrix;
-        // offset in range 0-1, changed order
-        private Vector4 _shaderOffset;
-        private int _uMvpMatrix;
-        private int _uColorMatrix;
-        private int _uColorOffset;
-
+    {
         public ColorMatrixFilter(ColorMatrix matrix = null)
         {
-            this.ColorMatrix = matrix ?? new ColorMatrix();
-            _colorMatrixDirty = true;
+            if (matrix != null)
+            {
+                ColorEffect.ColorMatrix = matrix;
+                ColorEffect.UpdateShaderMatrix();
+            }
         }
 
         /// <summary>
@@ -56,8 +46,9 @@ namespace Sparrow.Filters
         /// </summary>
         public void Invert()
         {
-            this.ColorMatrix.Invert();
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.Invert();
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -66,8 +57,9 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustSaturation(float saturation)
         {
-            this.ColorMatrix.AdjustSaturation(saturation);
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.AdjustSaturation(saturation);
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -76,8 +68,9 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustContrast(float contrast)
         {
-            this.ColorMatrix.AdjustContrast(contrast);
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.AdjustContrast(contrast);
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -86,8 +79,9 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustBrightness(float brightness)
         {
-            this.ColorMatrix.AdjustBrightness(brightness);
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.AdjustBrightness(brightness);
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -95,17 +89,9 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustHue(float hue)
         {
-            this.ColorMatrix.AdjustHue(hue);
-            _colorMatrixDirty = true;
-        }
-
-        /// <summary>
-        /// Changes the filter matrix back to the identity matrix.
-        /// </summary>
-        public void Reset()
-        {
-            this.ColorMatrix.Identity();
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.AdjustHue(hue);
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
         /// <summary>
@@ -113,50 +99,72 @@ namespace Sparrow.Filters
         /// </summary>
         public void ConcatColorMatrix(ColorMatrix colorMatrix)
         {
-            this.ColorMatrix.ConcatColorMatrix(colorMatrix);
-            _colorMatrixDirty = true;
+            ColorEffect.ColorMatrix.ConcatColorMatrix(colorMatrix);
+            ColorEffect.UpdateShaderMatrix();
+            SetRequiresRedraw();
         }
 
-        override protected void CreatePrograms()
+        override protected FilterEffect CreateEffect()
         {
-            if (_shaderProgram == null)
-            {
-                _shaderProgram = SparrowSharpApp.GetProgram(ColorMatrixProgram);
-
-                if (_shaderProgram == null)
-                {
-                    _shaderProgram = new Program(FragmentFilter.StandardVertexShader(), GetFragmentShader());
-
-                    SparrowSharpApp.RegisterProgram(ColorMatrixProgram, _shaderProgram);
-                }
-
-                VertexPosID = _shaderProgram.Attributes["aPosition"];
-                TexCoordsID = _shaderProgram.Attributes["aTexCoords"];
-
-                _uColorMatrix = _shaderProgram.Uniforms["uColorMatrix"];
-                _uColorOffset = _shaderProgram.Uniforms["uColorOffset"];
-                _uMvpMatrix = _shaderProgram.Uniforms["uMvpMatrix"];
-            }
+            return new ColorMatrixEffect();
         }
 
-        override protected void ActivateWithPass(int pass, Sparrow.Textures.Texture texture, Sparrow.Geom.Matrix mvpMatrix)
+        private ColorMatrixEffect ColorEffect { get { return Effect as ColorMatrixEffect; } }
+}
+
+
+    internal class ColorMatrixEffect : FilterEffect
+    {
+        /// <summary>
+        /// The color matrix object used to apply the filter.
+        /// </summary>
+        public ColorMatrix ColorMatrix;
+
+        private Matrix4 _shaderMatrix; // offset in range 0-1, changed order
+        // offset in range 0-1, changed order
+        private Vector4 _shaderOffset;
+
+        public ColorMatrixEffect()
         {
-            if (_colorMatrixDirty)
-            {
-                UpdateShaderMatrix();
-            }
-
-            GL.UseProgram(_shaderProgram.Name);
-
-            Matrix4 mvp = mvpMatrix.ConvertToMatrix4();
-            GL.UniformMatrix4(_uMvpMatrix, false, ref mvp);
-
-            GL.UniformMatrix4(_uColorMatrix, false, ref _shaderMatrix);
-
-            GL.Uniform4(_uColorOffset, ref _shaderOffset);
+            ColorMatrix = new ColorMatrix();
+            _shaderMatrix = new Matrix4();
         }
 
-        private void UpdateShaderMatrix()
+        override protected Program CreateProgram()
+        {
+            StringBuilder source = new StringBuilder("");
+            AddShaderInitCode(source);
+            source.AppendLine("uniform lowp mat4 uColorMatrix;");
+            source.AppendLine("uniform lowp vec4 uColorOffset;");
+            source.AppendLine("uniform lowp sampler2D uTexture;");
+            source.AppendLine("varying lowp vec2 vTexCoords;");
+            source.AppendLine("const lowp vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);");
+
+            source.AppendLine("void main() {");
+            source.AppendLine("  lowp vec4 texColor = texture2D(uTexture, vTexCoords);"); // read texture color
+            source.AppendLine("  texColor = max(texColor, MIN_COLOR                                                                                                                        );");                  // avoid division through zero in next step
+            source.AppendLine("  texColor.xyz /= texColor.www;");                         // restore original(non-PMA) RGB values
+            source.AppendLine("  texColor *= uColorMatrix;");                             // multiply color with 4x4 matrix
+            source.AppendLine("  texColor += uColorOffset;");                             // add offset
+            source.AppendLine("  texColor.xyz *= texColor.www;");                         // multiply with alpha again(PMA)
+            source.AppendLine("  gl_FragColor = texColor;");
+            source.AppendLine("}");
+            string fragmentShader = source.ToString();
+
+            return new Program(StdVertexShader, fragmentShader);
+        }
+
+        override protected void BeforeDraw()
+        {
+            base.BeforeDraw();
+
+            int uColorMatrix = Program.Uniforms["uColorMatrix"];
+            GL.UniformMatrix4(uColorMatrix, false, ref _shaderMatrix);
+            int uColorOffset = Program.Uniforms["uColorOffset"];
+            GL.Uniform4(uColorOffset, ref _shaderOffset);
+        }
+
+        public void UpdateShaderMatrix()
         {
             // the shader needs the matrix components in a different order,
             // and it needs the offsets in the range 0-1.
@@ -172,42 +180,8 @@ namespace Sparrow.Filters
             _shaderOffset = new Vector4(
                 matrix[4] / 255.0f, matrix[9] / 255.0f, matrix[14] / 255.0f, matrix[19] / 255.0f
             );
-
-            _colorMatrixDirty = false;
         }
 
-        private string GetFragmentShader()
-        {
-
-            StringBuilder source = new StringBuilder("");
-#if __WINDOWS__
-            source.AppendLine("#version 110");
-            source.AppendLine("#define highp  ");
-            source.AppendLine("#define mediump  ");
-            source.AppendLine("#define lowp  ");
-#else
-            source.AppendLine("#version 100");
-#endif
-            source.AppendLine("uniform lowp mat4 uColorMatrix;");
-            source.AppendLine("uniform lowp vec4 uColorOffset;");
-            source.AppendLine("uniform lowp sampler2D uTexture;");
-            source.AppendLine("varying lowp vec2 vTexCoords;");
-            source.AppendLine("const lowp vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);");
-
-            source.AppendLine("void main() {");
-
-            source.AppendLine("  lowp vec4 texColor = texture2D(uTexture, vTexCoords);"); // read texture color
-            source.AppendLine("  texColor = max(texColor, MIN_COLOR);");                  // avoid division through zero in next step
-            source.AppendLine("  texColor.xyz /= texColor.www;");                         // restore original(non-PMA) RGB values
-            source.AppendLine("  texColor *= uColorMatrix;");                             // multiply color with 4x4 matrix
-            source.AppendLine("  texColor += uColorOffset;");                             // add offset
-            source.AppendLine("  texColor.xyz *= texColor.www;");                         // multiply with alpha again(PMA)
-            source.AppendLine("  gl_FragColor = texColor;");
-
-            source.AppendLine("}");
-
-            return source.ToString();
-        }*/
     }
 }
 
