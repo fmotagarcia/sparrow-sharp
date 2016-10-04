@@ -126,10 +126,14 @@ namespace Sparrow.Filters
         public void Render(Painter painter)
         {
             if (_target == null)
+            {
                 throw new InvalidOperationException("Cannot render filter without target");
+            }
 
             if (_target.Is3D)
+            {
                 _cached = _cacheRequested = false;
+            }
 
             if (!_cached || _cacheRequested)
             {
@@ -399,7 +403,7 @@ namespace Sparrow.Filters
 
         /** Call this method when any of the filter's properties changes.
          *  This will make sure the filter is redrawn in the next frame. */
-        protected void SetRequiresRedraw()
+        virtual protected void SetRequiresRedraw()
         {
             OnChangedEvent?.Invoke();
             if (_target != null) _target.SetRequiresRedraw();
@@ -410,10 +414,7 @@ namespace Sparrow.Filters
          *  Subclasses must override this method if the number of passes is not <code>1</code>. */
         virtual public int NumPasses
         {
-            get
-            {
-                return 1;
-            }
+            get { return 1; }
         }
 
         /** Called when assigning a target display object.

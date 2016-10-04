@@ -132,5 +132,10 @@ namespace Sparrow.Geom
         {
             return (float)Math.Sqrt((X - p2.X) * (X - p2.X) + (Y - p2.Y) * (Y - p2.Y));
         }
+
+        override public string ToString()
+        {
+            return "(" + X + ", " + Y + ")";
+        }
     }
 }

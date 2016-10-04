@@ -290,14 +290,14 @@ namespace Sparrow.Styles
         public Point GetTexCoords(int vertexID)
         {
             if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID);
-            else return _vertexData.GetPoint(vertexID);
+            else return _vertexData.GetTexCoords(vertexID);
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
         public void SetTexCoords(int vertexID, float u, float v)
         {
             if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, u, v);
-            else _vertexData.SetPoint(vertexID, u, v);
+            else _vertexData.SetTexCoords(vertexID, u, v);
 
             SetRequiresRedraw();
         }

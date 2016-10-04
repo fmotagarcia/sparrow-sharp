@@ -26,9 +26,8 @@ namespace Sparrow.Samples
         public Benchmark()
         {
             SparrowSharp.EnableErrorChecking();
-            Texture star = SimpleTextureLoader.LoadLocalImage("bigstar.png");
-            Texture bird = SimpleTextureLoader.LoadLocalImage("benchmark_object.png");
-            textures = new Texture[] { star, bird };
+            textures = new Texture[] { SimpleTextureLoader.LoadLocalImage("bigstar.png"),
+                                       SimpleTextureLoader.LoadLocalImage("benchmark_object.png") };
             
             // the container will hold all test objects
             _container = new Sprite();
@@ -42,10 +41,20 @@ namespace Sparrow.Samples
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
-            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
             _started = true;
             _waitFrames = 3;
 
+            Image im = new Image(textures[0]);
+            //im.Scale9Grid = Rectangle.Create(68, 0, 55, 128);
+            //im.Width = 256;
+            ColorMatrixFilter fi = new ColorMatrixFilter();
+            fi.AdjustSaturation(-1);
+            im.Filter = fi;
+            im.X = 523;
+            im.Y = 323;
+            _container.AddChild(im);
+            
             AddTestObjects(16);
 
             TextField tf = new TextField(100, 100, "abcdefg");
@@ -54,15 +63,7 @@ namespace Sparrow.Samples
             AddChild(tf);
             tf.Y = 85;
             tf.X = 45;
-           
-            Image im = new Image(textures[0]);
-            //im.Scale9Grid = Rectangle.Create(68, 0, 55, 128);
-            //im.Width = 256;
-            im.Filter = new BlurFilter();
-            im.X = 523;
-            im.Y = 23;
-            _container.AddChild(im);
-            
+
             for (int i = 0; i < 10; i++)
             {
                 Quad q1 = new Quad(40, 36, 0xff0000);
@@ -83,7 +84,6 @@ namespace Sparrow.Samples
 
         private void AddTestObjects(int numObjects)
         {
-            
             int border = 40;
 
             Random r = new Random();
@@ -94,8 +94,8 @@ namespace Sparrow.Samples
                 egg.Width = textures[1].Width;
                 egg.Height = textures[1].Height;
                 egg.AlignPivot(HAlign.Center, VAlign.Center);
-                 if (i < 5)
-                 {
+                if (i < 5)
+                {
                      //ColorMatrix cm = new ColorMatrix();
                      //cm.AdjustSaturation(-0.8f);
                      //ColorMatrixFilter fi = new ColorMatrixFilter (cm);
@@ -103,7 +103,7 @@ namespace Sparrow.Samples
                      //BlurFilter fi = new BlurFilter(4, 1.1f);
                      //egg.Filter = fi;
                      //egg.Filter.Cache();
-                 }
+                }
                 //MovieClip egg = new MovieClip (textures, 3);
                 //SP.DefaultJuggler.Add (egg);
                 egg.X = r.Next(border, (int)Stage.Width - border);
@@ -159,7 +159,7 @@ namespace Sparrow.Samples
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
-                child.Rotation += 0.05f;    
+                child.Rotation += 0.01f;    
             } 
         }
     }

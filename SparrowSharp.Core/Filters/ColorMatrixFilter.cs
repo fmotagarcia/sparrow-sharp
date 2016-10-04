@@ -36,7 +36,7 @@ namespace Sparrow.Filters
         {
             if (matrix != null)
             {
-                ColorEffect.ColorMatrix = matrix;
+                ColorEffect.Matrix = matrix;
                 ColorEffect.UpdateShaderMatrix();
             }
         }
@@ -46,7 +46,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void Invert()
         {
-            ColorEffect.ColorMatrix.Invert();
+            ColorEffect.Matrix.Invert();
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -57,7 +57,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustSaturation(float saturation)
         {
-            ColorEffect.ColorMatrix.AdjustSaturation(saturation);
+            ColorEffect.Matrix.AdjustSaturation(saturation);
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -68,7 +68,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustContrast(float contrast)
         {
-            ColorEffect.ColorMatrix.AdjustContrast(contrast);
+            ColorEffect.Matrix.AdjustContrast(contrast);
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -79,7 +79,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustBrightness(float brightness)
         {
-            ColorEffect.ColorMatrix.AdjustBrightness(brightness);
+            ColorEffect.Matrix.AdjustBrightness(brightness);
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -89,7 +89,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void AdjustHue(float hue)
         {
-            ColorEffect.ColorMatrix.AdjustHue(hue);
+            ColorEffect.Matrix.AdjustHue(hue);
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -99,7 +99,7 @@ namespace Sparrow.Filters
         /// </summary>
         public void ConcatColorMatrix(ColorMatrix colorMatrix)
         {
-            ColorEffect.ColorMatrix.ConcatColorMatrix(colorMatrix);
+            ColorEffect.Matrix.ConcatColorMatrix(colorMatrix);
             ColorEffect.UpdateShaderMatrix();
             SetRequiresRedraw();
         }
@@ -107,6 +107,20 @@ namespace Sparrow.Filters
         override protected FilterEffect CreateEffect()
         {
             return new ColorMatrixEffect();
+        }
+
+        public ColorMatrix Matrix
+        {
+            set
+            {
+                ColorEffect.Matrix = value;
+                ColorEffect.UpdateShaderMatrix();
+                SetRequiresRedraw();
+            }
+            get
+            {
+                return ColorEffect.Matrix;
+            }
         }
 
         private ColorMatrixEffect ColorEffect { get { return Effect as ColorMatrixEffect; } }
@@ -118,7 +132,7 @@ namespace Sparrow.Filters
         /// <summary>
         /// The color matrix object used to apply the filter.
         /// </summary>
-        public ColorMatrix ColorMatrix;
+        public ColorMatrix Matrix;
 
         private Matrix4 _shaderMatrix; // offset in range 0-1, changed order
         // offset in range 0-1, changed order
@@ -126,10 +140,10 @@ namespace Sparrow.Filters
 
         public ColorMatrixEffect()
         {
-            ColorMatrix = new ColorMatrix();
+            Matrix = new ColorMatrix();
             _shaderMatrix = new Matrix4();
         }
-
+        /*
         override protected Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
@@ -142,7 +156,7 @@ namespace Sparrow.Filters
 
             source.AppendLine("void main() {");
             source.AppendLine("  lowp vec4 texColor = texture2D(uTexture, vTexCoords);"); // read texture color
-            source.AppendLine("  texColor = max(texColor, MIN_COLOR                                                                                                                        );");                  // avoid division through zero in next step
+            source.AppendLine("  texColor = max(texColor, MIN_COLOR);");                  // avoid division through zero in next step
             source.AppendLine("  texColor.xyz /= texColor.www;");                         // restore original(non-PMA) RGB values
             source.AppendLine("  texColor *= uColorMatrix;");                             // multiply color with 4x4 matrix
             source.AppendLine("  texColor += uColorOffset;");                             // add offset
@@ -163,12 +177,16 @@ namespace Sparrow.Filters
             int uColorOffset = Program.Uniforms["uColorOffset"];
             GL.Uniform4(uColorOffset, ref _shaderOffset);
         }
-
+        */
+        /// <summary>
+        /// Updates the actual shader matrix.
+        /// Always call this after you are finished manipulating the color matrix
+        /// </summary>
         public void UpdateShaderMatrix()
         {
             // the shader needs the matrix components in a different order,
             // and it needs the offsets in the range 0-1.
-            float[] matrix = ColorMatrix.Values;
+            float[] matrix = Matrix.Values;
 
             _shaderMatrix = new Matrix4(
                 matrix[0], matrix[1], matrix[2], matrix[3],

@@ -368,8 +368,9 @@ namespace Sparrow.Rendering
         public void FinishFrame()
         {
             if (_frameID % 99 == 0) // odd number -> alternating processors
+            {
                 _batchProcessor.Trim();
-
+            }
             _batchProcessor.FinishBatch();
             SwapBatchProcessors();
             _batchProcessor.Clear();
@@ -554,14 +555,15 @@ namespace Sparrow.Rendering
                         }
                         framebufferCache.Add(target, framebuffer);
                     }
-                    
-                    GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+                    else
+                    {
+                        GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+                    }
 
                     GL.Viewport(0, 0, (int)_state.RenderTarget.NativeWidth, (int)_state.RenderTarget.NativeHeight);
                 }
                 else
-                { 
-                    //_context.setRenderToBackBuffer();
+                {
                     // TODO: double check these on a device, the ifdef seems to be unneeded
 #if __IOS__
                     GL.BindFramebuffer(FramebufferTarget.Framebuffer, 1);
