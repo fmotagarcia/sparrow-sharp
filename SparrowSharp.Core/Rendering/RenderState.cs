@@ -230,7 +230,7 @@ namespace Sparrow.Rendering
         public void SetRenderTarget(Texture target, bool enableDepthAndStencil = true,
                                     int antiAlias = 0)
         {
-            int currentTarget = _renderTarget != null? _renderTarget.Base : 0;
+            int currentTarget = _renderTarget != null ? _renderTarget.Base : 0;
             int newTarget = target != null ? target.Base : 0;
             uint depthStencil = enableDepthAndStencil ? 1u : 0;
             uint newOptions = depthStencil | (uint)antiAlias << 4;

@@ -37,5 +37,10 @@ namespace Sparrow.Utils
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return "x=" + Position.X + " y=" + Position.Y + " texX=" + TexCoords.X + " texY=" + TexCoords.Y;
+        }
     }
 }

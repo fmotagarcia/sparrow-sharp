@@ -511,9 +511,7 @@ namespace Sparrow.Rendering
             float green = ColorUtil.GetG(rgb) / 255.0f;
             float blue = ColorUtil.GetB(rgb) / 255.0f;
             GL.ClearColor(red, green, blue, alpha);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-            GL.Clear(ClearBufferMask.StencilBufferBit);
-            GL.Clear(ClearBufferMask.DepthBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.DepthBufferBit);
     }
 
         /** Resets the render target to the back buffer */
@@ -559,7 +557,6 @@ namespace Sparrow.Rendering
                     {
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
                     }
-
                     GL.Viewport(0, 0, (int)_state.RenderTarget.NativeWidth, (int)_state.RenderTarget.NativeHeight);
                 }
                 else
@@ -586,7 +583,7 @@ namespace Sparrow.Rendering
             }
         }
 
-        private void ApplyClipRect() // used by rectangular masks
+        private void ApplyClipRect() // used by rectangular masks & render textures
         {
             Rectangle clipRect = _state.ClipRect;
 
@@ -618,7 +615,7 @@ namespace Sparrow.Rendering
                 sClipRect.Right  = (sPoint3D[0]* 0.5f + 0.5f) * width;
                 sClipRect.Bottom = (0.5f - sPoint3D[1] * 0.5f) * height;
                 // OpenGL positions the scissor rectangle from the bottom of the screen :(
-                sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
+                //sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
 
                 sBufferRect.SetTo(0, 0, width, height);
                 sScissorRect = sClipRect.Intersection(sBufferRect);
@@ -627,6 +624,7 @@ namespace Sparrow.Rendering
                 if (sScissorRect.Width < 1f || sScissorRect.Height < 1f)
                 {
                     sScissorRect.SetTo(0, 0, 1, 1);
+                    Debug.Write("WARNING: Clip rectangle has zero size, setting it to 1x1");
                 }
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);

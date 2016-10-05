@@ -248,7 +248,6 @@ namespace Sparrow.Textures
          *
          *  @param vertexData  the vertex data to which the texture coordinates will be written.
          *  @param vertexID    the start position within the VertexData instance.
-         *  @param attrName    the attribute name referencing the vertex positions.
          */
         public void SetupTextureCoordinates(VertexData vertexData, int vertexID = 0)
         {
