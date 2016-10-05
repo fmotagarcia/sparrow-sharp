@@ -143,7 +143,7 @@ namespace Sparrow.Filters
             Matrix = new ColorMatrix();
             _shaderMatrix = new Matrix4();
         }
-        /*
+        
         override protected Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
@@ -177,7 +177,7 @@ namespace Sparrow.Filters
             int uColorOffset = Program.Uniforms["uColorOffset"];
             GL.Uniform4(uColorOffset, ref _shaderOffset);
         }
-        */
+        
         /// <summary>
         /// Updates the actual shader matrix.
         /// Always call this after you are finished manipulating the color matrix

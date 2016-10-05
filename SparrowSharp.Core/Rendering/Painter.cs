@@ -595,12 +595,12 @@ namespace Sparrow.Rendering
 
                 if (renderTarget != null)
                 {
-                    width  = renderTarget.Root.NativeWidth;
+                    width = renderTarget.Root.NativeWidth;
                     height = renderTarget.Root.NativeHeight;
                 }
                 else
                 {
-                    width  = _backBufferWidth;
+                    width = _backBufferWidth;
                     height = _backBufferHeight;
                 }
 
@@ -612,11 +612,15 @@ namespace Sparrow.Rendering
 
                 sPoint3D = projMatrix.TransformCoords3D(clipRect.Right, clipRect.Bottom, 0.0f);
                 MathUtil.ProjectVector3D(ref sPoint3D); // eliminate w-coordinate
-                sClipRect.Right  = (sPoint3D[0]* 0.5f + 0.5f) * width;
+                sClipRect.Right = (sPoint3D[0] * 0.5f + 0.5f) * width;
                 sClipRect.Bottom = (0.5f - sPoint3D[1] * 0.5f) * height;
-                // OpenGL positions the scissor rectangle from the bottom of the screen :(
-                //sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
 
+                if (renderTarget == null)
+                { 
+                    // OpenGL positions the scissor rectangle from the bottom of the screen :(
+                    // flip it, if we're rendering to the backbuffer
+                    sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
+                }
                 sBufferRect.SetTo(0, 0, width, height);
                 sScissorRect = sClipRect.Intersection(sBufferRect);
 

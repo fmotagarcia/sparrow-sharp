@@ -130,6 +130,11 @@ namespace Sparrow.Textures
             if (matrix != null) state.TransformModelviewMatrix(matrix);
             else state.TransformModelviewMatrix(obj.TransformationMatrix);
 
+            // OpenGL calculates y coordinates from the bottom, invert them here
+            state.ModelviewMatrix.Scale(1, -1);
+            state.ModelviewMatrix.Translate(0, Height);
+            
+
             if (mask != null) painter.DrawMask(mask);
 
             if (filter != null) filter.Render(painter);
