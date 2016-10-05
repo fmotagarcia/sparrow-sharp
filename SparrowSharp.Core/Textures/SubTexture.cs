@@ -43,6 +43,11 @@ namespace Sparrow.Textures
             SetTo(parent, region, ownsParent, frame, rotated, scaleModifier);
         }
 
+        protected SubTexture()
+        {
+
+        }
+
         /** @private
          *
          *  <p>Textures are supposed to be immutable, and Starling uses this assumption for

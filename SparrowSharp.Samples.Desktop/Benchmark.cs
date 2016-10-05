@@ -30,25 +30,25 @@ namespace Sparrow.Samples
                                        SimpleTextureLoader.LoadLocalImage("benchmark_object.png") };
             
             // the container will hold all test objects
-            _container = new Sprite();
-            AddChild(_container);
+           // _container = new Sprite();
+          //  AddChild(_container);
 
-            EnterFrame += EnterFrameHandler;
+          //  EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
-            //SparrowSharpApp.SkipUnchangedFrames = true;
+            //SparrowSharp.SkipUnchangedFrames = true;
             SparrowSharp.Stage.Color = 0x432323;
         }
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
-            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+           // SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
             _started = true;
             _waitFrames = 3;
 
-            Image im = new Image(textures[0]);
+            //Image im = new Image(textures[0]);
             //im.Scale9Grid = Rectangle.Create(68, 0, 55, 128);
             //im.Width = 256;
-            ColorMatrixFilter fi = new ColorMatrixFilter();
+            /*ColorMatrixFilter fi = new ColorMatrixFilter();
             fi.AdjustSaturation(-1);
             im.Filter = fi;
             im.X = 523;
@@ -56,7 +56,17 @@ namespace Sparrow.Samples
             _container.AddChild(im);
             
             AddTestObjects(16);
+            */
+            RenderTexture renderTexture = new RenderTexture(300, 200);
+            //renderTexture.Clear(0x121298, 0.8f);
+           // renderTexture.Draw(new Quad(452, 645, 0xFF00FF));
+            renderTexture.Draw(new Image(textures[1]));
+            AddChild(new Image(renderTexture));
 
+            Quad qu = new Image(textures[1]);
+            qu.Y = 276;
+            AddChild(qu);
+            /*
             TextField tf = new TextField(100, 100, "abcdefg");
             tf.Format.Size = 32;
             tf.Border = true;
@@ -79,7 +89,7 @@ namespace Sparrow.Samples
             MovieClip mc = new MovieClip(li, 3);
             AddChild(mc);
             mc.X = mc.Y = 444;
-            SparrowSharp.DefaultJuggler.Add(mc);
+            SparrowSharp.DefaultJuggler.Add(mc);*/
         }
 
         private void AddTestObjects(int numObjects)

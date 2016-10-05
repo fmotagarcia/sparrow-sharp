@@ -115,7 +115,6 @@ namespace Sparrow.Rendering
                 GL.VertexAttribPointer(aTexCoords, 2, VertexAttribPointerType.Float, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
 
                 GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, _texture.Base);
                 
                 RenderUtil.SetSamplerStateAt(_texture.Base, _texture.NumMipMaps > 0, 
                                 _textureSmoothing, _textureRepeat);
