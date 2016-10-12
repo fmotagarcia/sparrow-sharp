@@ -62,6 +62,8 @@ namespace Sparrow.Textures
         {
             if (_base != 0)
             {
+                // is this OK?
+                SparrowSharp.Painter.DestroyFramebufferForTexture(this);
                 GL.DeleteTexture(_base);
             }
         }

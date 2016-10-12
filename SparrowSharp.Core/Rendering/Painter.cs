@@ -546,7 +546,6 @@ namespace Sparrow.Rendering
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
                         GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
                                                 TextureTarget.Texture2D, target, 0);
-
                         if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
                         {
                             Debug.WriteLine("Failed to create framebuffer for render texture");
@@ -555,6 +554,10 @@ namespace Sparrow.Rendering
                     }
                     else
                     {
+                        if (framebuffer == 0)
+                        {
+                            throw new InvalidOperationException("Attempted to bind framebuffer ID 0");
+                        }
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
                     }
                     GL.Viewport(0, 0, (int)_state.RenderTarget.NativeWidth, (int)_state.RenderTarget.NativeHeight);
@@ -573,7 +576,7 @@ namespace Sparrow.Rendering
             }
         }
 
-        private void DestroyFramebufferForTexture(Texture texture) // TODO call this
+        public void DestroyFramebufferForTexture(Texture texture) // TODO call this
         {
             uint framebuffer;
             if (framebufferCache.TryGetValue(texture.Base, out framebuffer))

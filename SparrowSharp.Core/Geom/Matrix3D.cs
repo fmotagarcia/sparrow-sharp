@@ -88,6 +88,16 @@ namespace Sparrow.Geom
             rawData.M44 += rawData.M14 * x + rawData.M24 * y + rawData.M34 * z;
         }
 
+        /// <summary>
+        /// Flips the matrix by the Y axis
+        /// </summary>
+        public void Flip(float height)
+        {
+            rawData.M21 = -rawData.M21;
+            rawData.M22 = -rawData.M22;
+            rawData.M42 = -rawData.M42;// + height*2;
+        }
+
         public float M11
         {
             set { rawData.M11 = value; }

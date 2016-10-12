@@ -35,9 +35,13 @@ namespace Sparrow.Core
 
         static void PCCallbackHandler(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
         {
+            string msg = Marshal.PtrToStringAnsi(message);
             if (severity == DebugSeverity.DebugSeverityHigh || severity == DebugSeverity.DebugSeverityMedium)
             {
-                string msg = Marshal.PtrToStringAnsi(message);
+                Console.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
+            }
+            else if (severity == DebugSeverity.DebugSeverityLow)
+            {
                 Console.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
             }
         }

@@ -282,6 +282,11 @@ namespace Sparrow.Geom
             Height += top + bottom;
         }
 
+        public override string ToString()
+        {
+            return "[x=" + X + " y=" + Y + " width=" + Width + " height=" + Height + "]";
+        }
+
         // static functions 
 
         /** Compares all properties of the given rectangle, returning true only if

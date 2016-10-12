@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using OpenTK;
-using Sparrow;
 using Sparrow.Core;
 using Sparrow.Display;
 using Sparrow.Geom;
@@ -153,7 +149,7 @@ namespace Sparrow.Filters
             if (_quad  == null) _quad  = new FilterQuad(_textureSmoothing);
             else { _helper.PutTexture(_quad.Texture); _quad.Texture = null; }
 
-            Rectangle bounds = Rectangle.Create();
+            Rectangle bounds = null;
             bool drawLastPassToBackBuffer = false;
             float origResolution = _resolution;
             DisplayObject renderSpace = _target.Stage != null ? _target.Stage : _target.Parent;
@@ -211,14 +207,14 @@ namespace Sparrow.Filters
             _helper.Target = _target;
             _helper.Start(NumPasses, drawLastPassToBackBuffer);
 
-            _quad.setBounds(bounds);
+            _quad.SetBounds(bounds);
             _resolution = 1.0f; // applied via '_helper.textureScale' already;
                                 // only 'child'-filters use resolution directly (in 'process')
 
             
             Texture input = _helper.GetTexture();
             uint frameID = painter.FrameID;
-            Texture output;
+            Texture output = null;
 
             painter.FrameID = 0;
             painter.PushState(_token);
@@ -228,8 +224,12 @@ namespace Sparrow.Filters
                 input.Root.Width, input.Root.Height,
                 stage.Width, stage.Height, stage.CameraPosition);
 
-            _target.Render(painter); // -> draw target object into 'input'
+            // OpenGL renders into textures with Y coordinates flipped :(
+            painter.State.ModelviewMatrix.Scale(1, -1);
+            painter.State.ModelviewMatrix.Translate(0, input.Root.Height + 2*bounds.Y);
 
+            _target.Render(painter); // -> draw target object into 'input'
+            
             painter.FinishMeshBatch();
             painter.State.SetModelviewMatricesToIdentity();
             painter.State.ClipRect = null;
@@ -245,10 +245,10 @@ namespace Sparrow.Filters
                 painter.PushState();
 
                 if (_target.Is3D) painter.State.SetModelviewMatricesToIdentity(); // -> stage coords
-                else              _quad.moveVertices(renderSpace, _target);       // -> local coords
+                else              _quad.MoveVertices(renderSpace, _target);       // -> local coords
 
                 _quad.Texture = output;
-                _quad.Render(painter);
+                _quad.Render(painter); // renders to the screen
 
                 painter.FinishMeshBatch();
                 painter.PopState();
@@ -292,6 +292,8 @@ namespace Sparrow.Filters
                 projectionMatrix = MatrixUtil.CreatePerspectiveProjectionMatrix(0, 0,
                     output.Root.Width / _resolution, output.Root.Height / _resolution,
                     0, 0, null);
+                // OpenGL renders into textures with Y coordinates flipped :(
+                projectionMatrix.Flip(output.Height);
             }
             else // render to back buffer
             {
@@ -552,6 +554,7 @@ internal class FilterQuad : Mesh
         public FilterQuad(TextureSmoothing smoothing) : base(new VertexData(4), new IndexData())
         {
             IndexData.AddQuad(0, 1, 2, 3);
+            VertexData.Colorize(0xFFFFFF, 1.0f);
 
             TextureSmoothing = smoothing;
             PixelSnapping = false;
@@ -572,7 +575,7 @@ internal class FilterQuad : Mesh
             }
         }
 
-        public void moveVertices(DisplayObject sourceSpace, DisplayObject targetSpace)
+        public void MoveVertices(DisplayObject sourceSpace, DisplayObject targetSpace)
         {
             if (targetSpace.Is3D)
                 throw new Exception("cannot move vertices into 3D space");
@@ -583,7 +586,7 @@ internal class FilterQuad : Mesh
             }
         }
 
-        public void setBounds(Rectangle bounds)
+        public void SetBounds(Rectangle bounds)
         {
             VertexData vertexData = VertexData;
 
