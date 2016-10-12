@@ -108,7 +108,6 @@
     <Compile Include="Pool\PooledObject.cs" />
     <Compile Include="Utils\GLExtensions.cs" />
     <Compile Include="Filters\BlurFilter.cs" />
-    <Compile Include="Filters\EmptyFilter.cs" />
     <Compile Include="Filters\FragmentFilter.cs" />
     <Compile Include="Textures\TextureFormat.cs" />
     <Compile Include="Text\CharLocation.cs" />

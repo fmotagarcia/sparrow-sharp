@@ -544,8 +544,13 @@ namespace Sparrow.Rendering
                     {
                         GL.GenFramebuffers(1, out framebuffer);
                         GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
+#if __WINDOWS__
                         GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
                                                 TextureTarget.Texture2D, target, 0);
+#elif __ANDROID__
+                        GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0,
+                                                TextureTarget.Texture2D, target, 0);
+#endif
                         if (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
                         {
                             Debug.WriteLine("Failed to create framebuffer for render texture");

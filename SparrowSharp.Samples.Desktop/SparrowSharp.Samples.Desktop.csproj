@@ -94,4 +94,7 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bigstarCROP.png" />
+  </ItemGroup>
 </Project>
