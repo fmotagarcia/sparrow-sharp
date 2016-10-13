@@ -124,7 +124,9 @@ namespace Sparrow.Text
         public void Dispose()
         {
             if (_texture != null)
+            {
                 _texture.Dispose();
+            }
         }
 
         private void ParseFontXml(XmlDocument xml)

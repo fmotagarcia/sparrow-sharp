@@ -6,6 +6,11 @@ using Sparrow.Utils;
 using Sparrow.Rendering;
 using Sparrow.Geom;
 using Sparrow.Animation;
+#if __WINDOWS__
+using OpenTK.Graphics.OpenGL4;
+#elif __ANDROID__
+using OpenTK.Graphics.ES30;
+#endif
 
 namespace Sparrow.Core
 {
@@ -53,10 +58,21 @@ namespace Sparrow.Core
         private static uint _width;
         private static uint _height;
 
-        private static int frameNum = 0;
-
         public static void Start(uint width, uint height, Type rootType)
         {
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.Dither);
+
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Always);
+
+            FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+            if (status != FramebufferErrorCode.FramebufferComplete)
+            {
+                Console.WriteLine("Framebuffer error: " + status);
+            }
+
             _width = width;
             _height = height;
             _viewPort = Rectangle.Create(0, 0, _width, _height);
@@ -82,7 +98,7 @@ namespace Sparrow.Core
 
             Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
-            frameNum = 0;
+            _frameID = 1; // starts with 1, so things on the first frame are cached
         }
 
         public static bool Step(double time)
@@ -92,9 +108,6 @@ namespace Sparrow.Core
 
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
-            frameNum++;
-            // first 2 frames must be redrawn for the cache to work properly
-            if (frameNum < 3) SetRequiresRedraw();
             bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames;
             Render(doRedraw);
             return doRedraw;
@@ -119,7 +132,7 @@ namespace Sparrow.Core
                     _clippedViewPort.Height / scaleY,
                     Stage.Width, Stage.Height, Stage.CameraPosition);
                 
-                _painter.Clear(Stage.Color, 1.0f);
+                _painter.Clear(Stage.Color, 0.0f);
 
                 Stage.Render(_painter);
                 _painter.FinishFrame();
@@ -208,9 +221,9 @@ namespace Sparrow.Core
          *  as this has a negative impact on performance. @default false */
         public static void EnableErrorChecking()
         {
-                _enableErrorChecking = true;
+            _enableErrorChecking = true;
 #if DEBUG
-                OpenGLDebugCallback.Init();
+            OpenGLDebugCallback.Init();
 #endif
         }
 

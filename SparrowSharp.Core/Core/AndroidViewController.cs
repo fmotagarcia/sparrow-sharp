@@ -75,10 +75,6 @@ namespace Sparrow.Core
             {
                 throw new NotSupportedException("Could not create OpenGLES 3.0 frame buffer");
             }
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.Dither);
-            GL.Enable(EnableCap.Blend);
 
             MakeCurrent();
         }
@@ -91,6 +87,7 @@ namespace Sparrow.Core
 
             if (SparrowSharp.Root == null)
             {
+                SparrowSharp.NativeWindow = this;
                 SparrowSharp.Start((uint)Size.Width, (uint)Size.Height, _rootClass);
             }
             // Run the render loop
@@ -103,7 +100,11 @@ namespace Sparrow.Core
 
             SparrowSharp.Step(e.Time);
 
-            SwapBuffers();
+            bool needsSwap = SparrowSharp.Step(e.Time);
+            if (needsSwap)
+            {
+                SwapBuffers();
+            }
         }
 
         protected override void OnResize(EventArgs e)

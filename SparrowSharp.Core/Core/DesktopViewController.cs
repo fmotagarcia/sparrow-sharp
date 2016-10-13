@@ -155,18 +155,6 @@ namespace Sparrow.Core
         private void HandleLoad(object sender, EventArgs e)
         {
             // setup settings, load textures, sounds
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.Dither);
-            GL.Enable(EnableCap.Blend);
-
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Always);
-
-            FramebufferErrorCode status = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-            if (status != FramebufferErrorCode.FramebufferComplete)
-            {
-                Console.WriteLine("Framebuffer error: " + status);
-            }
             SparrowSharp.NativeWindow = this;
             SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
         }
