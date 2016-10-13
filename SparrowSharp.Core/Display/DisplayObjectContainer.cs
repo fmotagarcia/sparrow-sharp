@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Rendering;
 using Sparrow.Filters;
@@ -282,25 +281,23 @@ namespace Sparrow.Display
         {
             int numChildren = _children.Count;
             uint frameID = painter.FrameID;
+            bool cacheEnabled = frameID == 0 ? false : true;
             bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameID;
 
             for (int i = 0; i < numChildren; ++i)
             {
                 DisplayObject child = _children[i];
-                FragmentFilter filter = child._filter;
-                DisplayObject mask = child._mask;
 
                 if (child._hasVisibleArea)
                 {
                     if (selfOrParentChanged)
                     {
                         child._lastParentOrSelfChangeFrameID = frameID;
-                        if (mask != null) mask._lastParentOrSelfChangeFrameID = frameID;
                     }
 
                     if (child._lastParentOrSelfChangeFrameID != frameID &&
                         child._lastChildChangeFrameID != frameID &&
-                        child._tokenFrameID == frameID - 1)
+                        child._tokenFrameID == frameID - 1 && cacheEnabled)
                     {
                         painter.PushState(sCacheToken);
                         painter.DrawFromCache(child._pushToken, child._popToken);
@@ -310,7 +307,12 @@ namespace Sparrow.Display
                     }
                     else
                     {
-                        painter.PushState(child._pushToken);
+                        BatchToken pushToken = cacheEnabled ? child._pushToken : null;
+                        BatchToken popToken = cacheEnabled ? child._popToken : null;
+                        FragmentFilter filter = child._filter;
+                        DisplayObject mask = child._mask;
+                        
+                        painter.PushState(pushToken);
                         painter.SetStateTo(child.TransformationMatrix, child.Alpha, child.BlendMode);
 
                         if (mask != null) painter.DrawMask(mask, child);
@@ -320,10 +322,13 @@ namespace Sparrow.Display
 
                         if (mask != null) painter.EraseMask(mask, child);
 
-                        painter.PopState(child._popToken);
+                        painter.PopState(popToken);
                     }
 
-                    child._tokenFrameID = frameID;
+                    if (cacheEnabled)
+                    {
+                        child._tokenFrameID = frameID;
+                    }
                 }
             }
         }

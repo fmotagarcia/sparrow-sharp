@@ -53,6 +53,8 @@ namespace Sparrow.Core
         private static uint _width;
         private static uint _height;
 
+        private static int frameNum = 0;
+
         public static void Start(uint width, uint height, Type rootType)
         {
             _width = width;
@@ -80,6 +82,7 @@ namespace Sparrow.Core
 
             Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
+            frameNum = 0;
         }
 
         public static bool Step(double time)
@@ -89,6 +92,9 @@ namespace Sparrow.Core
 
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
+            frameNum++;
+            // first 2 frames must be redrawn for the cache to work properly
+            if (frameNum < 3) SetRequiresRedraw();
             bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames;
             Render(doRedraw);
             return doRedraw;

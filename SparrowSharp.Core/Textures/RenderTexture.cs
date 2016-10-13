@@ -112,14 +112,11 @@ namespace Sparrow.Textures
         {
             Painter painter = SparrowSharp.Painter;
             RenderState state = painter.State;
+            bool wasCacheEnabled = painter.CacheEnabled;
             FragmentFilter filter = obj.Filter;
             DisplayObject mask = obj.Mask;
 
-            // The object might have been rendered already (to the back buffer or another
-            // render texture), but not necessarily using the same render state / mvp matrix.
-            // Thus, we need to force a redraw.
-            obj.SetRequiresRedraw();
-
+            painter.CacheEnabled = false;
             painter.PushState();
 
             state.Alpha = obj.Alpha * alpha;
@@ -143,11 +140,11 @@ namespace Sparrow.Textures
             if (mask != null) painter.EraseMask(mask);
 
             painter.PopState();
+            painter.CacheEnabled = wasCacheEnabled;
         }
 
         private void RenderBundled(Action<DisplayObject, Matrix, float> renderBlock, DisplayObject obj = null,
-                                          Matrix matrix = null, float alpha = 1.0f,
-                                          int antiAliasing = 0)
+                                   Matrix matrix = null, float alpha = 1.0f, int antiAliasing = 0)
         {
             Painter painter = SparrowSharp.Painter;
             RenderState state = painter.State;

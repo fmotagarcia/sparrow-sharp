@@ -5,7 +5,6 @@ using Sparrow.Utils;
 using System;
 using System.Collections.Generic;
 using Sparrow.Textures;
-using Sparrow.Text;
 using System.Diagnostics;
 #if __WINDOWS__
 using OpenTK.Graphics.OpenGL4;
@@ -59,9 +58,12 @@ namespace Sparrow.Rendering
         private float _pixelSize;
         private Dictionary<int, int> _stencilReferenceValues;
         private Stack<Rectangle> _clipRectStack;
-        private BatchProcessor _batchProcessor;
-        private BatchProcessor _batchCache;
         private List<DisplayObject> _batchCacheExclusions;
+
+        private BatchProcessor _batchProcessor;
+        private BatchProcessor _batchProcessorCurr; // current  processor
+        private BatchProcessor _batchProcessorPrev; // previous processor (cache)
+        private BatchProcessor _batchProcessorSpec; // special  processor (no cache)
 
         private int _actualRenderTarget;
         private uint _actualBlendMode;
@@ -94,11 +96,16 @@ namespace Sparrow.Rendering
             _stencilReferenceValues = new Dictionary<int, int>(); // use weak refs!
             _clipRectStack = new Stack<Rectangle>();
 
-            _batchProcessor = new BatchProcessor();
-            _batchProcessor.OnBatchComplete = DrawBatch;
+            _batchProcessorCurr = new BatchProcessor();
+            _batchProcessorCurr.OnBatchComplete = DrawBatch;
+            
+            _batchProcessorPrev = new BatchProcessor();
+            _batchProcessorPrev.OnBatchComplete = DrawBatch;
 
-            _batchCache = new BatchProcessor();
-            _batchCache.OnBatchComplete = DrawBatch;
+            _batchProcessorSpec = new BatchProcessor();
+            _batchProcessorSpec.OnBatchComplete = DrawBatch;
+            
+            _batchProcessor = _batchProcessorCurr;
             _batchCacheExclusions = new List<DisplayObject>();
 
             _state = new RenderState();
@@ -112,8 +119,9 @@ namespace Sparrow.Rendering
         *  the render context. */
         public void Dispose()
         {
-            _batchProcessor.Dispose();
-            _batchCache.Dispose();
+            _batchProcessorCurr.Dispose();
+            _batchProcessorPrev.Dispose();
+            _batchProcessorSpec.Dispose();
             // + dispose GL context?
         }
 
@@ -367,21 +375,12 @@ namespace Sparrow.Rendering
         /** Completes all unfinished batches, cleanup procedures. */
         public void FinishFrame()
         {
-            if (_frameID % 99 == 0) // odd number -> alternating processors
-            {
-                _batchProcessor.Trim();
-            }
-            _batchProcessor.FinishBatch();
-            SwapBatchProcessors();
-            _batchProcessor.Clear();
-            ProcessCacheExclusions();
-        }
+            if (_frameID % 99 == 0) _batchProcessorCurr.Trim(); // odd number -> alternating processors
+            if (_frameID % 150 == 0) _batchProcessorSpec.Trim();
 
-        private void SwapBatchProcessors()
-        {
-            BatchProcessor tmp = _batchProcessor;
-            _batchProcessor = _batchCache;
-            _batchCache = tmp;
+            _batchProcessor.FinishBatch();
+            _batchProcessor = _batchProcessorSpec; // no cache between frames
+            ProcessCacheExclusions();
         }
 
         private void ProcessCacheExclusions()
@@ -397,18 +396,28 @@ namespace Sparrow.Rendering
          *  clipping rectangle, and draw count. Furthermore, depth testing is disabled. */
         public void NextFrame()
         {
+            // update batch processors
+            _batchProcessor = SwapBatchProcessors();
+            _batchProcessor.Clear();
+            _batchProcessorSpec.Clear();
+
             // enforce reset of basic context settings
             _actualBlendMode = 0;
+            GL.DepthFunc(DepthFunction.Always);
 
             // reset everything else
             _clipRectStack.Clear();
             _drawCount = 0;
             _stateStackPos = -1;
-            _batchProcessor.Clear();
             _state.Reset();
         }
 
-
+        private BatchProcessor SwapBatchProcessors()
+        {
+            BatchProcessor tmp = _batchProcessorPrev;
+            _batchProcessorPrev = _batchProcessorCurr;
+            return _batchProcessorCurr = tmp;
+        }
         /** Draws all meshes from the render cache between <code>startToken</code> and
          *  (but not including) <code>endToken</code>. The render cache contains all meshes
          *  rendered in the previous frame. */
@@ -423,7 +432,7 @@ namespace Sparrow.Rendering
 
                 for (int i = startToken.BatchID; i <= endToken.BatchID; ++i)
                 {
-                    meshBatch = _batchCache.GetBatchAt(i);
+                    meshBatch = _batchProcessorPrev.GetBatchAt(i);
                     subset.SetTo(); // resets subset
 
                     if (i == startToken.BatchID)
@@ -449,14 +458,6 @@ namespace Sparrow.Rendering
                 }
                 PopState();
             }
-        }
-
-        /** Removes all parts of the render cache past the given token. Beware that some display
-        *  objects might still reference those parts of the cache! Only call it if you know
-        *  exactly what you're doing. */
-        public void RewindCacheTo(BatchToken token)
-        {
-            _batchProcessor.RewindTo(token);
         }
 
         /** Prevents the object from being drawn from the render cache in the next frame.
@@ -660,6 +661,27 @@ namespace Sparrow.Rendering
             get { return _drawCount; }
         }
 
+        /** Indicates if the render cache is enabled. Normally, this should be left at the default;
+         *  however, some custom rendering logic might require to change this property temporarily.
+         *  Also note that the cache is automatically reactivated each frame, right before the
+         *  render process.
+         *
+         *  @default true
+         */
+        public bool CacheEnabled {
+            get { return _batchProcessor == _batchProcessorCurr; }
+            set
+            {
+                if (value != CacheEnabled)
+                {
+                    FinishMeshBatch();
+
+                    if (value) _batchProcessor = _batchProcessorCurr;
+                    else _batchProcessor = _batchProcessorSpec;
+                }
+            }
+        }
+ 
         /** The current render state, containing some of the context settings, projection- and
          *  modelview-matrix, etc. Always returns the same instance, even after calls to "pushState"
          *  and "popState".
@@ -670,9 +692,11 @@ namespace Sparrow.Rendering
          */
         public RenderState State { get { return _state; } }
 
-        /** The number of frames that have been rendered with the current Starling instance. */
+        /** Returns the index of the current frame <strong>if</strong> the render cache is enabled;
+         *  otherwise, returns zero. To get the frameID regardless of the render cache, call
+         *  <code>Starling.frameID</code> instead. */
         public uint FrameID {
-            get { return _frameID; }
+            get { return _batchProcessor == _batchProcessorCurr ? _frameID : 0; }
             set { _frameID = value;  }
         }
 

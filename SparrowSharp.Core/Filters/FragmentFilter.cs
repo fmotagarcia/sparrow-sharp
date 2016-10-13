@@ -80,7 +80,6 @@ namespace Sparrow.Filters
         private FilterEffect _effect;
         private VertexData _vertexData;
         private IndexData _indexData;
-        private BatchToken _token;
         private Padding _padding;
         private FilterHelper _helper;
         private float _resolution;
@@ -144,7 +143,6 @@ namespace Sparrow.Filters
 
         private void RenderPasses(Painter painter, bool forCache)
         {
-            if (_token == null) _token = new BatchToken();
             if (_helper  == null) _helper = new FilterHelper(_textureFormat);
             if (_quad  == null) _quad  = new FilterQuad(_textureSmoothing);
             else { _helper.PutTexture(_quad.Texture); _quad.Texture = null; }
@@ -211,13 +209,12 @@ namespace Sparrow.Filters
             _resolution = 1.0f; // applied via '_helper.textureScale' already;
                                 // only 'child'-filters use resolution directly (in 'process')
 
-            
+            bool wasCacheEnabled = painter.CacheEnabled;
             Texture input = _helper.GetTexture();
-            uint frameID = painter.FrameID;
             Texture output = null;
 
-            painter.FrameID = 0;
-            painter.PushState(_token);
+            painter.CacheEnabled = false; // -> what follows should not be cached
+            painter.PushState();
             painter.State.Alpha = 1.0f;
             painter.State.RenderTarget = input;
             painter.State.SetProjectionMatrix(bounds.X, bounds.Y,
@@ -237,8 +234,7 @@ namespace Sparrow.Filters
             output = Process(painter, _helper, input); // -> feed 'input' to actual filter code
 
             painter.PopState();
-            painter.FrameID = frameID;
-            painter.RewindCacheTo(_token); // -> render cache forgets all that happened above :)
+            painter.CacheEnabled = wasCacheEnabled; // -> cache again
 
             if (output != null) // indirect rendering
             {

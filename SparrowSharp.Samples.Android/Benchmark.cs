@@ -20,8 +20,6 @@ namespace Sparrow.Samples
         private int _waitFrames = 0;
         private Texture[] textures;
 
-        public TextField eee;
-
         public Benchmark()
         {
             SparrowSharp.EnableErrorChecking();

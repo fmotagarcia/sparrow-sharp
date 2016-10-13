@@ -48,6 +48,7 @@ namespace Sparrow.Rendering
             _batches.Clear();
             _batchPool.Purge();
             _currentBatch = null;
+            OnBatchComplete = null;
         }
 
         /// <summary>
@@ -153,30 +154,6 @@ namespace Sparrow.Rendering
         public void Trim()
         {
             _batchPool.Purge();
-        }
-
-        public void RewindTo(BatchToken token)
-        {
-            if (token.BatchID > _cacheToken.BatchID)
-            {
-                throw new IndexOutOfRangeException("Token outside available range");
-            }
-
-            for (int i = _cacheToken.BatchID; i > token.BatchID; --i)
-            {
-                _batchPool.Put(_batches[_batches.Count - 1]);
-                _batches.RemoveAt(_batches.Count - 1);
-            }
-
-            if (_batches.Count > token.BatchID)
-            {
-                MeshBatch batch  = _batches[token.BatchID];
-                batch.NumIndices  = Math.Min(batch.NumIndices,  token.IndexID);
-                batch.NumVertices = Math.Min(batch.NumVertices, token.VertexID);
-            }
-
-            _currentBatch = null;
-            _cacheToken.CopyFrom(token);
         }
 
         /// <summary>

@@ -95,7 +95,7 @@ namespace Sparrow.Display
         private Matrix3D _transformationMatrix3D;
         private bool _orientationChanged;
         private bool _is3D = false;
-        private bool _isMask;
+        private DisplayObject _maskee;
 
         // internal members (for fast access on rendering)
         internal DisplayObjectContainer _parent;
@@ -135,7 +135,7 @@ namespace Sparrow.Display
             if (_filter != null) _filter.Dispose();
             if (_mask != null) _mask.Dispose();
             //TODO RemoveEventListeners();
-            Mask = null; // revert 'isMask' property, just to be sure.
+            Mask = null; // clear 'mask._maskee', just to be sure.
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace Sparrow.Display
             return outM;
         }
 
-        internal bool IsMask { get { return _isMask; } }
+        internal bool IsMask { get { return _maskee != null; } }
 
         // render cache
 
@@ -439,21 +439,18 @@ namespace Sparrow.Display
          */
         public void SetRequiresRedraw()
         {
-            DisplayObject parent = _parent;
+            DisplayObject parent = _parent != null ? _parent : _maskee;
             uint frameID = SparrowSharp.FrameID;
 
-            _hasVisibleArea = _alpha != 0.0f && _visible && !_isMask && _scaleX != 0.0f && _scaleY != 0.0f;
             _lastParentOrSelfChangeFrameID = frameID;
+            _hasVisibleArea = _alpha != 0.0f && _visible && _maskee == null && 
+                              _scaleX != 0.0f && _scaleY != 0.0f;
 
             while (parent != null && parent._lastChildChangeFrameID != frameID)
             {
                 parent._lastChildChangeFrameID = frameID;
-                if (parent._mask != null) parent._mask.SetRequiresRedraw();
-                parent = parent._parent;
+                parent = _parent._parent != null ? _parent._parent : _parent._maskee;
             }
-
-            if (_isMask) SparrowSharp.SetRequiresRedraw(); // notify 'skipUnchangedFrames'
-            else if (_mask != null) _mask.SetRequiresRedraw(); // propagate into mask
         }
 
         public bool RequiresRedraw
@@ -1059,10 +1056,13 @@ namespace Sparrow.Display
             {
                 if (_mask != value)
                 {
-                    if (_mask != null) _mask._isMask = false;
+                    if (_mask != null)
+                    {
+                        _mask._maskee = null;
+                    }
                     if (value != null)
                     {
-                        value._isMask = true;
+                        value._maskee = this;
                         value._hasVisibleArea = false;
                     }
 

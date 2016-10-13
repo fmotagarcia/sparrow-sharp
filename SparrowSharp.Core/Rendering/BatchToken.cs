@@ -60,7 +60,7 @@ namespace Sparrow.Rendering
         /** Creates a String representation of this instance. */
         override public string ToString()
         {
-            return String.Format("[BatchToken batchID={0} vertexID={1} indexID={2}]",
+            return string.Format("[BatchToken batchID={0} vertexID={1} indexID={2}]",
                 BatchID, VertexID, IndexID);
         }
     }

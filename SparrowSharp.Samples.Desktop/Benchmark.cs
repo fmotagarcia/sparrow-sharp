@@ -20,8 +20,6 @@ namespace Sparrow.Samples
         private int _waitFrames = 0;
         private Texture[] textures;
 
-        public TextField eee;
-
         public Benchmark()
         {
             SparrowSharp.EnableErrorChecking();
@@ -44,11 +42,10 @@ namespace Sparrow.Samples
             _waitFrames = 3;
 
             SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
-            
-            
+
             AddTestObjects(16);
 
-            TestRenderTexture();
+           // TestRenderTexture();
 
             TestFilters();
 
@@ -57,7 +54,6 @@ namespace Sparrow.Samples
             TestMovieClip();
 
             TestTextField();
-            
         }
 
         private void AddTestObjects(int numObjects)
@@ -92,7 +88,10 @@ namespace Sparrow.Samples
         private void EnterFrameHandler(DisplayObject target, float passedTime)
         {
             cnt++;
-            
+            if (cnt == 12)
+            {
+                TestRenderTexture();
+            }
             //Console.WriteLine("COUNT: " + cnt);
             if (!_started)
                 return;
@@ -194,7 +193,7 @@ namespace Sparrow.Samples
             im.X = 225;
             im.Y = 110;
             im.Rotation = 0.2f;
-            _container.AddChild(im);
+            AddChild(im);
 
             Image im2 = new Image(textures[0]);
             BlurFilter fi2 = new BlurFilter(5, 1);
@@ -202,7 +201,6 @@ namespace Sparrow.Samples
             im2.Filter = fi2;
             im2.X = 525;
             im2.Y = 210;
-            im2.Rotation = 0.2f;
             _container.AddChild(im2);
         }
     }
