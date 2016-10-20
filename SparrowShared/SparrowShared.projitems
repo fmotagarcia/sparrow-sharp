@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>4d13ab71-77bc-431b-8eb4-54bb69e86f9c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Sparrow</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\IAnimatable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animation\Juggler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\SparrowSharp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\StatsDisplay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\BlendMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\DisplayObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\DisplayObjectContainer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Mesh.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\MeshBatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\MovieClip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Quad.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Sprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Stage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\BlurFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\ColorMatrix.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\ColorMatrixFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\FilterHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\FragmentFilter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Filters\IFilterHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geom\Matrix.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geom\Matrix3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geom\Point.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geom\Rectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Geom\Vector2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pool\ObjectPool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pool\PooledObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchProcessor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BufferUsageType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Effect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\FilterEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\GPUInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\IndexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\MeshEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\OpenGLDebugCallback.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Painter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\RenderState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\Vertex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\VertexColor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rendering\VertexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\SimpleTextureLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Styles\MeshStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\ConcreteTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\RenderTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\SubTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\Texture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\TextureAtlas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\TextureFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\TextureInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\TextureOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Textures\TextureSmoothing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\BitmapChar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\BitmapFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\CharLocation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\ITextCompositor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\MiniBitmapFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextField.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextFieldAutoSize.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextFormat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Text\TextOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touches\Touch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touches\TouchEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touches\TouchPhase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ColorUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\GLExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\HAlign.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MathUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MatrixUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MeshSubset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MeshUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Padding.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\RenderUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\VAlign.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\VertexColorHelper.cs" />
+  </ItemGroup>
+</Project>

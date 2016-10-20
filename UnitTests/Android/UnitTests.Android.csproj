@@ -39,7 +39,12 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenGL.Net, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OpenGL.Net.0.2.2\lib\OpenGL.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
@@ -58,17 +63,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AboutAssets.txt" />
+    <None Include="packages.config" />
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
-      <Project>{175877F9-051C-4E18-8479-4E15335D683B}</Project>
-      <Name>SparrowSharp.Core.Android</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
 </Project>

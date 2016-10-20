@@ -46,13 +46,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenTK.2.0.0\lib\net20\OpenTK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="OpenGL.Net, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\OpenGL.NET-2016-10-20\OpenGL.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net.Http" />
@@ -63,12 +64,6 @@
     <Compile Include="Benchmark.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Desktop.csproj">
-      <Project>{2223B789-0378-4BCE-82F0-F1B059DC4B01}</Project>
-      <Name>SparrowSharp.Core.Desktop</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
@@ -95,6 +90,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bigstarCROP.png" />
+    <ProjectReference Include="..\SparrowSharp.Desktop\SparrowSharp.Desktop.csproj">
+      <Project>{40765b80-9be8-4a35-80b5-7d5abe4d6657}</Project>
+      <Name>SparrowSharp.Desktop</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

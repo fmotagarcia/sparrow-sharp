@@ -42,11 +42,14 @@
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenGL.Net">
+      <HintPath>..\lib\OpenGL.NET-2016-10-20\OpenGL.Net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,11 +60,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AboutAssets.txt" />
+    <None Include="packages.config" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SparrowSharp.Android\SparrowSharp.Android.csproj">
+      <Project>{de0fcad8-2c32-4b99-9962-e403853c3c4e}</Project>
+      <Name>SparrowSharp.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -69,11 +78,5 @@
     <AndroidResource Include="Resources\drawable-nodpi\benchmark_object.png" />
     <AndroidResource Include="Resources\drawable-nodpi\star.png" />
     <AndroidResource Include="Resources\drawable-nodpi\bigstar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.Android.csproj">
-      <Project>{175877F9-051C-4E18-8479-4E15335D683B}</Project>
-      <Name>SparrowSharp.Core.Android</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

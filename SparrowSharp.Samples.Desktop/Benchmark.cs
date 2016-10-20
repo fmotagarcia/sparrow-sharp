@@ -32,7 +32,7 @@ namespace Sparrow.Samples
 
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
-            //SparrowSharp.SkipUnchangedFrames = true;
+            SparrowSharp.SkipUnchangedFrames = true;
             SparrowSharp.Stage.Color = 0x432323;
         }
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
@@ -41,19 +41,19 @@ namespace Sparrow.Samples
             _started = true;
             _waitFrames = 3;
 
-            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
 
             AddTestObjects(16);
 
-           // TestRenderTexture();
+            TestRenderTexture();
 
-            TestFilters();
+            //TestFilters();
 
             TestQuad();
 
-            TestMovieClip();
+            //TestMovieClip();
 
-            TestTextField();
+            //TestTextField();
         }
 
         private void AddTestObjects(int numObjects)
@@ -90,7 +90,7 @@ namespace Sparrow.Samples
             cnt++;
             if (cnt == 12)
             {
-                TestRenderTexture();
+             //   TestRenderTexture();
             }
             //Console.WriteLine("COUNT: " + cnt);
             if (!_started)
