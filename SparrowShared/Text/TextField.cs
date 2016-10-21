@@ -295,8 +295,9 @@ namespace Sparrow.Text
                     AddChild(_border);
 
                     for (int i = 0; i < 4; ++i)
-                    _border.AddChild(new Quad(1.0f, 1.0f));
-
+                    {
+                        _border.AddChild(new Quad(1.0f, 1.0f));
+                    }
                     UpdateBorder();
                 }
                 else if (!value && _border != null)

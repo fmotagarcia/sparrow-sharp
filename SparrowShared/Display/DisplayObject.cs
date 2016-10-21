@@ -449,7 +449,7 @@ namespace Sparrow.Display
             while (parent != null && parent._lastChildChangeFrameID != frameID)
             {
                 parent._lastChildChangeFrameID = frameID;
-                parent = _parent._parent != null ? _parent._parent : _parent._maskee;
+                parent = parent._parent != null ? parent._parent : parent._maskee;
             }
         }
 

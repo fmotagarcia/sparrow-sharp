@@ -615,14 +615,8 @@ namespace Sparrow.Utils
         {
             if (_numVertices == 0) return new uint[] { 0, 0 };
             
-            uint _vertexBufferName;
-            uint _vertexColorsBufferName;
-            /*
-            Gl.GenBuffers(1, out _vertexBufferName);
-            Gl.GenBuffers(1, out _vertexColorsBufferName);
-            */
-            _vertexBufferName = Gl.GenBuffer();
-            _vertexColorsBufferName = Gl.GenBuffer();
+            uint _vertexBufferName = Gl.GenBuffer();
+            uint _vertexColorsBufferName = Gl.GenBuffer();
 
             if (upload)
             {
@@ -636,13 +630,6 @@ namespace Sparrow.Utils
         {
             if (_numVertices > 0)
             {
-                /*
-                Gl.BindBuffer(BufferTarget.ArrayBuffer, vertexBufferName);
-                Gl.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * 4 * sizeof(float)), _vertices, hint.Usage);
-
-                Gl.BindBuffer(BufferTarget.ArrayBuffer, vertexColorsBufferName);
-                Gl.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(_numVertices * sizeof(byte) * 4), VertexColors, hint.Usage);
-                */
                 Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBufferName);
                 Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(_numVertices * 4 * sizeof(float)), _vertices, BufferUsageARB.StaticDraw);
 

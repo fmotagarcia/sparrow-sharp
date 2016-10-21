@@ -95,7 +95,6 @@ namespace Sparrow.Core
                 if (needsSwap)
                 {
                     control.Invalidate();
-                    Console.WriteLine("SWAP");
                 }
                 int msToSleep = 16 - (int)sw.ElapsedMilliseconds - 1;
                 if (msToSleep > 0)
