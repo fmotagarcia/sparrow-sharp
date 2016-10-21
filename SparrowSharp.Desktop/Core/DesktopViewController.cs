@@ -57,14 +57,15 @@ namespace Sparrow.Core
         public DesktopViewController(Type rootClass, int windowWidth, int windowHeight)
         {
             _rootClass = rootClass;
-            Size = new Size(windowWidth, windowHeight);
+            var windowSize = new Size(windowWidth, windowHeight);
+            ClientSize = windowSize;
 
             control = new GlControl();
             control.DepthBits = 8;
             control.StencilBits = 8;
             //control.ContextProfile = GlControl.ProfileType.Core;
             control.DebugContext = GlControl.AttributePermission.Enabled;
-            control.Size = Size;
+            control.Size = windowSize;
      
             Controls.Add(control);
 
@@ -79,8 +80,8 @@ namespace Sparrow.Core
 
         private void OnContextCreated(object sender, GlControlEventArgs e)
         {
-            SparrowSharp.NativeWindow = this;
-            SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
+            SparrowSharp.NativeWindow = this; 
+            SparrowSharp.Start((uint)ClientSize.Width, (uint)ClientSize.Height, _rootClass);
             // Hook the application’s idle event
             Application.Idle += new EventHandler(OnApplicationIdle);
         }

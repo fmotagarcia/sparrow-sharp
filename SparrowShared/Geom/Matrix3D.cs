@@ -7,14 +7,8 @@ namespace Sparrow.Geom
 
     public class Matrix3D : PooledObject
     {
-        /// <summary>
-        /// The underlying raw Matrix data. Its structure looks like
-        /// [0, 1, 2, 3,
-        ///  4, 5, 6, 7,
-        ///  8, 9, 10,11,
-        ///  12,13,14,15]
-        /// </summary>
-        public float[] rawData;
+
+        private float[] rawData;
 
         private static readonly ObjectPool _pool = new ObjectPool(new CreateObject<PooledObject>(Init), 1000);
 
@@ -214,7 +208,12 @@ namespace Sparrow.Geom
         }
 
         /// <summary>
-        /// WARNING: raw data is a struct, it gets passed by value!
+        /// The underlying raw Matrix data. Its structure looks like
+        /// [0, 1, 2, 3,
+        ///  4, 5, 6, 7,
+        ///  8, 9, 10,11,
+        ///  12,13,14,15]
+        ///  WARNING: Not a copy
         /// </summary>
         public float[] RawData
         {

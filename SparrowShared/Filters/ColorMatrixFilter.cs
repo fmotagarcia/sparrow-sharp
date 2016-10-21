@@ -2,6 +2,7 @@
 using System.Text;
 using Sparrow.Rendering;
 using OpenGL;
+using Sparrow.Geom;
 
 namespace Sparrow.Filters
 {
@@ -128,15 +129,15 @@ namespace Sparrow.Filters
         /// The color matrix object used to apply the filter.
         /// </summary>
         public ColorMatrix Matrix;
-        /*
-        private Matrix4 _shaderMatrix; // offset in range 0-1, changed order
+        
+        private Matrix3D _shaderMatrix; // offset in range 0-1, changed order
         // offset in range 0-1, changed order
-        private Vector4 _shaderOffset;
+        private float[] _shaderOffset;
 
         public ColorMatrixEffect()
         {
             Matrix = new ColorMatrix();
-            _shaderMatrix = new Matrix4();
+            _shaderMatrix = Matrix3D.Create();
         }
         
         override protected Program CreateProgram()
@@ -168,31 +169,32 @@ namespace Sparrow.Filters
             base.BeforeDraw();
 
             int uColorMatrix = Program.Uniforms["uColorMatrix"];
-            Gl.UniformMatrix4(uColorMatrix, false, ref _shaderMatrix);
+            var sm = _shaderMatrix.RawData;
+            Gl.UniformMatrix4(uColorMatrix, 1, false, sm);
             int uColorOffset = Program.Uniforms["uColorOffset"];
-            Gl.Uniform4(uColorOffset, ref _shaderOffset);
+            Gl.Uniform4(uColorOffset, 1, _shaderOffset);
         }
-        */
+        
         /// <summary>
         /// Updates the actual shader matrix.
         /// Always call this after you are finished manipulating the color matrix
         /// </summary>
         public void UpdateShaderMatrix()
-        {/*
+        {
             // the shader needs the matrix components in a different order,
             // and it needs the offsets in the range 0-1.
             float[] matrix = Matrix.Values;
 
-            _shaderMatrix = new Matrix4(
+            _shaderMatrix = Matrix3D.Create(new float[] {
                 matrix[0], matrix[1], matrix[2], matrix[3],
                 matrix[5], matrix[6], matrix[7], matrix[8],
                 matrix[10], matrix[11], matrix[12], matrix[13],
                 matrix[15], matrix[16], matrix[17], matrix[18]
-            );
+            });
 
-            _shaderOffset = new Vector4(
+            _shaderOffset = new float[] {
                 matrix[4] / 255.0f, matrix[9] / 255.0f, matrix[14] / 255.0f, matrix[19] / 255.0f
-            );*/
+            };
         }
 
     }
