@@ -1,7 +1,6 @@
 ﻿
 using NUnit.Framework;
 using Sparrow.Utils;
-using OpenTK;
 using Sparrow.Geom;
 using System;
 
@@ -164,7 +163,7 @@ namespace Tests
             vertexData.Vertices[1] = secondVertex;
             vertexData.Vertices[2] = defaultVertex;
 
-            Matrix matrix = Matrix.Create();
+            Matrix2D matrix = Matrix2D.Create();
             matrix.Rotate((float)Math.PI);
            
             vertexData.TransformVertices(matrix, 1, 1);

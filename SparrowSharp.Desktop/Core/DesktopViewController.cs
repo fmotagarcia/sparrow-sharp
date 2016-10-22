@@ -5,7 +5,6 @@ using OpenGL;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace Sparrow.Core
 {
@@ -68,8 +67,7 @@ namespace Sparrow.Core
             control.Size = windowSize;
      
             Controls.Add(control);
-
-
+            
             MouseDown += OnMouseButtonDown;
             MouseUp += OnMouseButtonUp;
             MouseMove += OnMouseMove;

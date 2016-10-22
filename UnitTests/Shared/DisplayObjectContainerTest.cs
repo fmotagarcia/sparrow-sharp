@@ -1,7 +1,5 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Sparrow.Display;
-using Sparrow.Core;
 
 namespace Tests
 {

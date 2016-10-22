@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using Android.Util;
 using Android.Views;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.ES30;
-using OpenTK.Platform.Android;
 using Sparrow.Geom;
 using Sparrow.ResourceLoading;
 using Sparrow.Touches;
+using Android.Runtime;
+using OpenGL;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Android.Graphics;
 
 namespace Sparrow.Core
 {
@@ -17,107 +18,190 @@ namespace Sparrow.Core
     /// Note that this class contains device specific functionality, so if you override a function
     /// its likely that you will need to define platform specific behaviour using #ifdefs
     /// </summary>
-    public class AndroidViewController : AndroidGameView
+    public class AndroidViewController : SurfaceView, ISurfaceHolderCallback
     {
+        /// <summary>
+        /// Surface holder.
+        /// </summary>
+        private ISurfaceHolder _Holder;
+
         public delegate void OnLoadedAction(int viewWidth,int viewHeight);
 
         private Type _rootClass;
         public static Android.Content.Context AndroidContext;
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
 
+        private IntPtr _NativeWindowHandle;
+
+        /// <summary>
+        /// The <see cref="DeviceContext"/> created on this GlSurfaceView.
+        /// </summary>
+        protected DeviceContext _DeviceContext;
+
+        /// <summary>
+        /// The OpenGL context created on this GlSurfaceView.
+        /// </summary>
+        protected IntPtr _RenderContext;
+
+        /// <summary>
+        /// Get native window from surface
+        /// </summary>
+        /// <param name="jni"></param>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        [DllImport("android")]
+        private static extern IntPtr ANativeWindow_fromSurface(IntPtr jni, IntPtr surface);
+
+        /// <summary>
+        /// Get native window from surface
+        /// </summary>
+        /// <param name="surface"></param>
+        [DllImport("android")]
+        private static extern void ANativeWindow_release(IntPtr surface);
+
+        /// <summary>
+        /// Timer used for triggering rendering.
+        /// </summary>
+        private Timer _RenderTimer;
+
+        /// <summary>
+        /// Due time for triggering rendering, in milliseconds.
+        /// </summary>
+        private int _RenderTimerDueTime;
+
         public AndroidViewController(Android.Content.Context context, Type rootClass) : base(context)
         {
             Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
-            Setup(context);
-        }
+           
+            _Holder = Holder;
+            _Holder.AddCallback(this);
+            _Holder.SetType(SurfaceType.Gpu);
 
-        private void Setup(Android.Content.Context context)
-        {
             AndroidContext = context;
             TextureLoader._context = context;
             RequestFocus();
             FocusableInTouchMode = true;
         }
-        // This method is called everytime the context needs to be recreated.
-        protected override void CreateFrameBuffer()
-        {
-            Log.Verbose("Sparrow", "AndroidGameWindow.CreateFrameBuffer");
-            try
-            {
-                ContextRenderingApi = GLVersion.ES3;
-                try
-                {
-                    GraphicsMode = new AndroidGraphicsMode(new ColorFormat(8, 8, 8, 8), 24, 0, 0, 0, false);
-                    base.CreateFrameBuffer();
-                }
-                catch (Exception)
-                {
-                    Log.Verbose("Sparrow", "Failed to create desired format, falling back to defaults");
-                    // try again using a more basic mode with a 16 bit depth buffer which hopefully the device will support 
-                    GraphicsMode = new AndroidGraphicsMode(new ColorFormat(0, 0, 0, 0), 16, 0, 0, 0, false);
-                    try
-                    {
-                        base.CreateFrameBuffer();
-                    }
-                    catch (Exception)
-                    {
-                        // ok we are right back to getting the default
-                        GraphicsMode = new AndroidGraphicsMode(0, 0, 0, 0, 0, false);
-                        base.CreateFrameBuffer();
-                    }
-                }
-                Log.Verbose("Sparrow", "Created format " + GraphicsContext.GraphicsMode);
-                FramebufferErrorCode status = Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-                Log.Verbose("Sparrow", "Framebuffer Status: " + status);
-            }
-            catch (Exception)
-            {
-                throw new NotSupportedException("Could not create OpenGLES 3.0 frame buffer");
-            }
 
-            MakeCurrent();
-        }
 
-        // This gets called when the drawing surface is ready (=on startup and when the app regains focus)
-        protected override void OnLoad(EventArgs e)
+        /// <summary>
+        /// This is called immediately after the surface is first created.
+        /// </summary>
+        /// <param name="holder">
+        /// The SurfaceHolder whose surface is being created.
+        /// </param>
+        public void SurfaceCreated(ISurfaceHolder holder)
         {
-            base.OnLoad(e);
-            MakeCurrent();
+            // Get actual native window handle
+            _NativeWindowHandle = ANativeWindow_fromSurface(JNIEnv.Handle, holder.Surface.Handle);
+
+            // Create device context
+            _DeviceContext = DeviceContext.Create(_NativeWindowHandle);
+            _DeviceContext.IncRef();
+
+            // Set pixel format
+            DevicePixelFormatCollection pixelFormats = _DeviceContext.PixelsFormats;
+            DevicePixelFormat controlReqFormat = new DevicePixelFormat();
+
+            controlReqFormat.RgbaUnsigned = true;
+            controlReqFormat.RenderWindow = true;
+            controlReqFormat.ColorBits = 24;
+            //controlReqFormat.DepthBits = (int)DepthBits;
+            //controlReqFormat.StencilBits = (int)StencilBits;
+            //controlReqFormat.MultisampleBits = (int)MultisampleBits;
+            //controlReqFormat.DoubleBuffer = true;
+
+            List<DevicePixelFormat> matchingPixelFormats = pixelFormats.Choose(controlReqFormat);
+            if (matchingPixelFormats.Count == 0)
+                throw new InvalidOperationException("unable to find a suitable pixel format");
+            _DeviceContext.SetPixelFormat(matchingPixelFormats[0]);
+
+            // Create OpenGL context using compatibility profile
+            if ((_RenderContext = _DeviceContext.CreateContext(IntPtr.Zero)) == IntPtr.Zero)
+                throw new InvalidOperationException("unable to create render context");
+            // Make context current
+            if (_DeviceContext.MakeCurrent(_RenderContext) == false)
+                throw new InvalidOperationException("unable to make context current");
+
+            Invalidate();
+
+            float fps = 60.0f;
+            if (_RenderTimer != null)
+            {
+                throw new InvalidOperationException("rendering already active");
+            }
 
             if (SparrowSharp.Root == null)
             {
                 SparrowSharp.NativeWindow = this;
-                SparrowSharp.Start((uint)Size.Width, (uint)Size.Height, _rootClass);
+                SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
             }
-            // Run the render loop
-            Run();
+
+            _RenderTimerDueTime = (int)Math.Ceiling(1000.0f / fps);
+            _RenderTimer = new Timer(RenderTimerCallback, null, _RenderTimerDueTime, Timeout.Infinite);
         }
-        // This gets called on each frame render
-        protected override void OnRenderFrame(FrameEventArgs e)
+
+        private void RenderTimerCallback(object state)
         {
-            base.OnRenderFrame(e);
+            // Rendering on main UI thread
+            Android.App.Application.SynchronizationContext.Send(delegate {
+                bool needsSwap = SparrowSharp.Step();
+                if (needsSwap)
+                {
+                    _DeviceContext.SwapBuffers();
+                }
+            }, null);
 
-            SparrowSharp.Step(e.Time);
+            _RenderTimer.Change(_RenderTimerDueTime, Timeout.Infinite);
+        }
 
-            bool needsSwap = SparrowSharp.Step(e.Time);
-            if (needsSwap)
+        public void SurfaceChanged(ISurfaceHolder holder, Format format, int w, int h)
+        {
+        }
+
+        public void SurfaceDestroyed(ISurfaceHolder holder)
+        {
+            if (_RenderTimer != null)
             {
-                SwapBuffers();
+                _RenderTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                _RenderTimer.Dispose();
+                _RenderTimer = null;
+            }
+
+            if (_DeviceContext != null)
+            {
+                if (_RenderContext != IntPtr.Zero)
+                {
+                    _DeviceContext.DeleteContext(_RenderContext);
+                }
+                _DeviceContext.Dispose();
+                _DeviceContext = null;
             }
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void Dispose(bool disposing)
         {
-            base.OnResize(e);
-            SparrowSharp.Stage.SetDrawableArea((uint)Size.Width, (uint)Size.Height);
+            base.Dispose(disposing);
+
+            // Release native window handle
+            if (_NativeWindowHandle != IntPtr.Zero)
+            {
+                ANativeWindow_release(_NativeWindowHandle);
+                _NativeWindowHandle = IntPtr.Zero;
+            }
         }
 
-        protected override void DestroyFrameBuffer()
+        protected override void OnSizeChanged(int w, int h, int oldw, int oldh)
         {
-            base.DestroyFrameBuffer();
+            Console.WriteLine("Sparrow-sharp: Android view size changed");
+            base.OnSizeChanged(w, h, oldw, oldh);
+            if (SparrowSharp.Stage != null)
+            {
+                SparrowSharp.Stage.SetDrawableArea((uint)w, (uint)h);
+            }
         }
-
+        
         /// <summary>
         /// This function handles touch events. 
         /// It is responsible for maintaining the currently active touch events and dispatching events.
@@ -125,8 +209,8 @@ namespace Sparrow.Core
         /// </summary>
         override public bool OnTouchEvent(MotionEvent e)
         {
-            float xConversion = SparrowSharp.Stage.Width / Size.Width;
-            float yConversion = SparrowSharp.Stage.Height / Size.Height;
+            float xConversion = SparrowSharp.Stage.Width / Width;
+            float yConversion = SparrowSharp.Stage.Height / Height;
 
             // get pointer index from the event object
             int pointerIndex = e.ActionIndex;
@@ -152,7 +236,7 @@ namespace Sparrow.Core
                     newTouch.InitialGlobalX = newTouch.GlobalX;
                     newTouch.InitialGlobalY = newTouch.GlobalY;
                     newTouch.Phase = TouchPhase.Began;
-                    Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
+                    Geom.Point touchPosition = Geom.Point.Create(newTouch.GlobalX, newTouch.GlobalY);
                     newTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
 
                     _touches.Add(newTouch.TouchID, newTouch);
@@ -183,7 +267,7 @@ namespace Sparrow.Core
                             if (movedTouch.Target == null || movedTouch.Target.Stage == null)
                             {
                                 // target could have been removed from stage -> find new target in that case
-                                Point updatedTouchPosition = Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
+                                Geom.Point updatedTouchPosition = Geom.Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
                                 movedTouch.Target = SparrowSharp.Root.HitTest(updatedTouchPosition);
                             }
                         }

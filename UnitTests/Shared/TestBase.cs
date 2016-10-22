@@ -1,6 +1,5 @@
 ﻿using System;
 using Sparrow.Utils;
-using OpenTK;
 using NUnit.Framework;
 using Sparrow.Geom;
 using System.Reflection;

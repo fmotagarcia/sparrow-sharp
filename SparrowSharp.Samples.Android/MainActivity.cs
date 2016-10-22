@@ -2,7 +2,6 @@ using Android.App;
 using Android.OS;
 using Android.Content.PM;
 using Sparrow.Core;
-using Android.Widget;
 using Android.Views;
 
 namespace Sparrow.Samples

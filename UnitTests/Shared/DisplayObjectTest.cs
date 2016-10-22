@@ -73,8 +73,8 @@ namespace Tests
             child.Rotation = (float)(Math.PI / 4.0f);    
             sprite.AddChild(child);
 
-            Matrix matrix = sprite.GetTransformationMatrix(child);
-            Matrix expectedMatrix = child.TransformationMatrix;
+            Matrix2D matrix = sprite.GetTransformationMatrix(child);
+            Matrix2D expectedMatrix = child.TransformationMatrix;
             expectedMatrix.Invert();
 
             Assert.IsTrue(matrix.IsEqual(expectedMatrix));
@@ -96,7 +96,7 @@ namespace Tests
             sprite.ScaleX = 0.5f;
             sprite.ScaleY = 1.5f;
 
-            Matrix matrix = Matrix.Create();
+            Matrix2D matrix = Matrix2D.Create();
             matrix.Scale(sprite.ScaleX, sprite.ScaleY);
             matrix.Rotate(sprite.Rotation);
             matrix.Translate(sprite.X, sprite.Y);
@@ -113,7 +113,7 @@ namespace Tests
             const float scaleY = 1.5f;
             const float rotation = (float)(Math.PI / 4.0f);
 
-            Matrix matrix = Matrix.Create();
+            Matrix2D matrix = Matrix2D.Create();
             matrix.Scale(scaleX, scaleY);
             matrix.Rotate(rotation);
             matrix.Translate(x, y);
@@ -136,7 +136,7 @@ namespace Tests
             sprite.PivotX = 50;
             sprite.PivotY = 20;
 
-            Matrix matrix = sprite.TransformationMatrix;
+            Matrix2D matrix = sprite.TransformationMatrix;
             sprite.TransformationMatrix = matrix;
             
             AssertAreEqualWithSmallError(sprite.X, -50);
@@ -150,15 +150,15 @@ namespace Tests
         {
             Sprite sprite = new Sprite();
             float[] angles = { (float)(Math.PI / 2.0f), (float)(-Math.PI / 2.0f) };
-            Matrix[] matrices = {
-                Matrix.Create(0, 1,-1,0,0,0), 
-                Matrix.Create(0,-1, 1,0,0,0)
+            Matrix2D[] matrices = {
+                Matrix2D.Create(0, 1,-1,0,0,0),
+                Matrix2D.Create(0,-1, 1,0,0,0)
             };
 
             for (int i=0; i<2; ++i)
             {
                 float angle = angles[i];
-                Matrix matrix = matrices[i];
+                Matrix2D matrix = matrices[i];
                 sprite.TransformationMatrix = matrix;
 
                 AssertAreEqualWithSmallError(0.0f, sprite.X, "wrong x coord");
@@ -172,7 +172,7 @@ namespace Tests
         [Test]
         public void TestSetTransformationMatrixWithZeroValues()
         {
-            Matrix matrix = Matrix.Create(0,0,0,0,0,0);
+            Matrix2D matrix = Matrix2D.Create(0,0,0,0,0,0);
             Sprite sprite = new Sprite();
             sprite.TransformationMatrix = matrix;
 

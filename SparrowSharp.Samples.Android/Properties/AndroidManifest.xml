@@ -3,4 +3,7 @@
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="23" />
 	<application android:label="Sparrow.Samples.Android" android:debuggable="true"></application>
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-feature android:glEsVersion="0x00030000" android:required="true" />
+	<!--<supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />-->
+	<!-- android:name="GL_OES_compressed_paletted_texture" />-->
 </manifest>

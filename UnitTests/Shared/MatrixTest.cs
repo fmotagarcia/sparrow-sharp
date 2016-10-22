@@ -9,15 +9,15 @@ namespace Tests
     [TestFixture]
     public class MatrixTest : TestBase
     {
-    
-        Matrix countMatrix;
-        Matrix identMatrix;
+
+        Matrix2D countMatrix;
+        Matrix2D identMatrix;
 
         [SetUp]
         protected void SetUp()
         {
-            countMatrix = Matrix.Create(1, 2, 3, 4, 5, 6);
-            identMatrix = Matrix.Create();
+            countMatrix = Matrix2D.Create(1, 2, 3, 4, 5, 6);
+            identMatrix = Matrix2D.Create();
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace Tests
         [Test]
         public void TestCopy()
         {
-            Matrix copy = Matrix.Create();
+            Matrix2D copy = Matrix2D.Create();
             copy.CopyFromMatrix(countMatrix);
 
             Assert.IsTrue(countMatrix.IsEqual(copy), "copy not equal " + copy);
@@ -43,7 +43,7 @@ namespace Tests
         [Test]
         public void TestAppendMatrix()
         {
-            Matrix copy = Matrix.Create();
+            Matrix2D copy = Matrix2D.Create();
 
             copy.CopyFromMatrix(countMatrix);
             copy.AppendMatrix(identMatrix);
@@ -53,7 +53,7 @@ namespace Tests
             copy.AppendMatrix(countMatrix);
             Assert.IsTrue(countMatrix.IsEqual(copy), "multiplication with identity modified matrix");
 
-            Matrix countdownMatrix = Matrix.Create(9, 8, 7, 6, 5, 4);
+            Matrix2D countdownMatrix = Matrix2D.Create(9, 8, 7, 6, 5, 4);
             copy.AppendMatrix(countdownMatrix);
             Assert.IsTrue(CheckMatrixValues(copy, 23, 20, 55, 48, 92, 80), "wrong matrix " + copy);
 
@@ -67,7 +67,7 @@ namespace Tests
             countMatrix.Invert();
             Assert.IsTrue(CheckMatrixValues(countMatrix, -2, 1, 3.0f/2.0f, -0.5f, 1, -2), "invert produced wrong result: " + countMatrix);
 
-            Matrix translateMatrix = Matrix.Create();
+            Matrix2D translateMatrix = Matrix2D.Create();
             translateMatrix.Translate(20.0f, 40.0f);
             translateMatrix.Invert();
 
@@ -126,7 +126,7 @@ namespace Tests
             Assert.IsTrue(MathUtil.Equals(10.0f, ctPoint.Y), "wrong Y value " + ctPoint.Y); 
         }
 
-        bool CheckMatrixValues(Matrix matrix, float a, float b, float c, float d, float tx, float ty)
+        bool CheckMatrixValues(Matrix2D matrix, float a, float b, float c, float d, float tx, float ty)
         {
             return MathUtil.Equals(a, matrix.A) && MathUtil.Equals(b, matrix.B) &&
                 MathUtil.Equals(b, matrix.B) && MathUtil.Equals(c, matrix.C) &&

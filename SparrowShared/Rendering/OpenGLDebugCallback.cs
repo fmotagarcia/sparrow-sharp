@@ -3,6 +3,10 @@ using Sparrow.Core;
 using Sparrow.Utils;
 using OpenGL;
 using System.Runtime.InteropServices;
+#if __WINDOWS__
+#elif __ANDROID__
+using Android.Opengl;
+#endif
 
 namespace Sparrow.Core
 {

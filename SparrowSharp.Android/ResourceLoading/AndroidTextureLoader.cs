@@ -2,9 +2,9 @@
 using System.Net.Http;
 using Android.Graphics;
 using Android.Opengl;
-using OpenTK.Graphics.ES30;
 using Sparrow.Textures;
 using System.IO;
+using Sparrow.Core;
 
 namespace Sparrow.ResourceLoading
 {
@@ -94,15 +94,8 @@ namespace Sparrow.ResourceLoading
         {
             bitmap.SetPremultiplied(true); // note: Android 4.4 function
 
-            Gl.Hint(HintTarget.GenerateMipmapHint, HintMode.Fastest);
-            int name = Gl.GenTexture();
-            Gl.BindTexture(TextureTarget.Texture2D, name);
-            
-            Gl.TexStorage2D(TextureTarget2d.Texture2D,
-               1, // mipmap level, min 1
-               SizedInternalFormat.Rgba8,
-               bitmap.Width,
-               bitmap.Height);
+            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, SparrowSharp.ContentScaleFactor);
+            _glTexture = Texture.Empty(bitmap.Width, bitmap.Height, true, 0, false, -1, TextureFormat.Rgba8888);
 
             if (bitmap.Width > 0 && bitmap.Height > 0)
             {
@@ -116,10 +109,7 @@ namespace Sparrow.ResourceLoading
             {
                 Console.Out.WriteLine("WARNING: empty bitmap loaded");
             }
-
-            // see https://github.com/mono/MonoGame/blob/develop/MonoGame.Framework/Graphics/Texture2D.OpenGL.cs
-            // for how MonoGame does it
-            _glTexture = new ConcreteTexture(name, TextureFormat.Rgba8888, bitmap.Width, bitmap.Height, 0, true, false, 1.0f);
+            //_glTexture = new ConcreteTexture(name, TextureFormat.Rgba8888, bitmap.Width, bitmap.Height, 0, true, false, 1.0f);
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 

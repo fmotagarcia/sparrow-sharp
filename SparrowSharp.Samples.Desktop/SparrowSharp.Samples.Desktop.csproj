@@ -86,8 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bigstar.png" />
-    <None Include="OpenTK.dll.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SparrowSharp.Desktop\SparrowSharp.Desktop.csproj">
