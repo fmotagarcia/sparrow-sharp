@@ -234,7 +234,6 @@ namespace Sparrow.Rendering
             if (numTriangles == 0) return;
             
             BeforeDraw();
-            GPUInfo.CheckForOpenGLError();
             
             Gl.DrawElements(PrimitiveType.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
             AfterDraw();

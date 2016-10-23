@@ -84,7 +84,6 @@ namespace Sparrow.Core
             {
                 throw new InvalidOperationException("App already initialized!");
             }
-            GPUInfo.HasOpenGLError = false;
 
             _painter = new Painter(width, height);
             Stage = new Stage(width, height);
@@ -143,12 +142,10 @@ namespace Sparrow.Core
                 if (!doRedraw) _statsDisplay.MarkFrameAsSkipped();
             }
 
-#if DEBUG
             if (_enableErrorChecking)
             {
                 GPUInfo.CheckForOpenGLError();
             }
-#endif
         }
 
         private static void UpdateViewPort(bool forceUpdate = false)
@@ -218,9 +215,7 @@ namespace Sparrow.Core
         public static void EnableErrorChecking()
         {
             _enableErrorChecking = true;
-#if DEBUG
             OpenGLDebugCallback.Init();
-#endif
         }
 
         public static void Destroy()

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sparrow.Touches;
-using OpenGL;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
+using Sparrow.Rendering;
 
 namespace Sparrow.Core
 {
@@ -14,7 +14,7 @@ namespace Sparrow.Core
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
         private const int pointerId = 1;
         private readonly Stopwatch sw = new Stopwatch();
-        GlControl control;
+        private GlControl control;
 
         [System.Security.SuppressUnmanagedCodeSecurity]
         [System.Runtime.InteropServices.DllImport("User32.dll")]
