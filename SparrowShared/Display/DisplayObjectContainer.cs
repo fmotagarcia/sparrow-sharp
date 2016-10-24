@@ -375,7 +375,9 @@ namespace Sparrow.Display
                 DisplayObject child = _children[i];
                 if (child.IsMask) continue;
 
-                Matrix2D transformationMatrix = GetTransformationMatrix(child);
+
+                Matrix2D transformationMatrix = Matrix2D.Create();
+                transformationMatrix.CopyFromMatrix(child.TransformationMatrix);
                 transformationMatrix.Invert();
 
                 Point transformedPoint = transformationMatrix.TransformPoint(localPoint);
