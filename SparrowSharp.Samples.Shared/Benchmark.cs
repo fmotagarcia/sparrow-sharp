@@ -23,8 +23,9 @@ namespace Sparrow.Samples
         public Benchmark()
         {
             SparrowSharp.EnableErrorChecking();
-            textures = new Texture[] { SimpleTextureLoader.LoadLocalImage("bigstar.png"),
-                                       SimpleTextureLoader.LoadLocalImage("benchmark_object.png") };
+            EmbeddedResourceLoader loader = new EmbeddedResourceLoader("SparrowSamples");
+            textures = new Texture[] { SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("bigstar.png")),
+                                       SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")) };
             
             // the container will hold all test objects
             _container = new Sprite();
@@ -32,7 +33,7 @@ namespace Sparrow.Samples
 
             EnterFrame += EnterFrameHandler;
             AddedToStage += AddedToStageHandler;
-            SparrowSharp.SkipUnchangedFrames = true;
+            //SparrowSharp.SkipUnchangedFrames = true;
             SparrowSharp.Stage.Color = 0x432323;
         }
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
@@ -40,20 +41,27 @@ namespace Sparrow.Samples
 
             _started = true;
             _waitFrames = 3;
-
-            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            
+            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
 
             AddTestObjects(16);
 
             TestRenderTexture();
 
-            //TestFilters();
+            TestFilters();
 
             TestQuad();
 
-            //TestMovieClip();
+            TestMovieClip();
 
-            //TestTextField();
+            TestTextField();
+
+            Stage.Touch += Benchmark_Touch;
+        }
+
+        private void Benchmark_Touch(Touches.TouchEvent touch)
+        {
+            //Console.WriteLine(touch);
         }
 
         private void AddTestObjects(int numObjects)
@@ -145,12 +153,12 @@ namespace Sparrow.Samples
 
         private void TestTextField()
         {
-            TextField tf = new TextField(160, 100, "This is a TextField");
+            TextField tf = new TextField(180, 80, "Test TextField");
             tf.Format.Size = 32;
             tf.Border = true;
-            AddChild(tf);
+            tf.X = 245;
             tf.Y = 85;
-            tf.X = 45;
+            AddChild(tf);
         }
 
         private void TestQuad()

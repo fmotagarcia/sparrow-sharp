@@ -51,6 +51,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Vertex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VertexColor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VertexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\EmbeddedResourceLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\SimpleTextureLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\MeshStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Textures\ConcreteTexture.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Touches\Touch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Touches\TouchEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Touches\TouchPhase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Touches\TouchProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ColorUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\GLExtensions.cs" />

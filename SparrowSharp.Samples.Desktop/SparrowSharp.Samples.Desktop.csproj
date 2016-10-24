@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BC46AC11-1FD4-4720-A94E-DF5F279C5EE0}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Sparrow.Samples.Desktop</RootNamespace>
-    <AssemblyName>Sparrow.Samples.Desktop</AssemblyName>
+    <RootNamespace>SparrowSamples</RootNamespace>
+    <AssemblyName>SparrowSamples</AssemblyName>
     <StartupObject>Sparrow.Samples.Desktop.MainClass</StartupObject>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MainClass.cs" />
-    <Compile Include="Benchmark.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -82,15 +81,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="benchmark_object.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bigstar.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SparrowSharp.Desktop\SparrowSharp.Desktop.csproj">
       <Project>{40765b80-9be8-4a35-80b5-7d5abe4d6657}</Project>
       <Name>SparrowSharp.Desktop</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\SparrowSharp.Samples.Shared\SparrowSharp.Samples.Shared.projitems" Label="Shared" />
 </Project>

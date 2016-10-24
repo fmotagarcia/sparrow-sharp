@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Sparrow.Samples.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("SparrowSamples.Resource", IsApplication=true)]
 
-namespace Sparrow.Samples
+namespace SparrowSamples
 {
 	
 	
@@ -26,8 +26,8 @@ namespace Sparrow.Samples
 		
 		public static void UpdateIdValues()
 		{
-			global::Sparrow.Droid.Resource.String.ApplicationName = global::Sparrow.Samples.Resource.String.ApplicationName;
-			global::Sparrow.Droid.Resource.String.Hello = global::Sparrow.Samples.Resource.String.Hello;
+			global::Sparrow.Droid.Resource.String.ApplicationName = global::SparrowSamples.Resource.String.ApplicationName;
+			global::Sparrow.Droid.Resource.String.Hello = global::SparrowSamples.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -47,16 +47,7 @@ namespace Sparrow.Samples
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int benchmark_object = 2130837504;
-			
-			// aapt resource value: 0x7f020001
-			public const int bigstar = 2130837505;
-			
-			// aapt resource value: 0x7f020002
-			public const int Icon = 2130837506;
-			
-			// aapt resource value: 0x7f020003
-			public const int star = 2130837507;
+			public const int Icon = 2130837504;
 			
 			static Drawable()
 			{

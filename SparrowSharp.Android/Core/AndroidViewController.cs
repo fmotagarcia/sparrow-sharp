@@ -159,7 +159,6 @@ namespace Sparrow.Core
                 {
                     elapsed = _RenderTimerDueTime;
                 }
-                Console.WriteLine("elapsed time: " + elapsed);
                 _RenderTimer.Change(_RenderTimerDueTime - elapsed, Timeout.Infinite);
                 sw.Restart();
             }, null);
