@@ -121,12 +121,12 @@ namespace Sparrow.Display
                     outRect.Top -= outRect.Height;
                 }
             }
-            /*else if (Is3D && Stage != null)
+            else if (Is3D && Stage != null)
             {
                 float[] point3D = Stage.GetCameraPosition(targetSpace);
-                GetTransformationMatrix3D(targetSpace);
-                RectangleUtil.getBoundsProjected(_bounds, sMatrix3D, sPoint3D, out);
-            }*/
+                Matrix3D sMatrix3D = GetTransformationMatrix3D(targetSpace);
+                _bounds.SetBoundsProjected(sMatrix3D, point3D);
+            }
             else
             {
                 Matrix2D sMatrix = GetTransformationMatrix(targetSpace);

@@ -247,6 +247,41 @@ namespace Sparrow.Geom
             return outRect;
         }
 
+        /** Calculates the bounds of a rectangle projected into the XY-plane of a certain 3D space
+         *  as they appear from the given camera position. Note that 'camPos' is expected in the
+         *  target coordinate system (the same that the XY-plane lies in).
+         **/
+        public void SetBoundsProjected(Matrix3D matrix, float[] camPos)
+        {
+            if (camPos == null) throw new ArgumentNullException("camPos must not be null");
+
+            float minX = float.MaxValue, maxX = float.MinValue;
+            float minY = float.MaxValue, maxY = float.MinValue;
+            var positions = GetPositions();
+            float[] sPoint3D;
+            for (int i=0; i<4; ++i)
+            {
+                Point position = positions[i];
+
+                if (matrix != null)
+                    sPoint3D = matrix.TransformCoords3D(position.X, position.Y, 0);
+                else
+                    sPoint3D = new float[] { position.X, position.Y, 0};
+
+                Point sPoint = MathUtil.IntersectLineWithXYPlane(camPos, sPoint3D);
+
+                if (minX > sPoint.X) minX = sPoint.X;
+                if (maxX < sPoint.X) maxX = sPoint.X;
+                if (minY > sPoint.Y) minY = sPoint.Y;
+                if (maxY < sPoint.Y) maxY = sPoint.Y;
+            }
+
+            X = minX;
+            Y = minY;
+            Width = maxX - minX;
+            Height = maxY - minY;
+        }
+
         /// <summary>
         /// Returns a vector containing the positions of the four edges of the given rectangle. 
         /// </summary>

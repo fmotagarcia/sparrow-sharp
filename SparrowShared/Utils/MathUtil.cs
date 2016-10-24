@@ -26,6 +26,23 @@ namespace Sparrow.Utils
             }
         }
 
+        /** Calculates the intersection point between the xy-plane and an infinite line
+        *  that is defined by two 3D points in the same coordinate system. */
+        public static Point IntersectLineWithXYPlane(float[] pointA, float[] pointB)
+        {
+            Point outP = Point.Create();
+
+            float vectorX = pointB[0] - pointA[0];
+            float vectorY = pointB[1] - pointA[1];
+            float vectorZ = pointB[2] - pointA[2];
+            float lambda = -pointA[2] / vectorZ;
+
+            outP.X = pointA[0] + lambda * vectorX;
+            outP.Y = pointA[0] + lambda * vectorY;
+
+            return outP;
+        }
+
         /// <summary>
         /// checks if two numbers are equal with a small margin of error
         /// </summary>

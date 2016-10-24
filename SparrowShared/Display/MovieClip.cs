@@ -495,6 +495,7 @@ namespace Sparrow.Display
 
         public void ExecuteAction(MovieClip movie, int frameID)
         {
+            throw new NotImplementedException();
             /*if (action != null)
             {
                 int numArgs = action.length;
