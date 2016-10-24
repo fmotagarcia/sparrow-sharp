@@ -18,10 +18,18 @@ namespace Sparrow.Rendering
             int version;
       
             Gl.Get(Gl.MAJOR_VERSION, out version);
-            if (version < 4)
+
+            int minVersion;
+#if __WINDOWS__
+            minVersion = 4;
+#elif __ANDROID__
+            minVersion = 3; // GL ES 3
+#endif
+            if (version < minVersion)
             {
-                throw new NotSupportedException("You need at least OpenGL 4 to run on Desktop!");
+                throw new NotSupportedException("You need at least OpenGL " + minVersion + " to run Sparrow!");
             }
+
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 0, out work_grp_cnt[0]);
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 1, out work_grp_cnt[1]);
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 2, out work_grp_cnt[2]);

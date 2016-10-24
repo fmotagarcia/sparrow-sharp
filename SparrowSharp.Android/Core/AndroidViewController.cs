@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Android.Util;
 using Android.Views;
-using Sparrow.Geom;
 using Sparrow.ResourceLoading;
 using Sparrow.Touches;
 using Android.Runtime;
@@ -10,6 +8,7 @@ using OpenGL;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Android.Graphics;
+using System.Diagnostics;
 
 namespace Sparrow.Core
 {
@@ -29,8 +28,8 @@ namespace Sparrow.Core
 
         private Type _rootClass;
         public static Android.Content.Context AndroidContext;
-        private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
-
+        private readonly TouchProcessor touchProcessor;
+        private readonly Stopwatch sw = new Stopwatch();
         private IntPtr _NativeWindowHandle;
 
         /// <summary>
@@ -73,8 +72,9 @@ namespace Sparrow.Core
         {
             Console.WriteLine("Sparrow-sharp: Starting");
             _rootClass = rootClass;
-           
-            _Holder = Holder;
+            touchProcessor = new TouchProcessor();
+
+             _Holder = Holder;
             _Holder.AddCallback(this);
             _Holder.SetType(SurfaceType.Gpu);
 
@@ -145,15 +145,25 @@ namespace Sparrow.Core
         private void RenderTimerCallback(object state)
         {
             // Rendering on main UI thread
+           
             Android.App.Application.SynchronizationContext.Send(delegate {
+
                 bool needsSwap = SparrowSharp.Step();
                 if (needsSwap)
                 {
                     _DeviceContext.SwapBuffers();
                 }
+                
+                int elapsed = (int)sw.ElapsedMilliseconds - 1;
+                if (elapsed > _RenderTimerDueTime)
+                {
+                    elapsed = _RenderTimerDueTime;
+                }
+                Console.WriteLine("elapsed time: " + elapsed);
+                _RenderTimer.Change(_RenderTimerDueTime - elapsed, Timeout.Infinite);
+                sw.Restart();
             }, null);
-
-            _RenderTimer.Change(_RenderTimerDueTime, Timeout.Infinite);
+           
         }
 
         public void SurfaceChanged(ISurfaceHolder holder, Format format, int w, int h)
@@ -214,11 +224,8 @@ namespace Sparrow.Core
 
             // get pointer index from the event object
             int pointerIndex = e.ActionIndex;
-            Touch touchInFocus;
             // get pointer ID
             int pointerId = e.GetPointerId(pointerIndex);
-
-            double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
             // get masked (not specific to a pointer) action
             MotionEventActions maskedAction = e.ActionMasked;
@@ -227,91 +234,21 @@ namespace Sparrow.Core
             {
                 case MotionEventActions.Down:
                 case MotionEventActions.PointerDown:
-                    // new pointer
-                    Touch newTouch = new Touch();
-                    newTouch.TouchID = pointerId;
-                    newTouch.TimeStamp = now;
-                    newTouch.GlobalX = e.GetX() * xConversion;
-                    newTouch.GlobalY = e.GetY() * yConversion;
-                    newTouch.InitialGlobalX = newTouch.GlobalX;
-                    newTouch.InitialGlobalY = newTouch.GlobalY;
-                    newTouch.Phase = TouchPhase.Began;
-                    Geom.Point touchPosition = Geom.Point.Create(newTouch.GlobalX, newTouch.GlobalY);
-                    newTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
-
-                    _touches.Add(newTouch.TouchID, newTouch);
+                    touchProcessor.OnPointerDown(e.GetX() * xConversion, e.GetY() * yConversion, pointerId);
                     break;
                 case MotionEventActions.Move:
                     for (int size = e.PointerCount, i = 0; i < size; i++)
                     {
-                        Touch movedTouch;
-                        _touches.TryGetValue(e.GetPointerId(i), out movedTouch);
-                        if (movedTouch != null)
-                        {
-                            // TODO: should we care about historical pointer events?
-                            movedTouch.PreviousGlobalX = movedTouch.GlobalX;
-                            movedTouch.PreviousGlobalY = movedTouch.GlobalY;
-                            movedTouch.TimeStamp = now;
-                            float xc = e.GetX(i) * xConversion;
-                            float yc = e.GetY(i) * yConversion;
-                            if (movedTouch.GlobalX == xc && movedTouch.GlobalY == yc)
-                            {
-                                movedTouch.Phase = TouchPhase.Stationary;
-                            }
-                            else
-                            {
-                                movedTouch.GlobalX = xc;
-                                movedTouch.GlobalY = yc;
-                                movedTouch.Phase = TouchPhase.Moved;
-                            }
-                            if (movedTouch.Target == null || movedTouch.Target.Stage == null)
-                            {
-                                // target could have been removed from stage -> find new target in that case
-                                Geom.Point updatedTouchPosition = Geom.Point.Create(movedTouch.GlobalX, movedTouch.GlobalY);
-                                movedTouch.Target = SparrowSharp.Root.HitTest(updatedTouchPosition);
-                            }
-                        }
+                        touchProcessor.OnPointerMove(e.GetX(i) * xConversion, e.GetY(i) * yConversion, e.GetPointerId(i));
                     }
                     break;
                 case MotionEventActions.Up:
                 case MotionEventActions.PointerUp:
-                    touchInFocus = _touches[pointerId];
-                    touchInFocus.Phase = TouchPhase.Ended;
-                    long downTime = Android.OS.SystemClock.UptimeMillis() - e.DownTime;
-                    touchInFocus.TimeStamp = now;
-                    double dist = Math.Sqrt(
-                                      (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) * (touchInFocus.GlobalX - touchInFocus.InitialGlobalX) +
-                                      (touchInFocus.GlobalY - touchInFocus.InitialGlobalY) * (touchInFocus.GlobalY - touchInFocus.InitialGlobalY));
-                    // TODO: move the time out to a constant, make dist DPI dependent
-                    if (downTime < 300 && dist < 50)
-                    {
-                        touchInFocus.IsTap = true;
-                    }
+                    touchProcessor.OnPointerUp(pointerId);
                     break;
                 case MotionEventActions.Cancel:
-                    touchInFocus = _touches[pointerId];
-                    touchInFocus.Phase = TouchPhase.Cancelled;
+                    touchProcessor.OnPointerUp(pointerId);
                     break;
-            }
-
-            foreach (Touch tou in _touches.Values)
-            {
-                TouchEvent touchEvent = new TouchEvent(new List<Touch>(_touches.Values));
-                if (tou.Target != null)
-                {
-                    tou.Target.InvokeTouch(touchEvent);
-                }
-                //Console.WriteLine ("phase:" + tou.Phase + " ID:" + tou.TouchID + 
-                //    " target:" + tou.Target + " isTap:"+ tou.IsTap + " timestamp:" + tou.TimeStamp);
-            }
-
-            var touchList = new List<Touch>(_touches.Values);
-            foreach (Touch tou in touchList)
-            {
-                if (tou.Phase == TouchPhase.Ended || tou.Phase == TouchPhase.Cancelled)
-                {
-                    _touches.Remove(tou.TouchID);
-                }
             }
             return true;
         }

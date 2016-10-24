@@ -1,6 +1,5 @@
 ﻿using System;
 using Sparrow.Core;
-using OpenGL;
 using System.Windows.Forms;
 
 namespace Sparrow.Samples.Desktop

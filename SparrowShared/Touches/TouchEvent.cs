@@ -101,6 +101,17 @@ namespace Sparrow.Touches
             }
         }
 
+        public override string ToString()
+        {
+            string str = "touch timestamp " + _timestamp;
+            foreach (var touch in Touches)
+            {
+                str += string.Format("\n id: {0} target: {1} phase: {2} target {3} globalX: {4} globalY: {5}",
+                    touch.TouchID, touch.Target, touch.Phase, touch.Target, touch.GlobalX, touch.GlobalY );
+            }
+            return str;
+        }
+
     }
 }
 
