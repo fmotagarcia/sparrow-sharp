@@ -606,12 +606,12 @@ namespace Sparrow.Utils
          *  Optionally, the current data is uploaded right away. */
         public uint[] CreateVertexBuffer(bool upload = false)
         {
-            return CreateVertexBuffer(upload, BufferUsageType.StaticDraw);
+            return CreateVertexBuffer(upload, BufferUsageARB.StaticDraw);
         }
 
         /** Creates a vertex buffer object with the right size to fit the complete data.
          *  Optionally, the current data is uploaded right away. */
-        public uint[] CreateVertexBuffer(bool upload, BufferUsageType bufferUsage)
+        public uint[] CreateVertexBuffer(bool upload, BufferUsageARB bufferUsage)
         {
             if (_numVertices == 0) return new uint[] { 0, 0 };
             
@@ -626,16 +626,16 @@ namespace Sparrow.Utils
             return ret;
         }
 
-        public void UploadToVertexBuffer(uint vertexBufferName, uint vertexColorsBufferName, BufferUsageType hint)
+        public void UploadToVertexBuffer(uint vertexBufferName, uint vertexColorsBufferName, BufferUsageARB bufferUsage)
         {
             if (_numVertices > 0)
             {
                 Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexBufferName);
-                Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(_numVertices * 4 * sizeof(float)), _vertices, BufferUsageARB.StaticDraw);
+                Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(_numVertices * 4 * sizeof(float)), _vertices, bufferUsage);
 
 
                 Gl.BindBuffer(BufferTargetARB.ArrayBuffer, vertexColorsBufferName);
-                Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(_numVertices * sizeof(byte) * 4), VertexColors, BufferUsageARB.StaticDraw);
+                Gl.BufferData(BufferTargetARB.ArrayBuffer, (uint)(_numVertices * sizeof(byte) * 4), VertexColors, bufferUsage);
             }
         }
 

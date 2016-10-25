@@ -38,7 +38,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Pool\PooledObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchToken.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Rendering\BufferUsageType.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Effect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\FilterEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\GPUInfo.cs" />

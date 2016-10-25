@@ -14,7 +14,7 @@ namespace Sparrow.Display
     /// the stage. You can access 'root' and 'stage' from any display object using the respective 
     /// properties. 
 
-    /// The stage's 'Width' and 'Height' values define the coordinate system of your game. The color
+    /// The stage's 'StageWidth' and 'StageHeight' values define the coordinate system of your game. The color
     /// of the stage defines the background color of your game.
     /// </summary>
     public class Stage : DisplayObjectContainer

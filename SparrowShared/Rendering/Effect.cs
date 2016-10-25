@@ -144,7 +144,7 @@ namespace Sparrow.Rendering
          */
         public void UploadIndexData(IndexData indexData)
         {
-            UploadIndexData(indexData, BufferUsageType.StaticDraw);
+            UploadIndexData(indexData, BufferUsageARB.StaticDraw);
         }
         /** Uploads the given index data to the internal index buffer. If the buffer is too
          *  small, a new one is created automatically.
@@ -154,7 +154,7 @@ namespace Sparrow.Rendering
          *                     <code>Context3DBufferUsage</code>. Only used when the method call
          *                     causes the creation of a new index buffer.
          */
-        public void UploadIndexData(IndexData indexData, BufferUsageType bufferUsage)
+        public void UploadIndexData(IndexData indexData, BufferUsageARB bufferUsage)
         {
             int numIndices = indexData.NumIndices;
             bool isQuadLayout = indexData.UseQuadLayout;
@@ -190,7 +190,7 @@ namespace Sparrow.Rendering
          */
         public void UploadVertexData(VertexData vertexData)
         {
-            UploadVertexData(vertexData, BufferUsageType.StaticDraw);
+            UploadVertexData(vertexData, BufferUsageARB.StaticDraw);
         }
         /** Uploads the given vertex data to the internal vertex buffer. If the buffer is too
          *  small, a new one is created automatically.
@@ -200,7 +200,7 @@ namespace Sparrow.Rendering
          *                     <code>Context3DBufferUsage</code>. Only used when the method call
          *                     causes the creation of a new vertex buffer.
          */
-        public void UploadVertexData(VertexData vertexData, BufferUsageType bufferUsage)
+        public void UploadVertexData(VertexData vertexData, BufferUsageARB bufferUsage)
         {
             if (_vertexBufferName != 0)
             {
