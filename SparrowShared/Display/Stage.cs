@@ -3,6 +3,7 @@
 using Sparrow.Geom;
 using System;
 using OpenGL;
+using Sparrow.Filters;
 
 namespace Sparrow.Display
 {
@@ -26,55 +27,40 @@ namespace Sparrow.Display
         public event ResizeHandler OnResize;
 
         /// <summary>
-        /// The drawable width in pixels. This is the size of the game window on PCs and the size of the app on mobile.
-        /// </summary>
-        public uint DrawableWidth { get; private set; }
-
-        /// <summary>
-        /// The drawable width in pixels. This is the size of the game window on PCs and the size of the app on mobile.
-        /// </summary>
-        public uint DrawableHeight { get; private set; }
-
-        /// <summary>
-        /// The height of the stage's coordinate system.
-        /// Changing Stage size does not affect the size of the rendered area. If its the same as the DrawableWidht/DrawableHeight,
-        /// 1 unit in the Stage equals 1 pixel.
-        /// </summary>
-        override public float Width { get; set; } // TODO rename to StageWidth
-
-        /// <summary>
-        /// The width of the stage's coordinate system.
-        /// Changing Stage size does not affect the size of the rendered area. If its the same as the DrawableWidht/DrawableHeight,
-        /// 1 unit in the Stage equals 1 pixel.
-        /// </summary>
-        override public float Height { get; set; }
-
-        /// <summary>
         /// The background color of the stage. Default: black.
         /// </summary>
-        public uint Color { get; set; } // TODO call setRequiresRedraw
+        public uint Color { get; set; }
 
+        /** Specifies an angle (radian, between zero and PI) for the field of view. This value
+         *  determines how strong the perspective transformation and distortion apply to a Sprite3D
+         *  object.
+         *
+         *  <p>A value close to zero will look similar to an orthographic projection; a value
+         *  close to PI results in a fisheye lens effect. If the field of view is set to 0 or PI,
+         *  nothing is seen on the screen.</p>
+         *
+         *  @default 1.0
+         */
         public float FieldOfView { get; set; }
         private Point _projectionOffset;
-
+        private float _width;
+        private float _height;
         /// <summary>
         /// Initializes a stage with a certain size in points. Sparrow calls this automatically on startup.
         /// </summary>
         internal Stage(float width, float height)
         {
+            _width = width;
+            _height = height;
+            Color = 0xFFFFFF;
             FieldOfView = 1.0f;
-            Width = width;
-            Height = height;
-            DrawableWidth = (uint)width;
-            DrawableHeight = (uint)height;
             _projectionOffset = Point.Create();
+           
         }
 
         internal void SetDrawableArea(uint width, uint height)
         {
             Gl.Viewport(0, 0, (int)width, (int)height);
-            DrawableWidth = width;
-            DrawableHeight = height;
             if (OnResize != null)
             {
                 OnResize(this);
@@ -90,8 +76,8 @@ namespace Sparrow.Display
             }
 
             // locations outside of the stage area shouldn't be accepted
-            if (localPoint.X < 0 || localPoint.X > Width ||
-                localPoint.Y < 0 || localPoint.Y > Height)
+            if (localPoint.X < 0 || localPoint.X > _width ||
+                localPoint.Y < 0 || localPoint.Y > _height)
             {
                 return null;
             }
@@ -108,7 +94,7 @@ namespace Sparrow.Display
           *  spawned up by 'stageWidth' and 'stageHeight') in another coordinate system. */
         public Rectangle GetStageBounds(DisplayObject targetSpace)
         {
-            Rectangle outR = Rectangle.Create(0, 0, Width, Height);
+            Rectangle outR = Rectangle.Create(0, 0, _width, _height);
 
             Matrix2D sMatrix = GetTransformationMatrix(targetSpace);
 
@@ -127,7 +113,7 @@ namespace Sparrow.Display
             Matrix3D m = GetTransformationMatrix3D(space);
 
             return m.TransformCoords3D(
-                Width / 2 + _projectionOffset.X, Height / 2 + _projectionOffset.Y,
+                _width / 2 + _projectionOffset.X, _height / 2 + _projectionOffset.Y,
                 -FocalLength);
         }
 
@@ -140,9 +126,25 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
+        override public float Width
+        {
+            set { throw new InvalidOperationException("cannot set width of stage. Use StageWidth instead."); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
+        override public float Height
+        {
+            set { throw new InvalidOperationException("cannot set height of stage. Use StageHeight instead."); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
         override public float X
         {
-            set { throw new Exception("cannot set x-coordinate of stage"); }
+            set { throw new InvalidOperationException("cannot set x-coordinate of stage"); }
         }
 
         /// <summary>
@@ -150,7 +152,7 @@ namespace Sparrow.Display
         /// </summary>
         override public float Y
         {
-            set { throw new Exception("cannot set y-coordinate of stage"); }
+            set { throw new InvalidOperationException("cannot set y-coordinate of stage"); }
         }
 
         /// <summary>
@@ -158,7 +160,7 @@ namespace Sparrow.Display
         /// </summary>
         override public float ScaleX
         {
-            set { throw new Exception("cannot scale stage"); }
+            set { throw new InvalidOperationException("cannot scale stage"); }
         }
 
         /// <summary>
@@ -166,39 +168,7 @@ namespace Sparrow.Display
         /// </summary>
         override public float ScaleY
         {
-            set { throw new Exception("cannot scale stage"); }
-        }
-
-        /// <summary>
-        /// Cannot be set on the Stage, trying to set it will throw an exception
-        /// </summary>
-        override public float SkewX
-        {
-            set { throw new Exception("cannot skew stage"); }
-        }
-
-        /// <summary>
-        /// Cannot be set on the Stage, trying to set it will throw an exception
-        /// </summary>
-        override public float SkewY
-        {
-            set { throw new Exception("cannot skew stage"); }
-        }
-
-        /// <summary>
-        /// Cannot be set on the Stage, trying to set it will throw an exception
-        /// </summary>
-        override public float PivotX
-        {
-            set { throw new Exception("cannot set PivotX of stage"); }
-        }
-
-        /// <summary>
-        /// Cannot be set on the Stage, trying to set it will throw an exception
-        /// </summary>
-        override public float PivotY
-        {
-            set { throw new Exception("cannot set PivotY of stage"); }
+            set { throw new InvalidOperationException("cannot scale stage"); }
         }
 
         /// <summary>
@@ -206,15 +176,81 @@ namespace Sparrow.Display
         /// </summary>
         override public float Rotation
         {
-            set { throw new Exception("cannot set rotation of stage"); }
+            set { throw new InvalidOperationException("cannot set rotation of stage"); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
+        override public float SkewX
+        {
+            set { throw new InvalidOperationException("cannot skew stage"); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
+        override public float SkewY
+        {
+            set { throw new InvalidOperationException("cannot skew stage"); }
+        }
+
+        public override FragmentFilter Filter
+        {
+            get { throw new InvalidOperationException("Cannot add filter to stage. Add it to 'root' instead!"); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
+        override public float PivotX
+        {
+            set { throw new InvalidOperationException("cannot set PivotX of stage"); }
+        }
+
+        /// <summary>
+        /// Cannot be set on the Stage, trying to set it will throw an exception
+        /// </summary>
+        override public float PivotY
+        {
+            set { throw new InvalidOperationException("cannot set PivotY of stage"); }
+        }
+
+        /// <summary>
+        /// The height of the stage's coordinate system.
+        /// Changing Stage size does not affect the size of the rendered area. By default its the same as SparrowSharp.ViewPort.Width,
+        /// in this case 1 unit in the Stage equals 1 pixel.
+        /// </summary>
+        public float StageWidth {
+            get { return _width; }
+            set { _width = value; }
+        }
+
+        /// <summary>
+        /// The width of the stage's coordinate system.
+        /// Changing Stage size does not affect the size of the rendered area. By default its the same as SparrowSharp.ViewPort.Height,
+        /// in this case 1 unit in the Stage equals 1 pixel.
+        /// </summary>
+        public float StageHeight {
+            get { return _height; }
+            set { _height = value; }
         }
 
         /** The distance between the stage and the camera. Changing this value will update the
          *  field of view accordingly. */
         public float FocalLength
         {
-            get { return Width / (2f * (float)Math.Tan(FieldOfView / 2f)); }
-            set { FieldOfView = 2 * (float)Math.Atan(Width / (2f * value)); }
+            get { return StageWidth / (2f * (float)Math.Tan(FieldOfView / 2f)); }
+            set { FieldOfView = 2 * (float)Math.Atan(StageWidth / (2f * value)); }
+        }
+
+        /** A vector that moves the camera away from its default position in the center of the
+         *  stage. Use this property to change the center of projection, i.e. the vanishing
+         *  point for 3D display objects. <p>CAUTION: not a copy, but the actual object!</p>
+         */
+        public Point ProjectionOffset {
+            get { return _projectionOffset; }
+            set { _projectionOffset.SetTo(value.X, value.Y); }
         }
 
         /** The global position of the camera. This property can only be used to find out the
@@ -228,5 +264,5 @@ namespace Sparrow.Display
         {
             get { return GetCameraPosition(); }
         }
-}
+    }
 }

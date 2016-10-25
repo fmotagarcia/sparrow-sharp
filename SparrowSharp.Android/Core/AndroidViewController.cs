@@ -218,8 +218,8 @@ namespace Sparrow.Core
         /// </summary>
         override public bool OnTouchEvent(MotionEvent e)
         {
-            float xConversion = SparrowSharp.Stage.Width / Width;
-            float yConversion = SparrowSharp.Stage.Height / Height;
+            float xConversion = SparrowSharp.Stage.StageWidth / Width;
+            float yConversion = SparrowSharp.Stage.StageHeight / Height;
 
             // get pointer index from the event object
             int pointerIndex = e.ActionIndex;

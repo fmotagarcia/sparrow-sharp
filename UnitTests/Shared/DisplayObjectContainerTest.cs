@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Sparrow.Core;
 using Sparrow.Display;
 
 namespace Tests
@@ -13,16 +14,16 @@ namespace Tests
         [SetUp]
         protected void SetUp()
         {
-            Sparrow.Core.SparrowSharp.Start(12, 12, typeof(Sprite));
+            SparrowSharp.Start(12, 12, typeof(Sprite));
             testRoot = new Sprite();
-            Sparrow.Core.SparrowSharp.Stage.AddChild(testRoot);
+            SparrowSharp.Stage.AddChild(testRoot);
         }
 
         [TearDown]
         protected void TearDown()
         {
             testRoot.RemoveAllChildren();
-            Sparrow.Core.SparrowSharp.Destroy();
+            SparrowSharp.Destroy();
         }
 
         [Test]

@@ -16,6 +16,7 @@ namespace Sparrow.Utils
 
         public readonly static float PIQUARTER = (float)(Math.PI / 4.0f);
         public readonly static float PIHALF = (float)(Math.PI / 2.0f);
+        public readonly static float TWOPI = (float)(Math.PI * 2.0f);
 
         static MathUtil()
         {
@@ -121,9 +122,14 @@ namespace Sparrow.Utils
             return (u >= 0) && (v >= 0) && (u + v< 1);
         }
 
-        public static float Deg2rad(float deg)
+        public static float Deg2Rad(float deg)
         {
             return deg / 180.0f * (float)Math.PI;   
+        }
+
+        public static float Rad2Deg(float rad)
+        {
+            return rad * 180.0f / (float)Math.PI;
         }
 
         /// <summary>
@@ -146,7 +152,8 @@ namespace Sparrow.Utils
         /** Indicates if two float values are equal, give or take <code>epsilon</code>. */
         public static bool IsEquivalent(float a, float b, float epsilon = 0.0001f)
         {
-            return (a - epsilon<b) && (a + epsilon > b);
+            return (a - epsilon < b) && (a + epsilon > b);
         }
-}
+
+    }
 }

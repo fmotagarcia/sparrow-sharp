@@ -120,11 +120,6 @@ namespace Sparrow.Filters
                 throw new InvalidOperationException("Cannot render filter without target");
             }
 
-            if (_target.Is3D)
-            {
-                _cached = _cacheRequested = false;
-            }
-
             if (!_cached || _cacheRequested)
             {
                 RenderPasses(painter, _cacheRequested);
@@ -214,7 +209,7 @@ namespace Sparrow.Filters
             painter.State.RenderTarget = input;
             painter.State.SetProjectionMatrix(bounds.X, bounds.Y,
                 input.Root.Width, input.Root.Height,
-                stage.Width, stage.Height, stage.CameraPosition);
+                stage.StageWidth, stage.StageHeight, stage.CameraPosition);
 
             // OpenGL renders into textures with Y coordinates flipped :(
             painter.State.ModelviewMatrix.Scale(1, -1);
@@ -234,9 +229,8 @@ namespace Sparrow.Filters
             if (output != null) // indirect rendering
             {
                 painter.PushState();
-
-                if (_target.Is3D) painter.State.SetModelviewMatricesToIdentity(); // -> stage coords
-                else              _quad.MoveVertices(renderSpace, _target);       // -> local coords
+                
+                _quad.MoveVertices(renderSpace, _target);       // -> local coords
 
                 _quad.Texture = output;
                 _quad.Render(painter); // renders to the screen
@@ -568,9 +562,7 @@ internal class FilterQuad : Mesh
 
         public void MoveVertices(DisplayObject sourceSpace, DisplayObject targetSpace)
         {
-            if (targetSpace.Is3D)
-                throw new Exception("cannot move vertices into 3D space");
-            else if (sourceSpace != targetSpace)
+            if (sourceSpace != targetSpace)
             {
                 sMatrix = targetSpace.GetTransformationMatrix(sourceSpace).Invert(); // ss could be null!
                 VertexData.TransformVertices(sMatrix, 0, VertexData.NumVertices);

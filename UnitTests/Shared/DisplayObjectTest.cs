@@ -319,7 +319,7 @@ namespace Tests
             quad.PivotY = 20;            
             CompareRectangles(sprite.Bounds, quad.Bounds);
             
-            sprite.Rotation = quad.Rotation = MathUtil.Deg2rad(45);
+            sprite.Rotation = quad.Rotation = MathUtil.Deg2Rad(45);
             CompareRectangles(sprite.Bounds, quad.Bounds);
             
             sprite.ScaleX = quad.ScaleX = 1.5f;

@@ -109,6 +109,12 @@ namespace Sparrow.Geom
             Y = point.Y;
         }
 
+        public void SetTo(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
+
         /// <summary>
         /// Determines whether the specified Point's X and Y values is equal to the current Point with
         /// with a small epsilon error margin.

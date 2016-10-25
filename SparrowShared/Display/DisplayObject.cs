@@ -94,7 +94,6 @@ namespace Sparrow.Display
         private readonly Matrix2D _transformationMatrix;
         private Matrix3D _transformationMatrix3D;
         private bool _orientationChanged;
-        private bool _is3D = false;
         private DisplayObject _maskee;
 
         // internal members (for fast access on rendering)
@@ -437,7 +436,7 @@ namespace Sparrow.Display
          *  call <code>painter.excludeFromCache()</code> in the object's render method instead.
          *  That way, Starling's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
          */
-        public void SetRequiresRedraw()
+        virtual public void SetRequiresRedraw()
         {
             DisplayObject parent = _parent != null ? _parent : _maskee;
             uint frameID = SparrowSharp.FrameID;
@@ -614,7 +613,7 @@ namespace Sparrow.Display
         /// The transformation matrix of the object relative to its parent.
         /// @returns CAUTION: not a copy, but the actual object!
         /// </summary>
-        public Matrix2D TransformationMatrix
+        virtual public Matrix2D TransformationMatrix
         {
             get
             {
@@ -720,13 +719,10 @@ namespace Sparrow.Display
          *  matrix. Only the 'Sprite3D' class supports real 3D transformations.</p>
          *
          *  <p>CAUTION: not a copy, but the actual object!</p> */
-        public Matrix3D TransformationMatrix3D
+        virtual public Matrix3D TransformationMatrix3D
         {
             get { return TransformationMatrix.ConvertToMatrix3D(); }
         }
-
-        /** Indicates if this object or any of its parents is a 'Sprite3D' object. */
-        public bool Is3D { get { return _is3D; } }
 
         /// <summary>
         /// The bounds of the object relative to the local coordinates of the parent.
@@ -1010,7 +1006,7 @@ namespace Sparrow.Display
         *  @see starling.filters.FragmentFilter
         *  @see starling.filters.FilterChain
         */
-        public FragmentFilter Filter { 
+        virtual public FragmentFilter Filter { 
             get { return _filter; }
             set
             {

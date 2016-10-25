@@ -331,9 +331,8 @@ namespace Sparrow.Rendering
         private bool IsRectangularMask(DisplayObject mask, DisplayObject maskee, Matrix2D outMatrix)
         {
             Quad quad = mask as Quad;
-            bool is3D = mask.Is3D || (maskee != null && maskee.Is3D && mask.Stage == null);
 
-            if (quad != null && !is3D && quad.Texture == null)
+            if (quad != null && quad.Texture == null)
             {
                 if (mask.Stage != null) outMatrix = mask.GetTransformationMatrix(null);
                 else

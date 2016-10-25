@@ -112,8 +112,8 @@ namespace Sparrow.Core
         {
             if (e.Button == MouseButtons.Left)
             {
-                float xConversion = SparrowSharp.Stage.Width / Size.Width;
-                float yConversion = SparrowSharp.Stage.Height / Size.Height;
+                float xConversion = SparrowSharp.Stage.StageWidth / Size.Width;
+                float yConversion = SparrowSharp.Stage.StageHeight / Size.Height;
 
                 touchProcessor.OnPointerDown(e.X * xConversion, e.Y * yConversion, pointerId);
             }
@@ -123,8 +123,8 @@ namespace Sparrow.Core
         {
             if (e.Button == MouseButtons.Left)
             {
-                float xConversion = SparrowSharp.Stage.Width / Size.Width;
-                float yConversion = SparrowSharp.Stage.Height / Size.Height;
+                float xConversion = SparrowSharp.Stage.StageWidth / Size.Width;
+                float yConversion = SparrowSharp.Stage.StageHeight / Size.Height;
                 touchProcessor.OnPointerMove(e.X * xConversion, e.Y * yConversion, pointerId);
             }
         }

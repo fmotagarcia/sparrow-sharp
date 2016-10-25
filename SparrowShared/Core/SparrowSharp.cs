@@ -15,7 +15,6 @@ namespace Sparrow.Core
 
         private static Painter _painter;
         private static uint _frameID;
-        public static readonly float ContentScaleFactor = 1.0f;// TODO
 
         private static Rectangle _viewPort;
         private static Rectangle _previousViewPort;
@@ -115,8 +114,8 @@ namespace Sparrow.Core
             if (doRedraw)
             {
                 //dispatchEventWith(starling.events.Event.RENDER);
-                float scaleX = _viewPort.Width / Stage.Width;
-                float scaleY = _viewPort.Height / Stage.Height;
+                float scaleX = _viewPort.Width / Stage.StageWidth;
+                float scaleY = _viewPort.Height / Stage.StageHeight;
 
                 _painter.NextFrame();
                 _painter.PixelSize = 1.0f / ContentScaleFactor;
@@ -125,7 +124,7 @@ namespace Sparrow.Core
                     _viewPort.Y < 0f ? -_viewPort.Y / scaleY : 0.0f,
                     _clippedViewPort.Width / scaleX,
                     _clippedViewPort.Height / scaleY,
-                    Stage.Width, Stage.Height, Stage.CameraPosition);
+                    Stage.StageWidth, Stage.StageHeight, Stage.CameraPosition);
                 
                 _painter.Clear(Stage.Color, 0.0f);
 
@@ -188,8 +187,8 @@ namespace Sparrow.Core
         public static void ShowStats(HAlign horizontalAlign = HAlign.Left, 
                                      VAlign verticalAlign = VAlign.Top, float scale = 1f)
         {
-            float stageWidth  = Stage.Width;
-            float stageHeight = Stage.Height;
+            float stageWidth  = Stage.StageWidth;
+            float stageHeight = Stage.StageHeight;
 
             if (_statsDisplay == null)
             {
@@ -209,13 +208,31 @@ namespace Sparrow.Core
             else if (verticalAlign == VAlign.Center) _statsDisplay.Y = (stageHeight - _statsDisplay.Height) / 2;
         }
 
+        /// <summary>
+        /// The viewport into which Sparrow contents will be rendered. This is the size of the window/screen in pixels
+        /// </summary>
+        public static Rectangle ViewPort
+        {
+            get { return _viewPort; }
+            set { _viewPort = value.Clone(); }
+        }
+
+        /** The ratio between viewPort width and stage width. Useful for choosing a different
+         *  set of textures depending on the display resolution. */
+        public static float ContentScaleFactor
+        {
+            get { return _viewPort.Width / Stage.StageWidth; }
+        }
 
         /** Indicates if Stage3D render methods will report errors. Activate only when needed,
          *  as this has a negative impact on performance. @default false */
         public static void EnableErrorChecking()
         {
-            _enableErrorChecking = true;
-            OpenGLDebugCallback.Init();
+            if (_enableErrorChecking == false)
+            {
+                _enableErrorChecking = true;
+                OpenGLDebugCallback.Init();
+            }
         }
 
         public static void Destroy()
@@ -225,6 +242,7 @@ namespace Sparrow.Core
             Stage = null;
             Root = null;
             Programs.Clear();
+            // TODO check
         }
     }
 }

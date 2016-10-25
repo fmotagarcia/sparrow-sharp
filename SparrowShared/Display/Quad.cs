@@ -121,12 +121,6 @@ namespace Sparrow.Display
                     outRect.Top -= outRect.Height;
                 }
             }
-            else if (Is3D && Stage != null)
-            {
-                float[] point3D = Stage.GetCameraPosition(targetSpace);
-                Matrix3D sMatrix3D = GetTransformationMatrix3D(targetSpace);
-                _bounds.SetBoundsProjected(sMatrix3D, point3D);
-            }
             else
             {
                 Matrix2D sMatrix = GetTransformationMatrix(targetSpace);

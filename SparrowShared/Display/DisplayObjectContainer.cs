@@ -107,7 +107,7 @@ namespace Sparrow.Display
                 else
                 {
                     child.RemoveFromParent();
-                    _children.Insert(index, child);
+                    _children.Insert(index, child); // TODO this is different in Starling
                     child.Parent = this;
 
                     child.InvokeAdded(child, this);
