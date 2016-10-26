@@ -73,6 +73,7 @@ namespace Sparrow.Core
             control.Resize += OnResize;
 
             control.ContextCreated += OnContextCreated;
+            control.ContextDestroying += ContextDestroying;
         }
 
         private void OnContextCreated(object sender, GlControlEventArgs e)
@@ -82,7 +83,12 @@ namespace Sparrow.Core
             // Hook the application’s idle event
             Application.Idle += new EventHandler(OnApplicationIdle);
         }
-        
+
+        private void ContextDestroying(object sender, GlControlEventArgs e)
+        {
+            Console.WriteLine("Context loss on Windows is not impletented");
+        }
+
         private void OnApplicationIdle(object sender, EventArgs e)
         {
            

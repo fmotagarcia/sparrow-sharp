@@ -109,7 +109,17 @@ namespace Sparrow.ResourceLoading
             {
                 Console.Out.WriteLine("WARNING: empty bitmap loaded");
             }
-            //_glTexture = new ConcreteTexture(name, TextureFormat.Rgba8888, bitmap.Width, bitmap.Height, 0, true, false, 1.0f);
+
+            // TODO unify this code with other tex uploaders
+            _glTexture.Root.OnRestore = () => {
+                GLUtils.TexSubImage2D(GLES20.GlTexture2d,
+                   0, // level
+                   0, // xOffset
+                   0, // yOffset
+                   bitmap);
+                _glTexture.Root.SetDataUploaded();
+            };
+
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
             // a race condition if the last subscriber unsubscribes 

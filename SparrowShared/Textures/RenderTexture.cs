@@ -28,7 +28,7 @@ namespace Sparrow.Textures
     //     for (int i=0; i<numDrawings; ++i)
     //	   {
     //         image.Rotation = (2 * (float)Math.PI / numDrawings) * i;
-    //	       renderTexture.DrawObject(image);            
+    //	       renderTexture.Draw(image);            
     //     }             
     // });
     /// </summary>
@@ -58,6 +58,8 @@ namespace Sparrow.Textures
 
             _isPersistent = persistent;
             _activeTexture = Empty(width, height, true, 0, true, scale, format);
+            // TODO does not work. Render texture graphics are lost on context restore!
+            _activeTexture.Root.OnRestore = _activeTexture.Root.Clear;
 
             SetTo(_activeTexture, Rectangle.Create(0, 0, width, height), true, null, false);
         }

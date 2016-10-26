@@ -24,7 +24,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using OpenGL;
-using Sparrow.Rendering;
 
 namespace Sparrow.Core
 {

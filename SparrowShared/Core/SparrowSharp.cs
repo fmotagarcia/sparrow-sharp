@@ -13,6 +13,9 @@ namespace Sparrow.Core
     public static class SparrowSharp
     {
 
+        public delegate void ContextCreatedHandler();
+        public static event ContextCreatedHandler ContextCreated;
+
         private static Painter _painter;
         private static uint _frameID;
 
@@ -243,6 +246,12 @@ namespace Sparrow.Core
             Root = null;
             Programs.Clear();
             // TODO check
+        }
+
+        public static void OnContextCreated()
+        {
+            UpdateViewPort(true);
+            ContextCreated?.Invoke();
         }
     }
 }

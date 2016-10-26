@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using OpenGL;
+using Sparrow.Core;
 
 namespace Sparrow.Rendering
 {
@@ -102,10 +103,17 @@ namespace Sparrow.Rendering
         {
             _mvpMatrix3D = Matrix3D.Create();
             _programBaseName = GetType().Name;
+            SparrowSharp.ContextCreated += OnContextCreated;
         }
 
         /** Purges the index- and vertex-buffers. */
         public void Dispose()
+        {
+            PurgeBuffers();
+            SparrowSharp.ContextCreated -= OnContextCreated;
+        }
+
+        private void OnContextCreated()
         {
             PurgeBuffers();
         }
@@ -399,6 +407,11 @@ namespace Sparrow.Rendering
                 return program;
             }
         }
+
+        /** The function that you provide here will be called after a context loss.
+         *  Call both "upload..." methods from within the callback to restore any vertex or
+         *  index buffers. */
+        public Action OnRestore;
 
         public Matrix3D MvpMatrix3D
         {

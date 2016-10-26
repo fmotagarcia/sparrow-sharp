@@ -21,20 +21,13 @@ namespace Sparrow.Textures
                                 properties.NumMipMaps, properties.OptimizeForRenderToTexture,
                                 properties.Scale, properties.Format);
 
+            tex.Root.UploadData(imgData);
 
-            Gl.TexSubImage2D(TextureTarget.Texture2d,
-                        0, // level
-                        0, // xOffset
-                        0, // yOffset
-                        width,
-                        height,
-                        properties.Format.PixelFormat,
-                        properties.Format.PixelType,
-                        imgData);
-            if (properties.NumMipMaps > 0)
+            tex.Root.OnRestore = () =>
             {
-                Gl.GenerateMipmap(Gl.TEXTURE_2D);
-            }
+                tex.Root.UploadData(imgData);
+            };
+
             return tex;
         }
 
@@ -49,20 +42,13 @@ namespace Sparrow.Textures
                                 properties.NumMipMaps, properties.OptimizeForRenderToTexture,
                                 properties.Scale, properties.Format);
 
-            Gl.TexSubImage2D(TextureTarget.Texture2d,
-                        0, // level
-                        0, // xOffset
-                        0, // yOffset
-                        width,
-                        height,
-                        properties.Format.PixelFormat,
-                        properties.Format.PixelType,
-                        imgData);
+            tex.Root.UploadData(imgData);
 
-            if (properties.NumMipMaps > 0)
+            tex.Root.OnRestore = () =>
             {
-                Gl.GenerateMipmap(Gl.TEXTURE_2D);
-            }
+                tex.Root.UploadData(imgData);
+            };
+
             return tex;
         }
 
@@ -80,6 +66,7 @@ namespace Sparrow.Textures
 
             int size = Math.Max(32, width * height * properties.Format.BitsPerPixel / 8);
 
+            // TODO move this to ConcreteTexture
             Gl.CompressedTexSubImage2D(TextureTarget.Texture2d,
                 0, // level
                 0, // xOffset
@@ -94,6 +81,13 @@ namespace Sparrow.Textures
             {
                 Gl.GenerateMipmap(Gl.TEXTURE_2D);
             }
+            
+            tex.Root.OnRestore = () =>
+            {
+                throw new NotImplementedException();
+                //tex.Root.UploadCompressedData(imgData);
+            };
+
             return tex;
         }
 
@@ -133,7 +127,7 @@ namespace Sparrow.Textures
             uint glTexName = Gl.GenTexture();
             Gl.BindTexture(TextureTarget.Texture2d, glTexName);
 
-            Gl.TexStorage2D(Gl.TEXTURE_2D, // this could be stringly typed...
+            Gl.TexStorage2D(Gl.TEXTURE_2D,
                 numMipMaps + 1, // mipmap level, min 1
                 format.InternalFormat,
                 actualWidth,
@@ -142,7 +136,9 @@ namespace Sparrow.Textures
             ConcreteTexture concreteTexture = new ConcreteTexture(
                     glTexName, format, actualWidth, actualHeight, numMipMaps,
                     premultipliedAlpha, optimizeForRenderToTexture, scale);
-            
+
+
+            concreteTexture.OnRestore = concreteTexture.Clear;
 
             if (actualWidth - origWidth < 0.001f && actualHeight - origHeight < 0.001f)
             {
@@ -318,7 +314,7 @@ namespace Sparrow.Textures
 
         /** The height of the texture in pixels (without scale adjustment). */
         virtual public float NativeHeight { get { return 0f; } }
-
+        
         /** The scale factor, which influences width and height properties. */
         virtual public float Scale { get { return 1.0f; } }
 

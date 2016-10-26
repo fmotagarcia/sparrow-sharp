@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using OpenGL;
 using System.Text;
+using Sparrow.Core;
+using System;
 
 namespace Sparrow.Rendering
 {
@@ -44,6 +46,7 @@ namespace Sparrow.Rendering
         public Program(string vertexShader, string fragmentShader)
         {
             Init(vertexShader, fragmentShader);
+            SparrowSharp.ContextCreated += DisposeProgram;
         }
 
         protected void Init(string vertexShader, string fragmentShader)
@@ -51,6 +54,20 @@ namespace Sparrow.Rendering
             _vertexShader = vertexShader;
             _fragmentShader = fragmentShader;
         }
+
+
+        /** Disposes the internal Program3D instance. */
+        public void Dispose()
+        {
+            SparrowSharp.ContextCreated -= DisposeProgram;
+            Gl.DetachShader(Name, vertexShader);
+            Gl.DetachShader(Name, fragmentShader);
+
+            Gl.DeleteShader(vertexShader);
+            Gl.DeleteShader(fragmentShader);
+            DisposeProgram();
+        }
+
 
         public void Activate()
         {
@@ -105,18 +122,6 @@ namespace Sparrow.Rendering
 
             Gl.DeleteShader(vertexShader);
             Gl.DeleteShader(fragmentShader);
-        }
-
-        public void Dispose()
-        {
-            if (Name != 0)
-            {
-                Gl.DetachShader(Name, vertexShader);
-                Gl.DetachShader(Name, fragmentShader);
-
-                Gl.DeleteShader(vertexShader);
-                Gl.DeleteShader(fragmentShader);
-            }
         }
 
         private uint CompileShader(string source, int type)
@@ -189,6 +194,14 @@ namespace Sparrow.Rendering
                 Gl.GetActiveAttrib(Name, i, 200, out len, out size, out type, sb);
                 string nameStr = sb.ToString();
                 Attributes.Add(nameStr, Gl.GetAttribLocation(Name, nameStr)); // should return uint..
+            }
+        }
+
+        private void DisposeProgram()
+        {
+            if (Name != 0)
+            {
+                Name = 0;
             }
         }
 

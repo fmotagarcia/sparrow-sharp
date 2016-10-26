@@ -13,9 +13,7 @@ using System.Diagnostics;
 namespace Sparrow.Core
 {
     /// <summary>
-    /// The device-specific base class for a Sparrow project.
-    /// Note that this class contains device specific functionality, so if you override a function
-    /// its likely that you will need to define platform specific behaviour using #ifdefs
+    /// The Android-specific base class for a Sparrow project.
     /// </summary>
     public class AndroidViewController : SurfaceView, ISurfaceHolderCallback
     {
@@ -70,13 +68,12 @@ namespace Sparrow.Core
 
         public AndroidViewController(Android.Content.Context context, Type rootClass) : base(context)
         {
-            Console.WriteLine("Sparrow-sharp: Starting");
+            Console.WriteLine("Sparrow: Starting");
             _rootClass = rootClass;
             touchProcessor = new TouchProcessor();
 
              _Holder = Holder;
             _Holder.AddCallback(this);
-            _Holder.SetType(SurfaceType.Gpu);
 
             AndroidContext = context;
             TextureLoader._context = context;
@@ -93,6 +90,7 @@ namespace Sparrow.Core
         /// </param>
         public void SurfaceCreated(ISurfaceHolder holder)
         {
+            Console.WriteLine("Sparrow: SurfaceCreated");
             // Get actual native window handle
             _NativeWindowHandle = ANativeWindow_fromSurface(JNIEnv.Handle, holder.Surface.Handle);
 
@@ -125,8 +123,7 @@ namespace Sparrow.Core
                 throw new InvalidOperationException("unable to make context current");
 
             Invalidate();
-
-            float fps = 60.0f;
+            
             if (_RenderTimer != null)
             {
                 throw new InvalidOperationException("rendering already active");
@@ -137,17 +134,23 @@ namespace Sparrow.Core
                 SparrowSharp.NativeWindow = this;
                 SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
             }
+            else
+            {
+                SparrowSharp.OnContextCreated();
+            }
 
-            _RenderTimerDueTime = (int)Math.Ceiling(1000.0f / fps);
+            _RenderTimerDueTime = (int)Math.Ceiling(1000.0f / 60.0f);
             _RenderTimer = new Timer(RenderTimerCallback, null, _RenderTimerDueTime, Timeout.Infinite);
         }
 
         private void RenderTimerCallback(object state)
         {
             // Rendering on main UI thread
-           
             Android.App.Application.SynchronizationContext.Send(delegate {
-
+                if (_DeviceContext == null)
+                {
+                    return;
+                }
                 bool needsSwap = SparrowSharp.Step();
                 if (needsSwap)
                 {
@@ -167,10 +170,12 @@ namespace Sparrow.Core
 
         public void SurfaceChanged(ISurfaceHolder holder, Format format, int w, int h)
         {
+            Console.WriteLine("Sparrow: SurfaceChanged");
         }
 
         public void SurfaceDestroyed(ISurfaceHolder holder)
         {
+            Console.WriteLine("Sparrow: SurfaceDestroyed");
             if (_RenderTimer != null)
             {
                 _RenderTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -203,7 +208,7 @@ namespace Sparrow.Core
 
         protected override void OnSizeChanged(int w, int h, int oldw, int oldh)
         {
-            Console.WriteLine("Sparrow-sharp: Android view size changed");
+            Console.WriteLine("Sparrow: Android view size changed");
             base.OnSizeChanged(w, h, oldw, oldh);
             if (SparrowSharp.Stage != null)
             {

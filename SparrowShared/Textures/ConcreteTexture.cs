@@ -28,7 +28,8 @@ namespace Sparrow.Textures
         private bool _premultipliedAlpha;
         private bool _optimizedForRenderTexture;
         private float _scale;
-
+        private Action _onRestore;
+        private bool _dataUploaded;
         /** @private
          *
          *  Creates a ConcreteTexture object from a TextureBase, storing information about size,
@@ -51,6 +52,26 @@ namespace Sparrow.Textures
             _numMipMaps = numMipMaps;
             _premultipliedAlpha = premultipliedAlpha;
             _optimizedForRenderTexture = optimizedForRenderTexture;
+            _dataUploaded = false;
+        }
+
+        // TODO move this to a subclass?
+        public void UploadData(object pixels)
+        {
+            Gl.TexSubImage2D(TextureTarget.Texture2d,
+                       0, // level
+                       0, // xOffset
+                       0, // yOffset
+                       _width,
+                       _height,
+                       _format.PixelFormat,
+                       _format.PixelType,
+                       pixels);
+            if (_numMipMaps > 0)
+            {
+                Gl.GenerateMipmap(Gl.TEXTURE_2D);
+            }
+            SetDataUploaded();
         }
 
         /** Disposes the TextureBase object. */
@@ -63,10 +84,32 @@ namespace Sparrow.Textures
                 Gl.DeleteTextures(_base);
             }
         }
-        
+
+        private void OnContextCreated()
+        {
+            _dataUploaded = false;
+
+            _base = Gl.GenTexture(); // copypaste from Texture.Empty...
+            Gl.BindTexture(TextureTarget.Texture2d, _base);
+
+            Gl.TexStorage2D(Gl.TEXTURE_2D,
+                _numMipMaps + 1, // mipmap level, min 1
+                _format.InternalFormat,
+                _width,
+                _height); // recreate the underlying texture
+            _onRestore(); // restore contents, calls UploadData/Clear TODO make this an interface?
+
+            // if no texture has been uploaded above, we init the texture with transparent pixels.
+            if (!_dataUploaded) Clear();
+        }
+
+        public void Clear()
+        {
+            Clear(0x0, 0.0f);
+        }
         /** Clears the texture with a certain color and alpha value. The previous contents of the
          *  texture is wiped out. */
-        public void Clear(uint color = 0x0, float alpha = 0.0f)
+        public void Clear(uint color, float alpha)
         {
             if (_premultipliedAlpha && alpha< 1.0f)
             {
@@ -84,12 +127,36 @@ namespace Sparrow.Textures
             painter.Clear(color, alpha);
 
             painter.PopState();
+            SetDataUploaded();
+        }
+
+        public void SetDataUploaded()
+        {
+            _dataUploaded = true;
         }
 
         // properties
         
         /** Indicates if the base texture was optimized for being used in a render texture. */
         public bool OptimizedForRenderTexture { get { return _optimizedForRenderTexture; } }
+
+        public Action OnRestore
+        {
+            get { return _onRestore; }
+            set
+            {
+                SparrowSharp.ContextCreated -= OnContextCreated;
+                if (value != null)
+                {
+                    _onRestore = value;
+                    SparrowSharp.ContextCreated += OnContextCreated;
+                }
+                else
+                {
+                    _onRestore = null;
+                }
+            }
+        }
 
         public override uint Base { get { return _base; } }
 

@@ -231,6 +231,7 @@ namespace Sparrow.Display
                 _effect.Dispose();
 
             _effect = Style.CreateEffect();
+            _effect.OnRestore = SetVertexAndIndexDataChanged;
         }
 
         /** The total number of vertices in the mesh. If you change this to a smaller value,

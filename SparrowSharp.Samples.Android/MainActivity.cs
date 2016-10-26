@@ -7,7 +7,7 @@ using Android.Views;
 namespace Sparrow.Samples
 {
     [Activity(Label = "sparrow-sharp benchmark", Name = "awesome.demo.activity",
-        ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.KeyboardHidden,
+        ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.KeyboardHidden,
         MainLauncher = true)]
     public class MainActivity : Activity
     {
