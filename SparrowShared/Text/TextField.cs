@@ -44,6 +44,8 @@ namespace Sparrow.Text
             _meshBatch.Touchable = false;
             _meshBatch.PixelSnapping = true;
             AddChild(_meshBatch);
+
+            SparrowSharp.ContextCreated += SetRequiresRecomposition;
         }
 
 
@@ -52,7 +54,7 @@ namespace Sparrow.Text
         {
             _format.ChangeEvent -= SetRequiresRecomposition;
             _compositor.ClearMeshBatch(_meshBatch);
-
+            SparrowSharp.ContextCreated -= SetRequiresRecomposition;
             base.Dispose();
         }
         

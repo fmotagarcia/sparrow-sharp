@@ -575,7 +575,7 @@ namespace Sparrow.Rendering
             }
         }
 
-        public void DestroyFramebufferForTexture(Texture texture) // TODO call this
+        public void DestroyFramebufferForTexture(Texture texture)
         {
             uint framebuffer;
             if (framebufferCache.TryGetValue(texture.Base, out framebuffer))
@@ -630,7 +630,7 @@ namespace Sparrow.Rendering
                 if (sScissorRect.Width < 1f || sScissorRect.Height < 1f)
                 {
                     sScissorRect.SetTo(0, 0, 1, 1);
-                    Debug.Write("WARNING: Clip rectangle has zero size, setting it to 1x1");
+                    Debug.WriteLine("WARNING: Clip rectangle has zero size, setting it to 1x1");
                 }
                 Gl.Enable(EnableCap.ScissorTest);
                 Gl.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);

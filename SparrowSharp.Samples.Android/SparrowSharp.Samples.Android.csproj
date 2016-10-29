@@ -80,5 +80,8 @@
   <ItemGroup>
     <Folder Include="Resources\drawable-nodpi\" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidEnvironment Include="environment.txt" />
+  </ItemGroup>
   <Import Project="..\SparrowSharp.Samples.Shared\SparrowSharp.Samples.Shared.projitems" Label="Shared" />
 </Project>

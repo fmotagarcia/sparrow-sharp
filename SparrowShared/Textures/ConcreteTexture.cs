@@ -82,13 +82,15 @@ namespace Sparrow.Textures
                 // is this OK?
                 SparrowSharp.Painter.DestroyFramebufferForTexture(this);
                 Gl.DeleteTextures(_base);
+                _base = 0;
+                SparrowSharp.ContextCreated -= OnContextCreated;
             }
         }
 
         private void OnContextCreated()
         {
             _dataUploaded = false;
-
+            SparrowSharp.Painter.DestroyFramebufferForTexture(this);
             _base = Gl.GenTexture(); // copypaste from Texture.Empty...
             Gl.BindTexture(TextureTarget.Texture2d, _base);
 

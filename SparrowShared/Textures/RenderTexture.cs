@@ -67,6 +67,7 @@ namespace Sparrow.Textures
         public override void Dispose()
         {
             _activeTexture.Dispose();
+            _activeTexture = null;
             base.Dispose();
         }
 

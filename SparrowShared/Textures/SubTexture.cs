@@ -116,7 +116,11 @@ namespace Sparrow.Textures
         /** Disposes the parent texture if this texture owns it. */
         public override void Dispose()
         {
-            if (_ownsParent) _parent.Dispose();
+            if (_ownsParent)
+            {
+                _parent.Dispose();
+                _parent = null;
+            }
         }
 
         /** The texture which the SubTexture is based on. */

@@ -54,32 +54,6 @@ namespace Sparrow.Rendering
             Console.Out.WriteLine("max total local workgroup elements " + maxComputeWorkGroupInvocations);
         }
 
-        public static void CheckShaderCompileError(uint shaderId)
-        {
-            int rvalue;
-            Gl.GetShader(shaderId, Gl.COMPILE_STATUS, out rvalue);
-            if (rvalue != 1)
-            {
-                int logLenght;
-                StringBuilder logStr = new StringBuilder();
-                Gl.GetShaderInfoLog(shaderId, 2000, out logLenght, logStr);
-                Console.Out.WriteLine("Shader compile error: " + logStr.ToString() + " " + rvalue);
-            }
-        }
-
-        public static void CheckShaderLinkError(uint shaderProgramId)
-        {
-            int rvalue;
-            Gl.GetProgram(shaderProgramId, Gl.LINK_STATUS, out rvalue);
-            if (rvalue != 1)
-            {
-                int logLenght;
-                StringBuilder logStr = new StringBuilder();
-                Gl.GetShaderInfoLog(shaderProgramId, 2000, out logLenght, logStr);
-                Console.Out.WriteLine("Shader linker error: " + logStr.ToString() + " " + rvalue);
-            }
-        }
-
         /// <summary>
         /// Checks for an OpenGL error. If there is one, it is logged an the error code is returned.
         /// </summary>

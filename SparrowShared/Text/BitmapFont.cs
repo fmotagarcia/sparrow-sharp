@@ -109,14 +109,13 @@ namespace Sparrow.Text
             LineHeight = Size = Baseline = 14;
             OffsetX = OffsetY = Padding = 0.0f;
             
-            _texture = new TextureLoader().LoadFromStream(fontTextureData);
+            _texture = SimpleTextureLoader.LoadImageFromStream(fontTextureData);
             _chars = new Dictionary<int, BitmapChar>();
             _helperImage = new Image(_texture);
 
             XmlDocument xml = new XmlDocument();
             xml.Load(fontXmlData);
-
-
+            
             ParseFontXml(xml);
         }
 
@@ -126,6 +125,7 @@ namespace Sparrow.Text
             if (_texture != null)
             {
                 _texture.Dispose();
+                _texture = null;
             }
         }
 

@@ -251,6 +251,7 @@ namespace Sparrow.Core
         public static void OnContextCreated()
         {
             UpdateViewPort(true);
+            Stage.SetRequiresRedraw();
             ContextCreated?.Invoke();
         }
     }

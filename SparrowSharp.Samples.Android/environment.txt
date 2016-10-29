@@ -1,0 +1,3 @@
+﻿debug.mono.gc=0
+
+MONO_LOG_LEVEL=error
