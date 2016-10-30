@@ -3,7 +3,6 @@ using System;
 using Sparrow.Geom;
 using Sparrow.Utils;
 using Sparrow.Core;
-using OpenGL;
 
 namespace Sparrow.Textures
 {
@@ -12,12 +11,12 @@ namespace Sparrow.Textures
 
         /// <summary>
         /// Uploads a texture to the GPU.
+        /// Currently only 24 bit RBGA images are supported
         /// </summary>
-        /// <param name="imgData">The image data, either an array or IntPtr</param>
+        /// <param name="imgData">The image data, either an Array or IntPtr</param>
         /// <param name="properties"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
+        /// <param name="width">in points; number of pixels depends on scale parameter.</param>
+        /// <param name="height">in points; number of pixels depends on scale parameter.</param>
         public static Texture FromData(object imgData, TextureOptions properties,
                                        int width, int height)
         {
@@ -33,22 +32,25 @@ namespace Sparrow.Textures
             return tex;
         }
 
-        /** Creates an empty texture of a certain size.
-         *  Beware that the texture can only be used after you either upload some color data
-         *  ("texture.root.upload...") or clear the texture ("texture.root.clear()").
-         *
-         *  @param width   in points; number of pixels depends on scale parameter
-         *  @param height  in points; number of pixels depends on scale parameter
-         *  @param premultipliedAlpha  the PMA format you will use the texture with. If you will
-         *                 use the texture for bitmap data, use "true"; for ATF data, use "false".
-         *  @param mipMapping  indicates if mipmaps should be used for this texture. When you upload
-         *                 bitmap data, this decides if mipmaps will be created; when you upload ATF
-         *                 data, this decides if mipmaps inside the ATF file will be displayed.
-         *  @param optimizeForRenderToTexture  indicates if this texture will be used as render target
-         *  @param scale   if you omit this parameter, 'Starling.contentScaleFactor' will be used.
-         *  @param format  the context3D texture format to use. Pass one of the packed or
-         *                 compressed formats to save memory (at the price of reduced image quality).
-         */
+        /// <summary>
+        /// Creates an empty texture of a certain size.
+        ///  Beware that the texture can only be used after you either upload some color data
+        ///  ("texture.Root.Upload()") or clear the texture("texture.Root.Clear()").
+        /// </summary>
+        /// <param name="width">in points; number of pixels depends on scale parameter</param>
+        /// <param name="height">in points; number of pixels depends on scale parameter</param>
+        /// <param name="premultipliedAlpha">the PMA format you will use the texture with. If you will
+        ///     use the texture for bitmap data, use "true"; for compressed data, use "false".</param>
+        /// <param name="numMipMaps">indicates if mipmaps should be used for this texture. When you 
+        ///     upload bitmap data, this decides if mipmaps will be created.
+        /// </param>
+        /// <param name="optimizeForRenderToTexture">indicates if this texture will be used as render target
+        /// </param>
+        /// <param name="scale">if you omit this parameter, 'Sparrow.ContentScaleFactor' will be used.
+        /// </param>
+        /// <param name="format">the OpenGL texture format to use. Pass one of the uncompressed or
+        ///     compressed formats to save memory(at the price of reduced image quality).
+        /// </param>
         public static Texture Empty(float width, float height, bool premultipliedAlpha = true,
                                     int numMipMaps = 0, bool optimizeForRenderToTexture = false,
                                     float scale = -1, TextureFormat format = null)
@@ -65,7 +67,6 @@ namespace Sparrow.Textures
             actualWidth  = (int)Math.Ceiling(origWidth  - 0.000000001d); // avoid floating point errors
             actualHeight = (int)Math.Ceiling(origHeight - 0.000000001d);
             
-           
             ConcreteTexture concreteTexture = new ConcreteTexture(
                     format, actualWidth, actualHeight, numMipMaps,
                     premultipliedAlpha, optimizeForRenderToTexture, scale);
@@ -80,28 +81,32 @@ namespace Sparrow.Textures
             }
         }
 
-
-        /** Disposes the underlying texture data. Note that not all textures need to be disposed:
-         *  SubTextures (created with 'Texture.fromTexture') just reference other textures and
-         *  and do not take up resources themselves; this is also true for textures from an
-         *  atlas. */
+        /// <summary>
+        /// Disposes the underlying texture data. Note that not all textures need to be disposed:
+        /// SubTextures(created with 'Texture.FromTexture') just reference other textures and
+        /// and do not take up resources themselves; this is also true for textures from an
+        /// atlas.
+        /// </summary>
         public abstract void Dispose();
-        
 
-        /** Creates a texture that contains a region (in pixels) of another texture. The new
-         *  texture will reference the base texture; no data is duplicated.
-         *
-         *  @param texture  The texture you want to create a SubTexture from.
-         *  @param region   The region of the parent texture that the SubTexture will show
-         *                  (in points).
-         *  @param frame    If the texture was trimmed, the frame rectangle can be used to restore
-         *                  the trimmed area.
-         *  @param rotated  If true, the SubTexture will show the parent region rotated by
-         *                  90 degrees (CCW).
-         *  @param scaleModifier  The scale factor of the new texture will be calculated by
-         *                  multiplying the parent texture's scale factor with this value.
-         */
-        public static Texture FromTexture(Texture texture, Rectangle region = null,
+        /// <summary>
+        /// Creates a texture that contains a region (in pixels) of another texture. The new
+        /// texture will reference the base texture; no data is duplicated.
+        /// </summary>
+        /// <param name="texture">The texture you want to create a SubTexture from.</param>
+        /// <param name="region">The region of the parent texture that the SubTexture will show
+        ///     (in points).
+        /// </param>
+        /// <param name="frame">If the texture was trimmed, the frame rectangle can be used to restore
+        ///     the trimmed area.
+        /// </param>
+        /// <param name="rotated">If true, the SubTexture will show the parent region rotated by
+        ///     90 degrees (CCW).
+        /// </param>
+        /// <param name="scaleModifier">The scale factor of the new texture will be calculated by
+        ///     multiplying the parent texture's scale factor with this value.
+        /// </param>
+        public static SubTexture FromTexture(Texture texture, Rectangle region = null,
                                           Rectangle frame = null, bool rotated = false,
                                           float scaleModifier = 1.0f)
         {
@@ -251,10 +256,12 @@ namespace Sparrow.Textures
         /** The Stage3D texture object the texture is based on. */
         virtual public uint Base { get { return 0; } }
 
-        /** The concrete texture the texture is based on. */
+        /// <summary>
+        /// The concrete texture the texture is based on.
+        /// </summary>
         virtual public ConcreteTexture Root { get { return null; } }
 
-        /** The <code>Context3DTextureFormat</code> of the underlying texture data. */
+        /** The <code>TextureFormat</code> of the underlying texture data. */
         virtual public TextureFormat Format { get { return TextureFormat.Rgba4444; } }
 
         /** Indicates if the texture contains mip maps. */
@@ -276,27 +283,9 @@ namespace Sparrow.Textures
         virtual public Matrix2D TransformationMatrixToRoot { get { return null; } }
 
         /** Returns the maximum size constraint (for both width and height) for textures in the
-         *  current Context3D profile. */
+         *  current OpenGL profile. */
         public const int MaxSize = 4096;
 
-
-    /*
-    public enum TextureFormat
-    {
-        RGBA,
-        Alpha,
-        PvrtcRGB2,
-        PvrtcRGBA2,
-        PvrtcRGB4,
-        PvrtcRGBA4,
-        BGR565,
-        BGR888,
-        BGR5551,
-        BGR4444,
-        AI88,
-        I8
     }
-    */
-}
 }
 

@@ -36,27 +36,29 @@ namespace Sparrow.Samples
             //SparrowSharp.SkipUnchangedFrames = true;
             SparrowSharp.Stage.Color = 0x432323;
         }
+
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
-
+            //Stage.StageWidth = 480;
+            //Stage.StageHeight = 320;
             _started = true;
             _waitFrames = 3;
             
-            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
-
+            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            
             AddTestObjects(16);
-
+            /*
             TestRenderTexture();
-
+            
             TestFilters();
-
+            
             TestQuad();
 
             TestMovieClip();
-
+            
             TestTextField();
 
-            Stage.Touch += Benchmark_Touch;
+            Stage.Touch += Benchmark_Touch;*/
         }
 
         private void Benchmark_Touch(Touches.TouchEvent touch)
@@ -76,37 +78,21 @@ namespace Sparrow.Samples
                 egg.Width = textures[1].Width;
                 egg.Height = textures[1].Height;
                 egg.AlignPivot(HAlign.Center, VAlign.Center);
-                egg.X = r.Next(border, (int)Stage.Width - border);
-                egg.Y = r.Next(border, (int)Stage.Height - border);
+                egg.X = r.Next(border, (int)Stage.StageWidth - border);
+                egg.Y = r.Next(border, (int)Stage.StageHeight - border);
                 egg.Rotation = (float)(r.Next(0, 100) / 100.0f * Math.PI);
                 _container.AddChild(egg);
             }
         }
-
-        private void BenchmarkComplete()
-        {
-            Console.WriteLine("benchmark complete!");
-            Console.WriteLine("number of objects: " + _container.NumChildren);
-
-            _started = false;
-            _container.RemoveAllChildren();
-        }
-
-        int cnt = 0;
+        
         private void EnterFrameHandler(DisplayObject target, float passedTime)
         {
-            cnt++;
-            if (cnt == 12)
-            {
-             //   TestRenderTexture();
-            }
-            //Console.WriteLine("COUNT: " + cnt);
             if (!_started)
                 return;
             
             _elapsed += passedTime / 1000;
             ++_frameCount;
-            /*
+            
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
@@ -127,12 +113,25 @@ namespace Sparrow.Samples
                     if (_failCount > 20)
                         _waitFrames = 10;
                     if (_failCount == 25)
-                        BenchmarkComplete(); // target fps not reached for a while
+                    {
+                        Console.WriteLine("benchmark complete!");
+                        Console.WriteLine("number of objects: " + _container.NumChildren);
+
+                        _started = false;
+                        _container.RemoveAllChildren();
+
+                        TextField tf = new TextField(Stage.StageWidth, Stage.StageHeight, 
+                            "Benchmark complete!\nNumber of objects: " + _container.NumChildren);
+                        tf.Format.Size = 40;
+                        tf.Format.VerticalAlign = VAlign.Center;
+                        tf.Format.HorizontalAlign = HAlign.Center;
+                        AddChild(tf);
+                    }
                 }
 
                 _elapsed = _frameCount = 0;
             }
-            */
+            
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
@@ -153,7 +152,7 @@ namespace Sparrow.Samples
 
         private void TestTextField()
         {
-            TextField tf = new TextField(180, 80, "Test TextField");
+            TextField tf = new TextField(180, 80, "Textfield Test");
             tf.Format.Size = 32;
             tf.Border = true;
             tf.X = 245;
@@ -177,12 +176,17 @@ namespace Sparrow.Samples
         private void TestRenderTexture()
         {
             RenderTexture renderTexture = new RenderTexture(300, 200);
-            renderTexture.Draw(new Quad(155, 155, 0xFF00FF));
-            Image toDraw = new Image(textures[1]);
-            toDraw.X = 35;
-            toDraw.Y = 15;
-            toDraw.Rotation = 1;
-            renderTexture.Draw(toDraw);
+           
+            renderTexture.DrawBundled(delegate
+             {
+                 renderTexture.Draw(new Quad(155, 155, 0xFF00FF));
+                 Image toDraw = new Image(textures[1]);
+                 toDraw.X = 35;
+                 toDraw.Y = 15;
+                 toDraw.Rotation = 1;
+                 renderTexture.Draw(toDraw);
+             });
+            
 
             Image rtImage = new Image(renderTexture);
             AddChild(rtImage);
@@ -190,6 +194,7 @@ namespace Sparrow.Samples
             rtImage.X = 123;
             rtImage.Y = 198;
             rtImage.Rotation = 1;
+            
         }
 
         private void TestFilters()
@@ -197,12 +202,13 @@ namespace Sparrow.Samples
             Image im = new Image(textures[0]);
             ColorMatrixFilter fi = new ColorMatrixFilter();
             fi.AdjustSaturation(-0.99f);
+            fi.AlwaysDrawToBackBuffer = true;
             im.Filter = fi;
             im.X = 225;
             im.Y = 110;
             im.Rotation = 0.2f;
             AddChild(im);
-
+            
             Image im2 = new Image(textures[0]);
             BlurFilter fi2 = new BlurFilter(5, 1);
             fi2.AlwaysDrawToBackBuffer = true;

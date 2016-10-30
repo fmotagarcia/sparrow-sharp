@@ -40,15 +40,16 @@ namespace Sparrow.Display
     /// The 'sortChildren' method allows you to sort the children of a container by a custom criteria. 
     /// Below is an example how to depth-sort children by their y-coordinate; this will put objects that
     /// are lower on the screen in front of those higher on the screen.
-    /// 
+    /// <code>
     /// public class CompareExample : IComparator {
     ///     public int Compare(DisplayObject child1, DisplayObject child2) 
     ///     {
-    ///         if (child1.Y < child2.Y) return -1;
-    ///         else if (child1.Y > child2.Y) return 1;
+    ///         if (child1.Y &lt; child2.Y) return -1;
+    ///         else if (child1.Y &gt; child2.Y) return 1;
     ///         else return 0;
     ///     }
     /// }
+    /// </code>
     /// </summary>
     public abstract class DisplayObjectContainer : DisplayObject
     {

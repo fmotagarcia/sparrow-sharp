@@ -7,17 +7,19 @@ using OpenGL;
 
 namespace Sparrow.Textures
 {
-    /** A ConcreteTexture wraps a Stage3D texture object, storing the properties of the texture
-     *  and providing utility methods for data upload, etc.
-     *
-     *  <p>This class cannot be instantiated directly; create instances using
-     *  <code>Texture.fromTextureBase</code> instead. However, that's only necessary when
-     *  you need to wrap a <code>TextureBase</code> object in a Starling texture;
-     *  the preferred way of creating textures is to use one of the other
-     *  <code>Texture.from...</code> factory methods in the <code>Texture</code> class.</p>
-     *
-     *  @see Texture
-     */
+    /// <summary>
+    /// A ConcreteTexture wraps an OpenGL texture object, storing the properties of the texture
+    /// and providing utility methods for data upload, etc.
+    ///
+    /// <para>This class cannot be instantiated directly; create instances using
+    /// <code>Texture.fromTextureBase</code> instead. However, that's only necessary when
+    /// you need to wrap a <code>TextureBase</code> object in a Starling texture;
+    /// the preferred way of creating textures is to use one of the other
+    /// <code>Texture.From...</code> factory methods in the <code>Texture</code> class.</para>
+    ///  
+    /// See <see cref="Texture"/>
+    ///
+    /// </summary>
     public class ConcreteTexture : Texture
     {
         protected TextureFormat _format;
@@ -33,15 +35,14 @@ namespace Sparrow.Textures
         /// This is needed for the app be able to restore it on a context loss.
         /// </summary>
         protected object rawData;
-        /** @private
-         *
-         *  Creates a ConcreteTexture object from a TextureBase, storing information about size,
-         *  mip-mapping, and if the channels contain premultiplied alpha values. May only be
-         *  called from subclasses.
-         *
-         *  <p>Note that <code>width</code> and <code>height</code> are expected in pixels,
-         *  i.e. they do not take the scale factor into account.</p>
-         */
+        /// <summary>
+        ///  Creates a ConcreteTexture object from a TextureBase, storing information about size,
+        ///  mip-mapping, and if the channels contain premultiplied alpha values. May only be
+        ///  called from subclasses.
+        ///
+        /// <para>Note that <code>width</code> and <code>height</code> are expected in pixels,
+        ///  i.e. they do not take the scale factor into account.</para>
+        /// </summary>
         public ConcreteTexture(TextureFormat format, int width, int height,
                                int numMipMaps, bool premultipliedAlpha,
                                bool optimizedForRenderTexture = false, float scale = 1f)
@@ -69,8 +70,7 @@ namespace Sparrow.Textures
                 _width,
                 _height);
         }
-
-        /** Disposes the TextureBase object. */
+        
         public override void Dispose()
         {
             SparrowSharp.ContextCreated -= OnContextCreated;
@@ -98,6 +98,13 @@ namespace Sparrow.Textures
             }
         }
 
+        /// <summary>
+        /// Uploads image data to the GPU. It also generates bitmaps if specified.
+        /// Call this immediately after creating the texture otherwise the OpenGL state might
+        /// get corrupted.
+        /// </summary>
+        /// <param name="pixels">The image data, either an IntPtr or a number primitive array
+        /// </param>
         public void UploadData(object pixels)
         {
             rawData = pixels;
@@ -133,8 +140,10 @@ namespace Sparrow.Textures
             }
         }
 
-        /** Clears the texture with a certain color and alpha value. The previous contents of the
-         *  texture is wiped out. */
+        /// <summary>
+        /// Clears the texture with a certain color and alpha value. The previous contents of the
+        /// texture is wiped out.
+        /// </summary>
         public void Clear(uint color = 0x0, float alpha = 0f)
         {
             if (_premultipliedAlpha && alpha < 1.0f)
@@ -156,37 +165,30 @@ namespace Sparrow.Textures
         }
 
         // properties
-        
-        /** Indicates if the base texture was optimized for being used in a render texture. */
+
+        /// <summary>
+        /// Indicates if the base texture was optimized for being used in a render texture.
+        /// </summary>
         public bool OptimizedForRenderTexture { get { return _optimizedForRenderTexture; } }
 
         public override uint Base { get { return _base; } }
-
-        /** The concrete texture the texture is based on. */
+        
         public override ConcreteTexture Root { get { return this; } }
-
-        /** @inheritDoc */
+        
         public override TextureFormat Format { get { return _format; } }
         
-        /** @inheritDoc */
         public override float Width { get { return _width / _scale; } }
         
-        /** @inheritDoc */
         public override float Height { get { return _height / _scale; } }
         
-        /** @inheritDoc */
         public override float NativeWidth { get { return _width; } }
         
-        /** @inheritDoc */
         public override float NativeHeight { get { return _height; } }
         
-        /** @inheritDoc */
         public override float Scale { get { return _scale; } }
         
-        /** @inheritDoc */
         public override int NumMipMaps { get { return _numMipMaps; } }
         
-        /** @inheritDoc */
         public override bool PremultipliedAlpha { get { return _premultipliedAlpha; } }
 
     }
