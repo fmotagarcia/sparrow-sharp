@@ -42,7 +42,9 @@ namespace Sparrow.Textures
 
 
         private readonly int _bitsPerPixel;
-
+        /// <summary>
+        /// Needed for compressed image upload
+        /// </summary>
         public int BitsPerPixel
         {
             get

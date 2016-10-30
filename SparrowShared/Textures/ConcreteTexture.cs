@@ -20,16 +20,19 @@ namespace Sparrow.Textures
      */
     public class ConcreteTexture : Texture
     {
-        private uint _base;
-        private TextureFormat _format;
-        private int _width;
-        private int _height;
-        private int _numMipMaps;
-        private bool _premultipliedAlpha;
-        private bool _optimizedForRenderTexture;
-        private float _scale;
-        private Action _onRestore;
-        private bool _dataUploaded;
+        protected TextureFormat _format;
+        protected int _width;
+        protected int _height;
+        protected int _numMipMaps;
+        protected bool _premultipliedAlpha;
+        protected bool _optimizedForRenderTexture;
+        protected uint _base;
+        protected float _scale;
+        /// <summary>
+        /// Stores the pointer/array for the texture in the normal memory.
+        /// This is needed for the app be able to restore it on a context loss.
+        /// </summary>
+        protected object rawData;
         /** @private
          *
          *  Creates a ConcreteTexture object from a TextureBase, storing information about size,
@@ -39,81 +42,102 @@ namespace Sparrow.Textures
          *  <p>Note that <code>width</code> and <code>height</code> are expected in pixels,
          *  i.e. they do not take the scale factor into account.</p>
          */
-        public ConcreteTexture(uint __base, TextureFormat format, int width, int height,
+        public ConcreteTexture(TextureFormat format, int width, int height,
                                int numMipMaps, bool premultipliedAlpha,
                                bool optimizedForRenderTexture = false, float scale = 1f)
         {
-
             _scale = scale <= 0f ? 1.0f : scale;
-            _base = __base;
             _format = format;
             _width = width;
             _height = height;
             _numMipMaps = numMipMaps;
             _premultipliedAlpha = premultipliedAlpha;
             _optimizedForRenderTexture = optimizedForRenderTexture;
-            _dataUploaded = false;
+            SparrowSharp.ContextCreated += OnContextCreated;
+
+            InitGPUTextureStorage();
         }
 
-        // TODO move this to a subclass?
-        public void UploadData(object pixels)
+        protected virtual void InitGPUTextureStorage()
         {
-            Gl.TexSubImage2D(TextureTarget.Texture2d,
-                       0, // level
-                       0, // xOffset
-                       0, // yOffset
-                       _width,
-                       _height,
-                       _format.PixelFormat,
-                       _format.PixelType,
-                       pixels);
-            if (_numMipMaps > 0)
-            {
-                Gl.GenerateMipmap(Gl.TEXTURE_2D);
-            }
-            SetDataUploaded();
-        }
-
-        /** Disposes the TextureBase object. */
-        public override void Dispose()
-        {
-            if (_base != 0)
-            {
-                // is this OK?
-                SparrowSharp.Painter.DestroyFramebufferForTexture(this);
-                Gl.DeleteTextures(_base);
-                _base = 0;
-                SparrowSharp.ContextCreated -= OnContextCreated;
-            }
-        }
-
-        private void OnContextCreated()
-        {
-            _dataUploaded = false;
-            SparrowSharp.Painter.DestroyFramebufferForTexture(this);
-            _base = Gl.GenTexture(); // copypaste from Texture.Empty...
+            _base = Gl.GenTexture();
             Gl.BindTexture(TextureTarget.Texture2d, _base);
 
             Gl.TexStorage2D(Gl.TEXTURE_2D,
                 _numMipMaps + 1, // mipmap level, min 1
                 _format.InternalFormat,
                 _width,
-                _height); // recreate the underlying texture
-            _onRestore(); // restore contents, calls UploadData/Clear TODO make this an interface?
-
-            // if no texture has been uploaded above, we init the texture with transparent pixels.
-            if (!_dataUploaded) Clear();
+                _height);
         }
 
-        public void Clear()
+        /** Disposes the TextureBase object. */
+        public override void Dispose()
         {
-            Clear(0x0, 0.0f);
+            SparrowSharp.ContextCreated -= OnContextCreated;
+            if (_base != 0)
+            {
+                SparrowSharp.Painter.DestroyFramebufferForTexture(this);
+                Gl.DeleteTextures(_base);
+                _base = 0;
+            }
         }
+
+        protected virtual void OnContextCreated()
+        {
+            SparrowSharp.Painter.DestroyFramebufferForTexture(this);
+
+            InitGPUTextureStorage();
+
+            if (rawData != null)
+            {
+                UploadData(rawData);
+            }
+            else
+            {
+                Clear();
+            }
+        }
+
+        public void UploadData(object pixels)
+        {
+            rawData = pixels;
+            if (_format.Compressed)
+            {
+                int size = Math.Max(32, _width * _height * _format.BitsPerPixel / 8);
+                Gl.CompressedTexSubImage2D(TextureTarget.Texture2d,
+                                           0, // level
+                                           0, // xOffset
+                                           0, // yOffset
+                                           _width,
+                                           _height,
+                                           _format.PixelFormat,
+                                           size,
+                                           pixels);
+            }
+            else
+            {
+                Gl.TexSubImage2D(TextureTarget.Texture2d,
+                                 0, // level
+                                 0, // xOffset
+                                 0, // yOffset
+                                 _width,
+                                 _height,
+                                 _format.PixelFormat,
+                                 _format.PixelType,
+                                 pixels);
+            }
+
+            if (_numMipMaps > 0)
+            {
+                Gl.GenerateMipmap(Gl.TEXTURE_2D);
+            }
+        }
+
         /** Clears the texture with a certain color and alpha value. The previous contents of the
          *  texture is wiped out. */
-        public void Clear(uint color, float alpha)
+        public void Clear(uint color = 0x0, float alpha = 0f)
         {
-            if (_premultipliedAlpha && alpha< 1.0f)
+            if (_premultipliedAlpha && alpha < 1.0f)
             {
                 color = ColorUtil.GetRGB(
                     (byte)((ColorUtil.GetR(color)) * alpha),
@@ -129,36 +153,12 @@ namespace Sparrow.Textures
             painter.Clear(color, alpha);
 
             painter.PopState();
-            SetDataUploaded();
-        }
-
-        public void SetDataUploaded()
-        {
-            _dataUploaded = true;
         }
 
         // properties
         
         /** Indicates if the base texture was optimized for being used in a render texture. */
         public bool OptimizedForRenderTexture { get { return _optimizedForRenderTexture; } }
-
-        public Action OnRestore
-        {
-            get { return _onRestore; }
-            set
-            {
-                SparrowSharp.ContextCreated -= OnContextCreated;
-                if (value != null)
-                {
-                    _onRestore = value;
-                    SparrowSharp.ContextCreated += OnContextCreated;
-                }
-                else
-                {
-                    _onRestore = null;
-                }
-            }
-        }
 
         public override uint Base { get { return _base; } }
 

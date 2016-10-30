@@ -5,6 +5,7 @@ using Android.Opengl;
 using Sparrow.Textures;
 using System.IO;
 using Sparrow.Core;
+using OpenGL;
 
 namespace Sparrow.ResourceLoading
 {
@@ -93,32 +94,18 @@ namespace Sparrow.ResourceLoading
         protected void GenerateTexture(Bitmap bitmap)
         {
             bitmap.SetPremultiplied(true); // note: Android 4.4 function
-
+            
+            // from https://github.com/labnation/MonoGame/blob/master/MonoGame.Framework/Graphics/Texture2D.OpenGL.cs
+            bitmap.LockPixels();
+            int[] pixels = new int[bitmap.Width * bitmap.Height];
+            bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);
+            bitmap.UnlockPixels();
+            
+            ConvertToABGR(bitmap.Height, bitmap.Width, pixels); // Convert from ARGB to ABGR
+            // NOTE: GLUtils can figure out the exact pixel format, maybe implement it in the future.
             TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, SparrowSharp.ContentScaleFactor);
-            _glTexture = Texture.Empty(bitmap.Width, bitmap.Height, true, 0, false, -1, TextureFormat.Rgba8888);
-
-            if (bitmap.Width > 0 && bitmap.Height > 0)
-            {
-                GLUtils.TexSubImage2D(GLES20.GlTexture2d,
-                    0, // level
-                    0, // xOffset
-                    0, // yOffset
-                    bitmap);
-            }
-            else
-            {
-                Console.Out.WriteLine("WARNING: empty bitmap loaded");
-            }
-
-            // TODO unify this code with other tex uploaders
-            _glTexture.Root.OnRestore = () => {
-                GLUtils.TexSubImage2D(GLES20.GlTexture2d,
-                   0, // level
-                   0, // xOffset
-                   0, // yOffset
-                   bitmap);
-                _glTexture.Root.SetDataUploaded();
-            };
+            _glTexture = Texture.FromData(pixels, opts, bitmap.Width, bitmap.Height);
+            bitmap.Recycle();
 
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
@@ -128,6 +115,17 @@ namespace Sparrow.ResourceLoading
             if (handler != null)
             {
                 handler(this, _glTexture);
+            }
+        }
+
+        //Converts Pixel Data from ARGB to ABGR
+        private static void ConvertToABGR(int pixelHeight, int pixelWidth, int[] pixels)
+        {
+            int pixelCount = pixelWidth * pixelHeight;
+            for (int i = 0; i < pixelCount; ++i)
+            {
+                uint pixel = (uint)pixels[i];
+                pixels[i] = (int)((pixel & 0xFF00FF00) | ((pixel & 0x00FF0000) >> 16) | ((pixel & 0x000000FF) << 16));
             }
         }
     }

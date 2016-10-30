@@ -58,8 +58,6 @@ namespace Sparrow.Textures
 
             _isPersistent = persistent;
             _activeTexture = Empty(width, height, true, 0, true, scale, format);
-            // TODO does not work. Render texture graphics are lost on context restore!
-            _activeTexture.Root.OnRestore = _activeTexture.Root.Clear;
 
             SetTo(_activeTexture, Rectangle.Create(0, 0, width, height), true, null, false);
         }

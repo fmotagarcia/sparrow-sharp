@@ -10,84 +10,26 @@ namespace Sparrow.Textures
     public abstract class Texture
     {
 
-        public static Texture FromData(byte[] imgData, TextureOptions properties,
+        /// <summary>
+        /// Uploads a texture to the GPU.
+        /// </summary>
+        /// <param name="imgData">The image data, either an array or IntPtr</param>
+        /// <param name="properties"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static Texture FromData(object imgData, TextureOptions properties,
                                        int width, int height)
         {
             if (imgData == null)
             {
-                throw new ArgumentException("imgData cannot null!");
+                throw new ArgumentException("imgData cannot be null!");
             }
             Texture tex = Empty(width, height, properties.PremultipliedAlpha,
                                 properties.NumMipMaps, properties.OptimizeForRenderToTexture,
                                 properties.Scale, properties.Format);
 
             tex.Root.UploadData(imgData);
-
-            tex.Root.OnRestore = () =>
-            {
-                tex.Root.UploadData(imgData);
-            };
-
-            return tex;
-        }
-
-        public static Texture FromData(IntPtr imgData, TextureOptions properties, 
-                                       int width, int height)
-        {
-            if (imgData == IntPtr.Zero)
-            {
-                throw new ArgumentException("imgData cannot be a null pointer!");
-            }
-            Texture tex = Empty(width, height, properties.PremultipliedAlpha, 
-                                properties.NumMipMaps, properties.OptimizeForRenderToTexture,
-                                properties.Scale, properties.Format);
-
-            tex.Root.UploadData(imgData);
-
-            tex.Root.OnRestore = () =>
-            {
-                tex.Root.UploadData(imgData);
-            };
-
-            return tex;
-        }
-
-        // TODO this is not tested!
-        public static Texture FromCompressedData(IntPtr imgData, TextureOptions properties,
-                                       int width, int height)
-        {
-            if (imgData == IntPtr.Zero)
-            {
-                throw new ArgumentException("imgData cannot be a null pointer!");
-            }
-            Texture tex = Empty(width, height, properties.PremultipliedAlpha,
-                                properties.NumMipMaps, properties.OptimizeForRenderToTexture,
-                                properties.Scale, properties.Format);
-
-            int size = Math.Max(32, width * height * properties.Format.BitsPerPixel / 8);
-
-            // TODO move this to ConcreteTexture
-            Gl.CompressedTexSubImage2D(TextureTarget.Texture2d,
-                0, // level
-                0, // xOffset
-                0, // yOffset
-                width,
-                height,
-                properties.Format.PixelFormat,
-                size,
-                imgData);
-
-            if (properties.NumMipMaps > 0)
-            {
-                Gl.GenerateMipmap(Gl.TEXTURE_2D);
-            }
-            
-            tex.Root.OnRestore = () =>
-            {
-                throw new NotImplementedException();
-                //tex.Root.UploadCompressedData(imgData);
-            };
-
             return tex;
         }
 
@@ -123,22 +65,10 @@ namespace Sparrow.Textures
             actualWidth  = (int)Math.Ceiling(origWidth  - 0.000000001d); // avoid floating point errors
             actualHeight = (int)Math.Ceiling(origHeight - 0.000000001d);
             
-            bool compressed = format.Compressed;
-            uint glTexName = Gl.GenTexture();
-            Gl.BindTexture(TextureTarget.Texture2d, glTexName);
-
-            Gl.TexStorage2D(Gl.TEXTURE_2D,
-                numMipMaps + 1, // mipmap level, min 1
-                format.InternalFormat,
-                actualWidth,
-                actualHeight);
-            
+           
             ConcreteTexture concreteTexture = new ConcreteTexture(
-                    glTexName, format, actualWidth, actualHeight, numMipMaps,
+                    format, actualWidth, actualHeight, numMipMaps,
                     premultipliedAlpha, optimizeForRenderToTexture, scale);
-
-
-            concreteTexture.OnRestore = concreteTexture.Clear;
 
             if (actualWidth - origWidth < 0.001f && actualHeight - origHeight < 0.001f)
             {
