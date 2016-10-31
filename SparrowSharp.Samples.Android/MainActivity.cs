@@ -3,10 +3,11 @@ using Android.OS;
 using Android.Content.PM;
 using Sparrow.Core;
 using Android.Views;
+using System;
 
 namespace Sparrow.Samples
 {
-    [Activity(Label = "sparrow-sharp benchmark", Name = "awesome.demo.activity",
+    [Activity(Label = "sparrow-sharp benchmark", Name = "sparrow.sharp.samples.droid",
         ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.KeyboardHidden,
         MainLauncher = true)]
     public class MainActivity : Activity
@@ -16,7 +17,7 @@ namespace Sparrow.Samples
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
+            //Android.OS.Build
             RequestWindowFeature(WindowFeatures.NoTitle);
 
             if (sparrowView == null)

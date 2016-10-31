@@ -114,18 +114,16 @@ namespace Sparrow.Samples
                         _waitFrames = 10;
                     if (_failCount == 25)
                     {
-                        Console.WriteLine("benchmark complete!");
                         Console.WriteLine("number of objects: " + _container.NumChildren);
-
-                        _started = false;
-                        _container.RemoveAllChildren();
-
                         TextField tf = new TextField(Stage.StageWidth, Stage.StageHeight, 
                             "Benchmark complete!\nNumber of objects: " + _container.NumChildren);
-                        tf.Format.Size = 40;
+                        tf.Format.Color = 0xe1e1e1;
+                        tf.Format.Size = 50;
                         tf.Format.VerticalAlign = VAlign.Center;
                         tf.Format.HorizontalAlign = HAlign.Center;
                         AddChild(tf);
+                        _started = false;
+                        _container.RemoveAllChildren();
                     }
                 }
 

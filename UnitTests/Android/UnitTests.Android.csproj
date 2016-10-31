@@ -64,9 +64,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\SparrowSharp.Android\SparrowSharp.Android.csproj">
+    <ProjectReference Include="..\..\SparrowSharp.Android\SparrowSharp.Droid.csproj">
       <Project>{de0fcad8-2c32-4b99-9962-e403853c3c4e}</Project>
-      <Name>SparrowSharp.Android</Name>
+      <Name>SparrowSharp.Droid</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

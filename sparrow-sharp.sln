@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Android", "SparrowSharp.Samples.Android\SparrowSharp.Samples.Android.csproj", "{B68B75BA-A18C-4513-8BFF-53346D4840B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Droid", "SparrowSharp.Samples.Android\SparrowSharp.Samples.Droid.csproj", "{B68B75BA-A18C-4513-8BFF-53346D4840B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Core.iOS", "SparrowSharp.Core\SparrowSharp.Core.iOS.csproj", "{ECECB8BC-394C-4646-B165-135718EFBFF1}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Windows", "UnitTe
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SparrowShared", "SparrowShared\SparrowShared.shproj", "{4D13AB71-77BC-431B-8EB4-54BB69E86F9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Android", "SparrowSharp.Android\SparrowSharp.Android.csproj", "{DE0FCAD8-2C32-4B99-9962-E403853C3C4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Droid", "SparrowSharp.Android\SparrowSharp.Droid.csproj", "{DE0FCAD8-2C32-4B99-9962-E403853C3C4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Desktop", "SparrowSharp.Desktop\SparrowSharp.Desktop.csproj", "{40765B80-9BE8-4A35-80B5-7D5ABE4D6657}"
 EndProject

@@ -46,9 +46,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenGL.Net, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\OpenGL.NET-2016-10-20\OpenGL.Net.dll</HintPath>
+    <Reference Include="OpenGL.Net">
+      <HintPath>..\lib\OpenGL.NET-2016-10-31\OpenGL.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
