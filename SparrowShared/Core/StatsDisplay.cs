@@ -29,13 +29,6 @@ namespace Sparrow.Core
         public int DrawCount = 0;
         private int _skipCount = 0;
 
-        /// <summary>
-        /// Constant used by a Desktop Nvidia experimental GPU info extension
-        /// the returns the dedicated video memory (in kb) of the GPU memory
-        /// </summary>
-        private int GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX = 0x9047;
-        private int GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX = 0x9049;
-
         /** Creates a new Statistics Box. */
         public StatsDisplay()
         {
@@ -139,14 +132,14 @@ namespace Sparrow.Core
         {
             if (GLExtensions.DeviceSupportsOpenGLExtension("GL_NVX_gpu_memory_info"))
             {
-                // this returns in Kb
-                /*int dedicated;
-                Gl.GetInteger((GetPName)GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, out dedicated);
+                // this returns in Kb, Nvidia only extension
+                int dedicated;
+                Gl.Get(Gl.GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, out dedicated);
 
                 int available;
-                Gl.GetInteger((GetPName)GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, out available);
+                Gl.Get(Gl.GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, out available);
 
-                return (dedicated - available) / 1024;*/
+                return (dedicated - available) / 1024;
             }
             return 0;
         }

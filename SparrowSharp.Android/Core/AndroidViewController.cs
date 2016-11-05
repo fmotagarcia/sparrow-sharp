@@ -95,7 +95,7 @@ namespace Sparrow.Core
             _NativeWindowHandle = ANativeWindow_fromSurface(JNIEnv.Handle, holder.Surface.Handle);
 
             // Create device context
-            _DeviceContext = DeviceContext.Create(_NativeWindowHandle);
+            _DeviceContext = DeviceContext.Create(IntPtr.Zero, _NativeWindowHandle);
             _DeviceContext.IncRef();
 
             // Set pixel format

@@ -9,8 +9,6 @@ namespace Tests
     public class TextFieldTest : TestBase
     {
 
-        private static readonly float SUPER_LARGE_TEXT_LENGTH = 3200;
-
         [Test]
         public void TestTextField()
         {

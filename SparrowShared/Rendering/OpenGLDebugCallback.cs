@@ -29,7 +29,7 @@ namespace Sparrow.Core
             catch (Exception ex)
             {
                 // Google was lazy to implement this in Android 5 and 6, even though the drivers support it.
-                Console.Out.WriteLine("WARNING: No support for OpenGL debug callback, likely its not implemented");
+                Console.Out.WriteLine("WARNING: No support for OpenGL debug callback, likely its not implemented. " + ex);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using OpenGL;
-using System.Text;
 
 namespace Sparrow.Rendering
 {

@@ -147,7 +147,6 @@ namespace Sparrow.Rendering
                 if (logLength != 0)
                 {
                     int logSize;
-                    string log;
                     StringBuilder sb = new StringBuilder();
                     Gl.GetShaderInfoLog(shader, 9999, out logSize, sb);
                     Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == Gl.VERTEX_SHADER ? "vertex" : "fragment"), sb.ToString()));

@@ -302,11 +302,11 @@ namespace Sparrow.Display
             bool dispatchCompleteEvent = false;
             //Function frameAction = null;
             int previousFrameID = _currentFrameID;
-            bool changedFrame;
+            //bool changedFrame;
 
             while (passedTime >= restTimeInFrame)
             {
-                changedFrame = false;
+                //changedFrame = false;
                 passedTime -= restTimeInFrame;
                 _currentTime = frame.StartTime + frame.Duration;
 
@@ -320,14 +320,14 @@ namespace Sparrow.Display
                     {
                         _currentTime = 0;
                         _currentFrameID = 0;
-                        changedFrame = true;
+                        //changedFrame = true;
                     }
                     else return;
                 }
                 else
                 {
                     _currentFrameID += 1;
-                    changedFrame = true;
+                    //changedFrame = true;
                 }
 
                 frame = _frames[_currentFrameID];

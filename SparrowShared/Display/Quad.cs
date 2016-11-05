@@ -14,7 +14,7 @@ namespace Sparrow.Display
     ///<para></para>
     /// The indices of the vertices are arranged like this:
     ///<para></para>
-    ///<para>    0 - 1</para>
+    /// <para>   0 - 1</para>
     /// <para>   | / |</para>
     /// <para>   2 - 3</para>
     ///<para></para>

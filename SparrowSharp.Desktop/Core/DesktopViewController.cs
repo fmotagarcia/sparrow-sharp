@@ -3,6 +3,7 @@ using Sparrow.Touches;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
+using OpenGL;
 
 namespace Sparrow.Core
 {
