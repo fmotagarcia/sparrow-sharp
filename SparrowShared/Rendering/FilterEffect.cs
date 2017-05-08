@@ -125,6 +125,9 @@ namespace Sparrow.Rendering
             {
                 Gl.BindTexture(TextureTarget.Texture2d, 0);
                 // do we need to unbind anything else?
+
+                uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
+                Gl.DisableVertexAttribArray(aTexCoords);
             }
             base.AfterDraw();
         }

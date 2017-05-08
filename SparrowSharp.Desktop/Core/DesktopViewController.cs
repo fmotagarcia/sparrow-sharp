@@ -62,7 +62,7 @@ namespace Sparrow.Core
             control = new GlControl();
             control.DepthBits = 8;
             control.StencilBits = 8;
-            //control.ContextProfile = GlControl.ProfileType.Core;
+            control.ContextProfile = GlControl.ProfileType.Core;
             control.DebugContext = GlControl.AttributePermission.Enabled;
             control.Size = windowSize;
      

@@ -184,8 +184,10 @@ namespace Sparrow.Display
             return _style.CanBatchWith(mesh._style);
         }
 
-        /** If the <code>batchable</code> property is enabled, this method will add the batch
-        *  to the painter's current batch. Otherwise, this will actually do the drawing. */
+        /// <summary>
+        /// If the <code>batchable</code> property is enabled, this method will add the batch
+        /// to the painter's current batch. Otherwise, this will actually do the drawing.
+        /// </summary>
         override public void Render(Painter painter)
         {
             if (_vertexData.NumVertices == 0)

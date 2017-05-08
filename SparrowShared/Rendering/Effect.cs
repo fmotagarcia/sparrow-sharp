@@ -242,8 +242,9 @@ namespace Sparrow.Rendering
             if (numTriangles == 0) return;
             
             BeforeDraw();
-            
+
             Gl.DrawElements(PrimitiveType.Triangles, numTriangles * 3, DrawElementsType.UnsignedShort, IntPtr.Zero);
+
             AfterDraw();
         }
 
@@ -252,18 +253,18 @@ namespace Sparrow.Rendering
          *  the context with the following constants and attributes:
          *
          *  <ul>
-         *    <li><code>vc0-vc3</code> — MVP matrix</li>
-         *    <li><code>va0</code> — vertex position (xy)</li>
+         *    <li><code>uMvpMatrix</code> — MVP matrix</li>
+         *    <li><code>aPosition</code> — vertex position (xy)</li>
          *  </ul>
          */
         virtual protected void BeforeDraw()
         {
             Program.Activate(); // create, upload, use program
-
+            
             //is this the best place for this?
             Gl.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexBufferName);
             Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, _indexBufferName);
-            
+
             uint attribPosition = (uint)Program.Attributes["aPosition"];
             Gl.EnableVertexAttribArray(attribPosition);
             Gl.VertexAttribPointer(attribPosition, 2, Gl.FLOAT, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
@@ -274,12 +275,15 @@ namespace Sparrow.Rendering
             // color & alpha are set in subclasses
         }
 
-        /** This method is called by <code>render</code>, directly after
-         *  <code>context.drawTriangles</code>. Resets vertex buffer attributes.
-         */
+        /// <summary>
+        /// This method is called by <code>Render</code>, directly after
+        /// <code>Gl.DrawElements</code>. Resets vertex buffer attributes.
+        /// </summary>
         virtual protected void AfterDraw()
         {
             //?? context.setVertexBufferAt(0, null);
+            uint attribPosition = (uint)Program.Attributes["aPosition"];
+            Gl.DisableVertexAttribArray(attribPosition);
         }
 
         // program management
@@ -389,14 +393,14 @@ namespace Sparrow.Rendering
         }
 
         /** Returns the current program, either by creating a new one (via
-         *  <code>createProgram</code>) or by getting it from the <code>Painter</code>.
-         *  Do not override this method! Instead, implement <code>createProgram</code>. */
+         *  <code>CreateProgram</code>) or by getting it from the <code>Painter</code>.
+         *  Do not override this method! Instead, implement <code>CreateProgram</code>. */
          protected Program Program
          {
             get
             {
                 string name = ProgramName;
-                Painter painter = Core.SparrowSharp.Painter;
+                Painter painter = SparrowSharp.Painter;
                 Program program = painter.GetProgram(name);
 
                 if (program == null)

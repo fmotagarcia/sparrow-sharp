@@ -15,17 +15,24 @@ namespace Sparrow.Utils
         {
             Extensions = new HashSet<string>();
             FramebufferCache = new Dictionary<uint, uint>();
-            
-            string extensionsString = Gl.GetString(StringName.Extensions);
 
-            if (!string.IsNullOrEmpty(extensionsString))
+            string extensionsString = "";
+            int numExt;
+            Gl.Get(Gl.NUM_EXTENSIONS, out numExt);
+            for (uint i = 0; i < numExt; i++)
             {
-                string[] extensions = extensionsString.Split(' ');
-                for (int i = 0; i < extensions.Length; i++)
-                {
-                    Extensions.Add(extensions[i]);
-                }
+                Extensions.Add(Gl.GetString(Gl.EXTENSIONS, i));
             }
+            //TODO check this on Android
+            //string extensionsString = Gl.GetString(StringName.Extensions);
+            //if (!string.IsNullOrEmpty(extensionsString))
+            //{
+            //    string[] extensions = extensionsString.Split(' ');
+            //    for (int i = 0; i < extensions.Length; i++)
+            //    {
+            //        Extensions.Add(extensions[i]);
+            //    }
+            //}
             MapBufferSupported = DeviceSupportsOpenGLExtension("GL_OES_mapbuffer");
 
             TextureMaxAnisotropySupported = DeviceSupportsOpenGLExtension("GL_EXT_texture_filter_anisotropic");

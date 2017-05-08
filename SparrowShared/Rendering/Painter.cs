@@ -44,8 +44,7 @@ namespace Sparrow.Rendering
     */
     public class Painter
     {
-
-        // members
+        
         private Dictionary<string, Program> programs;
         private readonly Dictionary<uint, uint> framebufferCache;
 

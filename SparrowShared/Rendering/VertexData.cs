@@ -1,9 +1,9 @@
 using System;
 using Sparrow.Geom;
-using Sparrow.Rendering;
+using Sparrow.Utils;
 using OpenGL;
 
-namespace Sparrow.Utils
+namespace Sparrow.Rendering
 {
     /** The VertexData class manages a raw list of vertex information, allowing direct upload
      *  to Stage3D vertex buffers. <em>You only have to work with this class if you're writing

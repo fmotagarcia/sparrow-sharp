@@ -9,8 +9,10 @@ using OpenGL;
 
 namespace Sparrow.Core
 {
-    /** A small, lightweight box that displays the current framerate, memory consumption and
-     *  the number of draw calls per frame. The display is updated automatically once per frame. */
+    /// <summary>
+    /// A small, lightweight box that displays the current framerate, memory consumption and
+    /// the number of draw calls per frame.The display is updated automatically once per frame.
+    /// </summary>
     public class StatsDisplay : Sprite
     {
         private static readonly float UPDATE_INTERVAL = 0.5f;

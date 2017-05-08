@@ -77,6 +77,10 @@ namespace Sparrow.Core
             _previousViewPort = Rectangle.Create();
             GPUInfo.PrintGPUInfo();
 
+            // Desktop GL core profile needs a VAO for vertex attrib pointers to work.
+            uint vao = Gl.GenVertexArray();
+            Gl.BindVertexArray(vao);
+
             if (rootType == null)
             {
                 throw new InvalidOperationException("Root cannot be null!");

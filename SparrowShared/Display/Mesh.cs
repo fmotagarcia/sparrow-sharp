@@ -9,22 +9,23 @@ namespace Sparrow.Display
 {
 
     /// <summary>
-    ///  The base class for all tangible (non-container) display objects, spawned up by a number
-    ///  of triangles.
-    ///
-    ///  <p>Since Starling uses Stage3D for rendering, all rendered objects must be constructed
-    ///  from triangles. A mesh stores the information of its triangles through VertexData and
-    ///  IndexData structures. The default format stores position, color and texture coordinates
-    ///  for each vertex.</p>
-    ///
-    ///  <p>How a mesh is rendered depends on its style. Per default, this is an instance
-    ///  of the <code>MeshStyle</code> base class; however, subclasses may extend its behavior
-    ///  to add support for color transformations, normal mapping, etc.</p>
-    ///
-    ///  @see MeshBatch
-    ///  @see starling.styles.MeshStyle
-    ///  @see starling.rendering.VertexData
-    ///  @see starling.rendering.IndexData
+    /// <para>
+    /// The base class for all tangible (non-container) display objects, spawned up by a number
+    /// of triangles.
+    /// </para>
+    /// Since Starling uses Stage3D for rendering, all rendered objects must be constructed
+    /// from triangles. A mesh stores the information of its triangles through VertexData and
+    /// IndexData structures. The default format stores position, color and texture coordinates
+    /// for each vertex.
+    /// <para>
+    /// How a mesh is rendered depends on its style. Per default, this is an instance
+    /// of the <code>MeshStyle</code> base class; however, subclasses may extend its behavior
+    /// to add support for color transformations, normal mapping, etc.
+    /// </para>
+    /// <see cref="MeshBatch"/>
+    /// <see cref="MeshStyle"/>
+    /// <see cref="Rendering.IndexData"/>
+    /// <see cref="Rendering.VertexData"/>
     /// </summary>
     public class Mesh : DisplayObject
     {

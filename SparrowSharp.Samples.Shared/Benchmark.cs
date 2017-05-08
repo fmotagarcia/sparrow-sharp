@@ -22,7 +22,9 @@ namespace Sparrow.Samples
 
         public Benchmark()
         {
+            // NOTE: Removing this breaks the app!
             SparrowSharp.EnableErrorChecking();
+            
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader("SparrowSamples");
             textures = new Texture[] { SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("bigstar.png")),
                                        SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")) };
@@ -44,10 +46,10 @@ namespace Sparrow.Samples
             _started = true;
             _waitFrames = 3;
             
-            //SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
+            SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
             
             AddTestObjects(16);
-            /*
+            
             TestRenderTexture();
             
             TestFilters();
@@ -58,12 +60,12 @@ namespace Sparrow.Samples
             
             TestTextField();
 
-            Stage.Touch += Benchmark_Touch;*/
+            Stage.Touch += Benchmark_Touch;
         }
 
         private void Benchmark_Touch(Touches.TouchEvent touch)
         {
-            //Console.WriteLine(touch);
+            Console.WriteLine(touch);
         }
 
         private void AddTestObjects(int numObjects)

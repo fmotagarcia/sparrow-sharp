@@ -4,7 +4,6 @@ using System.Diagnostics;
 using OpenGL;
 using System.Text;
 using Sparrow.Core;
-using System;
 
 namespace Sparrow.Rendering
 {

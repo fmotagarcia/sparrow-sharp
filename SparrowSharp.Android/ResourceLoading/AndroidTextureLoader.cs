@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using Android.Graphics;
-using Android.Opengl;
 using Sparrow.Textures;
 using System.IO;
 using Sparrow.Core;
-using OpenGL;
 
 namespace Sparrow.ResourceLoading
 {

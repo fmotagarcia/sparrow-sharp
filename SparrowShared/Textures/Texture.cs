@@ -1,7 +1,7 @@
 
 using System;
 using Sparrow.Geom;
-using Sparrow.Utils;
+using Sparrow.Rendering;
 using Sparrow.Core;
 
 namespace Sparrow.Textures

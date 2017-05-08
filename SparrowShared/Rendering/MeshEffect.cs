@@ -126,6 +126,8 @@ namespace Sparrow.Rendering
         override protected void AfterDraw()
         {
             //?? context.setVertexBufferAt(2, null);
+            uint attribColor = (uint)Program.Attributes["aColor"];
+            Gl.DisableVertexAttribArray(attribColor);
             base.AfterDraw();
         }
 

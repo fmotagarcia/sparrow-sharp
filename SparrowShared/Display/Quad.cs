@@ -11,7 +11,7 @@ namespace Sparrow.Display
     /// You can set one color per vertex. The colors will smoothly fade into each other over the area
     /// of the quad. To display a simple linear color gradient, assign one color to vertices 0 and 1 and 
     /// another color to vertices 2 and 3.
-    ///<para></para>
+    /// 
     /// The indices of the vertices are arranged like this:
     ///<para></para>
     /// <para>   0 - 1</para>
@@ -27,10 +27,11 @@ namespace Sparrow.Display
     /// 0xRRGGBB
     ///<para></para>
     /// That means that you can create the base colors like this:
-    ///<para></para>
-    ///   <para>0xFF0000 -> red</para>
-    ///   <para>0x00FF00 -> green</para>
-    ///   <para>0x0000FF -> blue</para>
+    /// 
+    ///   <para/>0xFF0000 -> red
+    ///   <para/>0x00FF00 -> green
+    ///   <para/>0x0000FF -> blue
+    ///   
     /// </summary>
     public class Quad : Mesh
     {
