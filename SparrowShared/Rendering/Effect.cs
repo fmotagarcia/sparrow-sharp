@@ -77,9 +77,9 @@ namespace Sparrow.Rendering
      *
      *  @see FilterEffect
      *  @see MeshEffect
-     *  @see starling.styles.MeshStyle
-     *  @see starling.filters.FragmentFilter
-     *  @see starling.utils.RenderUtil
+     *  @see Sparrow.Styles.MeshStyle
+     *  @see Sparrow.Filters.FragmentFilter
+     *  @see Sparrow.Utils.RenderUtil
      */
     public class Effect
     {
@@ -180,7 +180,7 @@ namespace Sparrow.Rendering
                 }
                 else
                 {
-                    PurgeBuffers(false, true);
+                    PurgeBuffers(false);
                 }
             }
             if (_indexBufferName == 0)
@@ -236,7 +236,7 @@ namespace Sparrow.Rendering
         /** Draws the triangles described by the index- and vertex-buffers, or a range of them.
          *  This calls <code>beforeDraw</code>, <code>context.drawTriangles</code>, and
          *  <code>afterDraw</code>, in this order. */
-        virtual public void Render(int firstIndex = 0, int numTriangles= -1)
+        public virtual void Render(int firstIndex = 0, int numTriangles= -1)
         {
             if (numTriangles < 0) numTriangles = _indexBufferSize;
             if (numTriangles == 0) return;
@@ -257,7 +257,7 @@ namespace Sparrow.Rendering
          *    <li><code>aPosition</code> — vertex position (xy)</li>
          *  </ul>
          */
-        virtual protected void BeforeDraw()
+        protected virtual void BeforeDraw()
         {
             Program.Activate(); // create, upload, use program
             
@@ -267,10 +267,10 @@ namespace Sparrow.Rendering
 
             uint attribPosition = (uint)Program.Attributes["aPosition"];
             Gl.EnableVertexAttribArray(attribPosition);
-            Gl.VertexAttribPointer(attribPosition, 2, Gl.FLOAT, false, Vertex.SIZE, (IntPtr)Vertex.POSITION_OFFSET);
+            Gl.VertexAttribPointer(attribPosition, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.PositionOffset);
             
-            int _uMvpMatrix = Program.Uniforms["uMvpMatrix"];
-            Gl.UniformMatrix4(_uMvpMatrix, 1, false, MvpMatrix3D.RawData); // 1 is the number of matrices
+            int uMvpMatrix = Program.Uniforms["uMvpMatrix"];
+            Gl.UniformMatrix4(uMvpMatrix, 1, false, MvpMatrix3D.RawData); // 1 is the number of matrices
 
             // color & alpha are set in subclasses
         }
@@ -279,7 +279,7 @@ namespace Sparrow.Rendering
         /// This method is called by <code>Render</code>, directly after
         /// <code>Gl.DrawElements</code>. Resets vertex buffer attributes.
         /// </summary>
-        virtual protected void AfterDraw()
+        protected virtual void AfterDraw()
         {
             //?? context.setVertexBufferAt(0, null);
             uint attribPosition = (uint)Program.Attributes["aPosition"];
@@ -295,7 +295,7 @@ namespace Sparrow.Rendering
          *
          *  <p>The basic implementation always outputs pure white.</p>
          */
-        virtual protected Program CreateProgram()
+        protected virtual Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
 
@@ -342,7 +342,7 @@ namespace Sparrow.Rendering
          *
          *  @default 0
          */
-        virtual protected uint ProgramVariantName { get { return 0; } }
+        protected virtual uint ProgramVariantName { get { return 0; } }
 
         /** Returns the base name for the program.
          *  @default the fully qualified class name

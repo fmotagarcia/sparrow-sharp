@@ -13,8 +13,8 @@ namespace Sparrow.Rendering
     *  advantage is that it survives a context loss; furthermore, it makes it simple to
     *  create a program from AGAL source without having to deal with the assembler.</p>
     *
-    *  <p>It is recommended to store programs in Starling's "Painter" instance via the methods
-    *  <code>registerProgram</code> and <code>getProgram</code>. That way, your programs may
+    *  <p>It is recommended to store programs in Sparrow's "Painter" instance via the methods
+    *  <code>RegisterProgram</code> and <code>GetProgram</code>. That way, your programs may
     *  be shared among different display objects or even Starling instances.</p>
     *
     *  @see Painter
@@ -48,10 +48,10 @@ namespace Sparrow.Rendering
             SparrowSharp.ContextCreated += DisposeProgram;
         }
 
-        protected void Init(string vertexShader, string fragmentShader)
+        protected void Init(string initVertexShader, string initFragmentShader)
         {
-            _vertexShader = vertexShader;
-            _fragmentShader = fragmentShader;
+            _vertexShader = initVertexShader;
+            _fragmentShader = initFragmentShader;
         }
 
 
@@ -79,7 +79,7 @@ namespace Sparrow.Rendering
 
         public string Description()
         {
-            return string.Format("[Program {0}\n## VERTEX SHADER: ##\n{1}\n## FRAGMENT SHADER: ##\n{2}]", Name, _vertexShader, _fragmentShader);
+            return $"[Program {Name}\n## VERTEX SHADER: ##\n{_vertexShader}\n## FRAGMENT SHADER: ##\n{_fragmentShader}]";
         }
 
         private void Compile()
@@ -106,7 +106,7 @@ namespace Sparrow.Rendering
                     int logSize;
                     StringBuilder sb = new StringBuilder();
                     Gl.GetProgramInfoLog(program, 9999, out logSize, sb);
-                    Debug.WriteLine("Sparrow: Error linking program: " + sb.ToString());
+                    Debug.WriteLine("Sparrow: Error linking program: " + sb);
                 }
             }
 #endif
@@ -131,7 +131,7 @@ namespace Sparrow.Rendering
                 return shader;
             }
 
-            Gl.ShaderSource(shader, new string[] { source });
+            Gl.ShaderSource(shader, new [] { source });
             Gl.CompileShader(shader);
 
 #if DEBUG
@@ -148,7 +148,7 @@ namespace Sparrow.Rendering
                     int logSize;
                     StringBuilder sb = new StringBuilder();
                     Gl.GetShaderInfoLog(shader, 9999, out logSize, sb);
-                    Debug.WriteLine(string.Format("Sparrow: Error compiling {0} shader: {1}", (type == Gl.VERTEX_SHADER ? "vertex" : "fragment"), sb.ToString()));
+                    Debug.WriteLine("Sparrow: Error compiling {0} shader: {1}", (type == Gl.VERTEX_SHADER ? "vertex" : "fragment"), sb);
                 }
                 Gl.DeleteShader(shader);
                 return 0;

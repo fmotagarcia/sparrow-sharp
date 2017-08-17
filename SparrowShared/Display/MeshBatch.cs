@@ -8,7 +8,7 @@ namespace Sparrow.Display
 {
     /** Combines a number of meshes to one display object and renders them efficiently.
      *
-     *  <p>The most basic tangible (non-container) display object in Starling is the Mesh.
+     *  <p>The most basic tangible (non-container) display object in Sparrow is the Mesh.
      *  However, a mesh typically does not render itself; it just holds the data describing its
      *  geometry. Rendering is orchestrated by the "MeshBatch" class. As its name suggests, it
      *  acts as a batch for an arbitrary number of Mesh instances; add meshes to a batch and they
@@ -20,7 +20,7 @@ namespace Sparrow.Display
      *  To reset the current state, you can call <code>clear</code>; this will also remove all
      *  geometry that has been added thus far.</p>
      *
-     *  <p>Starling will use MeshBatch instances (or compatible objects) for all rendering.
+     *  <p>Sparrow will use MeshBatch instances (or compatible objects) for all rendering.
      *  However, you can also instantiate MeshBatch instances yourself and add them to the display
      *  tree. That makes sense for an object containing a large number of meshes; that way, that
      *  object can be created once and then rendered very efficiently, without having to copy its
@@ -32,7 +32,7 @@ namespace Sparrow.Display
     public class MeshBatch : Mesh
     {
         /** The maximum number of vertices that fit into one MeshBatch. */
-        public static readonly int MAX_NUM_VERTICES = 65535;
+        public static readonly int MaxNumVertices = 65535;
 
         private MeshEffect _effect;
         private bool _batchable;
@@ -40,7 +40,7 @@ namespace Sparrow.Display
         private bool _indexSyncRequired;
 
         // helper object
-        private static MeshSubset sFullMeshSubset = new MeshSubset();
+        private static readonly MeshSubset SFullMeshSubset = new MeshSubset();
 
         /// <summary>
         /// Creates a new, empty MeshBatch instance.
@@ -49,9 +49,9 @@ namespace Sparrow.Display
 
         // display object overrides
 
-        override public void Dispose()
+        public override void Dispose()
         {
-            if (_effect != null) _effect.Dispose();
+            _effect?.Dispose();
             base.Dispose();
         }
 
@@ -101,22 +101,22 @@ namespace Sparrow.Display
         {
             if (ignoreTransformations) matrix = null;
             else if (matrix == null) matrix = mesh.TransformationMatrix;
-            if (subset == null) subset = sFullMeshSubset;
+            if (subset == null) subset = SFullMeshSubset;
 
-            int targetVertexID = _vertexData.NumVertices;
-            int targetIndexID = _indexData.NumIndices;
+            int targetVertexId = _vertexData.NumVertices;
+            int targetIndexId = _indexData.NumIndices;
             MeshStyle meshStyle = mesh._style;
 
-            if (targetVertexID == 0)
+            if (targetVertexId == 0)
             {
                 SetupFor(mesh);
             }
             
-            meshStyle.BatchVertexData(_style, targetVertexID, matrix, subset.VertexID, subset.NumVertices);
-            meshStyle.BatchIndexData(_style, targetIndexID, targetVertexID - subset.VertexID,
+            meshStyle.BatchVertexData(_style, targetVertexId, matrix, subset.VertexID, subset.NumVertices);
+            meshStyle.BatchIndexData(_style, targetIndexId, targetVertexId - subset.VertexID,
                 subset.IndexID, subset.NumIndices);
 
-            if (alpha != 1.0f) _vertexData.ScaleAlphas(alpha, targetVertexID, subset.NumVertices);
+            if (alpha != 1.0f) _vertexData.ScaleAlphas(alpha, targetVertexId, subset.NumVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -131,7 +131,7 @@ namespace Sparrow.Display
          *  For the latter, indices are aligned in groups of 6 (one quad requires six indices),
          *  and the vertices in groups of 4 (one vertex for every corner).</p>
          */
-        public void AddMeshAt(Mesh mesh, int indexID, int vertexID)
+        public void AddMeshAt(Mesh mesh, int indexId, int vertexId)
         {
             int numIndices = mesh.NumIndices;
             int numVertices = mesh.NumVertices;
@@ -143,10 +143,10 @@ namespace Sparrow.Display
                 SetupFor(mesh);
             }
             
-            meshStyle.BatchVertexData(_style, vertexID, matrix, 0, numVertices);
-            meshStyle.BatchIndexData(_style, indexID, vertexID, 0, numIndices);
+            meshStyle.BatchVertexData(_style, vertexId, matrix, 0, numVertices);
+            meshStyle.BatchIndexData(_style, indexId, vertexId, 0, numIndices);
            
-            if (Alpha != 1.0f) _vertexData.ScaleAlphas(Alpha, vertexID, numVertices);
+            if (Alpha != 1.0f) _vertexData.ScaleAlphas(Alpha, vertexId, numVertices);
             if (_parent != null) SetRequiresRedraw();
 
             _indexSyncRequired = _vertexSyncRequired = true;
@@ -179,7 +179,7 @@ namespace Sparrow.Display
             if (currentNumVertices == 0) return true;
             if (numVertices< 0) numVertices = mesh.NumVertices;
             if (numVertices == 0) return true;
-            if (numVertices + currentNumVertices > MAX_NUM_VERTICES) return false;
+            if (numVertices + currentNumVertices > MaxNumVertices) return false;
 
             return _style.CanBatchWith(mesh._style);
         }
@@ -188,7 +188,7 @@ namespace Sparrow.Display
         /// If the <code>batchable</code> property is enabled, this method will add the batch
         /// to the painter's current batch. Otherwise, this will actually do the drawing.
         /// </summary>
-        override public void Render(Painter painter)
+        public override void Render(Painter painter)
         {
             if (_vertexData.NumVertices == 0)
             {
@@ -224,13 +224,12 @@ namespace Sparrow.Display
             }
         }
         
-        override public void SetStyle(MeshStyle meshStyle = null,
+        public override void SetStyle(MeshStyle meshStyle = null,
                                       bool mergeWithPredecessor = true)
         {
             base.SetStyle(meshStyle, mergeWithPredecessor);
 
-            if (_effect != null)
-                _effect.Dispose();
+            _effect?.Dispose();
 
             _effect = Style.CreateEffect();
             _effect.OnRestore = SetVertexAndIndexDataChanged;
@@ -239,7 +238,7 @@ namespace Sparrow.Display
         /** The total number of vertices in the mesh. If you change this to a smaller value,
          *  the surplus will be deleted. Make sure that no indices reference those deleted
          *  vertices! */
-        override public int NumVertices
+        public override int NumVertices
         {
             set
             {
@@ -255,7 +254,7 @@ namespace Sparrow.Display
         /** The total number of indices in the mesh. If you change this to a smaller value,
          *  the surplus will be deleted. Always make sure that the number of indices
          *  is a multiple of three! */
-        override public int NumIndices
+        public override int NumIndices
         {
             set
             {

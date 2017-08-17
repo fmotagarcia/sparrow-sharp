@@ -100,7 +100,7 @@ namespace Sparrow.Filters
             SetRequiresRedraw();
         }
 
-        override protected FilterEffect CreateEffect()
+        protected override FilterEffect CreateEffect()
         {
             return new ColorMatrixEffect();
         }
@@ -140,7 +140,7 @@ namespace Sparrow.Filters
             _shaderMatrix = Matrix3D.Create();
         }
         
-        override protected Program CreateProgram()
+        protected override Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
             AddShaderInitCode(source);
@@ -164,7 +164,7 @@ namespace Sparrow.Filters
             return new Program(StdVertexShader, fragmentShader);
         }
 
-        override protected void BeforeDraw()
+        protected override void BeforeDraw()
         {
             base.BeforeDraw();
 
@@ -192,7 +192,7 @@ namespace Sparrow.Filters
                 matrix[15], matrix[16], matrix[17], matrix[18]
             });
 
-            _shaderOffset = new float[] {
+            _shaderOffset = new[] {
                 matrix[4] / 255.0f, matrix[9] / 255.0f, matrix[14] / 255.0f, matrix[19] / 255.0f
             };
         }

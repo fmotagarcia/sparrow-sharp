@@ -54,7 +54,7 @@ namespace Sparrow.Display
     public abstract class DisplayObjectContainer : DisplayObject
     {
 
-        private static BatchToken sCacheToken = new BatchToken();
+        private static readonly BatchToken sCacheToken = new BatchToken();
 
         /// <summary>
         /// Disposes the resources of all children. 
@@ -281,9 +281,9 @@ namespace Sparrow.Display
         override public void Render(Painter painter)
         {
             int numChildren = _children.Count;
-            uint frameID = painter.FrameID;
-            bool cacheEnabled = frameID == 0 ? false : true;
-            bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameID;
+            uint frameId = painter.FrameID;
+            bool cacheEnabled = frameId == 0 ? false : true;
+            bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameId;
 
             for (int i = 0; i < numChildren; ++i)
             {
@@ -293,12 +293,12 @@ namespace Sparrow.Display
                 {
                     if (selfOrParentChanged)
                     {
-                        child._lastParentOrSelfChangeFrameID = frameID;
+                        child._lastParentOrSelfChangeFrameID = frameId;
                     }
 
-                    if (child._lastParentOrSelfChangeFrameID != frameID &&
-                        child._lastChildChangeFrameID != frameID &&
-                        child._tokenFrameID == frameID - 1 && cacheEnabled)
+                    if (child._lastParentOrSelfChangeFrameID != frameId &&
+                        child._lastChildChangeFrameID != frameId &&
+                        child._tokenFrameID == frameId - 1 && cacheEnabled)
                     {
                         painter.PushState(sCacheToken);
                         painter.DrawFromCache(child._pushToken, child._popToken);
@@ -328,13 +328,13 @@ namespace Sparrow.Display
 
                     if (cacheEnabled)
                     {
-                        child._tokenFrameID = frameID;
+                        child._tokenFrameID = frameId;
                     }
                 }
             }
         }
 
-        override public Rectangle GetBounds(DisplayObject targetSpace)
+        public override Rectangle GetBounds(DisplayObject targetSpace)
         {
             int numChildren = _children.Count;
 
@@ -344,26 +344,23 @@ namespace Sparrow.Display
                 Point transformedPoint = transformationMatrix.TransformPoint(X, Y);
                 return Rectangle.Create(transformedPoint.X, transformedPoint.Y);
             }
-            else if (numChildren == 1)
+            if (numChildren == 1)
             {
                 return _children[0].GetBounds(targetSpace);
             }
-            else
+            float minX = float.MaxValue, maxX = -float.MaxValue, minY = float.MaxValue, maxY = -float.MaxValue;
+            foreach (DisplayObject child in _children)
             {
-                float minX = float.MaxValue, maxX = -float.MaxValue, minY = float.MaxValue, maxY = -float.MaxValue;
-                foreach (DisplayObject child in _children)
-                {
-                    Rectangle childBounds = child.GetBounds(targetSpace);
-                    minX = Math.Min(minX, childBounds.X);
-                    maxX = Math.Max(maxX, childBounds.X + childBounds.Width);
-                    minY = Math.Min(minY, childBounds.Top);
-                    maxY = Math.Max(maxY, childBounds.Top + childBounds.Height);
-                }
-                return Rectangle.Create(minX, minY, maxX - minX, maxY - minY);
+                Rectangle childBounds = child.GetBounds(targetSpace);
+                minX = Math.Min(minX, childBounds.X);
+                maxX = Math.Max(maxX, childBounds.X + childBounds.Width);
+                minY = Math.Min(minY, childBounds.Top);
+                maxY = Math.Max(maxY, childBounds.Top + childBounds.Height);
             }
+            return Rectangle.Create(minX, minY, maxX - minX, maxY - minY);
         }
 
-        override public DisplayObject HitTest(Point localPoint)
+        public override DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable || !HitTestMask(localPoint))
             {

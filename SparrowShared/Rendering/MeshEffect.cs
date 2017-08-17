@@ -9,16 +9,13 @@ namespace Sparrow.Rendering
     public class MeshEffect : FilterEffect
     {
         private float _alpha;
-
-        // helper objects
-        private static float[] sRenderAlpha = new float[4];
         
         public MeshEffect()
         {
             _alpha = 1.0f;
         }
         
-        override protected uint ProgramVariantName
+        protected override uint ProgramVariantName
         {
             get
             {
@@ -27,7 +24,7 @@ namespace Sparrow.Rendering
             }
         }
         
-        override protected Program CreateProgram()
+        protected override Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
             string vertexShader;
@@ -108,12 +105,12 @@ namespace Sparrow.Rendering
          *    <li><code>fs0</code> — texture</li>
          *  </ul>
          */
-        override protected void BeforeDraw()
+        protected override void BeforeDraw()
         {
             base.BeforeDraw();
 
-            int _uAlpha = Program.Uniforms["uAlpha"];
-            Gl.Uniform4(_uAlpha, _alpha, _alpha, _alpha, _alpha);
+            int uAlpha = Program.Uniforms["uAlpha"];
+            Gl.Uniform4(uAlpha, _alpha, _alpha, _alpha, _alpha);
 
             uint attribColor = (uint)Program.Attributes["aColor"];
             Gl.EnableVertexAttribArray(attribColor);
@@ -123,7 +120,7 @@ namespace Sparrow.Rendering
 
         /** This method is called by <code>render</code>, directly after
          *  <code>context.drawTriangles</code>. Resets texture and vertex buffer attributes. */
-        override protected void AfterDraw()
+        protected override void AfterDraw()
         {
             //?? context.setVertexBufferAt(2, null);
             uint attribColor = (uint)Program.Attributes["aColor"];

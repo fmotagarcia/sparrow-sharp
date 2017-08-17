@@ -11,11 +11,11 @@ namespace Sparrow.Touches
 
         private readonly Dictionary<int, Touch> _touches = new Dictionary<int, Touch>();
 
-        public void OnPointerDown(float xPosition, float yPosition, int touchID)
+        public void OnPointerDown(float xPosition, float yPosition, int touchId)
         {
             double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             Touch newTouch = new Touch();
-            newTouch.TouchID = touchID;
+            newTouch.TouchID = touchId;
             newTouch.TimeStamp = now;
             newTouch.GlobalX = xPosition;
             newTouch.GlobalY = yPosition;
@@ -29,10 +29,10 @@ namespace Sparrow.Touches
             ProcessTouch();
         }
 
-        public void OnPointerMove(float xPosition, float yPosition, int touchID)
+        public void OnPointerMove(float xPosition, float yPosition, int touchId)
         {
             Touch movedTouch;
-            _touches.TryGetValue(touchID, out movedTouch);
+            _touches.TryGetValue(touchId, out movedTouch);
             if (movedTouch != null)
             {
                 double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -60,14 +60,13 @@ namespace Sparrow.Touches
             ProcessTouch();
         }
 
-        public void OnPointerUp(int touchID)
+        public void OnPointerUp(int touchId)
         {
-            Touch touchInFocus;
-            if (_touches.ContainsKey(touchID) == false)
+            if (_touches.ContainsKey(touchId) == false)
             {
                 return; // right click/middle click/..
             }
-            touchInFocus = _touches[touchID];
+            var touchInFocus = _touches[touchId];
             touchInFocus.Phase = TouchPhase.Ended;
             long downTime = -1; // TODO Android.OS.SystemClock.UptimeMillis() - e.DownTime;
             double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -83,9 +82,9 @@ namespace Sparrow.Touches
             ProcessTouch();
         }
 
-        public void OnPointerCancel(int touchID)
+        public void OnPointerCancel(int touchId)
         {
-            Touch touchInFocus = _touches[touchID];
+            Touch touchInFocus = _touches[touchId];
             touchInFocus.Phase = TouchPhase.Cancelled;
             ProcessTouch();
         }
@@ -95,10 +94,7 @@ namespace Sparrow.Touches
             foreach (Touch tou in _touches.Values)
             {
                 TouchEvent touchEvent = new TouchEvent(new List<Touch>(_touches.Values));
-                if (tou.Target != null)
-                {
-                    tou.Target.InvokeTouch(touchEvent);
-                }
+                tou.Target?.InvokeTouch(touchEvent);
                 // Console.WriteLine ("phase:" + tou.Phase + " ID:" + tou.TouchID + 
                 //    " target:" + tou.Target + " isTap:"+ tou.IsTap + " timestamp:" + tou.TimeStamp);
             }

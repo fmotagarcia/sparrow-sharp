@@ -1,5 +1,4 @@
 ﻿
-using Sparrow.Core;
 using Sparrow.Geom;
 using Sparrow.Display;
 using Sparrow.Utils;
@@ -10,11 +9,11 @@ namespace Sparrow.Rendering
 {
     public class BatchProcessor
     {
-        private List<MeshBatch> _batches;
-        private BatchPool _batchPool;
+        private readonly List<MeshBatch> _batches;
+        private readonly BatchPool _batchPool;
         private MeshBatch _currentBatch;
         private Type _currentStyleType;
-        private BatchToken _cacheToken;
+        private readonly BatchToken _cacheToken;
         public delegate void OnBatchCompleteFunction(MeshBatch mb);
         /// <summary>
         /// This callback is executed whenever a batch is finished and replaced by a new one.
@@ -24,10 +23,10 @@ namespace Sparrow.Rendering
         public OnBatchCompleteFunction OnBatchComplete;
 
         // helper objects
-        private static MeshSubset sMeshSubset = new MeshSubset();
+        private static readonly MeshSubset sMeshSubset = new MeshSubset();
 
         /// <summary>
-        ///  Creates a new batch processor.
+        /// Creates a new batch processor.
         /// </summary>
         public BatchProcessor()
         {
@@ -53,17 +52,17 @@ namespace Sparrow.Rendering
 
         /// <summary>
         /// Adds a mesh to the current batch, or to a new one if the current one does not support
-        /// it.Whenever the batch changes, <code>onBatchComplete</code> is called for the previous
+        /// it. Whenever the batch changes, <code>onBatchComplete</code> is called for the previous
         /// one.
         /// </summary>
-        /// <param name="mesh">mesh the mesh to add to the current(or new) batch.</param>
-        /// <param name="state"> the render state from which to take the current settings for alpha,
+        /// <param name="mesh">The mesh to add to the current(or new) batch.</param>
+        /// <param name="state">The render state from which to take the current settings for alpha,
         ///                    modelview matrix, and blend mode.</param>
-        /// <param name="subset">the subset of the mesh you want to add, or<code>null</code> for
+        /// <param name="subset">The subset of the mesh you want to add, or<code>null</code> for
         ///                    the complete mesh.</param>
-        /// <param name="ignoreTransformations">when enabled, the mesh's vertices will be added
+        /// <param name="ignoreTransformations">When enabled, the mesh's vertices will be added
         ///                    without transforming them in any way (no matter the value of the
-        ///                    state's <code>modelviewMatrix</param>
+        ///                    state's <code>modelviewMatrix</code></param>
         public void AddMesh(Mesh mesh, RenderState state, MeshSubset subset = null,
                             bool ignoreTransformations = false)
         {
@@ -115,10 +114,7 @@ namespace Sparrow.Rendering
                 _currentBatch = null;
                 _currentStyleType = null;
 
-                if (OnBatchComplete != null)
-                {
-                    OnBatchComplete(meshBatch);
-                }
+                OnBatchComplete?.Invoke(meshBatch);
             }
         }
 
@@ -143,9 +139,9 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Returns the batch at a certain index.
         /// </summary>
-        public MeshBatch GetBatchAt(int batchID)
+        public MeshBatch GetBatchAt(int batchId)
         {
-            return _batches[batchID];
+            return _batches[batchId];
         }
 
         /// <summary>
@@ -174,9 +170,9 @@ namespace Sparrow.Rendering
         public int NumBatches { get { return _batches.Count; } }
     }
 
-    class BatchPool
+    internal class BatchPool
     {
-        private Dictionary<Type, List<MeshBatch>> _batchLists;
+        private readonly Dictionary<Type, List<MeshBatch>> _batchLists;
 
         public BatchPool()
         {
@@ -188,9 +184,9 @@ namespace Sparrow.Rendering
             foreach (KeyValuePair<Type, List<MeshBatch>> entry in _batchLists)
             {
                 List<MeshBatch> batchList = entry.Value;
-                for (int i = 0; i < batchList.Count; ++i)
+                foreach (MeshBatch batch in batchList)
                 {
-                    batchList[i].Dispose();
+                    batch.Dispose();
                 }
                 batchList.Clear();
             }

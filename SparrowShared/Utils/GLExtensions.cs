@@ -7,16 +7,13 @@ namespace Sparrow.Utils
     public static class GLExtensions
     {
         private static readonly HashSet<string> Extensions;
-        private static readonly Dictionary<uint, uint> FramebufferCache;
-        public readonly static bool MapBufferSupported = false;
-        public readonly static bool TextureMaxAnisotropySupported = false;
+        public static readonly bool MapBufferSupported = false;
+        public static readonly bool TextureMaxAnisotropySupported = false;
 
         static GLExtensions()
         {
             Extensions = new HashSet<string>();
-            FramebufferCache = new Dictionary<uint, uint>();
 
-            string extensionsString = "";
             int numExt;
             Gl.Get(Gl.NUM_EXTENSIONS, out numExt);
             for (uint i = 0; i < numExt; i++)

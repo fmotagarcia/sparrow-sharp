@@ -17,7 +17,7 @@ namespace Sparrow.Core
         public static event ContextCreatedHandler ContextCreated;
 
         private static Painter _painter;
-        private static uint _frameID;
+        private static uint _frameId;
 
         private static Rectangle _viewPort;
         private static Rectangle _previousViewPort;
@@ -26,7 +26,7 @@ namespace Sparrow.Core
 
         public static Stage Stage { get; private set; }
 
-        public static uint FrameID { get { return _frameID; } }
+        public static uint FrameID { get { return _frameId; } }
 
         public static readonly Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
@@ -49,7 +49,7 @@ namespace Sparrow.Core
         */
         public static bool SkipUnchangedFrames = false;
 
-        private static readonly Stopwatch watch = new Stopwatch();
+        private static readonly Stopwatch Watch = new Stopwatch();
 
         private static StatsDisplay _statsDisplay;
 
@@ -99,17 +99,17 @@ namespace Sparrow.Core
 
             Root = (DisplayObject)Activator.CreateInstance(rootType);
             Stage.AddChild(Root);
-            _frameID = 1; // starts with 1, so things on the first frame are cached
+            _frameId = 1; // starts with 1, so things on the first frame are cached
         }
 
         public static bool Step()
         {
-            long elapsed = watch.ElapsedMilliseconds;
-            watch.Restart();
+            long elapsed = Watch.ElapsedMilliseconds;
+            Watch.Restart();
 
             Stage.AdvanceTime(elapsed);
             DefaultJuggler.AdvanceTime(elapsed / 1000.0f);
-            bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames || _frameID == 1;
+            bool doRedraw = Stage.RequiresRedraw || !SkipUnchangedFrames || _frameId == 1;
             Render(doRedraw);
             return doRedraw;
         }
@@ -133,11 +133,11 @@ namespace Sparrow.Core
                     _clippedViewPort.Height / scaleY,
                     Stage.StageWidth, Stage.StageHeight, Stage.CameraPosition);
                 
-                _painter.Clear(Stage.Color, 0.0f);
+                _painter.Clear(Stage.Color);
 
                 Stage.Render(_painter);
                 _painter.FinishFrame();
-                _painter.FrameID = ++_frameID;
+                _painter.FrameID = ++_frameId;
                 
                 _painter.Present();
             }
@@ -185,10 +185,7 @@ namespace Sparrow.Core
         
         public static void HideStats()
         {
-            if (_statsDisplay != null)
-            {
-                _statsDisplay.RemoveFromParent();
-            }
+            _statsDisplay?.RemoveFromParent();
         }
 
         public static void ShowStats(HAlign horizontalAlign = HAlign.Left, 
@@ -231,7 +228,7 @@ namespace Sparrow.Core
             get { return _viewPort.Width / Stage.StageWidth; }
         }
 
-        /** Indicates if Stage3D render methods will report errors. Activate only when needed,
+        /** Indicates if OpenGL render methods will report errors. Activate only when needed,
          *  as this has a negative impact on performance. @default false */
         public static void EnableErrorChecking()
         {
@@ -242,14 +239,13 @@ namespace Sparrow.Core
             }
         }
 
-        public static void Destroy()
+        public static void Destroy() // TODO check
         {
             _statsDisplay = null;
             Stage.RemoveAllChildren();
             Stage = null;
             Root = null;
             Programs.Clear();
-            // TODO check
         }
 
         public static void OnContextCreated()

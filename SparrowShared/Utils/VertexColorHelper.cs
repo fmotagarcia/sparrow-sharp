@@ -36,14 +36,11 @@
             {
                 return color;
             }
-            else
-            {
-                return VertexColorHelper.CreateVertexColor(
-                    (byte)(color.R * alpha + 0.5f),
-                    (byte)(color.G * alpha + 0.5f),
-                    (byte)(color.B * alpha + 0.5f),
-                    color.A);
-            }
+            return CreateVertexColor(
+                (byte)(color.R * alpha + 0.5f),
+                (byte)(color.G * alpha + 0.5f),
+                (byte)(color.B * alpha + 0.5f),
+                color.A);
         }
 
         public static VertexColor UnmultiplyAlpha(VertexColor color)

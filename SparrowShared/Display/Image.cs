@@ -129,14 +129,14 @@ namespace Sparrow.Display
             }
         }
         
-        override protected void SetupVertices()
+        protected override void SetupVertices()
         {
             if (Texture != null && _scale9Grid != null) SetupScale9Grid();
             else if (Texture != null && _tileGrid != null) SetupTileGrid();
             else base.SetupVertices();
         }
 
-        override public float ScaleX
+        public override float ScaleX
         {
             set
             {
@@ -148,7 +148,7 @@ namespace Sparrow.Display
             }
         }
 
-        override public float ScaleY
+        public override float ScaleY
         {
             set
             {
@@ -160,7 +160,7 @@ namespace Sparrow.Display
             }
         }
         
-        override public Texture Texture
+        public override Texture Texture
         {
             set
             {
@@ -195,8 +195,6 @@ namespace Sparrow.Display
             VertexData vertexData = VertexData;
             IndexData indexData = IndexData;
             int prevNumVertices = vertexData.NumVertices;
-            int numVertices;
-            int numQuads;
             float correction;
 
             // The following rectangles are used to figure everything out.
@@ -301,12 +299,12 @@ namespace Sparrow.Display
             sTexRows[2] = sBasRows[2] / pixelBounds.Height;
             sTexRows[1] = 1.0f - sTexRows[0] - sTexRows[2];
 
-            numVertices = SetupScale9GridAttributes(
-               sPadding.Left, sPadding.Top, sPosCols, sPosRows, sTexCols, sTexRows);
+            var numVertices = SetupScale9GridAttributes(
+                sPadding.Left, sPadding.Top, sPosCols, sPosRows, sTexCols, sTexRows);
 
             // update indices
 
-            numQuads = numVertices / 4;
+            var numQuads = numVertices / 4;
             vertexData.NumVertices = numVertices;
             indexData.NumIndices = 0;
 
@@ -341,7 +339,7 @@ namespace Sparrow.Display
             float currentY = startY;
             float currentU = 0f;
             float currentV = 0f;
-            int vertexID = 0;
+            int vertexId = 0;
 
             for (row = 0; row < 3; ++row)
             {
@@ -357,21 +355,21 @@ namespace Sparrow.Display
 
                         if (colWidthPos > 0)
                         {
-                            vertexData.SetPoint(vertexID, currentX, currentY);
-                            texture.SetTexCoords(vertexData, vertexID, currentU, currentV);
-                            vertexID++;
+                            vertexData.SetPoint(vertexId, currentX, currentY);
+                            texture.SetTexCoords(vertexData, vertexId, currentU, currentV);
+                            vertexId++;
 
-                            vertexData.SetPoint(vertexID, currentX + colWidthPos, currentY);
-                            texture.SetTexCoords(vertexData, vertexID, currentU + colWidthTex, currentV);
-                            vertexID++;
+                            vertexData.SetPoint(vertexId, currentX + colWidthPos, currentY);
+                            texture.SetTexCoords(vertexData, vertexId, currentU + colWidthTex, currentV);
+                            vertexId++;
 
-                            vertexData.SetPoint(vertexID, currentX, currentY + rowHeightPos);
-                            texture.SetTexCoords(vertexData, vertexID, currentU, currentV + rowHeightTex);
-                            vertexID++;
+                            vertexData.SetPoint(vertexId, currentX, currentY + rowHeightPos);
+                            texture.SetTexCoords(vertexData, vertexId, currentU, currentV + rowHeightTex);
+                            vertexId++;
 
-                            vertexData.SetPoint(vertexID, currentX + colWidthPos, currentY + rowHeightPos);
-                            texture.SetTexCoords(vertexData, vertexID, currentU + colWidthTex, currentV + rowHeightTex);
-                            vertexID++;
+                            vertexData.SetPoint(vertexId, currentX + colWidthPos, currentY + rowHeightPos);
+                            texture.SetTexCoords(vertexData, vertexId, currentU + colWidthTex, currentV + rowHeightTex);
+                            vertexId++;
 
                             currentX += colWidthPos;
                         }
@@ -387,7 +385,7 @@ namespace Sparrow.Display
                 currentV += rowHeightTex;
             }
 
-            return vertexID;
+            return vertexId;
         }
 
         private void SetupTileGrid()
@@ -431,7 +429,7 @@ namespace Sparrow.Display
             float texLeft, texRight, texTop, texBottom;
             float currentX;
             float currentY = startY;
-            int vertexID = 0;
+            int vertexId = 0;
 
             indexData.NumIndices = 0;
 
@@ -441,39 +439,39 @@ namespace Sparrow.Display
 
                 while (currentX < bounds.Width)
                 {
-                    indexData.AddQuad((short)vertexID, (short)(vertexID + 1), (short)(vertexID + 2), (short)(vertexID + 3));
+                    indexData.AddQuad((short)vertexId, (short)(vertexId + 1), (short)(vertexId + 2), (short)(vertexId + 3));
 
                     posLeft = currentX < 0 ? 0 : currentX;
                     posTop = currentY < 0 ? 0 : currentY;
                     posRight = currentX + tileWidth > bounds.Width ? bounds.Width : currentX + tileWidth;
                     posBottom = currentY + tileHeight > bounds.Height ? bounds.Height : currentY + tileHeight;
 
-                    vertexData.SetPoint(vertexID, posLeft, posTop);
-                    vertexData.SetPoint(vertexID + 1, posRight, posTop);
-                    vertexData.SetPoint(vertexID + 2, posLeft, posBottom);
-                    vertexData.SetPoint(vertexID + 3, posRight, posBottom);
+                    vertexData.SetPoint(vertexId, posLeft, posTop);
+                    vertexData.SetPoint(vertexId + 1, posRight, posTop);
+                    vertexData.SetPoint(vertexId + 2, posLeft, posBottom);
+                    vertexData.SetPoint(vertexId + 3, posRight, posBottom);
 
                     texLeft = (posLeft - currentX) / tileWidth;
                     texTop = (posTop - currentY) / tileHeight;
                     texRight = (posRight - currentX) / tileWidth;
                     texBottom = (posBottom - currentY) / tileHeight;
 
-                    texture.SetTexCoords(vertexData, vertexID, texLeft, texTop);
-                    texture.SetTexCoords(vertexData, vertexID + 1, texRight, texTop);
-                    texture.SetTexCoords(vertexData, vertexID + 2, texLeft, texBottom);
-                    texture.SetTexCoords(vertexData, vertexID + 3, texRight, texBottom);
+                    texture.SetTexCoords(vertexData, vertexId, texLeft, texTop);
+                    texture.SetTexCoords(vertexData, vertexId + 1, texRight, texTop);
+                    texture.SetTexCoords(vertexData, vertexId + 2, texLeft, texBottom);
+                    texture.SetTexCoords(vertexData, vertexId + 3, texRight, texBottom);
 
                     currentX += frameWidth;
-                    vertexID += 4;
+                    vertexId += 4;
                 }
 
                 currentY += frameHeight;
             }
 
             // trim to actual size
-            vertexData.NumVertices = vertexID;
+            vertexData.NumVertices = vertexId;
 
-            for (int i = prevNumVertices; i < vertexID; ++i)
+            for (int i = prevNumVertices; i < vertexId; ++i)
             {
                 vertexData.SetColor(i, color);
                 vertexData.SetAlpha(i, alpha);

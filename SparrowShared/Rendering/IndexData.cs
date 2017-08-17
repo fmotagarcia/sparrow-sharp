@@ -51,12 +51,11 @@ namespace Sparrow.Rendering
         private bool _useQuadLayout;
 
         // basic quad layout
-        private static short[] sQuadData = new short[0];
-        private static uint sQuadDataNumIndices = 0;
+        private static short[] _sQuadData = new short[0];
+        private static uint _sQuadDataNumIndices = 0;
 
         // helper objects
-        private static short[] sVector = new short[0];
-        private static short[] sTrimData = new short[0];
+        private static short[] _sVector = new short[0];
 
         /// <summary>
         /// Creates an empty IndexData instance.
@@ -104,21 +103,21 @@ namespace Sparrow.Rendering
         /// <p>By passing a non-zero <code>offset</code>, you can raise all copied indices
         /// by that value in the target object.</p>
         /// </summary>
-        public void CopyTo(IndexData target, int targetIndexID = 0, int offset = 0,
-                           int indexID = 0, int numIndices = -1)
+        public void CopyTo(IndexData target, int targetIndexId = 0, int offset = 0,
+                           int indexId = 0, int numIndices = -1)
         {
-            if (numIndices< 0 || indexID + numIndices> _numIndices)
+            if (numIndices< 0 || indexId + numIndices> _numIndices)
             {
-                numIndices = _numIndices - indexID;
+                numIndices = _numIndices - indexId;
             }
 
             short[] sourceData;
-            int newNumIndices = targetIndexID + numIndices;
+            int newNumIndices = targetIndexId + numIndices;
 
             if (target._numIndices < newNumIndices)
             {
                 target._numIndices = newNumIndices; 
-                if (sQuadDataNumIndices < newNumIndices)
+                if (_sQuadDataNumIndices < newNumIndices)
                 {
                     EnsureQuadDataCapacity(newNumIndices);
                 }
@@ -129,7 +128,7 @@ namespace Sparrow.Rendering
                 if (target._useQuadLayout)
                 {
                     bool keepsQuadLayout = true;
-                    int distance = targetIndexID - indexID;
+                    int distance = targetIndexId - indexId;
                     int distanceInQuads = distance / 6;
                     int offsetInQuads = offset / 4;
 
@@ -154,21 +153,21 @@ namespace Sparrow.Rendering
                         for (int i = 0; i < numIndices; ++i)
                         {
                             keepsQuadLayout = keepsQuadLayout &&
-                               (GetBasicQuadIndexAt(indexID + i) + offset == GetBasicQuadIndexAt(targetIndexID + i));
+                               (GetBasicQuadIndexAt(indexId + i) + offset == GetBasicQuadIndexAt(targetIndexId + i));
                         }
                     }
 
                     if (keepsQuadLayout) return;
-                    else target.SwitchToGenericData();
+                    target.SwitchToGenericData();
                 }
 
-                sourceData = sQuadData;
+                sourceData = _sQuadData;
 
                 if ((offset & 3) == 0) // => offset % 4 == 0
                 {
-                    indexID += 6 * offset / 4;
+                    indexId += 6 * offset / 4;
                     offset = 0;
-                    EnsureQuadDataCapacity(indexID + numIndices);
+                    EnsureQuadDataCapacity(indexId + numIndices);
                 }
             }
             else
@@ -180,18 +179,18 @@ namespace Sparrow.Rendering
                 sourceData = _rawData;
             }
             
-            if (target._rawData.Length < targetIndexID + numIndices)
+            if (target._rawData.Length < targetIndexId + numIndices)
             {
-                Array.Resize(ref target._rawData, targetIndexID + numIndices);
+                Array.Resize(ref target._rawData, targetIndexId + numIndices);
             }
             if (offset == 0)
             {
-                Array.Copy(sourceData, indexID, target._rawData, targetIndexID, numIndices);
+                Array.Copy(sourceData, indexId, target._rawData, targetIndexId, numIndices);
             }
             else
             {
-                int pos = indexID;
-                int targetPos = targetIndexID;
+                int pos = indexId;
+                int targetPos = targetIndexId;
                 for (int i = 0; i < numIndices; i++)
                 {
                     target._rawData[targetPos] = (short)(sourceData[pos] + offset);
@@ -204,15 +203,15 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Sets an index at the specified position.
         /// </summary>
-        public void SetIndex(int indexID, int index)
+        public void SetIndex(int indexId, int index)
         {
-            if (_numIndices < indexID + 1)
+            if (_numIndices < indexId + 1)
             {
-                NumIndices = indexID + 1;
+                NumIndices = indexId + 1;
             }
             if (_useQuadLayout)
             {
-                if (GetBasicQuadIndexAt(indexID) == index)
+                if (GetBasicQuadIndexAt(indexId) == index)
                 {
                     return;
                 }
@@ -221,19 +220,19 @@ namespace Sparrow.Rendering
                     SwitchToGenericData();
                 }
             }
-            _rawData[indexID] = (short)index;
+            _rawData[indexId] = (short)index;
         }
 
         /// <summary>
         /// Reads the index from the specified position.
         /// </summary>
-        public int GetIndex(int indexID)
+        public int GetIndex(int indexId)
         {
             if (_useQuadLayout)
             {
-                if (indexID < _numIndices)
+                if (indexId < _numIndices)
                 {
-                    return GetBasicQuadIndexAt(indexID);
+                    return GetBasicQuadIndexAt(indexId);
                 }
                 else
                 {
@@ -242,21 +241,21 @@ namespace Sparrow.Rendering
             }
             else
             {
-                return _rawData[indexID];
+                return _rawData[indexId];
             }
         }
 
         /// <summary>
         /// Adds an offset to all indices in the specified range
         /// </summary>
-        public void OffsetIndices(int offset , int indexID = 0, int numIndices = -1)
+        public void OffsetIndices(int offset , int indexId = 0, int numIndices = -1)
         {
-            if (numIndices< 0 || indexID + numIndices> _numIndices)
+            if (numIndices< 0 || indexId + numIndices> _numIndices)
             {
-                numIndices = _numIndices - indexID;
+                numIndices = _numIndices - indexId;
             }
-            int endIndex = indexID + numIndices;
-            for (int i = indexID; i < endIndex; ++i)
+            int endIndex = indexId + numIndices;
+            for (int i = indexId; i < endIndex; ++i)
             {
                 SetIndex(i, GetIndex(i) + offset);
             }
@@ -272,11 +271,11 @@ namespace Sparrow.Rendering
             {
                 if (a == GetBasicQuadIndexAt(_numIndices))
                 {
-                    bool oddTriangleID = (_numIndices & 1) != 0;
-                    bool evenTriangleID = !oddTriangleID;
+                    bool oddTriangleId = (_numIndices & 1) != 0;
+                    bool evenTriangleId = !oddTriangleId;
 
-                    if ((evenTriangleID && b == a + 1 && c == b + 1) ||
-                         (oddTriangleID && c == a + 1 && b == c + 1))
+                    if ((evenTriangleId && b == a + 1 && c == b + 1) ||
+                         (oddTriangleId && c == a + 1 && b == c + 1))
                     {
                         _numIndices += 3;
                         EnsureQuadDataCapacity(_numIndices);
@@ -347,20 +346,19 @@ namespace Sparrow.Rendering
                 Array.Resize(ref outVec, _numIndices);
             }
 
-            short[] rawData = _useQuadLayout? sQuadData : _rawData;
+            short[] rawData = _useQuadLayout? _sQuadData : _rawData;
             for (int i = 0; i < _numIndices; ++i)
             {
-                outVec[i] = _rawData[i];
+                outVec[i] = rawData[i];
             }
         }
 
-        override public string ToString()
+        public override string ToString()
         {
             short[] vec = new short[1];
-            ToVector(ref sVector);
-            string str = String.Format("[IndexData numIndices={0} indices=\"{1}\"]",
-                _numIndices, vec);
-            Array.Resize(ref sVector, 0);
+            ToVector(ref _sVector);
+            string str = $"[IndexData numIndices={_numIndices} indices=\"{vec}\"]";
+            Array.Resize(ref _sVector, 0);
             return str;
         }
 
@@ -376,12 +374,12 @@ namespace Sparrow.Rendering
 
                 if (_numIndices > 0)
                 {
-                    int numToWrite = Math.Min(_numIndices, sQuadData.Length);
+                    int numToWrite = Math.Min(_numIndices, _sQuadData.Length);
                     if (_rawData.Length < numToWrite)
                     {
                         Array.Resize(ref _rawData, numToWrite);
                     }
-                    Array.Copy(sQuadData, _rawData, numToWrite);
+                    Array.Copy(_sQuadData, _rawData, numToWrite);
                 }
             }
         }
@@ -393,30 +391,30 @@ namespace Sparrow.Rendering
         /// </summary>
         private void EnsureQuadDataCapacity(int numIndices)
         {
-            if (sQuadDataNumIndices >= numIndices) return;
+            if (_sQuadDataNumIndices >= numIndices) return;
 
             short i;
-            uint oldNumQuads = sQuadDataNumIndices / 6;
-            uint newNumQuads = (uint)Math.Ceiling((double)numIndices / 6d);
+            uint oldNumQuads = _sQuadDataNumIndices / 6;
+            uint newNumQuads = (uint)Math.Ceiling(numIndices / 6d);
             
-            var pos = sQuadData.Length;
-            sQuadDataNumIndices = newNumQuads * 6;
+            var pos = _sQuadData.Length;
+            _sQuadDataNumIndices = newNumQuads * 6;
 
             int newSize = pos + (int)(newNumQuads - oldNumQuads) * 6;
-            Array.Resize(ref sQuadData, newSize);
+            Array.Resize(ref _sQuadData, newSize);
             for (i = (short)oldNumQuads; i < newNumQuads; ++i)
             {
-                sQuadData[pos] = (short)(4 * i);
+                _sQuadData[pos] = (short)(4 * i);
                 pos++;
-                sQuadData[pos] = (short)(4 * i + 1);
+                _sQuadData[pos] = (short)(4 * i + 1);
                 pos++;
-                sQuadData[pos] = (short)(4 * i + 2);
+                _sQuadData[pos] = (short)(4 * i + 2);
                 pos++;
-                sQuadData[pos] = (short)(4 * i + 1);
+                _sQuadData[pos] = (short)(4 * i + 1);
                 pos++;
-                sQuadData[pos] = (short)(4 * i + 3);
+                _sQuadData[pos] = (short)(4 * i + 3);
                 pos++;
-                sQuadData[pos] = (short)(4 * i + 2);
+                _sQuadData[pos] = (short)(4 * i + 2);
                 pos++;
             }
         }
@@ -424,16 +422,16 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Returns the index that's expected at this position if following basic quad layout.
         /// </summary>
-        private static int GetBasicQuadIndexAt(int indexID)
+        private static int GetBasicQuadIndexAt(int indexId)
         {
-            int quadID = indexID / 6;
-            int posInQuad = indexID - quadID * 6; // => indexID % 6
+            int quadId = indexId / 6;
+            int posInQuad = indexId - quadId * 6; // => indexID % 6
             int offset;
             if (posInQuad == 0) offset = 0;
             else if (posInQuad == 1 || posInQuad == 3) offset = 1;
             else if (posInQuad == 2 || posInQuad == 5) offset = 2;
             else offset = 3;
-            return quadID * 4 + offset;
+            return quadId * 4 + offset;
         }
 
         /// <summary>
@@ -575,7 +573,7 @@ namespace Sparrow.Rendering
         {
             get
             {
-                if (_useQuadLayout) return sQuadData;
+                if (_useQuadLayout) return _sQuadData;
                 else return _rawData;
             }
         }

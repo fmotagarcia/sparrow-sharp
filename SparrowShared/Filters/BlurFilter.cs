@@ -25,7 +25,7 @@ namespace Sparrow.Filters
             Resolution = resolution;
         }
 
-        override public Texture Process(Painter painter, IFilterHelper helper,
+        public override Texture Process(Painter painter, IFilterHelper helper,
                                         Texture input0 = null, Texture input1 = null,
                                         Texture input2 = null, Texture input3 = null)
         {
@@ -72,13 +72,13 @@ namespace Sparrow.Filters
         }
 
         /** @private */
-        override protected FilterEffect CreateEffect()
+        protected override FilterEffect CreateEffect()
         {
             return new BlurEffect();
         }
 
         /** @private */
-        override public float Resolution
+        public override float Resolution
         {
             set
             {
@@ -87,7 +87,7 @@ namespace Sparrow.Filters
             }
         }
 
-        override public int NumPasses
+        public override int NumPasses
         {
             get {
                 int blurVal = (int)Math.Ceiling(_blurX) + (int)Math.Ceiling(_blurY);
@@ -158,7 +158,7 @@ namespace Sparrow.Filters
             Direction = direction;
         }
 
-        override protected Program CreateProgram()
+        protected override Program CreateProgram()
         {
             if (_strength == 0) return base.CreateProgram();
 
@@ -238,7 +238,7 @@ namespace Sparrow.Filters
             return new Program(vertexShader, fragmentShader);
         }
 
-        override protected void BeforeDraw()
+        protected override void BeforeDraw()
         {
             base.BeforeDraw();
 
@@ -255,7 +255,7 @@ namespace Sparrow.Filters
             }
         }
 
-        override protected uint ProgramVariantName
+        protected override uint ProgramVariantName
         {
             get
             {

@@ -92,7 +92,6 @@ namespace Sparrow.Display
         private uint _blendmode;
         private string _name;
         private readonly Matrix2D _transformationMatrix;
-        private Matrix3D _transformationMatrix3D;
         private bool _orientationChanged;
         private DisplayObject _maskee;
 
@@ -110,11 +109,8 @@ namespace Sparrow.Display
         private double _lastTouchTimestamp;
 
         // helper objects
-        private static List<DisplayObject> sAncestors = new List<DisplayObject>();
-        private static Point sHelperPoint = Point.Create();
-        private static Rectangle sHelperRect = Rectangle.Create();
-        private static Matrix2D sHelperMatrix = Matrix2D.Create();
-        private static Matrix2D sHelperMatrixAlt = Matrix2D.Create();
+        private static readonly List<DisplayObject> sAncestors = new List<DisplayObject>();
+        private static Matrix2D _sHelperMatrixAlt = Matrix2D.Create();
 
         protected DisplayObject()
         {
@@ -129,10 +125,10 @@ namespace Sparrow.Display
         /// Disposes all resources of the display object. 
         /// GPU buffers are released, event listeners are removed, filters and masks are disposed.
         /// </summary>
-        virtual public void Dispose()
+        public virtual void Dispose()
         {
-            if (_filter != null) _filter.Dispose();
-            if (_mask != null) _mask.Dispose();
+            _filter?.Dispose();
+            _mask?.Dispose();
             //TODO RemoveEventListeners();
             Mask = null; // clear 'mask._maskee', just to be sure.
         }
@@ -167,12 +163,12 @@ namespace Sparrow.Display
             {
                 return outMatrix;
             }
-            else if (targetSpace == _parent || (targetSpace == null && _parent == null))
+            if (targetSpace == _parent || (targetSpace == null && _parent == null))
             {
                 outMatrix.CopyFromMatrix(TransformationMatrix);
                 return outMatrix;
             }
-            else if (targetSpace == null || targetSpace == Base)
+            if (targetSpace == null || targetSpace == Base)
             {
                 // targetSpace 'null' represents the target coordinate of the base object.
                 // -> move up from this to base
@@ -184,7 +180,7 @@ namespace Sparrow.Display
                 }
                 return outMatrix;
             }
-            else if (targetSpace.Parent == this)
+            if (targetSpace.Parent == this)
             {
                 outMatrix = targetSpace.GetTransformationMatrix(this);
                 outMatrix.Invert();
@@ -211,6 +207,7 @@ namespace Sparrow.Display
 
             // 3.: Now move up from target until we reach the common parent
 
+            var sHelperMatrix = Matrix2D.Create();
             sHelperMatrix.Identity();
             currentObject = targetSpace;
             while (currentObject != commonParent)
@@ -235,7 +232,7 @@ namespace Sparrow.Display
         /// <summary>
         ///  Returns the object that is found topmost on a point in local coordinates, or null if the test fails.
         /// </summary>
-        virtual public DisplayObject HitTest(Point localPoint)
+        public virtual DisplayObject HitTest(Point localPoint)
         {
             // TODO its kinda stupid that this functions fails if the object is not touchable
             // invisible or untouchable objects cause the test to fail
@@ -262,23 +259,19 @@ namespace Sparrow.Display
         /// </summary>
         public bool HitTestMask(Point localPoint)
         {
-            if (_mask != null)
+            if (_mask == null) return true;
+            if (_mask.Stage != null)
             {
-                if (_mask.Stage != null)
-                {
-                    sHelperMatrixAlt = GetTransformationMatrix(_mask);
-                }
-                else
-                {
-                    sHelperMatrixAlt.CopyFromMatrix(_mask.TransformationMatrix);
-                    sHelperMatrixAlt.Invert();
-                }
-
-                Point helperPoint = localPoint == sHelperPoint ? Point.Create() : sHelperPoint;
-                helperPoint = sHelperMatrixAlt.TransformPoint(localPoint);
-                return _mask.HitTest(helperPoint) != null;
+                _sHelperMatrixAlt = GetTransformationMatrix(_mask);
             }
-            else return true;
+            else
+            {
+                _sHelperMatrixAlt.CopyFromMatrix(_mask.TransformationMatrix);
+                _sHelperMatrixAlt.Invert();
+            }
+            
+            var helperPoint = _sHelperMatrixAlt.TransformPoint(localPoint);
+            return _mask.HitTest(helperPoint) != null;
         }
 
         /// <summary>
@@ -353,7 +346,6 @@ namespace Sparrow.Display
          *  instead of creating a new object. */
         public Matrix3D GetTransformationMatrix3D(DisplayObject targetSpace)
         {
-            DisplayObject commonParent;
             DisplayObject currentObject;
 
             Matrix3D outM = Matrix3D.Create();
@@ -362,12 +354,12 @@ namespace Sparrow.Display
             {
                 return outM;
             }
-            else if (targetSpace == _parent || (targetSpace == null && _parent == null))
+            if (targetSpace == _parent || (targetSpace == null && _parent == null))
             {
                 outM.CopyFrom(TransformationMatrix3D);
                 return outM;
             }
-            else if (targetSpace == null || targetSpace == Base)
+            if (targetSpace == null || targetSpace == Base)
             {
                 // targetCoordinateSpace 'null' represents the target space of the base object.
                 // -> move up from this to base
@@ -380,7 +372,7 @@ namespace Sparrow.Display
                 }
                 return outM;
             }
-            else if (targetSpace._parent == this) // optimization
+            if (targetSpace._parent == this) // optimization
             {
                 outM = targetSpace.GetTransformationMatrix3D(this);
                 outM.Invert();
@@ -389,7 +381,7 @@ namespace Sparrow.Display
 
             // 1. find a common parent of this and the target space
 
-            commonParent = FindCommonParent(this, targetSpace);
+            var commonParent = FindCommonParent(this, targetSpace);
 
             // 2. move up from this to common parent
 
@@ -405,7 +397,7 @@ namespace Sparrow.Display
 
             // 3. now move up from target until we reach the common parent
 
-            Matrix3D sHelperMatrix3D = Matrix3D.Create();
+            var sHelperMatrix3D = Matrix3D.Create();
             currentObject = targetSpace;
             while (currentObject != commonParent)
             {
@@ -425,29 +417,30 @@ namespace Sparrow.Display
 
         // render cache
 
-        /** Forces the object to be redrawn in the next frame.
-         *  This will prevent the object to be drawn from the render cache.
-         *
-         *  <p>This method is called every time the object changes in any way. When creating
-         *  custom mesh styles or any other custom rendering code, call this method if the object
-         *  needs to be redrawn.</p>
-         *
-         *  <p>If the object needs to be redrawn just because it does not support the render cache,
-         *  call <code>painter.excludeFromCache()</code> in the object's render method instead.
-         *  That way, Starling's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
-         */
-        virtual public void SetRequiresRedraw()
+        /// <summary>
+        /// Forces the object to be redrawn in the next frame.
+        /// This will prevent the object to be drawn from the render cache.
+        ///
+        /// <p>This method is called every time the object changes in any way. When creating
+        /// custom mesh styles or any other custom rendering code, call this method if the object
+        /// needs to be redrawn.</p>
+        ///
+        /// <p>If the object needs to be redrawn just because it does not support the render cache,
+        /// call <code>painter.ExcludeFromCache()</code> in the object's render method instead.
+        /// That way, SparrowSharp's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
+        /// </summary>
+        public virtual void SetRequiresRedraw()
         {
             DisplayObject parent = _parent != null ? _parent : _maskee;
-            uint frameID = SparrowSharp.FrameID;
+            uint frameId = SparrowSharp.FrameID;
 
-            _lastParentOrSelfChangeFrameID = frameID;
+            _lastParentOrSelfChangeFrameID = frameId;
             _hasVisibleArea = _alpha != 0.0f && _visible && _maskee == null && 
                               _scaleX != 0.0f && _scaleY != 0.0f;
 
-            while (parent != null && parent._lastChildChangeFrameID != frameID)
+            while (parent != null && parent._lastChildChangeFrameID != frameId)
             {
-                parent._lastChildChangeFrameID = frameID;
+                parent._lastChildChangeFrameID = frameId;
                 parent = parent._parent != null ? parent._parent : parent._maskee;
             }
         }
@@ -455,19 +448,21 @@ namespace Sparrow.Display
         public bool RequiresRedraw
         {
             get {
-                uint frameID = SparrowSharp.FrameID;
-                return _lastParentOrSelfChangeFrameID == frameID ||
-                       _lastChildChangeFrameID == frameID;
+                uint frameId = SparrowSharp.FrameID;
+                return _lastParentOrSelfChangeFrameID == frameId ||
+                       _lastChildChangeFrameID == frameId;
             }
         }
 
-        /** @private Makes sure the object is not drawn from cache in the next frame.
-         *  This method is meant to be called only from <code>Painter.finishFrame()</code>,
-         *  since it requires rendering to be concluded. */
+        /// <summary>
+        ///  (private) Makes sure the object is not drawn from cache in the next frame.
+        ///  This method is meant to be called only from <code>Painter.finishFrame()</code>,
+        ///  since it requires rendering to be concluded.
+        /// </summary>
         internal void ExcludeFromCache()
         {
             DisplayObject dObject = this;
-            uint max = 0xffffffff;
+            const uint max = 0xffffffff;
 
             while (dObject != null && dObject._tokenFrameID != max)
             {
@@ -510,44 +505,30 @@ namespace Sparrow.Display
 
         internal virtual void InvokeAdded(DisplayObject target, DisplayObject currentTarget)
         {
-            if (Added != null)
-            {
-                Added(target, currentTarget);
-            }
+            Added?.Invoke(target, currentTarget);
         }
 
         internal virtual void InvokeRemoved()
         {
-            if (Removed != null)
-            {
-                Removed(this, this);
-            }
+            Removed?.Invoke(this, this);
         }
 
         internal void BroadcastAddedToStageEvent(DisplayObjectContainer currentTarget)
         {
-            if (AddedToStage != null)
-            {
-                AddedToStage(this, currentTarget);
-            }
+            AddedToStage?.Invoke(this, currentTarget);
             var displayObjectContainer = this as DisplayObjectContainer;
-            if (displayObjectContainer != null)
+            if (displayObjectContainer == null) return;
+            // We need to make a copy here because the Children list might be modified in an AddedToStage event handler
+            List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
+            foreach (var child in copy)
             {
-                // We need to make a copy here because the Children list might be modified in an AddedToStage event handler
-                List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
-                foreach (var child in copy)
-                {
-                    child.BroadcastAddedToStageEvent(currentTarget);
-                }
+                child.BroadcastAddedToStageEvent(currentTarget);
             }
         }
 
         internal void BroadcastRemovedFromStageEvent(DisplayObjectContainer currentTarget)
         {
-            if (RemovedFromStage != null)
-            {
-                RemovedFromStage(this, currentTarget);
-            }
+            RemovedFromStage?.Invoke(this, currentTarget);
             var displayObjectContainer = this as DisplayObjectContainer;
             if (displayObjectContainer != null)
             {
@@ -563,19 +544,14 @@ namespace Sparrow.Display
         // TODO this is optimized in Sparrow-s; it maintains an array of things on the Stage
         protected void BroadcastEnterFrameEvent(float passedTime)
         {
-            if (EnterFrame != null)
-            {
-                EnterFrame(this, passedTime);
-            }
+            EnterFrame?.Invoke(this, passedTime);
             var displayObjectContainer = this as DisplayObjectContainer;
-            if (displayObjectContainer != null)
+            if (displayObjectContainer == null) return;
+            // We need to make a copy here because the Children list might be modified in an EnterFrame event handler
+            var copy = new List<DisplayObject>(displayObjectContainer.Children);
+            foreach (var child in copy)
             {
-                // We need to make a copy here because the Children list might be modified in an EnterFrame event handler
-                List<DisplayObject> copy = new List<DisplayObject>(displayObjectContainer.Children);
-                foreach (var child in copy)
-                {
-                    child.BroadcastEnterFrameEvent(passedTime);
-                }
+                child.BroadcastEnterFrameEvent(passedTime);
             }
         }
 
@@ -594,18 +570,12 @@ namespace Sparrow.Display
 
         internal virtual void InvokeKeyUp(DisplayObject target, DisplayObject currentTarget)
         {
-            if (KeyUp != null)
-            {
-                KeyUp(target, currentTarget);
-            }
+            KeyUp?.Invoke(target, currentTarget);
         }
 
         internal virtual void InvokeKeyDown(DisplayObject target, DisplayObject currentTarget)
         {
-            if (KeyDown != null)
-            {
-                KeyDown(target, currentTarget);
-            }
+            KeyDown?.Invoke(target, currentTarget);
         }
 
 
@@ -613,7 +583,7 @@ namespace Sparrow.Display
         /// The transformation matrix of the object relative to its parent.
         /// @returns CAUTION: not a copy, but the actual object!
         /// </summary>
-        virtual public Matrix2D TransformationMatrix
+        public virtual Matrix2D TransformationMatrix
         {
             get
             {
@@ -712,14 +682,16 @@ namespace Sparrow.Display
                 }
             }
         }
-
-        /** The 3D transformation matrix of the object relative to its parent.
-         *
-         *  <p>For 2D objects, this property returns just a 3D version of the 2D transformation
-         *  matrix. Only the 'Sprite3D' class supports real 3D transformations.</p>
-         *
-         *  <p>CAUTION: not a copy, but the actual object!</p> */
-        virtual public Matrix3D TransformationMatrix3D
+        
+        /// <summary>
+        /// The 3D transformation matrix of the object relative to its parent.
+        ///
+        /// <p>For 2D objects, this property returns just a 3D version of the 2D transformation
+        /// matrix. Only the 'Sprite3D' class supports real 3D transformations.</p>
+        ///
+        /// <p>CAUTION: not a copy, but the actual object!</p>
+        /// </summary>
+        public virtual Matrix3D TransformationMatrix3D
         {
             get { return TransformationMatrix.ConvertToMatrix3D(); }
         }
@@ -735,7 +707,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The width of the object in points.
         /// </summary>
-        virtual public float Width
+        public virtual float Width
         {
             get { return GetBounds(_parent).Width; }
             set
@@ -756,7 +728,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The height of the object in points.
         /// </summary>
-        virtual public float Height
+        public virtual float Height
         {
             get { return GetBounds(_parent).Height; }
             set
@@ -777,7 +749,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The x coordinate of the object relative to the local coordinates of the parent.
         /// </summary>
-        virtual public float X
+        public virtual float X
         {
             get { return _x; }
             set
@@ -793,7 +765,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The y coordinate of the object relative to the local coordinates of the parent.
         /// </summary>
-        virtual public float Y
+        public virtual float Y
         {
             get { return _y; }
             set
@@ -809,7 +781,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The x coordinate of the object's origin in its own coordinate space (default: 0).
         /// </summary>
-        virtual public float PivotX
+        public virtual float PivotX
         {
             get { return _pivotX; }
             set
@@ -825,7 +797,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The y coordinate of the object's origin in its own coordinate space (default: 0).
         /// </summary>
-        virtual public float PivotY
+        public virtual float PivotY
         {
             get { return _pivotY; }
             set
@@ -841,7 +813,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The horizontal scale factor. "1" means no scale, negative values flip the object.
         /// </summary>
-        virtual public float ScaleX
+        public virtual float ScaleX
         {
             get { return _scaleX; }
             set
@@ -857,7 +829,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The vertical scale factor. "1" means no scale, negative values flip the object.
         /// </summary>
-        virtual public float ScaleY
+        public virtual float ScaleY
         {
             get { return _scaleY; }
             set
@@ -870,7 +842,7 @@ namespace Sparrow.Display
             }
         }
 
-        virtual public float Scale
+        public virtual float Scale
         {
             get { return ScaleX; }
             set { ScaleX = ScaleY = value; }
@@ -879,7 +851,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The horizontal skew angle in radians.
         /// </summary>
-        virtual public float SkewX
+        public virtual float SkewX
         {
             get { return _skewX; }
             set
@@ -895,7 +867,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The vertical skew angle in radians.
         /// </summary>
-        virtual public float SkewY
+        public virtual float SkewY
         {
             get { return _skewY; }
             set
@@ -911,7 +883,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The rotation of the object in radians. (In Sparrow, all angles are measured in radians.)
         /// </summary>
-        virtual public float Rotation
+        public virtual float Rotation
         {
             get { return _rotation; }
             set
@@ -942,7 +914,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The opacity of the object. 0 = transparent, 1 = opaque.
         /// </summary>
-        virtual public float Alpha
+        public virtual float Alpha
         {
             get { return _alpha; }
             set
@@ -955,7 +927,7 @@ namespace Sparrow.Display
         /// <summary>
         /// The visibility of the object. An invisible object will be untouchable.
         /// </summary>
-        virtual public bool Visible
+        public virtual bool Visible
         {
             get { return _visible; }
             set
@@ -967,7 +939,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Indicates if this object (and its children) will receive touch events.
         /// </summary>
-        virtual public bool Touchable
+        public virtual bool Touchable
         {
             get { return _touchable; }
             set { _touchable = value; }
@@ -975,7 +947,7 @@ namespace Sparrow.Display
         /// <summary>
         ///  The blend mode determines how the object is blended with the objects underneath. Default: BlendMode.AUTO
         /// </summary>
-        virtual public uint BlendMode
+        public virtual uint BlendMode
         {
             get { return _blendmode; }
             set {
@@ -987,13 +959,13 @@ namespace Sparrow.Display
         /// <summary>
         /// The name of the display object (default: null). Used by 'GetChild(string name)' of display object containers.
         /// </summary>
-        virtual public string Name
+        public virtual string Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        /** The filter that is attached to the display object. The <code>starling.filters</code>
+        /** The filter that is attached to the display object. The <code>Sparrow.Filters</code>
         *  package contains several classes that define specific filters you can use. To combine
         *  several filters, assign an instance of the <code>FilterChain</code> class; to remove
         *  all filters, assign <code>null</code>.
@@ -1003,48 +975,45 @@ namespace Sparrow.Display
         *  want to reuse it on a different object).</p>
         *
         *  @default null
-        *  @see starling.filters.FragmentFilter
-        *  @see starling.filters.FilterChain
+        *  @see Spőarrow.Filters.FragmentFilter
         */
-        virtual public FragmentFilter Filter { 
+        public virtual FragmentFilter Filter { 
             get { return _filter; }
             set
             {
                 if (value != _filter)
                 {
-                    if (_filter != null) _filter.SetTarget(null);
-                    if (value != null) value.SetTarget(this);
+                    _filter?.SetTarget(null);
+                    value?.SetTarget(this);
 
                     _filter = value;
                     SetRequiresRedraw();
                 }
             }
         }
-
-        /** The display object that acts as a mask for the current object.
-         *  Assign <code>null</code> to remove it.
-         *
-         *  <p>A pixel of the masked display object will only be drawn if it is within one of the
-         *  mask's polygons. Texture pixels and alpha values of the mask are not taken into
-         *  account. The mask object itself is never visible.</p>
-         *
-         *  <p>If the mask is part of the display list, masking will occur at exactly the
-         *  location it occupies on the stage. If it is not, the mask will be placed in the local
-         *  coordinate system of the target object (as if it was one of its children).</p>
-         *
-         *  <p>For rectangular masks, you can use simple quads; for other forms (like circles
-         *  or arbitrary shapes) it is recommended to use a 'Canvas' instance.</p>
-         *
-         *  <p>Beware that a mask will typically cause at least two additional draw calls:
-         *  one to draw the mask to the stencil buffer and one to erase it. However, if the
-         *  mask object is an instance of <code>starling.display.Quad</code> and is aligned
-         *  parallel to the stage axes, rendering will be optimized: instead of using the
-         *  stencil buffer, the object will be clipped using the scissor rectangle. That's
-         *  faster and reduces the number of draw calls, so make use of this when possible.</p>
-         *
-         *  @see Canvas
-         *  @default null
-         */
+        
+        ///<summary>
+        /// The display object that acts as a mask for the current object.
+        /// Assign <code>null</code> to remove it.
+        ///
+        /// <para>A pixel of the masked display object will only be drawn if it is within one of the
+        /// mask's polygons. Texture pixels and alpha values of the mask are not taken into
+        /// account. The mask object itself is never visible.</para>
+        ///
+        /// <para>If the mask is part of the display list, masking will occur at exactly the
+        /// location it occupies on the stage. If it is not, the mask will be placed in the local
+        /// coordinate system of the target object (as if it was one of its children).</para>
+        ///
+        /// <para>For rectangular masks, you can use simple quads; for other forms (like circles
+        /// or arbitrary shapes) it is recommended to use a 'Canvas' instance.</para>
+        ///
+        /// <para>Beware that a mask will typically cause at least two additional draw calls:
+        /// one to draw the mask to the stencil buffer and one to erase it. However, if the
+        /// mask object is an instance of <code>Sparrow.Display.Quad</code> and is aligned
+        /// parallel to the stage axes, rendering will be optimized: instead of using the
+        /// stencil buffer, the object will be clipped using the scissor rectangle. That's
+        /// faster and reduces the number of draw calls, so make use of this when possible.</para> 
+        /// </summary>
         public DisplayObject Mask
         {
             get { return _mask; }
@@ -1107,7 +1076,7 @@ namespace Sparrow.Display
 
         /// <summary>
         /// The root object the display object is connected to (i.e. an instance of the class 
-        /// that was passed to the Starling constructor), or null if the object is not connected
+        /// that was passed to the Sparrow constructor), or null if the object is not connected
         /// to the stage.
         /// </summary>
         public DisplayObject Root

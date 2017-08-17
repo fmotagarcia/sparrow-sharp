@@ -35,11 +35,11 @@ namespace Sparrow.Animation
     public class Juggler : IAnimatable
     {
         private readonly List<IAnimatable> _objects;
-        private Dictionary<IAnimatable, uint> _objectIDs;
+        private readonly Dictionary<IAnimatable, uint> _objectIDs;
         private double _elapsedTime;
         private float _timeScale;
 
-        private static uint sCurrentObjectID;
+        private static uint _sCurrentObjectId;
 
         public event RemoveFromJugglerHandler RemoveFromJugglerEvent;
 
@@ -58,18 +58,18 @@ namespace Sparrow.Animation
         /// </summary>
         public uint Add(IAnimatable animatable)
         {
-            return Add(animatable, GetNextID());
+            return Add(animatable, GetNextId());
         }
 
-        private uint Add(IAnimatable objectToAdd, uint objectID)
+        private uint Add(IAnimatable objectToAdd, uint objectId)
         {
             if (objectToAdd != null && !_objectIDs.ContainsKey(objectToAdd))
             {
                 objectToAdd.RemoveFromJugglerEvent += OnRemove;
                 _objects.Add(objectToAdd);
-                _objectIDs[objectToAdd] = objectID;
+                _objectIDs[objectToAdd] = objectId;
 
-                return objectID;
+                return objectId;
             }
             else return 0;
         }
@@ -87,7 +87,7 @@ namespace Sparrow.Animation
         /// </summary>
         public uint Remove(IAnimatable objectToRemove)
         {
-            uint objectID = 0;
+            uint objectId = 0;
 
             if (objectToRemove != null && !_objectIDs.ContainsKey(objectToRemove))
             {
@@ -95,10 +95,10 @@ namespace Sparrow.Animation
                 
                 _objects.Remove(objectToRemove);
 
-                objectID = _objectIDs[objectToRemove];
+                objectId = _objectIDs[objectToRemove];
                 _objectIDs.Remove(objectToRemove);
             }
-            return objectID;
+            return objectId;
         }
 
         /** Removes an object from the juggler, identified by the unique numeric identifier you
@@ -112,16 +112,16 @@ namespace Sparrow.Animation
          *
          *  @return if successful, the passed objectID; if the object was not found, zero.
          */
-        public uint RemoveByID(uint objectID)
+        public uint RemoveById(uint objectId)
         {
             for (int i = _objects.Count - 1; i >= 0; --i)
             {
                 IAnimatable obj = _objects[i];
 
-                if (_objectIDs[obj] == objectID)
+                if (_objectIDs[obj] == objectId)
                 {
                     Remove(obj);
-                    return objectID;
+                    return objectId;
                 }
             }
             return 0;
@@ -197,9 +197,9 @@ namespace Sparrow.Animation
 
         private void OnRemove(IAnimatable objectToRemove)
         {
-            uint objectID = Remove(objectToRemove);
+            uint objectId = Remove(objectToRemove);
 
-            if (objectID != 0)
+            if (objectId != 0)
             {
                 /*
                 Tween tween = objectToRemove as Tween;
@@ -210,7 +210,7 @@ namespace Sparrow.Animation
         }
 
 
-        private static uint GetNextID() { return ++sCurrentObjectID; }
+        private static uint GetNextId() { return ++_sCurrentObjectId; }
 
         /// <summary>
         /// The total life time of the juggler.

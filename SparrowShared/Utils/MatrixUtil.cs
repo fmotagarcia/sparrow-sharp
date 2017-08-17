@@ -69,7 +69,7 @@ namespace Sparrow.Utils
             if (stageHeight <= 0) stageHeight = height;
             if (cameraPos == null)
             {
-                cameraPos = new float[3] {
+                cameraPos = new[] {
                     stageWidth / 2f, stageHeight / 2f,// -> center of stage
                     stageWidth / (float)Math.Tan(0.5f) * 0.5f };// -> fieldOfView = 1.0 rad
             }
@@ -78,7 +78,7 @@ namespace Sparrow.Utils
             float offsetX = cameraPos[0] - stageWidth  / 2f;
             float offsetY = cameraPos[1] - stageHeight / 2f;
             float far    = focalLength * 20f;
-            float near   = 1f;
+            const float near = 1f;
             float scaleX = stageWidth  / width;
             float scaleY = stageHeight / height;
 

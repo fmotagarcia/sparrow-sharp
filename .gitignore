@@ -4,7 +4,8 @@ packages/
 **.userprefs
 *.suo
 .vs/
-
+*.bak
+workspace.xml
 
 # OS generated files #
 ######################

@@ -56,12 +56,12 @@ namespace Sparrow.Rendering
          *
          *  <p>Reserve 4 bits for the variant name of the base class.</p>
          */
-        override protected uint ProgramVariantName {
+        protected override uint ProgramVariantName {
             get { return RenderUtil.GetTextureVariantBits(_texture); }
         }
 
         /** @private */
-        override protected Program CreateProgram()
+        protected override Program CreateProgram()
         {
             if (_texture != null)
             {
@@ -100,7 +100,7 @@ namespace Sparrow.Rendering
          *    <li><code>fs0</code> — texture</li>
          *  </ul>
          */
-        override protected void BeforeDraw()
+        protected override void BeforeDraw()
         {
             base.BeforeDraw();
 
@@ -108,7 +108,7 @@ namespace Sparrow.Rendering
             {
                 uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
                 Gl.EnableVertexAttribArray(aTexCoords);
-                Gl.VertexAttribPointer(aTexCoords, 2, Gl.FLOAT, false, Vertex.SIZE, (IntPtr)Vertex.TEXTURE_OFFSET);
+                Gl.VertexAttribPointer(aTexCoords, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
 
                 Gl.ActiveTexture(Gl.TEXTURE0);
                 
@@ -119,7 +119,7 @@ namespace Sparrow.Rendering
 
         /** This method is called by <code>render</code>, directly after
          *  <code>context.drawTriangles</code>. Resets texture and vertex buffer attributes. */
-        override protected void AfterDraw()
+        protected override void AfterDraw()
         {
             if (_texture != null)
             {

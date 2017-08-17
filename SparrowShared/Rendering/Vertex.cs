@@ -8,9 +8,9 @@ namespace Sparrow.Utils
     public struct Vertex
     {
         
-        public const int SIZE = 16;
-        public const int POSITION_OFFSET = 0;
-        public const int TEXTURE_OFFSET = 8;
+        public const int Size = 16;
+        public const int PositionOffset = 0;
+        public const int TextureOffset = 8;
         public Vector2 Position;
         public Vector2 TexCoords;
         

@@ -42,7 +42,7 @@ namespace Sparrow.Display
          *  @default 1.0
          */
         public float FieldOfView { get; set; }
-        private Point _projectionOffset;
+        private readonly Point _projectionOffset;
         private float _width;
         private float _height;
         /// <summary>
@@ -61,14 +61,11 @@ namespace Sparrow.Display
         internal void SetDrawableArea(uint width, uint height)
         {
             Gl.Viewport(0, 0, (int)width, (int)height);
-            if (OnResize != null)
-            {
-                OnResize(this);
-            }
+            OnResize?.Invoke(this);
             SetRequiresRedraw();
         }
 
-        override public DisplayObject HitTest(Point localPoint)
+        public override DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable)
             {
@@ -126,7 +123,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float Width
+        public override float Width
         {
             set { throw new InvalidOperationException("cannot set width of stage. Use StageWidth instead."); }
         }
@@ -134,7 +131,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float Height
+        public override float Height
         {
             set { throw new InvalidOperationException("cannot set height of stage. Use StageHeight instead."); }
         }
@@ -142,7 +139,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float X
+        public override float X
         {
             set { throw new InvalidOperationException("cannot set x-coordinate of stage"); }
         }
@@ -150,7 +147,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float Y
+        public override float Y
         {
             set { throw new InvalidOperationException("cannot set y-coordinate of stage"); }
         }
@@ -158,7 +155,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float ScaleX
+        public override float ScaleX
         {
             set { throw new InvalidOperationException("cannot scale stage"); }
         }
@@ -166,7 +163,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float ScaleY
+        public override float ScaleY
         {
             set { throw new InvalidOperationException("cannot scale stage"); }
         }
@@ -174,7 +171,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float Rotation
+        public override float Rotation
         {
             set { throw new InvalidOperationException("cannot set rotation of stage"); }
         }
@@ -182,7 +179,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float SkewX
+        public override float SkewX
         {
             set { throw new InvalidOperationException("cannot skew stage"); }
         }
@@ -190,7 +187,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float SkewY
+        public override float SkewY
         {
             set { throw new InvalidOperationException("cannot skew stage"); }
         }
@@ -203,7 +200,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float PivotX
+        public override float PivotX
         {
             set { throw new InvalidOperationException("cannot set PivotX of stage"); }
         }
@@ -211,7 +208,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Cannot be set on the Stage, trying to set it will throw an exception
         /// </summary>
-        override public float PivotY
+        public override float PivotY
         {
             set { throw new InvalidOperationException("cannot set PivotY of stage"); }
         }

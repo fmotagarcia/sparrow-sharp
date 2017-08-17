@@ -5,7 +5,7 @@ using Sparrow.Pool;
 namespace Sparrow.Geom
 {
     /// <summary>
-    /// The Point class describes a two dimensional point or vector. */
+    /// The Point class describes a two dimensional point or vector.
     /// </summary>
     public class Point : PooledObject
     {
@@ -139,7 +139,7 @@ namespace Sparrow.Geom
             return (float)Math.Sqrt((X - p2.X) * (X - p2.X) + (Y - p2.Y) * (Y - p2.Y));
         }
 
-        override public string ToString()
+        public override string ToString()
         {
             return "(" + X + ", " + Y + ")";
         }

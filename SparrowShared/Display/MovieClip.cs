@@ -25,7 +25,7 @@ namespace Sparrow.Display
      *  <code>advanceTime</code> method called regularly) to run. The movie will dispatch 
      *  an event of type "Event.COMPLETE" whenever it has displayed its last frame.</p>
      *  
-     *  @see starling.textures.TextureAtlas
+     *  @see Sparrow.Textures.TextureAtlas
      */
     public class MovieClip : Image, IAnimatable
     {
@@ -38,7 +38,7 @@ namespace Sparrow.Display
         private List<MovieClipFrame> _frames;
         private float _defaultFrameDuration;
         private float _currentTime;
-        private int _currentFrameID;
+        private int _currentFrameId;
         private bool _playing;
         //private bool _muted;
         private bool _wasStopped;
@@ -79,7 +79,7 @@ namespace Sparrow.Display
             Loop = true;
             _playing = true;
             _currentTime = 0.0f;
-            _currentFrameID = 0;
+            _currentFrameId = 0;
             _wasStopped = true;
             _frames = new List<MovieClipFrame>();
 
@@ -102,52 +102,52 @@ namespace Sparrow.Display
         /// <summary>
         /// Adds a frame with a certain texture and duration.
         /// </summary>
-        public void AddFrame(int frameID, Texture texture, float duration = -1f)
+        public void AddFrame(int frameId, Texture texture, float duration = -1f)
         {
-            if (frameID < 0 || frameID > NumFrames) throw new ArgumentException("Invalid frame id");
+            if (frameId < 0 || frameId > NumFrames) throw new ArgumentException("Invalid frame id");
             if (duration < 0) duration = _defaultFrameDuration;
 
             MovieClipFrame frame = new MovieClipFrame(texture, duration);
             //frame.sound = sound;
-            _frames.Insert(frameID, frame);
+            _frames.Insert(frameId, frame);
             
 
-            if (frameID == NumFrames)
+            if (frameId == NumFrames)
             {
-                float prevStartTime = frameID > 0 ? _frames[frameID - 1].StartTime : 0.0f;
-                float prevDuration = frameID > 0 ? _frames[frameID - 1].Duration : 0.0f;
+                float prevStartTime = frameId > 0 ? _frames[frameId - 1].StartTime : 0.0f;
+                float prevDuration = frameId > 0 ? _frames[frameId - 1].Duration : 0.0f;
                 frame.StartTime = prevStartTime + prevDuration;
             }
             else
                 UpdateStartTimes();
         }
 
-        /** Removes the frame at a certain ID. The successors will move down. */
-        public void RemoveFrameAt(int frameID)
+        /** Removes the frame at a certain Id. The successors will move down. */
+        public void RemoveFrameAt(int frameId)
         {
-            if (frameID < 0 || frameID >= NumFrames) throw new ArgumentException("Invalid frame id");
+            if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
             if (NumFrames == 1) throw new InvalidOperationException("Movie clip must not be empty");
             
-            _frames.RemoveAt(frameID);
+            _frames.RemoveAt(frameId);
 
-            if (frameID != NumFrames)
+            if (frameId != NumFrames)
                 UpdateStartTimes();
         }
 
         /** Returns the texture of a certain frame. */
-        public Texture GetFrameTexture(int frameID)
+        public Texture GetFrameTexture(int frameId)
         {
-            if (frameID < 0 || frameID >= NumFrames) throw new ArgumentException("Invalid frame id");
-            return _frames[frameID].Texture;
+            if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
+            return _frames[frameId].Texture;
         }
 
         /// <summary>
         ///  Sets the texture of a certain frame.
         /// </summary>
-        public void SetFrameTexture(int frameID, Texture texture)
+        public void SetFrameTexture(int frameId, Texture texture)
         {
-            if (frameID < 0 || frameID >= NumFrames) throw new ArgumentException("Invalid frame id");
-            _frames[frameID].Texture = texture;
+            if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
+            _frames[frameId].Texture = texture;
         }
         /*
         /// Returns the sound of a certain frame. 
@@ -183,19 +183,19 @@ namespace Sparrow.Display
         /// <summary>
         /// Returns the duration (in seconds) of a frame at a certain position.
         /// </summary>
-        public float GetFrameDuration(int frameID)
+        public float GetFrameDuration(int frameId)
         {
-            if (frameID < 0 || frameID >= NumFrames) throw new ArgumentException("Invalid frame id");
-            return _frames[frameID].Duration;
+            if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
+            return _frames[frameId].Duration;
         }
 
         /// <summary>
         /// Sets the duration of a certain frame in seconds.
         /// </summary>
-        public void SetFrameDuration(int frameID, float duration)
+        public void SetFrameDuration(int frameId, float duration)
         {
-            if (frameID < 0 || frameID >= NumFrames) throw new ArgumentException("Invalid frame id");
-            _frames[frameID].Duration = duration;
+            if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
+            _frames[frameId].Duration = duration;
             UpdateStartTimes();
         }
 
@@ -205,7 +205,7 @@ namespace Sparrow.Display
         {
             _frames.Reverse();
             _currentTime = TotalTime - _currentTime;
-            _currentFrameID = NumFrames - _currentFrameID - 1;
+            _currentFrameId = NumFrames - _currentFrameId - 1;
             UpdateStartTimes();
         }
 
@@ -259,7 +259,7 @@ namespace Sparrow.Display
             // (a frame action or a 'COMPLETE' event handler), that callback might modify the clip.
             // Thus, we have to start over with the remaining time whenever that happens.
 
-            MovieClipFrame frame = _frames[_currentFrameID];
+            MovieClipFrame frame = _frames[_currentFrameId];
 
             if (_wasStopped)
             {
@@ -282,7 +282,7 @@ namespace Sparrow.Display
                 if (Loop)
                 {
                     _currentTime = 0.0f;
-                    _currentFrameID = 0;
+                    _currentFrameId = 0;
                     frame = _frames[0];
                     //frame.playSound(_soundTransform);
                     Texture = frame.Texture;
@@ -297,11 +297,11 @@ namespace Sparrow.Display
                 else return;
             }
 
-            int finalFrameID = _frames.Count - 1;
+            int finalFrameId = _frames.Count - 1;
             float restTimeInFrame = frame.Duration - _currentTime + frame.StartTime;
             bool dispatchCompleteEvent = false;
             //Function frameAction = null;
-            int previousFrameID = _currentFrameID;
+            int previousFrameId = _currentFrameId;
             //bool changedFrame;
 
             while (passedTime >= restTimeInFrame)
@@ -310,7 +310,7 @@ namespace Sparrow.Display
                 passedTime -= restTimeInFrame;
                 _currentTime = frame.StartTime + frame.Duration;
 
-                if (_currentFrameID == finalFrameID)
+                if (_currentFrameId == finalFrameId)
                 {
                     if (OnComplete != null)
                     {
@@ -319,18 +319,18 @@ namespace Sparrow.Display
                     else if (Loop)
                     {
                         _currentTime = 0;
-                        _currentFrameID = 0;
+                        _currentFrameId = 0;
                         //changedFrame = true;
                     }
                     else return;
                 }
                 else
                 {
-                    _currentFrameID += 1;
+                    _currentFrameId += 1;
                     //changedFrame = true;
                 }
 
-                frame = _frames[_currentFrameID];
+                frame = _frames[_currentFrameId];
                 //frameAction = frame.action;
 
                 //if (changedFrame)
@@ -358,8 +358,8 @@ namespace Sparrow.Display
                     passedTime = restTimeInFrame;
             }
 
-            if (previousFrameID != _currentFrameID)
-                Texture = _frames[_currentFrameID].Texture;
+            if (previousFrameId != _currentFrameId)
+                Texture = _frames[_currentFrameId].Texture;
 
             _currentTime += passedTime;
         }
@@ -394,14 +394,14 @@ namespace Sparrow.Display
             {
                 if (value < 0 || value > TotalTime) throw new ArgumentException("Invalid time: " + value);
 
-                int lastFrameID = _frames.Count - 1;
+                int lastFrameId = _frames.Count - 1;
                 _currentTime = value;
-                _currentFrameID = 0;
+                _currentFrameId = 0;
 
-                while (_currentFrameID < lastFrameID && _frames[_currentFrameID + 1].StartTime <= value)
-                    ++_currentFrameID;
+                while (_currentFrameId < lastFrameId && _frames[_currentFrameId + 1].StartTime <= value)
+                    ++_currentFrameId;
 
-                MovieClipFrame frame = _frames[_currentFrameID];
+                MovieClipFrame frame = _frames[_currentFrameId];
                 Texture = frame.Texture;
             }
         }
@@ -418,7 +418,7 @@ namespace Sparrow.Display
         /// </summary>
         public int CurrentFrame
         {
-            get { return _currentFrameID; }
+            get { return _currentFrameId; }
             set
             {
                 if (value < 0 || value >= NumFrames) throw new ArgumentException("Invalid frame id");
@@ -493,7 +493,7 @@ namespace Sparrow.Display
         //    if (sound != null) sound.play(0, 0, transform);
         //}
 
-        public void ExecuteAction(MovieClip movie, int frameID)
+        public void ExecuteAction(MovieClip movie, int frameId)
         {
             throw new NotImplementedException();
             /*if (action != null)

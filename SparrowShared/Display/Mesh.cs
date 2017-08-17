@@ -13,7 +13,7 @@ namespace Sparrow.Display
     /// The base class for all tangible (non-container) display objects, spawned up by a number
     /// of triangles.
     /// </para>
-    /// Since Starling uses Stage3D for rendering, all rendered objects must be constructed
+    /// Since SparrowSharp uses OpenGL for rendering, all rendered objects must be constructed
     /// from triangles. A mesh stores the information of its triangles through VertexData and
     /// IndexData structures. The default format stores position, color and texture coordinates
     /// for each vertex.
@@ -34,7 +34,7 @@ namespace Sparrow.Display
         internal IndexData _indexData;
         internal bool _pixelSnapping;
 
-        private static Type sDefaultStyle = typeof(MeshStyle);
+        private static Type _sDefaultStyle = typeof(MeshStyle);
 
         public delegate MeshStyle DefaultStyleFactoryFunction();
         private static DefaultStyleFactoryFunction sDefaultStyleFactory;
@@ -55,25 +55,25 @@ namespace Sparrow.Display
             SetStyle(style, false);
         }
         
-        override public void Dispose()
+        public override void Dispose()
         {
             _vertexData.Clear();
             _indexData.Clear();
             base.Dispose();
         }
         
-        override public DisplayObject HitTest(Point localPoint)
+        public override DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable || !HitTestMask(localPoint)) return null;
-            else return MeshUtil.ContainsPoint(_vertexData, _indexData, localPoint) ? this : null;
+            return MeshUtil.ContainsPoint(_vertexData, _indexData, localPoint) ? this : null;
         }
         
-        override public Rectangle GetBounds(DisplayObject targetSpace)
+        public override Rectangle GetBounds(DisplayObject targetSpace)
         {
             return MeshUtil.CalculateBounds(_vertexData, this, targetSpace);
         }
 
-        override public void Render(Painter painter)
+        public override void Render(Painter painter)
         {
             if (_pixelSnapping)
             {
@@ -97,7 +97,7 @@ namespace Sparrow.Display
          *  @see #defaultStyle
          *  @see #defaultStyleFactory
          */
-        virtual public void SetStyle(MeshStyle meshStyle = null, bool mergeWithPredecessor= true)
+        public virtual void SetStyle(MeshStyle meshStyle = null, bool mergeWithPredecessor= true)
         {
             if (meshStyle == null) meshStyle = CreateDefaultMeshStyle();
             else if (meshStyle == _style) return;
@@ -122,7 +122,7 @@ namespace Sparrow.Display
             }
             if (meshStyle == null)
             {
-                meshStyle = (MeshStyle)Activator.CreateInstance(sDefaultStyle);
+                meshStyle = (MeshStyle)Activator.CreateInstance(_sDefaultStyle);
             }
             return meshStyle;
         }
@@ -138,50 +138,50 @@ namespace Sparrow.Display
          *  area; some of its optimized methods won't work correctly if that premise is no longer
          *  fulfilled or the original bounds change.</p>
          */
-        public Point GetVertexPosition(int vertexID)
+        public Point GetVertexPosition(int vertexId)
         {
-            return _style.GetVertexPosition(vertexID);
+            return _style.GetVertexPosition(vertexId);
         }
 
-        public void SetVertexPosition(int vertexID, float x, float y)
+        public void SetVertexPosition(int vertexId, float x, float y)
         {
-            _style.SetVertexPosition(vertexID, x, y);
+            _style.SetVertexPosition(vertexId, x, y);
         }
 
         /** Returns the alpha value of the vertex at the specified index. */
-        public float GetVertexAlpha(int vertexID)
+        public float GetVertexAlpha(int vertexId)
         {
-            return _style.GetVertexAlpha(vertexID);
+            return _style.GetVertexAlpha(vertexId);
         }
 
         /** Sets the alpha value of the vertex at the specified index to a certain value. */
-        public void SetVertexAlpha(int vertexID, float alpha)
+        public void SetVertexAlpha(int vertexId, float alpha)
         {
-            _style.SetVertexAlpha(vertexID, alpha);
+            _style.SetVertexAlpha(vertexId, alpha);
         }
 
         /** Returns the RGB color of the vertex at the specified index. */
-        public uint GetVertexColor(int vertexID)
+        public uint GetVertexColor(int vertexId)
         {
-            return _style.GetVertexColor(vertexID);
+            return _style.GetVertexColor(vertexId);
         }
 
         /** Sets the RGB color of the vertex at the specified index to a certain value. */
-        public void SetVertexColor(int vertexID, uint color)
+        public void SetVertexColor(int vertexId, uint color)
         {
-            _style.SetVertexColor(vertexID, color);
+            _style.SetVertexColor(vertexId, color);
         }
 
         /** Returns the texture coordinates of the vertex at the specified index. */
-        public Point GetTexCoords(int vertexID)
+        public Point GetTexCoords(int vertexId)
         {
-            return _style.GetTexCoords(vertexID);
+            return _style.GetTexCoords(vertexId);
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
-        public void SetTexCoords(int vertexID, float u, float v)
+        public void SetTexCoords(int vertexId, float u, float v)
         {
-            _style.SetTexCoords(vertexID, u, v);
+            _style.SetTexCoords(vertexId, u, v);
         }
 
         // properties
@@ -208,7 +208,7 @@ namespace Sparrow.Display
         }
 
         /** The texture that is mapped to the mesh (or <code>null</code>, if there is none). */
-        virtual public Texture Texture { 
+        public virtual Texture Texture { 
             get { return _style.Texture; }
             set { _style.Texture = value; }
         }
@@ -244,13 +244,13 @@ namespace Sparrow.Display
         }
 
         /** The total number of vertices in the mesh. */
-        virtual public int NumVertices {
+        public virtual int NumVertices {
             set { }
             get { return _vertexData.NumVertices; }
         }
 
         /** The total number of indices referencing vertices. */
-        virtual public int NumIndices {
+        public virtual int NumIndices {
             set { }
             get { return _indexData.NumIndices;}
         }
@@ -262,11 +262,11 @@ namespace Sparrow.Display
         // static properties
 
         /** The default style used for meshes if no specific style is provided. The default is
-         *  <code>starling.rendering.MeshStyle</code>, and any assigned class must be a subclass
+         *  <code>Sparrow.Rendering.MeshStyle</code>, and any assigned class must be a subclass
          *  of the same. */
         public static Type DefaultStyle { 
-            get { return sDefaultStyle; }
-            set { sDefaultStyle = value; }
+            get { return _sDefaultStyle; }
+            set { _sDefaultStyle = value; }
         }
 
         /** A factory method that is used to create the 'MeshStyle' for a mesh if no specific

@@ -14,13 +14,13 @@ namespace Sparrow.Filters
         private float _height;
         private int _nativeWidth;
         private int _nativeHeight;
-        private Stack<Texture> _pool;
+        private readonly Stack<Texture> _pool;
         private float _preferredScale;
         private float _scale;
-        private int _sizeStep;
+        private readonly int _sizeStep;
         private int _numPasses;
-        private Matrix3D _projectionMatrix;
-        private Rectangle _targetBounds;
+        private readonly Matrix3D _projectionMatrix;
+        private readonly Rectangle _targetBounds;
         private DisplayObject _target;
         /** The render target that was active when the filter started processing. */
         public Texture RenderTarget;
@@ -59,7 +59,6 @@ namespace Sparrow.Filters
         public Texture GetTexture(float resolution = 1)
         {
             Texture texture;
-            SubTexture subTexture;
 
             if (_numPasses >= 0)
             {
@@ -81,7 +80,7 @@ namespace Sparrow.Filters
                 !MathUtil.Equals(texture.Scale, _scale * resolution))
             {
                 Rectangle sRegion = Rectangle.Create(0, 0, _width * resolution, _height * resolution);
-                subTexture = texture as SubTexture;
+                var subTexture = texture as SubTexture;
 
                 if (subTexture != null)
                 {
@@ -126,15 +125,14 @@ namespace Sparrow.Filters
          *  them. */
         private void SetSize(float width, float height)
         {
-            float factor;
             float newScale = _preferredScale;
-            int maxNativeSize   = Texture.MaxSize;
+            const int maxNativeSize = Texture.MaxSize;
             float newNativeWidth  = GetNativeSize(width, newScale);
             float newNativeHeight = GetNativeSize(height, newScale);
 
             if (newNativeWidth > maxNativeSize || newNativeHeight > maxNativeSize)
             {
-                factor = maxNativeSize / Math.Max(newNativeWidth, newNativeHeight);
+                var factor = maxNativeSize / Math.Max(newNativeWidth, newNativeHeight);
                 newNativeWidth  *= factor;
                 newNativeHeight *= factor;
                 newScale *= factor;

@@ -58,14 +58,11 @@ namespace Sparrow.Textures
             if (format == null) format = TextureFormat.Rgba4444;
             if (scale <= 0.0f) scale = SparrowSharp.ContentScaleFactor;
 
-            int actualWidth;
-            int actualHeight;
-
             float origWidth  = width * scale;
             float origHeight = height * scale;
             
-            actualWidth  = (int)Math.Ceiling(origWidth  - 0.000000001d); // avoid floating point errors
-            actualHeight = (int)Math.Ceiling(origHeight - 0.000000001d);
+            var actualWidth = (int)Math.Ceiling(origWidth  - 0.000000001d);
+            var actualHeight = (int)Math.Ceiling(origHeight - 0.000000001d);
             
             ConcreteTexture concreteTexture = new ConcreteTexture(
                     format, actualWidth, actualHeight, numMipMaps,
@@ -123,7 +120,7 @@ namespace Sparrow.Textures
         *                     vertices at the correct position within the given bounds,
         *                     distorted appropriately.
         */
-        public void SetupVertexPositions(VertexData vertexData, int vertexID = 0,
+        public void SetupVertexPositions(VertexData vertexData, int vertexId = 0,
                                          Rectangle bounds = null)
         {
             Rectangle frame = Frame;
@@ -136,10 +133,10 @@ namespace Sparrow.Textures
             else
                 sRectangle.SetTo(0, 0, width, height);
             
-            vertexData.SetPoint(vertexID,     sRectangle.Left,  sRectangle.Top);
-            vertexData.SetPoint(vertexID + 1, sRectangle.Right, sRectangle.Top);
-            vertexData.SetPoint(vertexID + 2, sRectangle.Left,  sRectangle.Bottom);
-            vertexData.SetPoint(vertexID + 3, sRectangle.Right, sRectangle.Bottom);
+            vertexData.SetPoint(vertexId,     sRectangle.Left,  sRectangle.Top);
+            vertexData.SetPoint(vertexId + 1, sRectangle.Right, sRectangle.Top);
+            vertexData.SetPoint(vertexId + 2, sRectangle.Left,  sRectangle.Bottom);
+            vertexData.SetPoint(vertexId + 3, sRectangle.Right, sRectangle.Bottom);
 
             if (bounds != null)
             {
@@ -152,7 +149,7 @@ namespace Sparrow.Textures
                     sMatrix.Identity();
                     sMatrix.Scale(scaleX, scaleY);
                     sMatrix.Translate(bounds.X, bounds.Y);
-                    vertexData.TransformVertices(sMatrix, vertexID, 4);
+                    vertexData.TransformVertices(sMatrix, vertexId, 4);
                 }
             }
         }
@@ -163,12 +160,12 @@ namespace Sparrow.Textures
          *  @param vertexData  the vertex data to which the texture coordinates will be written.
          *  @param vertexID    the start position within the VertexData instance.
          */
-        public void SetupTextureCoordinates(VertexData vertexData, int vertexID = 0)
+        public void SetupTextureCoordinates(VertexData vertexData, int vertexId = 0)
         {
-            SetTexCoords(vertexData, vertexID    , 0.0f, 0.0f);
-            SetTexCoords(vertexData, vertexID + 1, 1.0f, 0.0f);
-            SetTexCoords(vertexData, vertexID + 2, 0.0f, 1.0f);
-            SetTexCoords(vertexData, vertexID + 3, 1.0f, 1.0f);
+            SetTexCoords(vertexData, vertexId    , 0.0f, 0.0f);
+            SetTexCoords(vertexData, vertexId + 1, 1.0f, 0.0f);
+            SetTexCoords(vertexData, vertexId + 2, 0.0f, 1.0f);
+            SetTexCoords(vertexData, vertexId + 3, 1.0f, 1.0f);
         }
 
         /** Transforms the given texture coordinates from the local coordinate system
@@ -208,19 +205,18 @@ namespace Sparrow.Textures
         /** Writes the given texture coordinates to a VertexData instance after transforming
          *  them into the root texture's coordinate system. That way, the texture coordinates
          *  can be used directly to sample the texture in the fragment shader. */
-        public void SetTexCoords(VertexData vertexData, int vertexID, float u, float v)
+        public void SetTexCoords(VertexData vertexData, int vertexId, float u, float v)
         {
             Point sPoint = LocalToGlobal(u, v);
-            vertexData.SetTexCoords(vertexID, sPoint);
+            vertexData.SetTexCoords(vertexId, sPoint);
         }
 
         /** Reads a pair of texture coordinates from the given VertexData instance and transforms
          *  them into the current texture's coordinate system. (Remember, the VertexData instance
          *  will always contain the coordinates in the root texture's coordinate system!) */
-        public Point GetTexCoords(VertexData vertexData, int vertexID)
+        public Point GetTexCoords(VertexData vertexData, int vertexId)
         {
-            Point outP = Point.Create();
-            outP = vertexData.GetTexCoords(vertexID);
+            var outP = vertexData.GetTexCoords(vertexId);
             return GlobalToLocal(outP.X, outP.Y);
         }
 

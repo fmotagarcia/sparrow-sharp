@@ -59,7 +59,7 @@ namespace Sparrow.Display
             Color = color;
         }
 
-        virtual protected void SetupVertices()
+        protected virtual void SetupVertices()
         {
             Texture texture = Style.Texture;
             VertexData vertexData = VertexData;
@@ -130,11 +130,11 @@ namespace Sparrow.Display
             return outRect;
         }
         
-        override public DisplayObject HitTest(Point localPoint)
+        public override DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable || !HitTestMask(localPoint)) return null;
-            else if (_bounds.Contains(localPoint)) return this;
-            else return null;
+            if (_bounds.Contains(localPoint)) return this;
+            return null;
         }
 
         /** Readjusts the dimensions of the quad. Use this method without any arguments to

@@ -26,8 +26,8 @@ namespace Sparrow.Samples
             SparrowSharp.EnableErrorChecking();
             
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader("SparrowSamples");
-            textures = new Texture[] { SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("bigstar.png")),
-                                       SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")) };
+            textures = new[] { SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("bigstar.png")),
+                               SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")) };
             
             // the container will hold all test objects
             _container = new Sprite();
@@ -60,6 +60,8 @@ namespace Sparrow.Samples
             
             TestTextField();
 
+            TestMask();
+
             Stage.Touch += Benchmark_Touch;
         }
 
@@ -70,7 +72,7 @@ namespace Sparrow.Samples
 
         private void AddTestObjects(int numObjects)
         {
-            int border = 40;
+            const int border = 40;
 
             Random r = new Random();
             for (int i = 0; i < numObjects; ++i)
@@ -94,13 +96,13 @@ namespace Sparrow.Samples
             
             _elapsed += passedTime / 1000;
             ++_frameCount;
-            
+            /*
             if (_frameCount % _waitFrames == 0)
             {
                 float targetFPS = 60;
-                float realFPS = _waitFrames / _elapsed;
+                float realFps = _waitFrames / _elapsed;
                 //Console.WriteLine ("FPS: " + realFPS);
-                if (realFPS >= targetFPS)
+                if (realFps >= targetFPS)
                 {
                     int numObjects = _failCount != 0 ? 5 : 25;
                     AddTestObjects(numObjects);
@@ -131,7 +133,7 @@ namespace Sparrow.Samples
 
                 _elapsed = _frameCount = 0;
             }
-            
+            */
             for (int i = 0; i < _container.NumChildren; i++)
             {
                 DisplayObject child = _container.GetChild(i);
@@ -141,9 +143,7 @@ namespace Sparrow.Samples
 
         private void TestMovieClip()
         {
-            List<Texture> li = new List<Texture>();
-            li.Add(textures[0]);
-            li.Add(textures[1]);
+            List<Texture> li = new List<Texture> {textures[0], textures[1]};
             MovieClip mc = new MovieClip(li, 3);
             AddChild(mc);
             mc.X = mc.Y = 444;
@@ -217,5 +217,16 @@ namespace Sparrow.Samples
             im2.Y = 210;
             _container.AddChild(im2);
         }
+        
+        private void TestMask()
+        {
+            Image im = new Image(textures[0]);
+            im.Mask = new Quad(83, 33);
+            im.X = 155;
+            im.Y = 155;
+            AddChild(im);
+            
+        }
+
     }
 }

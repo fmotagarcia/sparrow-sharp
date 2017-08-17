@@ -231,11 +231,10 @@ namespace Sparrow.Geom
             float minX = float.MaxValue, maxX = -float.MaxValue;
             float minY = float.MaxValue, maxY = -float.MaxValue;
             Point[] positions = GetPositions();
-            Point sPoint = Point.Create();
 
             for (int i = 0; i < 4; ++i)
             {
-                sPoint = matrix.TransformPoint(positions[i]);
+                var sPoint = matrix.TransformPoint(positions[i]);
 
                 if (minX > sPoint.X) minX = sPoint.X;
                 if (maxX<sPoint.X) maxX = sPoint.X;
@@ -253,7 +252,7 @@ namespace Sparrow.Geom
          **/
         public void SetBoundsProjected(Matrix3D matrix, float[] camPos)
         {
-            if (camPos == null) throw new ArgumentNullException("camPos must not be null");
+            if (camPos == null) throw new ArgumentNullException(nameof(camPos));
 
             float minX = float.MaxValue, maxX = float.MinValue;
             float minY = float.MaxValue, maxY = float.MinValue;
@@ -266,7 +265,7 @@ namespace Sparrow.Geom
                 if (matrix != null)
                     sPoint3D = matrix.TransformCoords3D(position.X, position.Y, 0);
                 else
-                    sPoint3D = new float[] { position.X, position.Y, 0};
+                    sPoint3D = new[] { position.X, position.Y, 0};
 
                 Point sPoint = MathUtil.IntersectLineWithXYPlane(camPos, sPoint3D);
 
@@ -324,19 +323,19 @@ namespace Sparrow.Geom
 
         // static functions 
 
-        /** Compares all properties of the given rectangle, returning true only if
-         *  they are equal (with the given accuracy 'e'). */
+        /// <summary>
+        /// Compares all properties of the given rectangle, returning true only if
+        /// they are equal (with the given accuracy 'e').
+        /// </summary>
         public static bool Compare(Rectangle r1, Rectangle r2, float e = 0.0001f)
         {
             if (r1 == null) return r2 == null;
-            else if (r2 == null) return false;
-            else
-            {
-                return r1.X > r2.X - e && r1.X < r2.X + e &&
-                       r1.Y > r2.Y - e && r1.Y < r2.Y + e &&
-                       r1.Width> r2.Width  - e && r1.Width < r2.Width  + e &&
-                       r1.Height> r2.Height - e && r1.Height<r2.Height + e;
-            }
+            if (r2 == null) return false;
+            
+            return r1.X > r2.X - e && r1.X < r2.X + e &&
+                   r1.Y > r2.Y - e && r1.Y < r2.Y + e &&
+                   r1.Width > r2.Width  - e && r1.Width < r2.Width  + e &&
+                   r1.Height > r2.Height - e && r1.Height < r2.Height + e;
         }
     }
 }

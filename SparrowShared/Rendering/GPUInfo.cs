@@ -10,8 +10,8 @@ namespace Sparrow.Rendering
             string versionOpenGL = Gl.GetString(StringName.Version);
             Console.Out.WriteLine("GL version:" + versionOpenGL);
 
-            int[] work_grp_cnt = new int[3];
-            int[] work_grp_size = new int[3];
+            int[] workGrpCnt = new int[3];
+            int[] workGrpSize = new int[3];
             int maxComputeWorkGroupInvocations;
 
             int version;
@@ -29,13 +29,13 @@ namespace Sparrow.Rendering
                 throw new NotSupportedException("You need at least OpenGL " + minVersion + " to run Sparrow!");
             }
 
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 0, out work_grp_cnt[0]);
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 1, out work_grp_cnt[1]);
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 2, out work_grp_cnt[2]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 0, out workGrpCnt[0]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 1, out workGrpCnt[1]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 2, out workGrpCnt[2]);
             
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 0, out work_grp_size[0]);
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 1, out work_grp_size[1]);
-            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 2, out work_grp_size[2]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 0, out workGrpSize[0]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 1, out workGrpSize[1]);
+            Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_SIZE, 2, out workGrpSize[2]);
 
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_INVOCATIONS, out maxComputeWorkGroupInvocations);
 
@@ -48,8 +48,8 @@ namespace Sparrow.Rendering
             //    dimensions, and 64 in the case of z           
             //
             // GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS is guaranteed to be no lower than 128.
-            Console.Out.WriteLine("max global (total) work group size " + string.Join(",", work_grp_cnt));
-            Console.Out.WriteLine("max local (in one shader) work group sizes " + string.Join(",", work_grp_size));
+            Console.Out.WriteLine("max global (total) work group size " + string.Join(",", workGrpCnt));
+            Console.Out.WriteLine("max local (in one shader) work group sizes " + string.Join(",", workGrpSize));
             Console.Out.WriteLine("max total local workgroup elements " + maxComputeWorkGroupInvocations);
         }
 

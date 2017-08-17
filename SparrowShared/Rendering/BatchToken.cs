@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Sparrow.Rendering
 {
     /** Points to a location within a list of MeshBatches.
@@ -24,9 +23,9 @@ namespace Sparrow.Rendering
         public int IndexID;
 
         /** Creates a new BatchToken. */
-        public BatchToken(int batchID = 0, int vertexID = 0, int indexID = 0)
+        public BatchToken(int batchId = 0, int vertexId = 0, int indexId = 0)
         {
-            SetTo(batchID, vertexID, indexID);
+            SetTo(batchId, vertexId, indexId);
         }
 
         /** Copies the properties from the given token to this instance. */
@@ -38,11 +37,11 @@ namespace Sparrow.Rendering
         }
 
         /** Changes all properties at once. */
-        public void SetTo(int batchID = 0, int vertexID = 0, int indexID = 0)
+        public void SetTo(int batchId = 0, int vertexId = 0, int indexId = 0)
         {
-            BatchID = batchID;
-            VertexID = vertexID;
-            IndexID = indexID;
+            BatchID = batchId;
+            VertexID = vertexId;
+            IndexID = indexId;
         }
 
         /** Resets all properties to zero. */
@@ -58,10 +57,9 @@ namespace Sparrow.Rendering
         }
 
         /** Creates a String representation of this instance. */
-        override public string ToString()
+        public override string ToString()
         {
-            return string.Format("[BatchToken batchID={0} vertexID={1} indexID={2}]",
-                BatchID, VertexID, IndexID);
+            return $"[BatchToken batchID={BatchID} vertexID={VertexID} indexID={IndexID}]";
         }
     }
 }

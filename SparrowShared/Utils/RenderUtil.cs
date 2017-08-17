@@ -41,12 +41,12 @@ namespace Sparrow.Utils
             return bitField;
         }
 
-        public static void SetSamplerStateAt(uint _name, bool hasMipMaps,
+        public static void SetSamplerStateAt(uint name, bool hasMipMaps,
                                       TextureSmoothing smoothing = TextureSmoothing.Bilinear,
                                       bool repeat = false)
         {
             // set repeat
-            Gl.BindTexture(TextureTarget.Texture2d, _name);
+            Gl.BindTexture(TextureTarget.Texture2d, name);
             Gl.TexParameter(TextureTarget.Texture2d, TextureParameterName.TextureWrapS, repeat ? Gl.REPEAT : Gl.CLAMP_TO_EDGE);
             Gl.TexParameter(TextureTarget.Texture2d, TextureParameterName.TextureWrapT, repeat ? Gl.REPEAT : Gl.CLAMP_TO_EDGE);
 

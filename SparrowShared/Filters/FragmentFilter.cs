@@ -84,12 +84,9 @@ namespace Sparrow.Filters
         private bool _cacheRequested;
         private bool _cached;
 
-        // helpers
-        private static Matrix3D sMatrix3D;
-
         /** Creates a new instance. The base class' implementation just draws the unmodified
          *  input texture. */
-        public FragmentFilter()
+        protected FragmentFilter()
         {
             _resolution = 1.0f;
             _textureFormat = TextureFormat.Rgba4444;
@@ -101,10 +98,9 @@ namespace Sparrow.Filters
         /** Disposes all resources that have been created by the filter. */
         public void Dispose()
         {
-
-            if (_helper != null) _helper.Dispose();
-            if (_effect != null) _effect.Dispose();
-            if (_quad != null)   _quad.Dispose();
+            _helper?.Dispose();
+            _effect?.Dispose();
+            _quad?.Dispose();
 
             _effect = null;
             _quad = null;
@@ -137,13 +133,12 @@ namespace Sparrow.Filters
             if (_quad  == null) _quad  = new FilterQuad(_textureSmoothing);
             else { _helper.PutTexture(_quad.Texture); _quad.Texture = null; }
 
-            Rectangle bounds = null;
+            Rectangle bounds;
             bool drawLastPassToBackBuffer = false;
             float origResolution = _resolution;
             DisplayObject renderSpace = _target.Stage != null ? _target.Stage : _target.Parent;
             bool isOnStage = renderSpace is Stage;
             Stage stage = SparrowSharp.Stage;
-            Rectangle stageBounds;
 
             if (!forCache && (_alwaysDrawToBackBuffer || _target.RequiresRedraw))
             {
@@ -174,7 +169,7 @@ namespace Sparrow.Filters
 
                 if (!forCache && isOnStage) // normally, we don't need anything outside
                 {
-                    stageBounds = stage.GetStageBounds(null);
+                    var stageBounds = stage.GetStageBounds(null);
                     bounds = bounds.Intersection(stageBounds);
                 }
             }
@@ -201,7 +196,6 @@ namespace Sparrow.Filters
 
             bool wasCacheEnabled = painter.CacheEnabled;
             Texture input = _helper.GetTexture();
-            Texture output = null;
 
             painter.CacheEnabled = false; // -> what follows should not be cached
             painter.PushState();
@@ -221,7 +215,7 @@ namespace Sparrow.Filters
             painter.State.SetModelviewMatricesToIdentity();
             painter.State.ClipRect = null;
 
-            output = Process(painter, _helper, input); // -> feed 'input' to actual filter code
+            var output = Process(painter, _helper, input);
 
             painter.PopState();
             painter.CacheEnabled = wasCacheEnabled; // -> cache again
@@ -261,7 +255,7 @@ namespace Sparrow.Filters
          *  not need them any longer. Ownership of both input textures and returned texture
          *  lies at the caller; only temporary textures should be put into the helper.</p>
          */
-        virtual public Texture Process(Painter painter, IFilterHelper helper,
+        public virtual Texture Process(Painter painter, IFilterHelper helper,
                                        Texture input0 = null, Texture input1 = null,
                                        Texture input2 = null, Texture input3 = null)
         {
@@ -275,8 +269,7 @@ namespace Sparrow.Filters
             {
                 renderTarget = output;
                 projectionMatrix = MatrixUtil.CreatePerspectiveProjectionMatrix(0, 0,
-                    output.Root.Width / _resolution, output.Root.Height / _resolution,
-                    0, 0, null);
+                    output.Root.Width / _resolution, output.Root.Height / _resolution);
                 // OpenGL renders into textures with Y coordinates flipped :(
                 projectionMatrix.Flip(output.Height);
             }
@@ -308,7 +301,7 @@ namespace Sparrow.Filters
          *  Must be overridden by all subclasses that do any rendering on their own (instead
          *  of just forwarding processing to other filters).
          */
-        virtual protected FilterEffect CreateEffect()
+        protected virtual FilterEffect CreateEffect()
         {
             return new FilterEffect();
         }
@@ -390,23 +383,23 @@ namespace Sparrow.Filters
 
         /** Call this method when any of the filter's properties changes.
          *  This will make sure the filter is redrawn in the next frame. */
-        virtual protected void SetRequiresRedraw()
+        protected virtual void SetRequiresRedraw()
         {
             OnChangedEvent?.Invoke();
-            if (_target != null) _target.SetRequiresRedraw();
+            _target?.SetRequiresRedraw();
             if (_cached) _cacheRequested = true;
         }
 
         /** Indicates the number of rendering passes required for this filter.
          *  Subclasses must override this method if the number of passes is not <code>1</code>. */
-        virtual public int NumPasses
+        public virtual int NumPasses
         {
             get { return 1; }
         }
 
         /** Called when assigning a target display object.
          *  Override to plug in class-specific logic. */
-        virtual protected void OnTargetAssigned(DisplayObject target) { }
+        protected virtual void OnTargetAssigned(DisplayObject target) { }
 
         /** Padding can extend the size of the filter texture in all directions.
         *  That's useful when the filter "grows" the bounds of the object in any direction. */
@@ -436,7 +429,7 @@ namespace Sparrow.Filters
          *  output quality. Values greater than 1 are allowed; such values might make sense for a
          *  cached filter when it is scaled up. @default 1
          */
-        virtual public float Resolution {
+        public virtual float Resolution {
             get { return _resolution; }
             set
             {
@@ -508,9 +501,9 @@ namespace Sparrow.Filters
 
                 if (target == null)
                 {
-                    if (_helper != null) _helper.Purge();
-                    if (_effect != null) _effect.PurgeBuffers();
-                    if (_quad != null)   _quad.DisposeTexture();
+                    _helper?.Purge();
+                    _effect?.PurgeBuffers();
+                    _quad?.DisposeTexture();
                 }
 
                 if (prevTarget != null)
@@ -534,8 +527,6 @@ namespace Sparrow.Filters
 
 internal class FilterQuad : Mesh
     {
-        private static Matrix2D sMatrix = Matrix2D.Create();
-
         public FilterQuad(TextureSmoothing smoothing) : base(new VertexData(4), new IndexData())
         {
             IndexData.AddQuad(0, 1, 2, 3);
@@ -545,7 +536,7 @@ internal class FilterQuad : Mesh
             PixelSnapping = false;
         }
 
-        override public void Dispose()
+        public override void Dispose()
         {
             DisposeTexture();
             base.Dispose();
@@ -564,7 +555,7 @@ internal class FilterQuad : Mesh
         {
             if (sourceSpace != targetSpace)
             {
-                sMatrix = targetSpace.GetTransformationMatrix(sourceSpace).Invert(); // ss could be null!
+                Matrix2D sMatrix = targetSpace.GetTransformationMatrix(sourceSpace).Invert(); // ss could be null!
                 VertexData.TransformVertices(sMatrix, 0, VertexData.NumVertices);
             }
         }
@@ -579,11 +570,11 @@ internal class FilterQuad : Mesh
             vertexData.SetPoint(3, bounds.Right, bounds.Bottom);
         }
 
-        override public Texture Texture
+        public override Texture Texture
         {
             set {
                 base.Texture = value;
-                if (value != null) value.SetupTextureCoordinates(VertexData);
+                value?.SetupTextureCoordinates(VertexData);
             }
            
         }

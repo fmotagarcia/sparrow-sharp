@@ -11,7 +11,7 @@ namespace Sparrow.Utils
     public class MeshUtil
     {
         // helper objects
-        private static Matrix2D sMatrix = Matrix2D.Create();
+        private static Matrix2D _sMatrix = Matrix2D.Create();
         
         private MeshUtil() { }
 
@@ -24,15 +24,12 @@ namespace Sparrow.Utils
             int i;
             bool result = false;
             int numIndices = indexData.NumIndices;
-            Point p0;
-            Point p1;
-            Point p2;
 
             for (i = 0; i < numIndices; i += 3)
             {
-                p0 = vertexData.GetPoint(indexData.GetIndex(i));
-                p1 = vertexData.GetPoint(indexData.GetIndex(i + 1));
-                p2 = vertexData.GetPoint(indexData.GetIndex(i + 2));
+                var p0 = vertexData.GetPoint(indexData.GetIndex(i));
+                var p1 = vertexData.GetPoint(indexData.GetIndex(i + 1));
+                var p2 = vertexData.GetPoint(indexData.GetIndex(i + 2));
 
                 if (MathUtil.IsPointInTriangle(point, p0, p1, p2))
                 {
@@ -50,11 +47,8 @@ namespace Sparrow.Utils
                                                 DisplayObject sourceSpace,
                                                 DisplayObject targetSpace)
         {
-            Rectangle outRect = Rectangle.Create();
-
-            Stage stage = sourceSpace.Stage;
-            sMatrix = sourceSpace.GetTransformationMatrix(targetSpace);
-            outRect = vertexData.BoundsAfterTransformation(sMatrix);
+            _sMatrix = sourceSpace.GetTransformationMatrix(targetSpace);
+            var outRect = vertexData.BoundsAfterTransformation(_sMatrix);
             return outRect;
         }
     }

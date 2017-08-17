@@ -6,17 +6,17 @@ using OpenGL;
 namespace Sparrow.Rendering
 {
     /** The VertexData class manages a raw list of vertex information, allowing direct upload
-     *  to Stage3D vertex buffers. <em>You only have to work with this class if you're writing
+     *  to OpenGL vertex buffers. <em>You only have to work with this class if you're writing
      *  your own rendering code (e.g. if you create custom display objects).</em>
      *
-     *  <p>To render objects with Stage3D, you have to organize vertices and indices in so-called
+     *  <p>To render objects with OpenGL, you have to organize vertices and indices in so-called
      *  vertex- and index-buffers. Vertex buffers store the coordinates of the vertices that make
      *  up an object; index buffers reference those vertices to determine which vertices spawn
      *  up triangles. Those buffers reside in graphics memory and can be accessed very
      *  efficiently by the GPU.</p>
      *
      *  <p>Before you can move data into the buffers, you have to set it up in conventional
-     *  memory — that is, in a Vector or a ByteArray. Since it's quite cumbersome to manually
+     *  memory that is, in a Vector or a ByteArray. Since it's quite cumbersome to manually
      *  create and manipulate those data structures, the IndexData and VertexData classes provide
      *  a simple way to do just that. The data is stored sequentially (one vertex or index after
      *  the other) so that it can easily be uploaded to a buffer.</p>
@@ -80,7 +80,7 @@ namespace Sparrow.Rendering
      */
     public class VertexData
     {
-        private const float MIN_ALPHA = 5.0f / 255.0f;
+        private const float MinAlpha = 5.0f / 255.0f;
         private Vertex[] _vertices;
         private VertexColor[] _vertexColors;
         private int _numVertices;
@@ -310,7 +310,7 @@ namespace Sparrow.Rendering
                 throw new IndexOutOfRangeException("Invalid vertex index");
             }
 
-            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f); 
+            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MinAlpha : 0.0f, 1.0f); 
 
             VertexColor vertexColor = VertexColorHelper.CreateVertexColor(color, alpha);
             _vertexColors[atIndex] = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
@@ -378,17 +378,17 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Writes the given RGB and alpha values to the specified vertices.
         /// </summary>
-        public void Colorize(uint color, float alpha, int vertexID, int numVertices)
+        public void Colorize(uint color, float alpha, int vertexId, int numVertices)
         {
-            if (numVertices < 0 || vertexID + numVertices > _numVertices)
+            if (numVertices < 0 || vertexId + numVertices > _numVertices)
             {
-                numVertices = _numVertices - vertexID;
+                numVertices = _numVertices - vertexId;
             }
 
-            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MIN_ALPHA : 0.0f, 1.0f);
+            alpha = MathUtil.Clamp(alpha, _premultipliedAlpha ? MinAlpha : 0.0f, 1.0f);
             VertexColor vertexColor = VertexColorHelper.CreateVertexColor(color, alpha);
             VertexColor col = _premultipliedAlpha ? VertexColorHelper.PremultiplyAlpha(vertexColor) : vertexColor;
-            for (int i = vertexID; i < numVertices; i++)
+            for (int i = vertexId; i < numVertices; i++)
             {
                 _vertexColors[i] = col;
             }
@@ -449,7 +449,7 @@ namespace Sparrow.Rendering
                 return;
             }
 
-            int minAlpha = _premultipliedAlpha ? (int)(MIN_ALPHA * 255.0f) : 0;
+            int minAlpha = _premultipliedAlpha ? (int)(MinAlpha * 255.0f) : 0;
 
             for (int i = index; i < index + numVertices; ++i)
             {
@@ -589,17 +589,15 @@ namespace Sparrow.Rendering
             uint alpha = rgba & 0xff;
 
             if (alpha == 0xff) return rgba;
-            else
-            {
-                float factor = alpha / 255.0f;
-                uint r = (uint)(((rgba >> 24) & 0xff) * factor);
-                uint g = (uint)(((rgba >> 16) & 0xff) * factor);
-                uint b = (uint)(((rgba >>  8) & 0xff) * factor);
+           
+            float factor = alpha / 255.0f;
+            uint r = (uint)(((rgba >> 24) & 0xff) * factor);
+            uint g = (uint)(((rgba >> 16) & 0xff) * factor);
+            uint b = (uint)(((rgba >>  8) & 0xff) * factor);
 
-                return (r & 0xff) << 24 |
-                       (g & 0xff) << 16 |
-                       (b & 0xff) <<  8 | alpha;
-            }
+            return (r & 0xff) << 24 |
+                   (g & 0xff) << 16 |
+                   (b & 0xff) <<  8 | alpha;
         }
 
         /** Creates a vertex buffer object with the right size to fit the complete data.
@@ -615,14 +613,14 @@ namespace Sparrow.Rendering
         {
             if (_numVertices == 0) return new uint[] { 0, 0 };
             
-            uint _vertexBufferName = Gl.GenBuffer();
-            uint _vertexColorsBufferName = Gl.GenBuffer();
+            uint vertexBufferName = Gl.GenBuffer();
+            uint vertexColorsBufferName = Gl.GenBuffer();
 
             if (upload)
             {
-                UploadToVertexBuffer(_vertexBufferName, _vertexColorsBufferName, bufferUsage);
+                UploadToVertexBuffer(vertexBufferName, vertexColorsBufferName, bufferUsage);
             }
-            uint[] ret = new uint[] { _vertexBufferName, _vertexColorsBufferName };
+            uint[] ret = { vertexBufferName, vertexColorsBufferName };
             return ret;
         }
 

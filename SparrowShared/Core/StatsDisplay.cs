@@ -18,9 +18,8 @@ namespace Sparrow.Core
         private static readonly float UPDATE_INTERVAL = 0.5f;
         private static readonly float B_TO_MB = 1.0f / (1024f * 1024f); // convert from bytes to MB
         
-        private Quad _background;
-        private TextField _labels;
-        private TextField _values;
+        private readonly Quad _background;
+        private readonly TextField _values;
         
         private int _frameCount = 0;
         private float _totalTime = 0;
@@ -34,18 +33,18 @@ namespace Sparrow.Core
         /** Creates a new Statistics Box. */
         public StatsDisplay()
         {
-            string fontName = BitmapFont.MINI;
+            const string fontName = BitmapFont.MINI;
             float fontSize = BitmapFont.NATIVE_SIZE;
-            uint fontColor  = 0xffffff;
-            float width = 90;
-            float height = 35;
-            string gpuLabel = "\ngpu memory:";
-            string labels = "frames/sec:\nstd memory:" + gpuLabel + "\ndraw calls:";
+            const uint fontColor = 0xffffff;
+            const float width = 90;
+            const float height = 35;
+            const string gpuLabel = "\ngpu memory:";
+            const string labels = "frames/sec:\nstd memory:" + gpuLabel + "\ndraw calls:";
 
-            _labels = new TextField(width, height, labels);
-            _labels.Format.SetTo(fontName, fontSize, fontColor, HAlign.Left);
-            _labels.Batchable = true;
-            _labels.X = 2;
+            var labels1 = new TextField(width, height, labels);
+            labels1.Format.SetTo(fontName, fontSize, fontColor, HAlign.Left);
+            labels1.Batchable = true;
+            labels1.X = 2;
 
             _values = new TextField(width - 1, height, "");
             _values.Format.SetTo(fontName, fontSize, fontColor, HAlign.Right);
@@ -56,11 +55,11 @@ namespace Sparrow.Core
 
             // make sure that rendering takes 2 draw calls
             if (_background.Style.Type != typeof(MeshStyle)) _background.Style = new MeshStyle();
-            if (_labels.Style.Type != typeof(MeshStyle)) _labels.Style = new MeshStyle();
+            if (labels1.Style.Type != typeof(MeshStyle)) labels1.Style = new MeshStyle();
             if (_values.Style.Type != typeof(MeshStyle)) _values.Style = new MeshStyle();
 
             AddChild(_background);
-            AddChild(_labels);
+            AddChild(labels1);
             AddChild(_values);
             
             AddedToStage += OnAddedToStage;

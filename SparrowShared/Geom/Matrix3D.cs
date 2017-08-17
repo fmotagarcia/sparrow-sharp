@@ -57,7 +57,6 @@ namespace Sparrow.Geom
         /// </summary>
         /// <param name="left">The left operand of the multiplication.</param>
         /// <param name="right">The right operand of the multiplication.</param>
-        /// <param name="result">The Matrix to write the result to. It can be one of the other input parameters too</param>
         public void Mult(Matrix3D left, Matrix3D right)
         {
             float lM11 = left.rawData[0], lM12 = left.rawData[1], lM13 = left.rawData[2], lM14 = left.rawData[3],

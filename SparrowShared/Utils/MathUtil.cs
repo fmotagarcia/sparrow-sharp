@@ -8,15 +8,15 @@ namespace Sparrow.Utils
         /// <summary>
         /// Lookup table for fast sine calculations
         /// </summary>
-        public readonly static float[] SinLUT = new float[2048];
+        public static readonly float[] SinLUT = new float[2048];
         /// <summary>
         /// Lookup table for fast cosine calculations
         /// </summary>
-        public readonly static float[] CosLUT = new float[2048];
+        public static readonly float[] CosLUT = new float[2048];
 
-        public readonly static float PIQUARTER = (float)(Math.PI / 4.0f);
-        public readonly static float PIHALF = (float)(Math.PI / 2.0f);
-        public readonly static float TWOPI = (float)(Math.PI * 2.0f);
+        public static readonly float PIQUARTER = (float)(Math.PI / 4.0f);
+        public static readonly float PIHALF = (float)(Math.PI / 2.0f);
+        public static readonly float TWOPI = (float)(Math.PI * 2.0f);
 
         static MathUtil()
         {
@@ -47,9 +47,9 @@ namespace Sparrow.Utils
         /// <summary>
         /// checks if two numbers are equal with a small margin of error
         /// </summary>
-        public static bool Equals(float a, float b, float E = 0.000005f)
+        public static bool Equals(float a, float b, float epsilon = 0.000005f)
         {
-            return Math.Abs(a - b) < E;
+            return Math.Abs(a - b) < epsilon;
         }
 
         public static float Clamp(float value, float min, float max)

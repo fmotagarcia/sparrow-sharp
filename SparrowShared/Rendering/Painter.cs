@@ -11,11 +11,11 @@ using OpenGL;
 namespace Sparrow.Rendering
 {
 
-    /** A class that orchestrates rendering of all Starling display objects.
+    /** A class that orchestrates rendering of all Sparrow display objects.
     *
-    *  <p>A Starling instance contains exactly one 'Painter' instance that should be used for all
+    *  <p>A Sparrow instance contains exactly one 'Painter' instance that should be used for all
     *  rendering purposes. Each frame, it is passed to the render methods of all rendered display
-    *  objects. To access it outside a render method, call <code>Starling.painter</code>.</p>
+    *  objects. To access it outside a render method, call <code>Sparrow.Painter</code>.</p>
     *
     *  <p>The painter is responsible for drawing all display objects to the screen. At its
     *  core, it is a wrapper for many Context3D methods, but that's not all: it also provides
@@ -32,33 +32,32 @@ namespace Sparrow.Rendering
     *  it later. That makes it easy to write rendering code that doesn't have any side effects.</p>
     *
     *  <listing>
-    *  painter.pushState(); // save a copy of the current state on the stack
-    *  painter.state.renderTarget = renderTexture;
-    *  painter.state.transformModelviewMatrix(object.transformationMatrix);
-    *  painter.state.alpha = 0.5;
-    *  painter.prepareToDraw(); // apply all state settings at the render context
+    *  painter.PushState(); // save a copy of the current state on the stack
+    *  painter.State.RenderTarget = renderTexture;
+    *  painter.State.TransformModelviewMatrix(object.TransformationMatrix);
+    *  painter.State.Alpha = 0.5;
+    *  painter.PrepareToDraw(); // apply all state settings at the render context
     *  drawSomething(); // insert Stage3D rendering code here
-    *  painter.popState(); // restores previous state</listing>
+    *  painter.PopState(); // restores previous state</listing>
     *
     *  @see RenderState
     */
     public class Painter
     {
         
-        private Dictionary<string, Program> programs;
-        private readonly Dictionary<uint, uint> framebufferCache;
+        private Dictionary<string, Program> _programs;
+        private readonly Dictionary<uint, uint> _framebufferCache;
 
         private int _drawCount;
-        private uint _frameID;
+        private uint _frameId;
         private float _pixelSize;
-        private Dictionary<int, int> _stencilReferenceValues;
-        private Stack<Rectangle> _clipRectStack;
-        private List<DisplayObject> _batchCacheExclusions;
+        private readonly Stack<Rectangle> _clipRectStack;
+        private readonly List<DisplayObject> _batchCacheExclusions;
 
         private BatchProcessor _batchProcessor;
         private BatchProcessor _batchProcessorCurr; // current  processor
         private BatchProcessor _batchProcessorPrev; // previous processor (cache)
-        private BatchProcessor _batchProcessorSpec; // special  processor (no cache)
+        private readonly BatchProcessor _batchProcessorSpec; // special  processor (no cache)
 
         private uint _actualRenderTarget;
         private uint _actualBlendMode;
@@ -66,29 +65,30 @@ namespace Sparrow.Rendering
         private float _backBufferWidth;
         private float _backBufferHeight;
 
-        private RenderState _state;
-        private List<RenderState> _stateStack;
+        private readonly RenderState _state;
+        private readonly List<RenderState> _stateStack;
         private int _stateStackPos;
         private int _stateStackLength;
 
         // helper objects
-        private static Matrix2D sMatrix = Matrix2D.Create();
+        private static readonly Matrix2D sMatrix = Matrix2D.Create();
         private static Rectangle sClipRect = Rectangle.Create();
-        private static Rectangle sBufferRect = Rectangle.Create();
+        private static readonly Rectangle sBufferRect = Rectangle.Create();
         private static Rectangle sScissorRect = Rectangle.Create();
-        private static MeshSubset sMeshSubset = new MeshSubset();
+        private static readonly MeshSubset sMeshSubset = new MeshSubset();
         
-        /** Creates a new Painter object. Normally, it's not necessary to create any custom
-         *  painters; instead, use the global painter found on the Starling instance. */
+        /// <summary>
+        /// Creates a new Painter object. Normally, it's not necessary to create any custom
+        ///  painters; instead, use the global painter found on the Sparrow instance.
+        /// </summary>
         public Painter(float width, float height)
         {
-            framebufferCache = new Dictionary<uint, uint>();
+            _framebufferCache = new Dictionary<uint, uint>();
             _actualBlendMode = 0;
 
             _backBufferWidth = width;
             _backBufferHeight = height;
             _pixelSize = 1.0f;
-            _stencilReferenceValues = new Dictionary<int, int>(); // use weak refs!
             _clipRectStack = new Stack<Rectangle>();
 
             _batchProcessorCurr = new BatchProcessor();
@@ -123,11 +123,7 @@ namespace Sparrow.Rendering
         // context handling
 
         /** Sets the viewport dimensions and other attributes of the rendering buffer.
-         *  Starling will call this method internally, so most apps won't need to mess with this.
-         *
-         *  <p>Beware: if <code>shareContext</code> is enabled, the method will only update the
-         *  painter's context-related information (like the size of the back buffer), but won't
-         *  make any actual changes to the context.</p>
+         *  Sparrow will call this method internally, so most apps won't need to mess with this.
          *
          * @param viewPort                the position and size of the area that should be rendered
          *                                into, in pixels.
@@ -259,7 +255,7 @@ namespace Sparrow.Rendering
         {
             FinishMeshBatch();
 
-            if (IsRectangularMask(mask, maskee, sMatrix))
+            if (IsRectangularMask(mask, sMatrix))
             {
                 sClipRect = mask.GetBounds(mask);
                 sClipRect = sClipRect.GetBounds(sMatrix);
@@ -286,7 +282,7 @@ namespace Sparrow.Rendering
            
             FinishMeshBatch();
 
-            if (IsRectangularMask(mask, maskee, sMatrix))
+            if (IsRectangularMask(mask, sMatrix))
             {
                 PopClipRect();
             }
@@ -323,11 +319,13 @@ namespace Sparrow.Rendering
             _state.ClipRect = stackLength != 0 ? _clipRectStack.Peek() : null;
         }
 
-        /** Figures out if the mask can be represented by a scissor rectangle; this is possible
-        *  if it's just a simple (untextured) quad that is parallel to the stage axes. The 'out'
-        *  parameter will be filled with the transformation matrix required to move the mask into
-        *  stage coordinates. */
-        private bool IsRectangularMask(DisplayObject mask, DisplayObject maskee, Matrix2D outMatrix)
+        /// <summary>
+        /// Figures out if the mask can be represented by a scissor rectangle; this is possible
+        /// if it's just a simple (untextured) quad that is parallel to the stage axes. The 'out'
+        /// parameter will be filled with the transformation matrix required to move the mask into
+        /// stage coordinates.
+        /// </summary>
+        private bool IsRectangularMask(DisplayObject mask, Matrix2D outMatrix)
         {
             Quad quad = mask as Quad;
 
@@ -369,8 +367,8 @@ namespace Sparrow.Rendering
         /** Completes all unfinished batches, cleanup procedures. */
         public void FinishFrame()
         {
-            if (_frameID % 99 == 0) _batchProcessorCurr.Trim(); // odd number -> alternating processors
-            if (_frameID % 150 == 0) _batchProcessorSpec.Trim();
+            if (_frameId % 99 == 0) _batchProcessorCurr.Trim(); // odd number -> alternating processors
+            if (_frameId % 150 == 0) _batchProcessorSpec.Trim();
 
             _batchProcessor.FinishBatch();
             _batchProcessor = _batchProcessorSpec; // no cache between frames
@@ -509,7 +507,9 @@ namespace Sparrow.Rendering
             Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.DepthBufferBit);
     }
 
-        /** Resets the render target to the back buffer */
+        /// <summary>
+        /// Resets the render target to the back buffer
+        /// </summary>
         public void Present()
         {
             _state.RenderTarget = null;
@@ -535,7 +535,7 @@ namespace Sparrow.Rendering
                 {
                     // TODO set this uint antiAlias  = _state.RenderTargetAntiAlias;
                     uint framebuffer;
-                    if (!framebufferCache.TryGetValue(target, out framebuffer))
+                    if (!_framebufferCache.TryGetValue(target, out framebuffer))
                     {
                         uint[] fb = new uint[1];
                         Gl.GenFramebuffers(fb);
@@ -548,7 +548,7 @@ namespace Sparrow.Rendering
                         {
                             Debug.WriteLine("Failed to create framebuffer for render texture");
                         }
-                        framebufferCache.Add(target, framebuffer);
+                        _framebufferCache.Add(target, framebuffer);
                     }
                     else
                     {
@@ -577,10 +577,10 @@ namespace Sparrow.Rendering
         public void DestroyFramebufferForTexture(Texture texture)
         {
             uint framebuffer;
-            if (framebufferCache.TryGetValue(texture.Base, out framebuffer))
+            if (_framebufferCache.TryGetValue(texture.Base, out framebuffer))
             {
                 Gl.DeleteFramebuffers(framebuffer);
-                framebufferCache.Remove(texture.Base);
+                _framebufferCache.Remove(texture.Base);
             }
         }
 
@@ -632,6 +632,7 @@ namespace Sparrow.Rendering
                     Debug.WriteLine("WARNING: Clip rectangle has zero size, setting it to 1x1");
                 }
                 Gl.Enable(EnableCap.ScissorTest);
+                Gl.Clear(ClearBufferMask.StencilBufferBit);
                 Gl.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);
             }
             else
@@ -639,7 +640,6 @@ namespace Sparrow.Rendering
                 if (Gl.IsEnabled(EnableCap.ScissorTest))
                 {
                     Gl.Disable(EnableCap.ScissorTest);
-                    Gl.Clear(ClearBufferMask.ColorBufferBit);
                 }
             }
         }
@@ -686,10 +686,10 @@ namespace Sparrow.Rendering
 
         /** Returns the index of the current frame <strong>if</strong> the render cache is enabled;
          *  otherwise, returns zero. To get the frameID regardless of the render cache, call
-         *  <code>Starling.frameID</code> instead. */
+         *  <code>Sparrow.frameID</code> instead. */
         public uint FrameID {
-            get { return _batchProcessor == _batchProcessorCurr ? _frameID : 0; }
-            set { _frameID = value;  }
+            get { return _batchProcessor == _batchProcessorCurr ? _frameId : 0; }
+            set { _frameId = value;  }
         }
 
         /** The size (in points) that represents one pixel in the back buffer. */
@@ -716,11 +716,11 @@ namespace Sparrow.Rendering
         private Dictionary<string, Program> Programs {
             get
             {
-                if (programs == null)
+                if (_programs == null)
                 {
-                    programs = new Dictionary<string, Program>();
+                    _programs = new Dictionary<string, Program>();
                 }
-                return programs;
+                return _programs;
             }
         }
     }

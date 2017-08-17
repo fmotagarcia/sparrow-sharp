@@ -1,8 +1,6 @@
-﻿using Sparrow.Core;
-using Sparrow.Display;
+﻿using Sparrow.Display;
 using Sparrow.Geom;
 using Sparrow.Textures;
-using Sparrow.Utils;
 using Sparrow.Rendering;
 using System;
 
@@ -171,15 +169,15 @@ namespace Sparrow.Styles
         ///  process.
         /// </summary>
         /// <param name="targetStyle">Points to the style of a MeshBatch</param>
-        /// <param name="targetVertexID">Where to start the copy in the target</param>
+        /// <param name="targetVertexId">Where to start the copy in the target</param>
         /// <param name="matrix">If you pass a non-null matrix, the 2D position of each vertex 
         /// will be transformed by that matrix before storing it in the target object.</param>
-        /// <param name="vertexID">position to start copyting from</param>
+        /// <param name="vertexId">position to start copyting from</param>
         /// <param name="numVertices">Number of vertices to copy</param>
-        public void BatchVertexData(MeshStyle targetStyle, int targetVertexID = 0,
-                                    Matrix2D matrix = null, int vertexID = 0, int numVertices= -1)
+        public void BatchVertexData(MeshStyle targetStyle, int targetVertexId = 0,
+                                    Matrix2D matrix = null, int vertexId = 0, int numVertices= -1)
         {
-            _vertexData.CopyTo(targetStyle._vertexData, vertexID, targetVertexID, numVertices, matrix);
+            _vertexData.CopyTo(targetStyle._vertexData, vertexId, targetVertexId, numVertices, matrix);
         }
 
         /** Copies the index data of the style's current target to the target of another style.
@@ -190,24 +188,21 @@ namespace Sparrow.Styles
          *  subclass of <code>Mesh</code>). Subclasses may override this method if they need
          *  to modify the index data in that process.</p>
          */
-        public void BatchIndexData(MeshStyle targetStyle, int targetIndexID = 0, int offset= 0,
-                                   int indexID= 0, int numIndices= -1)
+        public void BatchIndexData(MeshStyle targetStyle, int targetIndexId = 0, int offset = 0,
+                                   int indexId = 0, int numIndices = -1)
         {
-            _indexData.CopyTo(targetStyle._indexData, targetIndexID, offset, indexID, numIndices);
+            _indexData.CopyTo(targetStyle._indexData, targetIndexId, offset, indexId, numIndices);
         }
 
         /** Call this method if the target needs to be redrawn.
          *  The call is simply forwarded to the mesh. */
         protected void SetRequiresRedraw()
         {
-            if (_target != null)
-            {
-                _target.SetRequiresRedraw();
-            } 
+            _target?.SetRequiresRedraw();
         }
 
         /** Called when assigning a target mesh. Override to plug in class-specific logic. */
-        virtual protected void OnTargetAssigned(Mesh target) { }
+        protected virtual void OnTargetAssigned(Mesh target) { }
 
         // enter frame event
 
@@ -249,55 +244,55 @@ namespace Sparrow.Styles
          *  area; some of its optimized methods won't work correctly if that premise is no longer
          *  fulfilled or the original bounds change.</p>
          */
-        public Point GetVertexPosition(int vertexID)
+        public Point GetVertexPosition(int vertexId)
         {
-            return _vertexData.GetPoint(vertexID);
+            return _vertexData.GetPoint(vertexId);
         }
 
-        public void SetVertexPosition(int vertexID, float x, float y)
+        public void SetVertexPosition(int vertexId, float x, float y)
         {
-            _vertexData.SetPoint(vertexID, x, y);
+            _vertexData.SetPoint(vertexId, x, y);
             SetRequiresRedraw();
         }
 
         /** Returns the alpha value of the vertex at the specified index. */
-        public float GetVertexAlpha(int vertexID)
+        public float GetVertexAlpha(int vertexId)
         {
-            return _vertexData.GetAlpha(vertexID);
+            return _vertexData.GetAlpha(vertexId);
         }
 
         /** Sets the alpha value of the vertex at the specified index to a certain value. */
-        public void SetVertexAlpha(int vertexID, float alpha)
+        public void SetVertexAlpha(int vertexId, float alpha)
         {
-            _vertexData.SetAlpha(vertexID, alpha);
+            _vertexData.SetAlpha(vertexId, alpha);
             SetRequiresRedraw();
         }
 
         /** Returns the RGB color of the vertex at the specified index. */
-        public uint GetVertexColor(int vertexID)
+        public uint GetVertexColor(int vertexId)
         {
-            return _vertexData.GetColor(vertexID);
+            return _vertexData.GetColor(vertexId);
         }
 
         /** Sets the RGB color of the vertex at the specified index to a certain value. */
-        public void SetVertexColor(int vertexID, uint color)
+        public void SetVertexColor(int vertexId, uint color)
         {
-            _vertexData.SetColor(vertexID, color);
+            _vertexData.SetColor(vertexId, color);
             SetRequiresRedraw();
         }
 
         /** Returns the texture coordinates of the vertex at the specified index. */
-        public Point GetTexCoords(int vertexID)
+        public Point GetTexCoords(int vertexId)
         {
-            if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexID);
-            else return _vertexData.GetTexCoords(vertexID);
+            if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexId);
+            else return _vertexData.GetTexCoords(vertexId);
         }
 
         /** Sets the texture coordinates of the vertex at the specified index to the given values. */
-        public void SetTexCoords(int vertexID, float u, float v)
+        public void SetTexCoords(int vertexId, float u, float v)
         {
-            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexID, u, v);
-            else _vertexData.SetTexCoords(vertexID, u, v);
+            if (_texture != null) _texture.SetTexCoords(_vertexData, vertexId, u, v);
+            else _vertexData.SetTexCoords(vertexId, u, v);
 
             SetRequiresRedraw();
         }
