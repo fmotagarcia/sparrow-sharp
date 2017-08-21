@@ -40,7 +40,9 @@ namespace Sparrow.Filters
             SetSize(_sizeStep, _sizeStep);
         }
 
-        /** Purges the pool. */
+        /// <summary>
+        /// Purges the pool.
+        /// </summary>
         public void Dispose()
         {
             Purge();

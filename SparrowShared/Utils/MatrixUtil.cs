@@ -7,37 +7,37 @@ namespace Sparrow.Utils
     public class MatrixUtil
     {
 
-        /** Updates the given matrix so that it points exactly to pixel boundaries. This works
-         *  only if the object is unscaled and rotated by a multiple of 90 degrees.
-         *
-         *  @param matrix    The matrix to manipulate in place (normally the modelview matrix).
-         *  @param pixelSize The size (in points) that represents one pixel in the back buffer.
-         */
+        /// <summary>
+        /// Updates the given matrix so that it points exactly to pixel boundaries. This works
+        /// only if the object is unscaled and rotated by a multiple of 90 degrees.
+        /// </summary>
+        /// <param name="matrix">The matrix to manipulate in place (normally the modelview matrix).</param>
+        /// <param name="pixelSize">The size (in points) that represents one pixel in the back buffer.</param>
         public static void SnapToPixels(Matrix2D matrix, float pixelSize)
         {
             // Snapping only makes sense if the object is unscaled and rotated only by
             // multiples of 90 degrees. If that's the case can be found out by looking
             // at the modelview matrix.
 
-            const float E = 0.0001f;
+            const float e = 0.0001f;
 
             bool doSnap = false;
             float aSq, bSq, cSq, dSq;
 
-            if (matrix.B + E > 0 && matrix.B - E< 0 && matrix.C + E> 0 && matrix.C - E< 0)
+            if (matrix.B + e > 0 && matrix.B - e< 0 && matrix.C + e> 0 && matrix.C - e< 0)
             {
                 // what we actually want is 'Math.abs(matrix.a)', but squaring
                 // the value works just as well for our needs & is faster.
 
                 aSq = matrix.A* matrix.A;
                 dSq = matrix.D* matrix.D;
-                doSnap = aSq + E > 1 && aSq - E< 1 && dSq + E> 1 && dSq - E< 1;
+                doSnap = aSq + e > 1 && aSq - e< 1 && dSq + e> 1 && dSq - e< 1;
             }
-            else if (matrix.A + E > 0 && matrix.A - E< 0 && matrix.D + E> 0 && matrix.D - E< 0)
+            else if (matrix.A + e > 0 && matrix.A - e< 0 && matrix.D + e> 0 && matrix.D - e< 0)
             {
                 bSq = matrix.B* matrix.B;
                 cSq = matrix.C* matrix.C;
-                doSnap = bSq + E > 1 && bSq - E< 1 && cSq + E> 1 && cSq - E< 1;
+                doSnap = bSq + e > 1 && bSq - e< 1 && cSq + e> 1 && cSq - e< 1;
             }
 
             if (doSnap)

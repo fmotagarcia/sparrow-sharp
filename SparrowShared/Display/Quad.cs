@@ -1,6 +1,5 @@
 using Sparrow.Geom;
 using Sparrow.Textures;
-using Sparrow.Utils;
 using Sparrow.Rendering;
 
 namespace Sparrow.Display
@@ -76,7 +75,7 @@ namespace Sparrow.Display
             if (Texture != null)
             {
                 texture.SetupVertexPositions(vertexData, 0, _bounds);
-                texture.SetupTextureCoordinates(vertexData, 0);
+                texture.SetupTextureCoordinates(vertexData);
             }
             else
             {
@@ -153,8 +152,9 @@ namespace Sparrow.Display
             }
         }
 
-        /** Creates a quad from the given texture.
-        *  The quad will have the same size as the texture. */
+        /// <summary>
+        /// Creates a quad from the given texture. The quad will have the same size as the texture.
+        /// </summary>
         public static Quad FromTexture(Texture texture)
         {
             Quad quad = new Quad(100, 100);
@@ -166,13 +166,13 @@ namespace Sparrow.Display
         /** The texture that is mapped to the quad (or <code>null</code>, if there is none).
          *  Per default, it is mapped to the complete quad, i.e. to the complete area between the
          *  top left and bottom right vertices. This can be changed with the
-         *  <code>setTexCoords</code>-method.
+         *  <code>SetTexCoords</code>-method.
          *
          *  <p>Note that the size of the quad will not change when you assign a texture, which
-         *  means that the texture might be distorted at first. Call <code>readjustSize</code> to
+         *  means that the texture might be distorted at first. Call <code>ReadjustSize</code> to
          *  synchronize quad and texture size.</p>
          *
-         *  <p>You could also set the texture via the <code>style.texture</code> property.
+         *  <p>You could also set the texture via the <code>style.Texture</code> property.
          *  That way, however, the texture frame won't be taken into account. Since only rectangular
          *  objects can make use of a texture frame, only a property on the Quad class can do that.
          *  </p>

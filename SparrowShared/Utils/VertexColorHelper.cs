@@ -51,16 +51,13 @@
             {
                 return color;
             }
-            else
-            {
-                // 0.5f is added to prevent rounding issues, see 
-                // http://stackoverflow.com/questions/25703304/why-does-a-division-result-differ-based-on-the-cast-type
-                return VertexColorHelper.CreateVertexColor(
-                    (byte)(color.R / alpha + 0.5f),
-                    (byte)(color.G / alpha + 0.5f),
-                    (byte)(color.B / alpha + 0.5f),
-                    color.A);
-            }
+            // 0.5f is added to prevent rounding issues, see 
+            // http://stackoverflow.com/questions/25703304/why-does-a-division-result-differ-based-on-the-cast-type
+            return VertexColorHelper.CreateVertexColor(
+                (byte)(color.R / alpha + 0.5f),
+                (byte)(color.G / alpha + 0.5f),
+                (byte)(color.B / alpha + 0.5f),
+                color.A);
         }
 
         public static bool IsOpaqueWhite(VertexColor color)

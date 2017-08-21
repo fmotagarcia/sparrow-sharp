@@ -81,22 +81,22 @@ namespace Sparrow.Display
             }
             painter.BatchMesh(this);
         }
-
-        /** Sets the style that is used to render the mesh. Styles (which are always subclasses of
-         *  <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
-         *  For example, they may add support for color transformations or normal mapping.
-         *
-         *  <p>When assigning a new style, the vertex format will be changed to fit it.
-         *  Do not use the same style instance on multiple objects! Instead, make use of
-         *  <code>style.clone()</code> to assign an identical style to multiple meshes.</p>
-         *
-         *  @param meshStyle             the style to assign. If <code>null</code>, the default
-         *                               style will be created.
-         *  @param mergeWithPredecessor  if enabled, all attributes of the previous style will be
-         *                               be copied to the new one, if possible.
-         *  @see #defaultStyle
-         *  @see #defaultStyleFactory
-         */
+        
+        /// <summary>
+        /// Sets the style that is used to render the mesh. Styles (which are always subclasses of
+        /// <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
+        /// For example, they may add support for color transformations or normal mapping.
+        ///
+        /// <p>When assigning a new style, the vertex format will be changed to fit it.
+        /// Do not use the same style instance on multiple objects! Instead, make use of
+        /// <code>Style.Clone()</code> to assign an identical style to multiple meshes.</p>
+        /// </summary>
+        /// <param name="meshStyle">the style to assign. If <code>null</code>, the default
+        ///                         style will be created.</param>
+        /// <param name="mergeWithPredecessor">if enabled, all attributes of the previous style will be
+        ///                                    be copied to the new one, if possible.</param>
+        /// <see cref="DefaultStyle"/>
+        /// <see cref="DefaultStyleFactory"/>
         public virtual void SetStyle(MeshStyle meshStyle = null, bool mergeWithPredecessor= true)
         {
             if (meshStyle == null) meshStyle = CreateDefaultMeshStyle();
@@ -148,7 +148,9 @@ namespace Sparrow.Display
             _style.SetVertexPosition(vertexId, x, y);
         }
 
-        /** Returns the alpha value of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the alpha value of the vertex at the specified index.
+        /// </summary>
         public float GetVertexAlpha(int vertexId)
         {
             return _style.GetVertexAlpha(vertexId);
@@ -269,20 +271,15 @@ namespace Sparrow.Display
             set { _sDefaultStyle = value; }
         }
 
-        /** A factory method that is used to create the 'MeshStyle' for a mesh if no specific
-         *  style is provided. That's useful if you are creating a hierarchy of objects, all
-         *  of which need to have a certain style. Different to the <code>defaultStyle</code>
-         *  property, this method allows plugging in custom logic and passing arguments to the
-         *  constructor. Return <code>null</code> to fall back to the default behavior (i.e.
-         *  to instantiate <code>defaultStyle</code>). The <code>mesh</code>-parameter is optional
-         *  and may be omitted.
-         *
-         *  <listing>
-         *  Mesh.defaultStyleFactory = function(mesh:Mesh):MeshStyle
-         *  {
-         *      return new ColorizeMeshStyle(Math.random() * 0xffffff);
-         *  }</listing>
-         */
+        /// <summary>
+        /// A factory method that is used to create the 'MeshStyle' for a mesh if no specific
+        /// style is provided. That's useful if you are creating a hierarchy of objects, all
+        /// of which need to have a certain style. Different to the <code>defaultStyle</code>
+        /// property, this method allows plugging in custom logic and passing arguments to the
+        /// constructor. Return <code>null</code> to fall back to the default behavior (i.e.
+        /// to instantiate <code>DefaultStyle</code>). The <code>mesh</code>-parameter is optional
+        /// and may be omitted.
+        /// </summary>
         public static DefaultStyleFactoryFunction DefaultStyleFactory { 
             get { return sDefaultStyleFactory; }
             set { sDefaultStyleFactory = value; }

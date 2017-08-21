@@ -9,7 +9,7 @@ namespace Sparrow.Display
     /** An Image is a quad with a texture mapped onto it.
      *
      *  <p>Typically, the Image class will act as an equivalent of Flash's Bitmap class. Instead
-     *  of BitmapData, Starling uses textures to represent the pixels of an image. To display a
+     *  of BitmapData, Sparrow uses textures to represent the pixels of an image. To display a
      *  texture, you have to map it onto a quad - and that's what the Image class is for.</p>
      *
      *  <p>While the base class <code>Quad</code> already supports textures, the <code>Image</code>
@@ -26,7 +26,7 @@ namespace Sparrow.Display
      *  <p>Finally, you can repeat a texture horizontally and vertically within the image's region,
      *  just like the tiles of a wallpaper. Use the <code>tileGrid</code> property to do that.</p>
      *
-     *  @see starling.textures.Texture
+     *  @see Sparrow.Textures.Texture
      *  @see Quad
      */
     public class Image : Quad
@@ -203,7 +203,6 @@ namespace Sparrow.Display
             Rectangle gridCenter = Rectangle.Create();
             Rectangle textureBounds = Rectangle.Create();
             Rectangle pixelBounds = Rectangle.Create();
-            Rectangle intersection = Rectangle.Create();
 
             gridCenter.CopyFrom(_scale9Grid);
             textureBounds.SetTo(0, 0, texture.FrameWidth, texture.FrameHeight);
@@ -214,7 +213,7 @@ namespace Sparrow.Display
             // calculate 3x3 grid according to texture and scale9 properties,
             // taking special care about the texture frame (headache included)
 
-            intersection = gridCenter.Intersection(pixelBounds);
+            var intersection = gridCenter.Intersection(pixelBounds);
 
             float[] sBasCols = new float[3];
             float[] sBasRows = new float[3];

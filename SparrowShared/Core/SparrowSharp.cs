@@ -36,17 +36,17 @@ namespace Sparrow.Core
 
         public static Juggler DefaultJuggler { get; private set; }
 
-        /** When enabled, Starling will skip rendering the stage if it hasn't changed since the
-        *  last frame. This is great for apps that remain static from time to time, since it will
-        *  greatly reduce power consumption. You should activate this whenever possible!
-        *
-        *  <p>The reason why it's disabled by default is just that it causes problems with Render-
-        *  and VideoTextures. When you use those, you either have to disable this property
-        *  temporarily, or call <code>setRequiresRedraw()</code> (ideally on the stage) whenever
-        *  those textures are changing. Otherwise, the changes won't show up.</p>
-        *
-        *  @default false
-        */
+        /// <summary>
+        /// When enabled, Sparrow will skip rendering the stage if it hasn't changed since the
+        /// last frame. This is great for apps that remain static from time to time, since it will
+        /// greatly reduce power consumption. You should activate this whenever possible!
+        ///
+        /// <para>The reason why it's disabled by default is just that it causes problems with Render-
+        /// and VideoTextures. When you use those, you either have to disable this property
+        /// temporarily, or call <code>SetRequiresRedraw()</code> (ideally on the stage) whenever
+        /// those textures are changing. Otherwise, the changes won't show up.</para>
+        /// <para>default false</para>
+        /// </summary>
         public static bool SkipUnchangedFrames = false;
 
         private static readonly Stopwatch Watch = new Stopwatch();
@@ -56,6 +56,13 @@ namespace Sparrow.Core
         private static uint _width;
         private static uint _height;
 
+        /// <summary>
+        /// Start your game.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="rootType">The root class of your app</param>
+        /// <exception cref="InvalidOperationException">When rootType is null or this function is called twice</exception>
         public static void Start(uint width, uint height, Type rootType)
         {
             Gl.Disable(EnableCap.CullFace);
@@ -167,17 +174,19 @@ namespace Sparrow.Core
             }
         }
 
-        /** The painter, which is used for all rendering. The same instance is passed to all
-         *  <code>render</code>methods each frame. */
+        /// <summary>
+        /// The painter, which is used for all rendering. The same instance is passed to all
+        /// <code>Render()</code> methods each frame.
+        /// </summary>
         public static Painter Painter {get { return _painter; } }
 
-        /** Makes sure that the next frame is actually rendered.
-         *
-         *  <p>When <code>skipUnchangedFrames</code> is enabled, some situations require that you
-         *  manually force a redraw, e.g. when a RenderTexture is changed. This method is the
-         *  easiest way to do so; it's just a shortcut to <code>stage.setRequiresRedraw()</code>.
-         *  </p>
-         */
+        /// <summary>
+        /// Makes sure that the next frame is actually rendered.
+        /// <para>When <code>SkipUnchangedFrames</code> is enabled, some situations require that you
+        /// manually force a redraw, e.g. when a RenderTexture is changed. This method is the
+        /// easiest way to do so; it's just a shortcut to <code>Stage.SetRequiresRedraw()</code>.
+        /// </para>
+        /// </summary>
         public static void SetRequiresRedraw()
         {
             Stage.SetRequiresRedraw();
@@ -221,15 +230,19 @@ namespace Sparrow.Core
             set { _viewPort = value.Clone(); }
         }
 
-        /** The ratio between viewPort width and stage width. Useful for choosing a different
-         *  set of textures depending on the display resolution. */
+        /// <summary>
+        /// The ratio between viewPort width and stage width. Useful for choosing a different
+        /// set of textures depending on the display resolution.
+        /// </summary>
         public static float ContentScaleFactor
         {
             get { return _viewPort.Width / Stage.StageWidth; }
         }
 
-        /** Indicates if OpenGL render methods will report errors. Activate only when needed,
-         *  as this has a negative impact on performance. @default false */
+        /// <summary>
+        /// Indicates if OpenGL render methods will report errors. Activate only when needed,
+        /// as this has a negative impact on performance. default false
+        /// </summary>
         public static void EnableErrorChecking()
         {
             if (_enableErrorChecking == false)

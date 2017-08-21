@@ -50,7 +50,9 @@ namespace Sparrow.Touches
         }
 
 
+        /// <summary>
         /// Gets a set of Touch objects that originated over a certain target.
+        /// </summary>
         public List<Touch> TouchesWithTarget (DisplayObject target)
         {
             List<Touch> touchesFound = new List<Touch> ();
@@ -106,8 +108,8 @@ namespace Sparrow.Touches
             string str = "touch timestamp " + _timestamp;
             foreach (var touch in Touches)
             {
-                str += string.Format("\n id: {0} target: {1} phase: {2} target {3} globalX: {4} globalY: {5}",
-                    touch.TouchID, touch.Target, touch.Phase, touch.Target, touch.GlobalX, touch.GlobalY );
+                str += $"\n id: {touch.TouchID} target: {touch.Target} phase: {touch.Phase} target {touch.Target} " +
+                       $"globalX: {touch.GlobalX} globalY: {touch.GlobalY}";
             }
             return str;
         }

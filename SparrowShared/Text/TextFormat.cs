@@ -151,8 +151,10 @@ namespace Sparrow.Text
             }
         }
 
-        /** Indicates whether kerning is enabled. Kerning adjusts the pixels between certain
-         *  character pairs to improve readability. @default true */
+        /// <summary>
+        /// Indicates whether kerning is enabled. Kerning adjusts the pixels between certain
+        /// character pairs to improve readability. default true
+        /// </summary>
         public bool Kerning
         {
             get { return _kerning; }
@@ -166,7 +168,9 @@ namespace Sparrow.Text
             }
         }
 
-        /** The amount of vertical space (called 'leading') between lines. @default 0 */
+        /// <summary>
+        /// The amount of vertical space (called 'leading') between lines. default 0
+        /// </summary>
         public float Leading
         {
             get { return _leading; }

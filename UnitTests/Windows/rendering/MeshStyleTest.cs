@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Sparrow.Display;
-using Sparrow.Rendering;
 using Sparrow.Styles;
 using System;
 
@@ -10,7 +9,7 @@ namespace Tests
     class MeshStyleTest : TestBase
     {
 
-        private int eventCount;
+        private int _eventCount;
 
         [Test]
         public void TestAssignment()
@@ -38,38 +37,38 @@ namespace Tests
         [Test]
         public void TestEnterFrameEvent()
         {
-            eventCount = 0;
+            _eventCount = 0;
             MeshStyle style = new MeshStyle();
             TestQuad quad0 = new TestQuad(100, 100);
             TestQuad quad1 = new TestQuad(100, 100);
 
             style.EnterFrame += StyleEnterFrame;
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(0, eventCount);
+            Assert.AreEqual(0, _eventCount);
 
             quad0.Style = style;
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(1, eventCount);
+            Assert.AreEqual(1, _eventCount);
 
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(2, eventCount);
+            Assert.AreEqual(2, _eventCount);
 
             quad1.Style = style;
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(2, eventCount);
+            Assert.AreEqual(2, _eventCount);
 
             quad0.Style = style;
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(3, eventCount);
+            Assert.AreEqual(3, _eventCount);
 
             style.EnterFrame -= StyleEnterFrame;
             quad0.DispatchEnterFrame();
-            Assert.AreEqual(3, eventCount);
+            Assert.AreEqual(3, _eventCount);
         }
 
         private void StyleEnterFrame(DisplayObject target, float passedTime)
         {
-            ++eventCount;
+            ++_eventCount;
         }
 
         [Test]
@@ -91,9 +90,9 @@ namespace Tests
 
     }
 
-    class MockStyle : MeshStyle { }
+    internal class MockStyle : MeshStyle { }
 
-    class TestQuad : Quad
+    internal class TestQuad : Quad
     {
         public TestQuad(float w, float h) : base(w, h) { }
                 

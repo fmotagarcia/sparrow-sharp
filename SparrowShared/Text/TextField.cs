@@ -13,21 +13,21 @@ namespace Sparrow.Text
     {
         
         private string _text;
-        private TextOptions _options;
-        private TextFormat _format;
+        private readonly TextOptions _options;
+        private readonly TextFormat _format;
         private Rectangle _textBounds;
-        private Rectangle _hitArea;
+        private readonly Rectangle _hitArea;
         private ITextCompositor _compositor;
         private bool _requiresRecomposition;
         private DisplayObjectContainer _border;
-        private MeshBatch _meshBatch;
+        private readonly MeshBatch _meshBatch;
         private MeshStyle _style;
 
         // helper objects
-        private static Matrix2D sMatrix = Matrix2D.Create();
-        private static ITextCompositor sDefaultCompositor;
-        private static TextureFormat sDefaultTextureFormat = TextureFormat.RGB565;
-        private TextFormat _helperFormat = new TextFormat();
+        private static Matrix2D _sMatrix = Matrix2D.Create();
+        private static ITextCompositor _sDefaultCompositor;
+        private static TextureFormat _sDefaultTextureFormat = TextureFormat.RGB565;
+        private readonly TextFormat _helperFormat = new TextFormat();
 
         public TextField(float width, float height, string text = "", TextFormat format = null)
         {
@@ -49,7 +49,9 @@ namespace Sparrow.Text
         }
 
 
-        /** Disposes the underlying texture data. */
+        /// <summary>
+        /// Disposes the underlying texture data.
+        /// </summary>
         public override void Dispose()
         {
             _format.ChangeEvent -= SetRequiresRecomposition;
@@ -115,7 +117,7 @@ namespace Sparrow.Text
 
             _meshBatch.X = _meshBatch.Y = 0f;
             _options.TextureScale = SparrowSharp.ContentScaleFactor;
-            _options.TextureFormat = sDefaultTextureFormat;
+            _options.TextureFormat = _sDefaultTextureFormat;
             _compositor.FillMeshBatch(_meshBatch, width, height, _text, format, _options);
 
             if (_style != null) _meshBatch.Style = _style;
@@ -206,18 +208,18 @@ namespace Sparrow.Text
         public override Rectangle GetBounds(DisplayObject targetSpace)
         {
             if (_requiresRecomposition) Recompose();
-            sMatrix = GetTransformationMatrix(targetSpace);
-            return _hitArea.GetBounds(sMatrix);
+            _sMatrix = GetTransformationMatrix(targetSpace);
+            return _hitArea.GetBounds(_sMatrix);
         }
 
         public override DisplayObject HitTest(Point localPoint)
         {
             if (!Visible || !Touchable || !HitTestMask(localPoint)) return null;
-            else if (_hitArea.Contains(localPoint)) return this;
-            else return null;
+            if (_hitArea.Contains(localPoint)) return this;
+            return null;
         }
 
-        override public float Width
+        public override float Width
         {
             set
             {
@@ -230,7 +232,7 @@ namespace Sparrow.Text
             }
         }
 
-        override public float Height
+        public override float Height
         {
             set
             {
@@ -396,8 +398,8 @@ namespace Sparrow.Text
          *
          *  @default Context3DTextureFormat.BGRA_PACKED */
         public static TextureFormat DefaultTextureFormat { 
-            get { return sDefaultTextureFormat; }
-            set { sDefaultTextureFormat = value; }
+            get { return _sDefaultTextureFormat; }
+            set { _sDefaultTextureFormat = value; }
         }
 
         /** The default compositor used to arrange the letters of the text.
@@ -408,11 +410,11 @@ namespace Sparrow.Text
         public static ITextCompositor DefaultCompositor { 
             get
             {
-                if (sDefaultCompositor == null)
+                if (_sDefaultCompositor == null)
                 {
-                    sDefaultCompositor = new BitmapFont();
+                    _sDefaultCompositor = new BitmapFont();
                 }
-                return sDefaultCompositor;
+                return _sDefaultCompositor;
             }
             set
             {
@@ -420,7 +422,7 @@ namespace Sparrow.Text
                 {
                     throw new ArgumentNullException("Default compositor cannot be null");
                 }
-                sDefaultCompositor = value;
+                _sDefaultCompositor = value;
             }
         }
 

@@ -10,16 +10,19 @@ using Sparrow.Core;
 namespace Sparrow.Display
 {
     /// <summary>
+    /// <para>
     /// The DisplayObject class is the base class for all objects that are rendered on the screen.
-    /// 
+    /// </para>
+    /// <para>
     /// In Sparrow, all displayable objects are organized in a display tree. Only objects that are part of
     /// the display tree will be displayed (rendered). 
-    /// 
+    /// </para>
+    /// <para>
     /// The display tree consists of leaf nodes (Image, Quad) that will be rendered directly to
     /// the screen, and of container nodes (subclasses of DisplayObjectContainer, like Sprite).
     /// A container is simply a display object that has child nodes - which can, again, be either leaf
     /// nodes or other containers. 
-    /// 
+    /// </para>
     /// A display object has properties that define its position in relation to its parent
     /// ('X', 'Y'), as well as its rotation, skewing and scaling factors. Use the 
     /// 'Alpha' and 'Visible' properties to make an object translucent or invisible.
@@ -27,33 +30,33 @@ namespace Sparrow.Display
     /// Every display object may be the target of touch events. If you don't want an object to be
     /// touchable, you can disable the `Touchable` property. When it's disabled, neither the object
     /// nor its children will receive any more touch events.
-    /// 
+    /// <para>
     /// **Points vs. Pixels**
-    /// 
+    /// </para>
     /// All sizes and distances are measured in points. What this means in pixels depends on the 
     /// contentScaleFactor of the device.
-    /// 
+    /// <para>
     /// **Transforming coordinates**
-    /// 
+    /// </para>
     /// Within the display tree, each object has its own local coordinate system. If you rotate a container,
     /// you rotate that coordinate system - and thus all the children of the container.
     /// 
     /// Sometimes you need to know where a certain point lies relative to another coordinate system. 
     /// That's the purpose of the method 'TransformationMatrixToSpace'. It will create a matrix that
     /// represents the transformation of a point in one coordinate system to another. 
-    /// 
+    /// <para>
     /// **Subclassing DisplayObject**
-    /// 
+    /// </para>
     /// As DisplayObject is an abstract class, you can't instantiate it directly, but have to use one of 
     /// its subclasses instead.
     /// However, you can create custom display objects as well. That's especially useful when you want to
     /// create an object with a custom render function.
     /// 
     /// You will need to implement the following methods when you subclass DisplayObject:
-    /// 
-    /// - void Render ( Painter support);
-    /// - Rectangle BoundsInSpace ( DisplayObject targetSpace);
-    /// 
+    /// <code>
+    /// Void Render ( Painter support);
+    /// Rectangle BoundsInSpace ( DisplayObject targetSpace);
+    /// </code>
     /// Have a look at Quad for a sample implementation of those methods.  
     /// </summary>
     public abstract class DisplayObject
@@ -340,10 +343,10 @@ namespace Sparrow.Display
 
         // 3D transformation
 
-        /** Creates a matrix that represents the transformation from the local coordinate system
-         *  to another. This method supports three dimensional objects created via 'Sprite3D'.
-         *  If you pass an <code>out</code>-matrix, the result will be stored in this matrix
-         *  instead of creating a new object. */
+        /// <summary>
+        /// Creates a matrix that represents the transformation from the local coordinate system
+        /// to another. This method supports three dimensional objects created via 'Sprite3D'.
+        /// </summary>
         public Matrix3D GetTransformationMatrix3D(DisplayObject targetSpace)
         {
             DisplayObject currentObject;
@@ -421,13 +424,13 @@ namespace Sparrow.Display
         /// Forces the object to be redrawn in the next frame.
         /// This will prevent the object to be drawn from the render cache.
         ///
-        /// <p>This method is called every time the object changes in any way. When creating
+        /// <para>This method is called every time the object changes in any way. When creating
         /// custom mesh styles or any other custom rendering code, call this method if the object
-        /// needs to be redrawn.</p>
+        /// needs to be redrawn.</para>
         ///
-        /// <p>If the object needs to be redrawn just because it does not support the render cache,
-        /// call <code>painter.ExcludeFromCache()</code> in the object's render method instead.
-        /// That way, SparrowSharp's <code>skipUnchangedFrames</code> policy won't be disrupted.</p>
+        /// <para>If the object needs to be redrawn just because it does not support the render cache,
+        /// call <code>Painter.ExcludeFromCache()</code> in the object's render method instead.
+        /// That way, Sparrow's <code>SkipUnchangedFrames</code> policy won't be disrupted.</para>
         /// </summary>
         public virtual void SetRequiresRedraw()
         {
@@ -455,8 +458,8 @@ namespace Sparrow.Display
         }
 
         /// <summary>
-        ///  (private) Makes sure the object is not drawn from cache in the next frame.
-        ///  This method is meant to be called only from <code>Painter.finishFrame()</code>,
+        ///  Makes sure the object is not drawn from cache in the next frame.
+        ///  This method is meant to be called only from <code>Painter.FinishFrame()</code>,
         ///  since it requires rendering to be concluded.
         /// </summary>
         internal void ExcludeFromCache()
@@ -499,7 +502,7 @@ namespace Sparrow.Display
             sAncestors.Clear();
 
             if (currentObject != null) return currentObject;
-            else throw new ArgumentException("Object not connected to target");
+            throw new ArgumentException("Object not connected to target");
         }
 
 
@@ -581,7 +584,7 @@ namespace Sparrow.Display
 
         /// <summary>
         /// The transformation matrix of the object relative to its parent.
-        /// @returns CAUTION: not a copy, but the actual object!
+        /// <returns>CAUTION: not a copy, but the actual object!</returns>
         /// </summary>
         public virtual Matrix2D TransformationMatrix
         {
@@ -905,7 +908,9 @@ namespace Sparrow.Display
             }
         }
 
-        /** @private Indicates if the object is rotated or skewed in any way. */
+        /// <summary>
+        /// Indicates if the object is rotated or skewed in any way.
+        /// </summary>
         internal bool IsRotated
         {
             get { return _rotation != 0.0 || _skewX != 0.0 || _skewY != 0.0; }
@@ -965,18 +970,17 @@ namespace Sparrow.Display
             set { _name = value; }
         }
 
-        /** The filter that is attached to the display object. The <code>Sparrow.Filters</code>
-        *  package contains several classes that define specific filters you can use. To combine
-        *  several filters, assign an instance of the <code>FilterChain</code> class; to remove
-        *  all filters, assign <code>null</code>.
-        *
-        *  <p>Beware that a filter instance may only be used on one object at a time! Furthermore,
-        *  when you remove or replace a filter, it is NOT disposed automatically (since you might
-        *  want to reuse it on a different object).</p>
-        *
-        *  @default null
-        *  @see Spőarrow.Filters.FragmentFilter
-        */
+        /// <summary>
+        /// The filter that is attached to the display object. The <code>Sparrow.Filters</code>
+        /// package contains several classes that define specific filters you can use. To combine
+        /// several filters, assign an instance of the <code>FilterChain</code> class; to remove
+        /// all filters, assign <code>null</code>.
+        ///
+        /// <p>Beware that a filter instance may only be used on one object at a time! Furthermore,
+        /// when you remove or replace a filter, it is NOT disposed automatically (since you might
+        /// want to reuse it on a different object).</p>
+        /// <see cref="FragmentFilter"/>
+        /// </summary>
         public virtual FragmentFilter Filter { 
             get { return _filter; }
             set

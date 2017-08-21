@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Sparrow.Utils;
 using Sparrow.Geom;
 using System;
+using Sparrow.Rendering;
 
 namespace Tests
 {
@@ -24,7 +25,6 @@ namespace Tests
         {
             const int numVertices = 4;
 
-            Vertex vertex = AnyVertex();
             Vertex defaultVertex = DefaultVertex();
 
             VertexData vertexData = new VertexData(numVertices);

@@ -122,7 +122,11 @@ namespace Sparrow.Display
                 UpdateStartTimes();
         }
 
-        /** Removes the frame at a certain Id. The successors will move down. */
+        /// <summary>
+        /// Removes the frame at a certain id. The successors will move down.
+        /// </summary>
+        /// <exception cref="ArgumentException">thrown when the frame id is invalid</exception>
+        /// <exception cref="InvalidOperationException">thrown when the MovieClip is empty</exception>
         public void RemoveFrameAt(int frameId)
         {
             if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
@@ -134,7 +138,10 @@ namespace Sparrow.Display
                 UpdateStartTimes();
         }
 
-        /** Returns the texture of a certain frame. */
+        /// <summary>
+        /// Returns the texture of a certain frame.
+        /// </summary>
+        /// <exception cref="ArgumentException">thorwn when the frame id is invalid</exception>
         public Texture GetFrameTexture(int frameId)
         {
             if (frameId < 0 || frameId >= NumFrames) throw new ArgumentException("Invalid frame id");
@@ -153,7 +160,7 @@ namespace Sparrow.Display
         /// Returns the sound of a certain frame. 
         public function getFrameSound(frameID:int):Sound
         {
-            if (frameID< 0 || frameID >= numFrames) throw new ArgumentError("Invalid frame id");
+            if (frameID< 0 || frameID >= numFrames) throw new ArgumentException("Invalid frame id");
             return _frames[frameID].sound;
         }
 
@@ -161,21 +168,21 @@ namespace Sparrow.Display
         /// is displayed. 
         public function setFrameSound(frameID:int, sound:Sound):void
         {
-            if (frameID< 0 || frameID >= numFrames) throw new ArgumentError("Invalid frame id");
+            if (frameID< 0 || frameID >= numFrames) throw new ArgumentException("Invalid frame id");
             _frames[frameID].sound = sound;
         }
 
         /// Returns the method that is executed at a certain frame.
         public function getFrameAction(frameID:int):Function
         {
-            if (frameID< 0 || frameID >= numFrames) throw new ArgumentError("Invalid frame id");
+            if (frameID< 0 || frameID >= numFrames) throw new ArgumentException("Invalid frame id");
             return _frames[frameID].action;
         }
 
         /// Sets an action that will be executed whenever a certain frame is reached.
         public function setFrameAction(frameID:int, action:Function):void
         {
-            if (frameID< 0 || frameID >= numFrames) throw new ArgumentError("Invalid frame id");
+            if (frameID< 0 || frameID >= numFrames) throw new ArgumentException("Invalid frame id");
             _frames[frameID].action = action;
         }
         */

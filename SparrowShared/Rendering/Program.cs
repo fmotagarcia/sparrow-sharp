@@ -9,13 +9,9 @@ namespace Sparrow.Rendering
 {
     /** A Program represents a pair of a fragment- and vertex-shader.
     *
-    *  <p>This class is a convenient replacement for Stage3Ds "Program3D" class. Its main
-    *  advantage is that it survives a context loss; furthermore, it makes it simple to
-    *  create a program from AGAL source without having to deal with the assembler.</p>
-    *
     *  <p>It is recommended to store programs in Sparrow's "Painter" instance via the methods
     *  <code>RegisterProgram</code> and <code>GetProgram</code>. That way, your programs may
-    *  be shared among different display objects or even Starling instances.</p>
+    *  be shared among different display objects or even Sparrow instances.</p>
     *
     *  @see Painter
     */

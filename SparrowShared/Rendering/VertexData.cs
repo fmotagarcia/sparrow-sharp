@@ -61,20 +61,6 @@ namespace Sparrow.Rendering
      *  the RGB channels. A small alpha value results in a lower accuracy of the other channels,
      *  and if the alpha value reaches zero, the color information is lost altogether.</p>
      *
-     *  <strong>Tinting</strong>
-     *
-     *  <p>Some low-end hardware is very sensitive when it comes to fragment shader complexity.
-     *  Thus, Starling optimizes shaders for non-tinted meshes. The VertexData class keeps track
-     *  of its <code>tinted</code>-state, at least at a basic level: whenever you change color
-     *  or alpha value of a vertex to something different than white (<code>0xffffff</code>) with
-     *  full alpha (<code>1.0</code>), the <code>tinted</code> property is enabled.</p>
-     *
-     *  <p>However, that value is not entirely accurate: when you restore the color of just a
-     *  range of vertices, or copy just a subset of vertices to another instance, the property
-     *  might wrongfully indicate a tinted mesh. If that's the case, you can either call
-     *  <code>updateTinted()</code> or assign a custom value to the <code>tinted</code>-property.
-     *  </p>
-     *
      *  @see VertexDataFormat
      *  @see IndexData
      */

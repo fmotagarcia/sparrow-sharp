@@ -8,8 +8,10 @@ using OpenGL;
 
 namespace Sparrow.Filters
 {
-    /** The BlurFilter applies a Gaussian blur to an object. The strength of the blur can be
-     *  set for x- and y-axis separately. */
+    /// <summary>
+    /// The BlurFilter applies a Gaussian blur to an object. The strength of the blur can be
+    /// set for x- and y-axis separately.
+    /// </summary>
     public class BlurFilter : FragmentFilter
     {
         private float _blurX;

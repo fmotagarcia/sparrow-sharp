@@ -22,7 +22,7 @@ namespace Sparrow.Samples
 
         public Benchmark()
         {
-            // NOTE: Removing this breaks the app!
+            // NOTE: Removing this breaks the app on some Nvidia cards!
             SparrowSharp.EnableErrorChecking();
             
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader("SparrowSamples");

@@ -8,38 +8,40 @@ namespace Sparrow.Display
 {
     /// <summary>
     /// A DisplayObjectContainer represents a collection of display objects.
-    /// 
+    /// <para>
     /// It is the base class of all display objects that act as a container for other objects. By 
     /// maintaining an ordered list of children, it defines the back-to-front positioning of the children
     /// within the display tree.
-    /// 
+    /// </para>
     /// A container does not have size in itself. The width and height properties represent the extents
     /// of its children. Changing those properties will scale all children accordingly.
-    /// 
+    /// <para>
     /// As this is an abstract class, you can't instantiate it directly, but have to 
     /// use a subclass instead. The most lightweight container class is Sprite.
-    /// 
+    /// </para>
     /// **Adding and removing children**
-    /// 
+    /// <para>
     /// The class defines methods that allow you to add or remove children. When you add a child, it will
     /// be added at the foremost position, possibly occluding a child that was added before. You can access
     /// the children via an index. The first child will have index 0, the second child index 1, etc. 
-    /// 
+    /// </para>
     /// Adding and removing objects from a container triggers events.
-    /// 
+    /// <para>
     /// - 'Added': the object was added to a DisplayObjectContainer.
     /// - 'AddedToStage': the object was added to a DisplayObjectContainer that is connected to the stage.
     /// - 'Removed': the object was removed from a DisplayObjectContainer.
     /// - 'RemovedFromStage': the object was removed from a DisplayObjectContainer that is connected to the stage.
-    /// 
+    /// </para>
+    /// <para>
     /// Especially the AddedToStage event is very helpful, as it allows you to automatically execute
     /// some logic (e.g. start an animation) when an object is rendered the first time.
-    /// 
+    /// </para>
     /// **Sorting children**
-    /// 
-    /// The 'sortChildren' method allows you to sort the children of a container by a custom criteria. 
+    /// <para>
+    /// The 'SortChildren' method allows you to sort the children of a container by a custom criteria. 
     /// Below is an example how to depth-sort children by their y-coordinate; this will put objects that
     /// are lower on the screen in front of those higher on the screen.
+    /// </para>
     /// <code>
     /// public class CompareExample : IComparator {
     ///     public int Compare(DisplayObject child1, DisplayObject child2) 
@@ -54,7 +56,7 @@ namespace Sparrow.Display
     public abstract class DisplayObjectContainer : DisplayObject
     {
 
-        private static readonly BatchToken sCacheToken = new BatchToken();
+        private static readonly BatchToken SCacheToken = new BatchToken();
 
         /// <summary>
         /// Disposes the resources of all children. 
@@ -78,14 +80,13 @@ namespace Sparrow.Display
         /// <summary>
         /// Returns the children of this container 
         /// </summary>
-        /// <value>The children.</value>
         public IReadOnlyList<DisplayObject> Children
         {
             get { return _children; }
         }
 
         /// <summary>
-        ///  Adds a child to the container. It will be at the topmost position.
+        /// Adds a child to the container. It will be at the topmost position.
         /// </summary>
         public void AddChild(DisplayObject child)
         {
@@ -278,11 +279,11 @@ namespace Sparrow.Display
             }
         }
 
-        override public void Render(Painter painter)
+        public override void Render(Painter painter)
         {
             int numChildren = _children.Count;
             uint frameId = painter.FrameID;
-            bool cacheEnabled = frameId == 0 ? false : true;
+            bool cacheEnabled = frameId != 0;
             bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameId;
 
             for (int i = 0; i < numChildren; ++i)
@@ -300,11 +301,11 @@ namespace Sparrow.Display
                         child._lastChildChangeFrameID != frameId &&
                         child._tokenFrameID == frameId - 1 && cacheEnabled)
                     {
-                        painter.PushState(sCacheToken);
+                        painter.PushState(SCacheToken);
                         painter.DrawFromCache(child._pushToken, child._popToken);
                         painter.PopState(child._popToken);
 
-                        child._pushToken.CopyFrom(sCacheToken);
+                        child._pushToken.CopyFrom(SCacheToken);
                     }
                     else
                     {

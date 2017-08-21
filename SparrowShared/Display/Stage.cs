@@ -87,8 +87,10 @@ namespace Sparrow.Display
             return target;
         }
 
-        /** Returns the stage bounds (i.e. not the bounds of its contents, but the rectangle
-          *  spawned up by 'stageWidth' and 'stageHeight') in another coordinate system. */
+        /// <summary>
+        /// Returns the stage bounds (i.e. not the bounds of its contents, but the rectangle
+        ///  spawned up by 'stageWidth' and 'stageHeight') in another coordinate system.
+        /// </summary>
         public Rectangle GetStageBounds(DisplayObject targetSpace)
         {
             Rectangle outR = Rectangle.Create(0, 0, _width, _height);
@@ -100,11 +102,12 @@ namespace Sparrow.Display
 
         // camera positioning
 
-        /** Returns the position of the camera within the local coordinate system of a certain
-         *  display object. If you do not pass a space, the method returns the global position.
-         *  To change the position of the camera, you can modify the properties 'fieldOfView',
-         *  'focalDistance' and 'projectionOffset'.
-         */
+        /// <summary>
+        /// Returns the position of the camera within the local coordinate system of a certain
+        /// display object. If you do not pass a space, the method returns the global position.
+        /// To change the position of the camera, you can modify the properties 'fieldOfView',
+        /// 'focalDistance' and 'projectionOffset'.
+        /// </summary>
         public float[] GetCameraPosition(DisplayObject space = null)
         {
             Matrix3D m = GetTransformationMatrix3D(space);

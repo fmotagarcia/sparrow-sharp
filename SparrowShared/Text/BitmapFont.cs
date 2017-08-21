@@ -46,7 +46,9 @@ namespace Sparrow.Text
          *  render the bitmap font in exactly the size it was created. */
         public static readonly int NATIVE_SIZE = -1;
         
-        /** The font name of the embedded minimal bitmap font. Use this e.g. for debug output. */
+        /// <summary>
+        /// The font name of the embedded minimal bitmap font. Use this e.g. for debug output.
+        /// </summary>
         public const string MINI = "mini";
         
         private const int CHAR_SPACE = 32;
@@ -241,7 +243,6 @@ namespace Sparrow.Text
             }
         }
 
-        /** @inheritDoc */
         public void ClearMeshBatch(MeshBatch meshBatch)
         {
             meshBatch.Clear();
@@ -294,20 +295,20 @@ namespace Sparrow.Text
                     for (i = 0; i < numChars; i++)
                     {
                         bool lineFull = false;
-                        int charID = text[i]; // casting to int automatically returns the ASCII value
-                        BitmapChar bitmapChar = GetChar(charID);
+                        int charId = text[i]; // casting to int automatically returns the ASCII value
+                        BitmapChar bitmapChar = GetChar(charId);
 
-                        if (charID == CHAR_NEWLINE || charID == CHAR_CARRIAGE_RETURN)
+                        if (charId == CHAR_NEWLINE || charId == CHAR_CARRIAGE_RETURN)
                         {
                             lineFull = true;
                         }
                         else if (bitmapChar == null)
                         {
-                            Console.WriteLine("font " + Name + " missing character: " + text[i] + " ID:" + charID);
+                            Console.WriteLine("font " + Name + " missing character: " + text[i] + " ID:" + charId);
                         }
                         else
                         {
-                            if (charID == CHAR_SPACE || charID == CHAR_TAB)
+                            if (charId == CHAR_SPACE || charId == CHAR_TAB)
                             {
                                 lastWhiteSpace = i;
                             }
@@ -320,7 +321,7 @@ namespace Sparrow.Text
                             currentLine.Add(charLocation);
 
                             currentX += bitmapChar.XAdvance;
-                            lastCharId = charID;
+                            lastCharId = charId;
 
                             if (charLocation.X + bitmapChar.Width > containerWidth)
                             {
@@ -413,10 +414,9 @@ namespace Sparrow.Text
                 yOffset = (int)((containerHeight - bottom) / 2);
             }
 
-            List<CharLocation> line;
-            for (int lineID = 0; lineID < numLines; ++lineID)
+            for (int lineId = 0; lineId < numLines; ++lineId)
             {
-                line = sLines[lineID];
+                var line = sLines[lineId];
                 numChars = line.Count;
                 if (numChars == 0)
                 {

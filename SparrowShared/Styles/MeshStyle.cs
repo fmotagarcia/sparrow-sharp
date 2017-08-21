@@ -7,7 +7,7 @@ using System;
 namespace Sparrow.Styles
 {
     /** MeshStyles provide a means to completely modify the way a mesh is rendered.
-     *  The base class provides Starling's standard mesh rendering functionality: colored and
+     *  The base class provides Sparrow's standard mesh rendering functionality: colored and
      *  (optionally) textured meshes. Subclasses may add support for additional features like
      *  color transformations, normal mapping, etc.
      *
@@ -34,9 +34,9 @@ namespace Sparrow.Styles
      *
      *  <p><strong>Creating your own styles</strong></p>
      *
-     *  <p>To create custom rendering code in Starling, you need to extend two classes:
+     *  <p>To create custom rendering code in Sparrow, you need to extend two classes:
      *  <code>MeshStyle</code> and <code>MeshEffect</code>. While the effect class contains
-     *  the actual AGAL rendering code, the style provides the API that other developers will
+     *  the actual OpenGL rendering code, the style provides the API that other developers will
      *  interact with.</p>
      *
      *  <p>Subclasses of <code>MeshStyle</code> will add specific properties that configure the
@@ -47,7 +47,7 @@ namespace Sparrow.Styles
      *    <li>Always provide a constructor that can be called without any arguments.</li>
      *    <li>Override <code>copyFrom</code> — that's necessary for batching.</li>
      *    <li>Override <code>createEffect</code> — this method must return the
-     *        <code>MeshEffect</code> that will do the actual Stage3D rendering.</li>
+     *        <code>MeshEffect</code> that will do the actual OpenGL rendering.</li>
      *    <li>Override <code>updateEffect</code> — this configures the effect created above
      *        right before rendering.</li>
      *    <li>Override <code>canBatchWith</code> if necessary — this method figures out if one
@@ -64,20 +64,22 @@ namespace Sparrow.Styles
      *
      *  <p>When that's done, you can turn to the implementation of your <code>MeshEffect</code>;
      *  the <code>createEffect</code>-override will return an instance of this class.
-     *  Directly before rendering begins, Starling will then call <code>updateEffect</code>
+     *  Directly before rendering begins, Sparrow will then call <code>UpdateEffect()</code>
      *  to set it up.</p>
      *
      *  @see MeshEffect
      *  @see VertexDataFormat
-     *  @see starling.display.Mesh
+     *  @see Sparrow.display.Mesh
      */
     public class MeshStyle
     {
 
-        /** Dispatched every frame on styles assigned to display objects connected to the stage. */
+        /// <summary>
+        ///  Dispatched every frame on styles assigned to display objects connected to the stage.
+        /// </summary>
         public event DisplayObject.EnterFrameEventHandler EnterFrame;
 
-        private Type _type;
+        private readonly Type _type;
         private Mesh _target;
         private Texture _texture;
         private uint _textureBase;
@@ -85,22 +87,22 @@ namespace Sparrow.Styles
         private bool _textureRepeat;
         private VertexData _vertexData;   // just a reference to the target's vertex data
         private IndexData _indexData;     // just a reference to the target's index data
-       
-        // helper objects
-        private static Point sPoint = Point.Create();
 
-        /** Creates a new MeshStyle instance.
-         *  Subclasses must provide a constructor that can be called without any arguments. */
+        /// <summary>
+        /// Creates a new MeshStyle instance.
+        /// Subclasses must provide a constructor that can be called without any arguments.
+        /// </summary>
         public MeshStyle()
         {
             _textureSmoothing = TextureSmoothing.Bilinear;
             _type = GetType();
         }
 
-        /** Copies all properties of the given style to the current instance (or a subset, if the
-         *  classes don't match). Must be overridden by all subclasses!
-         */
-        public void CopyFrom(MeshStyle meshStyle)
+        /// <summary>
+        /// Copies all properties of the given style to the current instance (or a subset, if the
+        /// classes don't match). Must be overridden by all subclasses!
+        /// </summary>
+        public virtual void CopyFrom(MeshStyle meshStyle)
         {
             _texture = meshStyle._texture;
             _textureBase = meshStyle._textureBase;
@@ -108,8 +110,10 @@ namespace Sparrow.Styles
             _textureSmoothing = meshStyle._textureSmoothing;
         }
 
-        /** Creates a clone of this instance. The method will work for subclasses automatically,
-         *  no need to override it. */
+        /// <summary>
+        /// Creates a clone of this instance. The method will work for subclasses automatically,
+        /// no need to override it.
+        /// </summary>
         public MeshStyle Clone()
         {
             MeshStyle clone = (MeshStyle)Activator.CreateInstance(_type);
@@ -117,21 +121,23 @@ namespace Sparrow.Styles
             return clone;
         }
 
-        /** Creates the effect that does the actual, low-level rendering.
-         *  To be overridden by subclasses!
-         */
-        public MeshEffect CreateEffect()
+        /// <summary>
+        /// Creates the effect that does the actual, low-level rendering.
+        /// To be overridden by subclasses!
+        /// </summary>
+        public virtual MeshEffect CreateEffect()
         {
             return new MeshEffect();
         }
 
-        /** Updates the settings of the given effect to match the current style.
-         *  The given <code>effect</code> will always match the class returned by
-         *  <code>createEffect</code>.
-         *
-         *  <p>To be overridden by subclasses!</p>
-         */
-        public void UpdateEffect(MeshEffect effect, RenderState state)
+        /// <summary>
+        /// Updates the settings of the given effect to match the current style.
+        /// The given <code>effect</code> will always match the class returned by
+        /// <code>createEffect</code>.
+        ///
+        /// <para>To be overridden by subclasses!</para>
+        /// </summary>
+        public virtual void UpdateEffect(MeshEffect effect, RenderState state)
         {
             effect.Texture = _texture;
             effect.TextureRepeat = _textureRepeat;
@@ -140,11 +146,12 @@ namespace Sparrow.Styles
             effect.Alpha = state.Alpha;
         }
 
-        /** Indicates if the current instance can be batched with the given style.
-         *  To be overridden by subclasses if default behavior is not sufficient.
-         *  The base implementation just checks if the styles are of the same type
-         *  and if the textures are compatible.
-         */
+        /// <summary>
+        /// Indicates if the current instance can be batched with the given style.
+        /// To be overridden by subclasses if default behavior is not sufficient.
+        /// The base implementation just checks if the styles are of the same type
+        /// and if the textures are compatible.
+        /// </summary>
         public bool CanBatchWith(MeshStyle meshStyle)
         {
             if (_type == meshStyle._type)
@@ -152,13 +159,13 @@ namespace Sparrow.Styles
                 Texture newTexture = meshStyle._texture;
 
                 if (_texture == null && newTexture == null) return true;
-                else if (_texture != null && newTexture != null)
+                if (_texture != null && newTexture != null)
                     return _textureBase == meshStyle._textureBase &&
                            _textureSmoothing == meshStyle._textureSmoothing &&
                            _textureRepeat == meshStyle._textureRepeat;
-                else return false;
+                return false;
             }
-            else return false;
+            return false;
         }
 
         /// <summary>
@@ -180,28 +187,32 @@ namespace Sparrow.Styles
             _vertexData.CopyTo(targetStyle._vertexData, vertexId, targetVertexId, numVertices, matrix);
         }
 
-        /** Copies the index data of the style's current target to the target of another style.
-         *  The given offset value will be added to all indices during the process.
-         *
-         *  <p>This method is used when batching meshes together for rendering. The parameter
-         *  <code>targetStyle</code> will point to the style of a <code>MeshBatch</code> (a
-         *  subclass of <code>Mesh</code>). Subclasses may override this method if they need
-         *  to modify the index data in that process.</p>
-         */
-        public void BatchIndexData(MeshStyle targetStyle, int targetIndexId = 0, int offset = 0,
+        /// <summary>
+        /// Copies the index data of the style's current target to the target of another style.
+        /// The given offset value will be added to all indices during the process.
+        ///
+        /// <para>This method is used when batching meshes together for rendering. The parameter
+        /// <code>targetStyle</code> will point to the style of a <code>MeshBatch</code> (a
+        /// subclass of <code>Mesh</code>). Subclasses may override this method if they need
+        /// to modify the index data in that process.</para>
+        /// </summary>
+        public virtual void BatchIndexData(MeshStyle targetStyle, int targetIndexId = 0, int offset = 0,
                                    int indexId = 0, int numIndices = -1)
         {
             _indexData.CopyTo(targetStyle._indexData, targetIndexId, offset, indexId, numIndices);
         }
 
-        /** Call this method if the target needs to be redrawn.
-         *  The call is simply forwarded to the mesh. */
+        /// <summary>
+        /// Call this method if the target needs to be redrawn. The call is simply forwarded to the mesh.
+        /// </summary>
         protected void SetRequiresRedraw()
         {
             _target?.SetRequiresRedraw();
         }
 
-        /** Called when assigning a target mesh. Override to plug in class-specific logic. */
+        /// <summary>
+        /// Called when assigning a target mesh. Override to plug in class-specific logic.
+        /// </summary>
         protected virtual void OnTargetAssigned(Mesh target) { }
 
         // enter frame event
@@ -210,9 +221,10 @@ namespace Sparrow.Styles
         {
             EnterFrame?.Invoke(target, passedTime);
         }
+        
         // internal methods
 
-        internal void SetTarget(Mesh target, VertexData vertexData = null, IndexData indexData = null)
+        internal void SetTarget(Mesh target, VertexData vertexData = null, IndexData targetIndexData = null)
         {
             if (_target != target)
             {
@@ -220,7 +232,7 @@ namespace Sparrow.Styles
 
                 _target = target;
                 _vertexData = vertexData;
-                _indexData = indexData;
+                _indexData = targetIndexData;
 
                 if (target != null)
                 {
@@ -255,40 +267,52 @@ namespace Sparrow.Styles
             SetRequiresRedraw();
         }
 
-        /** Returns the alpha value of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the alpha value of the vertex at the specified index.
+        /// </summary>
         public float GetVertexAlpha(int vertexId)
         {
             return _vertexData.GetAlpha(vertexId);
         }
 
-        /** Sets the alpha value of the vertex at the specified index to a certain value. */
+        /// <summary>
+        /// Sets the alpha value of the vertex at the specified index to a certain value.
+        /// </summary>
         public void SetVertexAlpha(int vertexId, float alpha)
         {
             _vertexData.SetAlpha(vertexId, alpha);
             SetRequiresRedraw();
         }
 
-        /** Returns the RGB color of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the RGB color of the vertex at the specified index.
+        /// </summary>
         public uint GetVertexColor(int vertexId)
         {
             return _vertexData.GetColor(vertexId);
         }
 
-        /** Sets the RGB color of the vertex at the specified index to a certain value. */
+        /// <summary>
+        /// Sets the RGB color of the vertex at the specified index to a certain value.
+        /// </summary>
         public void SetVertexColor(int vertexId, uint color)
         {
             _vertexData.SetColor(vertexId, color);
             SetRequiresRedraw();
         }
 
-        /** Returns the texture coordinates of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the texture coordinates of the vertex at the specified index.
+        /// </summary>
         public Point GetTexCoords(int vertexId)
         {
             if (_texture != null) return _texture.GetTexCoords(_vertexData, vertexId);
-            else return _vertexData.GetTexCoords(vertexId);
+            return _vertexData.GetTexCoords(vertexId);
         }
 
-        /** Sets the texture coordinates of the vertex at the specified index to the given values. */
+        /// <summary>
+        /// Sets the texture coordinates of the vertex at the specified index to the given values.
+        /// </summary>
         public void SetTexCoords(int vertexId, float u, float v)
         {
             if (_texture != null) _texture.SetTexCoords(_vertexData, vertexId, u, v);
@@ -309,7 +333,9 @@ namespace Sparrow.Styles
          *  it is limited to manipulating those of the target mesh. */
         protected IndexData indexData  { get { return _indexData; } }
 
-        /** The actual class of this style. */
+        /// <summary>
+        /// The actual class of this style.
+        /// </summary>
         public Type Type { get { return _type; } }
 
         /** Changes the color of all vertices to the same value.
@@ -319,7 +345,7 @@ namespace Sparrow.Styles
             get
             {
                 if (_vertexData.NumVertices > 0) return _vertexData.GetColor(0);
-                else return 0x0;
+                return 0x0;
             }
             set
             {
@@ -334,13 +360,12 @@ namespace Sparrow.Styles
             
         }
 
-        /** The texture that is mapped to the mesh (or <code>null</code>, if there is none). */
+        /// <summary>
+        /// The texture that is mapped to the mesh (or <code>null</code>, if there is none).
+        /// </summary>
         public Texture Texture
         {
-            get
-            {
-                return _texture;
-            }
+            get { return _texture; }
             set
             {
                 if (value != _texture)
@@ -352,7 +377,7 @@ namespace Sparrow.Styles
 
                         for (i = 0; i < numVertices; ++i)
                         {
-                            sPoint = GetTexCoords(i);
+                            Point sPoint = GetTexCoords(i);
                             value.SetTexCoords(_vertexData, i, sPoint.X, sPoint.Y);
                         }
                     }
@@ -364,7 +389,9 @@ namespace Sparrow.Styles
             }
         }
 
-        /** The smoothing filter that is used for the texture. @default bilinear */
+        /// <summary>
+        /// The smoothing filter that is used for the texture. @default bilinear
+        /// </summary>
         public TextureSmoothing TextureSmoothing
         {
             get
@@ -381,21 +408,22 @@ namespace Sparrow.Styles
             }
         }
 
-        /** Indicates if pixels at the edges will be repeated or clamped.
-         *  Only works for power-of-two textures. @default false */
+        /// <summary>
+        /// Indicates if pixels at the edges will be repeated or clamped.
+        /// Only works for power-of-two textures. @default false
+        /// </summary>
         public bool TextureRepeat
         {
             get { return _textureRepeat; }
             set { _textureRepeat = value; }
         }
 
-        /** The target the style is currently assigned to. */
+        /// <summary>
+        /// The target the style is currently assigned to.
+        /// </summary>
         public Mesh Target
         {
-            get
-            {
-                return _target;
-            }
+            get { return _target; }
         }
 
     }

@@ -17,7 +17,7 @@ namespace Sparrow.Textures
         public int NumMipMaps;
 
         /** Indicates if the texture will be used as render target. */
-        public bool OptimizeForRenderToTexture = false;
+        public bool OptimizeForRenderToTexture;
 
         /** Indicates if the alpha values are premultiplied into the RGB values. This is typically
          *  true for textures created from BitmapData and false for textures created from ATF data.

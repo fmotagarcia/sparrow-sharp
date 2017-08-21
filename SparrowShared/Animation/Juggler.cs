@@ -8,7 +8,7 @@ namespace Sparrow.Animation
     /// The Juggler takes objects that implement IAnimatable (e.g. 'MovieClip's) and executes them.
     /// 
     /// A juggler is a simple object. It does no more than saving a list of objects implementing 
-    /// 'Animatable' and advancing their time if it is told to do so (by calling its own 'AdvanceTime'
+    /// 'IAnimatable' and advancing their time if it is told to do so (by calling its own 'AdvanceTime'
     /// method). Furthermore, an object can request to be removed from the juggler by dispatching an
     /// 'RemoveFromJuggler' event.
     /// 
@@ -129,7 +129,9 @@ namespace Sparrow.Animation
 
         // TODO add removeTweens, containsTweens
 
-        /** Removes all objects at once. */
+        /// <summary>
+        /// Removes all objects at once.
+        /// </summary>
         public void Purge()
         {
             // the object vector is not purged right away, because if this method is called 
@@ -147,7 +149,9 @@ namespace Sparrow.Animation
             }
         }
 
-        /** Advances all objects by a certain time (in seconds). */
+        /// <summary>
+        /// Advances all objects by a certain time (in seconds).
+        /// </summary>
         public void AdvanceTime(float time)
         {
 
@@ -237,7 +241,9 @@ namespace Sparrow.Animation
             }
         }
 
-        /** The actual vector that contains all objects that are currently being animated. */
+        /// <summary>
+        /// The actual vector that contains all objects that are currently being animated.
+        /// </summary>
         protected List<IAnimatable> Objects { get { return _objects; } }
     }
 }

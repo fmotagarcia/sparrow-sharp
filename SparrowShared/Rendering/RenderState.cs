@@ -8,7 +8,7 @@ namespace Sparrow.Rendering
     /** The RenderState stores a combination of settings that are currently used for rendering.
      *  This includes modelview and transformation matrices as well as context3D related settings.
      *
-     *  <p>Starling's Painter instance stores a reference to the current RenderState.
+     *  <p>Sparrow's Painter instance stores a reference to the current RenderState.
      *  Via a stack mechanism, you can always save a specific state and restore it later.
      *  That makes it easy to write rendering code that doesn't have any side effects.</p>
      *
@@ -19,7 +19,7 @@ namespace Sparrow.Rendering
      *
      *  <strong>Matrix Magic</strong>
      *
-     *  <p>On rendering, Starling traverses the display tree, constantly moving from one
+     *  <p>On rendering, Sparrow traverses the display tree, constantly moving from one
      *  coordinate system to the next. Each display object stores its vertex coordinates
      *  in its local coordinate system; on rendering, they must be moved to a global,
      *  2D coordinate space (the so-called "clip-space"). To handle these calculations,
@@ -43,7 +43,7 @@ namespace Sparrow.Rendering
      *  position.</p>
      *
      *  @see Painter
-     *  @see starling.display.Sprite3D
+     *  @see Sparrow.Display.Sprite3D
      */
     public class RenderState
     {
@@ -114,7 +114,9 @@ namespace Sparrow.Rendering
             if (_mvpMatrix3D == null) _mvpMatrix3D = Matrix3D.Create();
         }
 
-        /** Prepends the given matrix to the 2D modelview matrix. */
+        /// <summary>
+        /// Prepends the given matrix to the 2D modelview matrix.
+        /// </summary>
         public void TransformModelviewMatrix(Matrix2D matrix)
         {
             _modelviewMatrix.PrependMatrix(matrix);
@@ -259,7 +261,7 @@ namespace Sparrow.Rendering
         }
 
         /** The anti-alias setting used when setting the current render target
-         *  via <code>setRenderTarget</code>. */
+         *  via <code>SetRenderTarget</code>. */
         public uint RenderTargetAntiAlias
         {
             get { return _renderTargetOptions >> 4; }

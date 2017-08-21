@@ -1,6 +1,8 @@
 ﻿
 using NUnit.Framework;
+using Sparrow.Core;
 using Sparrow.Display;
+using Sparrow.Geom;
 using Sparrow.Text;
 
 namespace Tests
@@ -12,6 +14,8 @@ namespace Tests
         [Test]
         public void TestTextField()
         {
+            SparrowSharp.ViewPort = Rectangle.Create(10, 10, 10, 10);
+            // TODO SparrowSharp needs Stage!
             TextField.DefaultCompositor = new MockCompositor();
             TextField.DefaultCompositor = new MockCompositor();
             TextField textField = new TextField(240, 50, "test text");

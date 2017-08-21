@@ -36,7 +36,7 @@ namespace Sparrow.Utils
          *  Pass <code>null</code> to reset all values to zero. */
         public void CopyFrom(Padding padding)
         {
-            if (padding == null) SetTo(0, 0, 0, 0);
+            if (padding == null) SetTo();
             else SetTo(padding._left, padding._right, padding._top, padding._bottom);
         }
 

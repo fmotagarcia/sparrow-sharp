@@ -110,8 +110,9 @@ namespace Sparrow.Rendering
             _stateStackLength = 0;
         }
 
-        /** Disposes all mesh batches, programs, and - if it is not being shared -
-        *  the render context. */
+        /// <summary>
+        /// Disposes all mesh batches, programs, and the OpenGL render context.
+        /// </summary>
         public void Dispose()
         {
             _batchProcessorCurr.Dispose();
@@ -244,12 +245,12 @@ namespace Sparrow.Rendering
         *
         *  <p>As an optimization, this method might update the clipping rectangle of the render
         *  state instead of utilizing the stencil buffer. This is possible when the mask object
-        *  is of type <code>starling.display.Quad</code> and is aligned parallel to the stage
+        *  is of type <code>Sparrow.Display.Quad</code> and is aligned parallel to the stage
         *  axes.</p>
         *
         *  <p>Note that masking breaks the render cache; the masked object must be redrawn anew
         *  in the next frame. If you pass <code>maskee</code>, the method will automatically
-        *  call <code>excludeFromCache(maskee)</code> for you.</p>
+        *  call <code>ExcludeFromCache(maskee)</code> for you.</p>
         */
         public void DrawMask(DisplayObject mask, DisplayObject maskee = null)
         {

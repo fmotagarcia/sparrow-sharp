@@ -30,7 +30,9 @@ namespace Sparrow.Core
         public int DrawCount = 0;
         private int _skipCount = 0;
 
-        /** Creates a new Statistics Box. */
+        /// <summary>
+        /// Creates a new Statistics Box.
+        /// </summary>
         public StatsDisplay()
         {
             const string fontName = BitmapFont.MINI;
@@ -46,7 +48,7 @@ namespace Sparrow.Core
             labels1.Batchable = true;
             labels1.X = 2;
 
-            _values = new TextField(width - 1, height, "");
+            _values = new TextField(width - 1, height);
             _values.Format.SetTo(fontName, fontSize, fontColor, HAlign.Right);
             _values.Batchable = true;
 
@@ -91,7 +93,9 @@ namespace Sparrow.Core
             }
         }
 
-        /** Updates the displayed values. */
+        /// <summary>
+        /// Updates the displayed values.
+        /// </summary>
         public void Update()
         {
             _background.Color = _skipCount > (_frameCount / 2) ? (uint)0x003F00 : 0x0;
@@ -109,7 +113,9 @@ namespace Sparrow.Core
                 (GpuMemory >= 0 ? gpuMemText + "\n" : "") + drwText;
         }
 
-        /** Call this once in every frame that can skip rendering because nothing changed. */
+        /// <summary>
+        /// Call this once in every frame that can skip rendering because nothing changed.
+        /// </summary>
         public void MarkFrameAsSkipped()
         {
             _skipCount += 1;
