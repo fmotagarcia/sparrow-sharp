@@ -53,7 +53,7 @@ namespace Sparrow.Touches
         /// <summary>
         /// Gets a set of Touch objects that originated over a certain target.
         /// </summary>
-        public List<Touch> TouchesWithTarget (DisplayObject target)
+        public List<Touch> GetTouches(DisplayObject target)
         {
             List<Touch> touchesFound = new List<Touch> ();
             foreach (Touch touch in _touches) {
@@ -66,10 +66,12 @@ namespace Sparrow.Touches
             return touchesFound;
         }
 
+        /// <summary>
         /// Gets a set of Touch objects that originated over a certain target and are in a certain phase.
-        public List<Touch> TouchesWithTarget (DisplayObject target, TouchPhase phase)
+        /// </summary>
+        public List<Touch> GetTouches(DisplayObject target, TouchPhase phase)
         {
-            List<Touch> touchesFound = new List<Touch> ();
+            List<Touch> touchesFound = new List<Touch>();
             foreach (Touch touch in _touches) {
                 if (touch.Phase == phase &&
                    (target == touch.Target || 
@@ -79,6 +81,21 @@ namespace Sparrow.Touches
                 }
             }
             return touchesFound;
+        }
+        
+       /** Returns a touch that originated over a certain target. 
+       * 
+       *  @param target   The object that was touched; may also be a parent of the actual
+       *                  touch-target.
+       */
+        public Touch GetTouch(DisplayObject target)
+        {
+            var sTouches = GetTouches(target);
+            if (_touches.Count > 0) 
+            {
+                return sTouches[0];
+            }
+            return null;
         }
 
         private List<Touch> _touches;

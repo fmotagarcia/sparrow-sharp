@@ -14,6 +14,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\SparrowSharp.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\StatsDisplay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Display\BlendMode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Display\ButtonState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Display\DisplayObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Display\DisplayObjectContainer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Display\Image.cs" />

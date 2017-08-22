@@ -62,6 +62,8 @@ namespace Sparrow.Samples
 
             TestMask();
 
+            TestButton();
+
             Stage.Touch += Benchmark_Touch;
         }
 
@@ -227,6 +229,17 @@ namespace Sparrow.Samples
             AddChild(im);
             
         }
+        
+        private void TestButton()
+        {
+            Button btn = new Button(Texture.FromColor(95, 33, 0x23F502), "a button");
+            btn.X = 12;
+            btn.Y = 221;
+            btn.Triggered += button => Console.WriteLine("Burron press");
+            AddChild(btn);
+
+        }
+
 
     }
 }

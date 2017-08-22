@@ -3,6 +3,7 @@ using System;
 using Sparrow.Geom;
 using Sparrow.Rendering;
 using Sparrow.Core;
+using Sparrow.Text;
 
 namespace Sparrow.Textures
 {
@@ -35,7 +36,7 @@ namespace Sparrow.Textures
         /// <summary>
         /// Creates an empty texture of a certain size.
         ///  Beware that the texture can only be used after you either upload some color data
-        ///  ("texture.Root.Upload()") or clear the texture("texture.Root.Clear()").
+        ///  ("Texture.Root.Upload()") or clear the texture("Texture.Root.Clear()").
         /// </summary>
         /// <param name="width">in points; number of pixels depends on scale parameter</param>
         /// <param name="height">in points; number of pixels depends on scale parameter</param>
@@ -72,10 +73,17 @@ namespace Sparrow.Textures
             {
                 return concreteTexture;
             }
-            else
-            {
-                return new SubTexture(concreteTexture, Rectangle.Create(0.0f, 0.0f, width, height), true);
-            }
+            return new SubTexture(concreteTexture, Rectangle.Create(0.0f, 0.0f, width, height), true);
+        }
+        
+        public static Texture FromColor(float width, float height,
+                                        uint color = 0xffffff, float alpha = 1.0f,
+                                        bool optimizeForRenderToTexture = false,
+                                        float scale =-1, TextureFormat format = null) {
+            if (format == null) format = TextureFormat.Rgba4444;
+            var texture = Empty(width, height, true, 0, optimizeForRenderToTexture, scale, format);
+            texture.Root.Clear(color, alpha);
+            return texture;
         }
 
         /// <summary>
@@ -224,59 +232,59 @@ namespace Sparrow.Textures
 
         /** The texture frame if it has one (see class description), otherwise <code>null</code>.
          *  <p>CAUTION: not a copy, but the actual object! Do not modify!</p> */
-        virtual public Rectangle Frame { get { return null; } }
+        public virtual Rectangle Frame { get { return null; } }
 
         /** The height of the texture in points, taking into account the frame rectangle
          *  (if there is one). */
-        virtual public float FrameWidth { get { return Frame != null ? Frame.Width : Width; } }
+        public virtual float FrameWidth { get { return Frame != null ? Frame.Width : Width; } }
 
         /** The width of the texture in points, taking into account the frame rectangle
          *  (if there is one). */
-        virtual public float FrameHeight { get { return Frame != null ? Frame.Height : Height; } }
+        public virtual float FrameHeight { get { return Frame != null ? Frame.Height : Height; } }
 
         /** The width of the texture in points. */
-        virtual public float Width { get { return 0; } }
+        public virtual float Width { get { return 0; } }
 
         /** The height of the texture in points. */
-        virtual public float Height { get { return 0; } }
+        public virtual float Height { get { return 0; } }
 
         /** The width of the texture in pixels (without scale adjustment). */
-        virtual public float NativeWidth { get { return 0; } }
+        public virtual float NativeWidth { get { return 0; } }
 
         /** The height of the texture in pixels (without scale adjustment). */
-        virtual public float NativeHeight { get { return 0f; } }
+        public virtual float NativeHeight { get { return 0f; } }
         
         /** The scale factor, which influences width and height properties. */
-        virtual public float Scale { get { return 1.0f; } }
+        public virtual float Scale { get { return 1.0f; } }
 
         /** The Stage3D texture object the texture is based on. */
-        virtual public uint Base { get { return 0; } }
+        public virtual uint Base { get { return 0; } }
 
         /// <summary>
         /// The concrete texture the texture is based on.
         /// </summary>
-        virtual public ConcreteTexture Root { get { return null; } }
+        public virtual ConcreteTexture Root { get { return null; } }
 
         /** The <code>TextureFormat</code> of the underlying texture data. */
-        virtual public TextureFormat Format { get { return TextureFormat.Rgba4444; } }
+        public virtual TextureFormat Format { get { return TextureFormat.Rgba4444; } }
 
         /** Indicates if the texture contains mip maps. */
-        virtual public int NumMipMaps { get { return 0; } }
+        public virtual int NumMipMaps { get { return 0; } }
 
         /** Indicates if the alpha values are premultiplied into the RGB values. */
-        virtual public bool PremultipliedAlpha { get { return false; } }
+        public virtual bool PremultipliedAlpha { get { return false; } }
 
         /** The matrix that is used to transform the texture coordinates into the coordinate
          *  space of the parent texture, if there is one. @default null
          *
          *  <p>CAUTION: not a copy, but the actual object! Never modify this matrix!</p> */
-        virtual public Matrix2D TransformationMatrix { get { return null; } }
+        public virtual Matrix2D TransformationMatrix { get { return null; } }
 
         /** The matrix that is used to transform the texture coordinates into the coordinate
          *  space of the root texture, if this instance is not the root. @default null
          *
          *  <p>CAUTION: not a copy, but the actual object! Never modify this matrix!</p> */
-        virtual public Matrix2D TransformationMatrixToRoot { get { return null; } }
+        public virtual Matrix2D TransformationMatrixToRoot { get { return null; } }
 
         /** Returns the maximum size constraint (for both width and height) for textures in the
          *  current OpenGL profile. */

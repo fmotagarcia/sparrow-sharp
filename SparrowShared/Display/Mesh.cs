@@ -32,7 +32,7 @@ namespace Sparrow.Display
         internal MeshStyle _style;
         internal VertexData _vertexData;
         internal IndexData _indexData;
-        internal bool _pixelSnapping;
+        protected bool _pixelSnapping;
 
         private static Type _sDefaultStyle = typeof(MeshStyle);
 
