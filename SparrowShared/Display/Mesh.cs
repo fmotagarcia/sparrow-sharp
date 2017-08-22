@@ -37,7 +37,7 @@ namespace Sparrow.Display
         private static Type _sDefaultStyle = typeof(MeshStyle);
 
         public delegate MeshStyle DefaultStyleFactoryFunction();
-        private static DefaultStyleFactoryFunction sDefaultStyleFactory;
+        private static DefaultStyleFactoryFunction _sDefaultStyleFactory;
 
         /// <summary> Creates a new mesh with the given vertices and indices.
         ///  If you don't pass a style, an instance of <code>MeshStyle</code> will be created
@@ -116,9 +116,9 @@ namespace Sparrow.Display
         private MeshStyle CreateDefaultMeshStyle()
         {
             MeshStyle meshStyle = null;
-            if (sDefaultStyleFactory != null)
+            if (_sDefaultStyleFactory != null)
             {
-                meshStyle = sDefaultStyleFactory();
+                meshStyle = _sDefaultStyleFactory();
             }
             if (meshStyle == null)
             {
@@ -257,15 +257,19 @@ namespace Sparrow.Display
             get { return _indexData.NumIndices;}
         }
 
-        /** The total number of triangles in this mesh.
-         *  (In other words: the number of indices divided by three.) */
+        /// <summary>
+        /// The total number of triangles in this mesh.
+        /// (In other words: the number of indices divided by three.)
+        /// </summary>
         public int NumTriangles { get { return _indexData.NumTriangles; } }
 
         // static properties
 
-        /** The default style used for meshes if no specific style is provided. The default is
-         *  <code>Sparrow.Rendering.MeshStyle</code>, and any assigned class must be a subclass
-         *  of the same. */
+        /// <summary>
+        /// The default style used for meshes if no specific style is provided. The default is
+        /// <code>Sparrow.Rendering.MeshStyle</code>, and any assigned class must be a subclass
+        /// of the this one.
+        /// </summary>
         public static Type DefaultStyle { 
             get { return _sDefaultStyle; }
             set { _sDefaultStyle = value; }
@@ -281,8 +285,8 @@ namespace Sparrow.Display
         /// and may be omitted.
         /// </summary>
         public static DefaultStyleFactoryFunction DefaultStyleFactory { 
-            get { return sDefaultStyleFactory; }
-            set { sDefaultStyleFactory = value; }
+            get { return _sDefaultStyleFactory; }
+            set { _sDefaultStyleFactory = value; }
         }
 }
 }

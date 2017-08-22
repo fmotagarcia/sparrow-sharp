@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
 using OpenGL;
+using Sparrow.Utils;
 
 namespace Sparrow.Core
 {
@@ -30,14 +31,14 @@ namespace Sparrow.Core
 
             public override string ToString()
             {
-                return string.Format("msg=0x{0:x} ({1}) hwnd=0x{2:x} wparam=0x{3:x} lparam=0x{4:x} pt=0x{5:x}", (int)Message, Message.ToString(), HWnd.ToInt32(), WParam.ToInt32(), LParam.ToInt32(), Point);
+                return $"msg=0x{(int) Message:x} ({Message}) hwnd=0x{HWnd.ToInt32():x} wparam=0x{WParam.ToInt32():x} lparam=0x{LParam.ToInt32():x} pt=0x{Point:x}";
             }
         }
         
         struct POINT
         {
-            public int X;
-            public int Y;
+            private int X;
+            private int Y;
 
             public POINT(int x, int y)
             {
@@ -47,7 +48,7 @@ namespace Sparrow.Core
 
             public override string ToString()
             {
-                return "Point {" + X.ToString() + ", " + Y.ToString() + ")";
+                return "Point {" + X + ", " + Y + ")";
             }
         }
         MSG msg = new MSG();
@@ -81,8 +82,9 @@ namespace Sparrow.Core
         {
             SparrowSharp.NativeWindow = this; 
             SparrowSharp.Start((uint)ClientSize.Width, (uint)ClientSize.Height, _rootClass);
+            SparrowSharp.MouseIconChange += OnCursorChange;
             // Hook the application’s idle event
-            Application.Idle += new EventHandler(OnApplicationIdle);
+            Application.Idle += OnApplicationIdle;
         }
 
         private void ContextDestroying(object sender, GlControlEventArgs e)
@@ -119,10 +121,7 @@ namespace Sparrow.Core
         {
             if (e.Button == MouseButtons.Left)
             {
-                float xConversion = SparrowSharp.Stage.StageWidth / Size.Width;
-                float yConversion = SparrowSharp.Stage.StageHeight / Size.Height;
-
-                touchProcessor.OnPointerDown(e.X * xConversion, e.Y * yConversion, pointerId);
+                touchProcessor.OnPointerDown(e.X, e.Y, pointerId);
             }
         }
 
@@ -130,9 +129,11 @@ namespace Sparrow.Core
         {
             if (e.Button == MouseButtons.Left)
             {
-                float xConversion = SparrowSharp.Stage.StageWidth / Size.Width;
-                float yConversion = SparrowSharp.Stage.StageHeight / Size.Height;
-                touchProcessor.OnPointerMove(e.X * xConversion, e.Y * yConversion, pointerId);
+                touchProcessor.OnPointerMove(e.X, e.Y, pointerId);
+            }
+            else
+            {
+                touchProcessor.OnMouseHover(e.X, e.Y, pointerId);
             }
         }
 
@@ -140,7 +141,23 @@ namespace Sparrow.Core
         {
             touchProcessor.OnPointerUp(pointerId);
         }
-        
+
+        private void OnCursorChange(MouseCursor cursor)
+        {
+            switch (cursor)
+            {
+                case MouseCursor.Default:
+                    Cursor = DefaultCursor;
+                    break;
+                case MouseCursor.Hand:
+                    Cursor = Cursors.Hand;
+                    break;
+                case MouseCursor.Wait:
+                    Cursor = Cursors.WaitCursor;
+                    break;
+            }
+            
+        }
     }
 }
 

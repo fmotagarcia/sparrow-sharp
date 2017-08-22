@@ -60,6 +60,43 @@ namespace Sparrow.Touches
             ProcessTouch();
         }
 
+        private Touch _hoverTouch;
+        
+        public void OnMouseHover(float xPosition, float yPosition, int touchId)
+        {
+            if (_hoverTouch == null)
+            {
+                _hoverTouch = new Touch();
+                _hoverTouch.Phase = TouchPhase.Hover;
+            }
+            double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            _hoverTouch.TouchID = touchId;
+            _hoverTouch.TimeStamp = now;
+            _hoverTouch.PreviousGlobalX = _hoverTouch.GlobalX;
+            _hoverTouch.PreviousGlobalY = _hoverTouch.GlobalY;
+            _hoverTouch.InitialGlobalX = _hoverTouch.GlobalX;
+            _hoverTouch.InitialGlobalY = _hoverTouch.GlobalY;
+            _hoverTouch.GlobalX = xPosition;
+            _hoverTouch.GlobalY = yPosition;    
+            Point touchPosition = Point.Create(xPosition, yPosition);
+            var oldTarget = _hoverTouch.Target;
+            _hoverTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
+            Console.WriteLine("hover target: " + _hoverTouch.Target);
+            
+            var touches = new List<Touch> {_hoverTouch};
+            TouchEvent touchEvent = new TouchEvent(touches);
+            // invoke the event one last time on the old target
+            if (oldTarget != _hoverTouch.Target)
+            {
+              
+                if (touchEvent.GetTouch(oldTarget) == null)
+                {
+                    oldTarget?.InvokeTouch(touchEvent);   
+                }
+            }
+            _hoverTouch.Target?.InvokeTouch(touchEvent);
+        }
+
         public void OnPointerUp(int touchId)
         {
             if (_touches.ContainsKey(touchId) == false)

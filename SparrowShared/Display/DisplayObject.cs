@@ -94,6 +94,7 @@ namespace Sparrow.Display
         private bool _touchable;
         private uint _blendmode;
         private string _name;
+        private bool _useHandCursor;
         private readonly Matrix2D _transformationMatrix;
         private bool _orientationChanged;
         private DisplayObject _maskee;
@@ -699,6 +700,34 @@ namespace Sparrow.Display
             get { return TransformationMatrix.ConvertToMatrix3D(); }
         }
 
+        
+        /// <summary>
+        /// Indicates if the mouse cursor should transform into a hand while it's over the sprite.
+        /// default false
+        /// </summary>
+        public virtual bool UseHandCursor {
+            get { return _useHandCursor; }
+            set
+            {
+                if (value == _useHandCursor) return;
+                _useHandCursor = value;
+
+                if (_useHandCursor)
+                {
+                    Touch += OnTouch;    
+                }
+                else
+                {
+                    Touch -= OnTouch;
+                }                
+            }
+        }
+        
+        private void OnTouch(TouchEvent evt)
+        {
+            SparrowSharp.MouseCursor = evt.InteractsWith(this) ? MouseCursor.Hand : MouseCursor.Default;
+        }
+        
         /// <summary>
         /// The bounds of the object relative to the local coordinates of the parent.
         /// </summary>

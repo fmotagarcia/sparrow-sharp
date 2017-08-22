@@ -1,26 +1,28 @@
 ﻿using System;
+using Sparrow.Core;
 using Sparrow.Styles;
 using Sparrow.Text;
 using Sparrow.Textures;
 using Sparrow.Touches;
+using Sparrow.Utils;
 using Rectangle = Sparrow.Geom.Rectangle;
 
 namespace Sparrow.Display
 {
     
-    /** A simple button composed of an image and, optionally, text.
-     *  
-     *  <p>You can use different textures for various states of the button. If you're providing
-     *  only an up state, the button is simply scaled a little when it is touched.</p>
-     *
-     *  <p>In addition, you can overlay text on the button. To customize the text, you can use
-     *  properties equivalent to those of the TextField class. Move the text to a certain position
-     *  by updating the <code>textBounds</code> property.</p>
-     *  
-     *  <p>To react on touches on a button, there is special <code>Triggered</code> event.
-     *  Use this event instead of normal touch events. That way, users can cancel button
-     *  activation by moving the mouse/finger away from the button before releasing.</p>
-     */
+    /// <summary>
+    /// A simple button composed of an image and, optionally, text.
+    /// <para>You can use different textures for various states of the button. If you're providing
+    /// only an up state, the button is simply scaled a little when it is touched.</para>
+    ///
+    /// <para>In addition, you can overlay text on the button. To customize the text, you can use
+    /// properties equivalent to those of the TextField class. Move the text to a certain position
+    /// by updating the <code>textBounds</code> property.</para>
+    /// 
+    /// <para>To react on touches on a button, there is special <code>Triggered</code> event.
+    /// Use this event instead of normal touch events. That way, users can cancel button
+    /// activation by moving the mouse/finger away from the button before releasing.</para>
+    /// </summary>
     public class Button : DisplayObjectContainer
     {
         
@@ -40,7 +42,7 @@ namespace Sparrow.Display
         private readonly Rectangle _textBounds;
         private Sprite _overlay;
 
-        //private bool _useHandCursor;
+        private bool _useHandCursor;
         private bool _enabled;
         private ButtonState _state;
         private Rectangle _triggerBounds;
@@ -69,7 +71,7 @@ namespace Sparrow.Display
             ScaleWhenOver = AlphaWhenDown = 1.0f;
             AlphaWhenDisabled = disabledState != null ? 1.0f : 0.5f;
             _enabled = true;
-            //_useHandCursor = true;
+            _useHandCursor = true;
             _textBounds = Rectangle.Create(0, 0, _body.Width, _body.Height);
             _triggerBounds = Rectangle.Create();
             
@@ -78,7 +80,7 @@ namespace Sparrow.Display
             AddChild(_contents);
             Touch += OnTouch;
             
-            //??? this.touchGroup = true;
+            TouchGroup = true;
             Text = text;
         }
         
@@ -131,14 +133,13 @@ namespace Sparrow.Display
 
         private void OnTouch(TouchEvent evt)
         {
-            //Mouse.cursor = (_useHandCursor && _enabled && evt.interactsWith(this)) ? MouseCursor.BUTTON : MouseCursor.AUTO;
-            
-            Touch touch = evt.GetTouch(this);
-
+            SparrowSharp.MouseCursor = (_useHandCursor && _enabled && evt.InteractsWith(this)) ? MouseCursor.Hand : MouseCursor.Default;
+           
             if (!_enabled)
             {
                 return;
             }
+            Touch touch = evt.GetTouch(this);
             if (touch == null)
             {
                 State = ButtonState.Up;
@@ -182,7 +183,7 @@ namespace Sparrow.Display
         /// <exception cref="ArgumentException">When setting an invalid state</exception>
         public ButtonState State
         {
-            get { return _state; }
+            get => _state;
             set
             {
                 _state = value;
@@ -236,10 +237,12 @@ namespace Sparrow.Display
         /** The alpha value of the button when it is disabled. @default 0.5 */
         public float AlphaWhenDisabled { get; set; }
 
-        /** Indicates if the button can be triggered. */
+        /// <summary>
+        /// Indicates if the button can be triggered. 
+        /// </summary>
         public bool Enabled
         {
-            get { return _enabled; }
+            get => _enabled;
             set
             {
                 if (_enabled != value)
@@ -250,10 +253,12 @@ namespace Sparrow.Display
             }
         }
         
-        /** The text that is displayed on the button. */
+        /// <summary>
+        /// The text that is displayed on the button.
+        /// </summary>
         public string Text
         {
-            get { return _textField != null ? _textField.Text : ""; }
+            get => _textField != null ? _textField.Text : "";
             set
             {
                 if (value.Length == 0)
@@ -298,13 +303,13 @@ namespace Sparrow.Display
         /// </summary>
         public MeshStyle Style
         {
-            get { return _body.Style; }
-            set { _body.Style = value; }
+            get => _body.Style;
+            set => _body.Style = value;
         }
         
         public Texture UpState
         {
-            get { return _upState; }
+            get => _upState;
             set
             {
                 if (value == null)
@@ -328,7 +333,7 @@ namespace Sparrow.Display
 
         public Texture DownState
         {
-            get { return _downState; }
+            get => _downState;
             set
             {
                 if (_downState != value)
@@ -341,7 +346,7 @@ namespace Sparrow.Display
 
         public Texture OverState
         {
-            get { return _overState; }
+            get => _overState;
             set
             {
                 if (_overState != value)
@@ -354,7 +359,7 @@ namespace Sparrow.Display
 
         public Texture DisabledState
         {
-            get { return _disabledState; }
+            get => _disabledState;
             set
             {
                 if (_disabledState != value)
@@ -371,7 +376,7 @@ namespace Sparrow.Display
         /// </summary>
         public Rectangle TextBounds
         {
-            get { return _textBounds; }
+            get => _textBounds;
             set
             {
                 _textBounds.CopyFrom(value);
@@ -385,8 +390,8 @@ namespace Sparrow.Display
         /// </summary>
         public uint Color
         {
-            get { return _body.Color; }
-            set { _body.Color = value; }
+            get => _body.Color;
+            set => _body.Color = value;
         }
 
         /// <summary>
@@ -394,8 +399,8 @@ namespace Sparrow.Display
         /// </summary>
         public TextureSmoothing TextureSmoothing
         {
-            get { return _body.TextureSmoothing; }
-            set { _body.TextureSmoothing = value; }
+            get => _body.TextureSmoothing;
+            set => _body.TextureSmoothing = value;
         }
 
         /// <summary>
@@ -414,10 +419,16 @@ namespace Sparrow.Display
                 return _overlay;
             }
         }
+        
+        public override bool UseHandCursor
+        {
+            get => _useHandCursor;
+            set => _useHandCursor = value;
+        }
 
         public bool PixelSnapping
         {
-            get { return _body.PixelSnapping; }
+            get => _body.PixelSnapping;
             set
             {
                 _body.PixelSnapping = value;
@@ -465,10 +476,8 @@ namespace Sparrow.Display
         /// </summary>
         public Rectangle Scale9Grid
         {
-            get { return _body.Scale9Grid; }
-            set { _body.Scale9Grid = value; }
+            get => _body.Scale9Grid;
+            set => _body.Scale9Grid = value;
         }
-        
-        // +add UseHandCursor
     }
 }

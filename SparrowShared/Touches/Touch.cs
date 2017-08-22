@@ -28,6 +28,9 @@ namespace Sparrow.Touches
     /// you'll want to have the position in a different coordinate system most of the time. 
     /// For this reason, there are methods that convert the current and previous touches into the local
     /// coordinate system of any object.
+    /// 
+    /// <p>Finally, there's the <code>HOVER</code> phase, which is exclusive to mouse input. It is
+    /// invoked event when the mouse button is not pressed.</p> 
     /// </summary>
     public class Touch
     {

@@ -232,10 +232,10 @@ namespace Sparrow.Samples
         
         private void TestButton()
         {
-            Button btn = new Button(Texture.FromColor(95, 33, 0x23F502), "a button");
-            btn.X = 12;
-            btn.Y = 221;
-            btn.Triggered += button => Console.WriteLine("Burron press");
+            Button btn = new Button(Texture.FromColor(100, 40, 0x23F502), "Test button");
+            btn.X = 150;
+            btn.Y = 200;
+            btn.Triggered += button => Console.WriteLine("Button press");
             AddChild(btn);
 
         }

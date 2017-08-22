@@ -76,6 +76,7 @@ namespace Sparrow.Display
         public int NumChildren { get { return _children.Count; } }
 
         private readonly List<DisplayObject> _children = new List<DisplayObject>();
+        private bool _touchGroup;
 
         /// <summary>
         /// Returns the children of this container 
@@ -383,11 +384,22 @@ namespace Sparrow.Display
                 DisplayObject target = child.HitTest(transformedPoint);
                 if (target != null)
                 {
-                    return target;
+                    return _touchGroup ? this : target;
                 }
             }
             return null;
         }
+
+        /// <summary>
+        /// If a container is a 'TouchGroup', it will act as a single touchable object.
+        /// Touch events will have the container as target, not the touched child.
+        /// default false
+        /// </summary>
+        public bool TouchGroup
+        {
+            get { return _touchGroup; }
+            set { _touchGroup = value; }
+        } 
 
         /// <summary>
         /// Sorts the children using the given IComparer.

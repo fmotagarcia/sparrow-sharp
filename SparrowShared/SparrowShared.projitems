@@ -85,6 +85,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\MatrixUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\MeshSubset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\MeshUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\MouseCursor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Padding.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\RenderUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\VAlign.cs" />

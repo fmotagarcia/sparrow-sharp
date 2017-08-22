@@ -55,10 +55,11 @@ namespace Sparrow.Touches
         /// </summary>
         public List<Touch> GetTouches(DisplayObject target)
         {
-            List<Touch> touchesFound = new List<Touch> ();
+            List<Touch> touchesFound = new List<Touch>();
             foreach (Touch touch in _touches) {
                 if (target == touch.Target || 
-                   (target is DisplayObjectContainer && ((DisplayObjectContainer)target).Contains(touch.Target)))
+                   (target is DisplayObjectContainer && 
+                    ((DisplayObjectContainer)target).Contains(touch.Target)))
                 {
                     touchesFound.Add(touch);
                 }
@@ -83,19 +84,38 @@ namespace Sparrow.Touches
             return touchesFound;
         }
         
-       /** Returns a touch that originated over a certain target. 
-       * 
-       *  @param target   The object that was touched; may also be a parent of the actual
-       *                  touch-target.
-       */
+        /// <summary>
+        /// Returns a touch that originated over a certain target.
+        /// </summary>
+        /// <param name="target">The object that was touched; may also be a parent of the actual touch-target.</param>
         public Touch GetTouch(DisplayObject target)
         {
             var sTouches = GetTouches(target);
-            if (_touches.Count > 0) 
+            if (sTouches.Count > 0) 
             {
                 return sTouches[0];
             }
             return null;
+        }
+        
+        /// <summary>
+        /// Indicates if a target is currently being touched or hovered over.
+        /// </summary>
+        public bool InteractsWith(DisplayObject target)
+        {
+            var result = false;
+            var sTouches = GetTouches(target);
+            
+            for (var i = sTouches.Count - 1; i >= 0; --i)
+            {
+                if (sTouches[i].Phase != TouchPhase.Ended)
+                {
+                    result = true;
+                    break;
+                }
+            }
+            sTouches.Clear();
+            return result;
         }
 
         private List<Touch> _touches;
@@ -113,7 +133,7 @@ namespace Sparrow.Touches
         // The time the event occurred (in seconds since application launch).
         public double Timestamp {
             get {
-                return _touches [0].TimeStamp;
+                return _touches[0].TimeStamp;
             }
             internal set {
                 _timestamp = value;

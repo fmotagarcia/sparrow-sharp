@@ -6,29 +6,28 @@ using Sparrow.Rendering;
 
 namespace Sparrow.Display
 {
-    /** An Image is a quad with a texture mapped onto it.
-     *
-     *  <p>Typically, the Image class will act as an equivalent of Flash's Bitmap class. Instead
-     *  of BitmapData, Sparrow uses textures to represent the pixels of an image. To display a
-     *  texture, you have to map it onto a quad - and that's what the Image class is for.</p>
-     *
-     *  <p>While the base class <code>Quad</code> already supports textures, the <code>Image</code>
-     *  class adds some additional functionality.</p>
-     *
-     *  <p>First of all, it provides a convenient constructor that will automatically synchronize
-     *  the size of the image with the displayed texture.</p>
-     *
-     *  <p>Furthermore, it adds support for a "Scale9" grid. This splits up the image into
-     *  nine regions, the corners of which will always maintain their original aspect ratio.
-     *  The center region stretches in both directions to fill the remaining space; the side
-     *  regions will stretch accordingly in either horizontal or vertical direction.</p>
-     *
-     *  <p>Finally, you can repeat a texture horizontally and vertically within the image's region,
-     *  just like the tiles of a wallpaper. Use the <code>tileGrid</code> property to do that.</p>
-     *
-     *  @see Sparrow.Textures.Texture
-     *  @see Quad
-     */
+    /// <summary>
+    /// An Image is a quad with a texture mapped onto it.
+    ///
+    /// <para>Sparrow uses textures to represent the pixels of an image. To display a
+    /// texture, you have to map it onto a quad - and that's what the Image class is for.</para>
+    ///
+    /// <para>While the base class <code>Quad</code> already supports textures, the <code>Image</code>
+    /// class adds some additional functionality.</para>
+    ///
+    /// <para>First of all, it provides a convenient constructor that will automatically synchronize
+    /// the size of the image with the displayed texture.</para>
+    ///
+    /// <para>Furthermore, it adds support for a "Scale9" grid. This splits up the image into
+    /// nine regions, the corners of which will always maintain their original aspect ratio.
+    /// The center region stretches in both directions to fill the remaining space; the side
+    /// regions will stretch accordingly in either horizontal or vertical direction.</para>
+    ///
+    /// <para>Finally, you can repeat a texture horizontally and vertically within the image's region,
+    /// just like the tiles of a wallpaper. Use the <code>TileGrid</code> property to do that.</para>
+    /// </summary>
+    /// <see cref="Texture"/>
+    /// <see cref="Quad"/>
     public class Image : Quad
     {
         private Rectangle _scale9Grid;

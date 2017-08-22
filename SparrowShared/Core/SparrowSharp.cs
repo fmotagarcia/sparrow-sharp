@@ -16,6 +16,9 @@ namespace Sparrow.Core
         public delegate void ContextCreatedHandler();
         public static event ContextCreatedHandler ContextCreated;
 
+        internal delegate void MouseIconChangeHandler(MouseCursor mouseCursor);
+        internal static event MouseIconChangeHandler MouseIconChange;
+        
         private static Painter _painter;
         private static uint _frameId;
 
@@ -266,6 +269,11 @@ namespace Sparrow.Core
             UpdateViewPort(true);
             Stage.SetRequiresRedraw();
             ContextCreated?.Invoke();
+        }
+
+        public static MouseCursor MouseCursor
+        {
+            set => MouseIconChange?.Invoke(value);
         }
     }
 }
