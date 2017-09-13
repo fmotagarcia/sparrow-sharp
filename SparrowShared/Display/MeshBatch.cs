@@ -128,13 +128,13 @@ namespace Sparrow.Display
 
         /// <summary>
         /// Adds a mesh to the batch by copying its vertices and indices to the given positions.
-        ///  Beware that you need to check for yourself if those positions make sense; for example,
+        /// Beware that you need to check for yourself if those positions make sense; for example,
         /// you need to make sure that they are aligned within the 3-indices groups making up
         /// the mesh's triangles.
         ///
-        /// <p>It's easiest to only add objects with an identical setup, e.g. only quads.
+        /// <para>It's easiest to only add objects with an identical setup, e.g. only quads.
         /// For the latter, indices are aligned in groups of 6 (one quad requires six indices),
-        /// and the vertices in groups of 4 (one vertex for every corner).</p>
+        /// and the vertices in groups of 4 (one vertex for every corner).</para>
         /// </summary>
         public void AddMeshAt(Mesh mesh, int indexId, int vertexId)
         {
@@ -258,9 +258,11 @@ namespace Sparrow.Display
             }
         }
 
-        /** The total number of indices in the mesh. If you change this to a smaller value,
-         *  the surplus will be deleted. Always make sure that the number of indices
-         *  is a multiple of three! */
+        /// <summary>
+        /// The total number of indices in the mesh. If you change this to a smaller value,
+        /// the surplus will be deleted. Always make sure that the number of indices
+        /// is a multiple of three!
+        /// </summary>
         public override int NumIndices
         {
             set
@@ -274,15 +276,16 @@ namespace Sparrow.Display
             }
         }
 
-        /** Indicates if this object will be added to the painter's batch on rendering,
-         *  or if it will draw itself right away.
-         *
-         *  <p>Only batchable meshes can profit from the render cache; but batching large meshes
-         *  may take up a lot of CPU time. Activate this property only if the batch contains just
-         *  a handful of vertices (say, 20 quads).</p>
-         *
-         *  @default false
-         */
+        /// <summary>
+        /// Indicates if this object will be added to the painter's batch on rendering,
+        /// or if it will draw itself right away.
+        ///
+        /// <para>Only batchable meshes can profit from the render cache; but batching large meshes
+        /// may take up a lot of CPU time. Activate this property only if the batch contains just
+        /// a handful of vertices (say, 20 quads).</para>
+        ///
+        /// @default false
+        /// </summary>
         public bool Batchable
         {
             set

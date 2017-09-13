@@ -9,60 +9,60 @@ using Sparrow.Rendering;
 namespace Sparrow.Filters
 {
     /** The FragmentFilter class is the base class for all filter effects in Starling.
-        *  All filters must extend this class. You can attach them to any display object through the
-        *  <code>filter</code> property.
-        *
-        *  <p>A fragment filter works in the following way:</p>
-        *  <ol>
-        *    <li>The object to be filtered is rendered into a texture.</li>
-        *    <li>That texture is passed to the <code>process</code> method.</li>
-        *    <li>This method processes the texture using a <code>FilterEffect</code> subclass
-        *        that processes the input via fragment and vertex shaders to achieve a certain
-        *        effect.</li>
-        *    <li>If the filter requires several passes, the process method may execute the
-        *        effect several times, or even make use of other filters in the process.</li>
-        *    <li>In the end, a quad with the output texture is added to the batch renderer.
-        *        In the next frame, if the object hasn't changed, the filter is drawn directly
-        *        from the render cache.</li>
-        *    <li>Alternatively, the last pass may be drawn directly to the back buffer. That saves
-        *        one draw call, but means that the object may not be drawn from the render cache in
-        *        the next frame. Starling makes an educated guess if that makes sense, but you can
-        *        also force it to do so via the <code>alwaysDrawToBackBuffer</code> property.</li>
-        *  </ol>
-        *
-        *  <p>All of this is set up by the basic FragmentFilter class. Concrete subclasses
-        *  just need to override the protected method <code>createEffect</code> and (optionally)
-        *  <code>process</code>. Multi-pass filters must also override <code>numPasses</code>.</p>
-        *
-        *  <p>Typically, any properties on the filter are just forwarded to an effect instance,
-        *  which is then used automatically by <code>process</code> to render the filter pass.
-        *  For a simple example on how to write a single-pass filter, look at the implementation of
-        *  the <code>ColorMatrixFilter</code>; for a composite filter (i.e. a filter that combines
-        *  several others), look at the <code>GlowFilter</code>.
-        *  </p>
-        *
-        *  <p>Beware that a filter instance may only be used on one object at a time!</p>
-        *
-        *  <p><strong>Animated filters</strong></p>
-        *
-        *  <p>The <code>process</code> method of a filter is only called when it's necessary, i.e.
-        *  when the filter properties or the target display object changes. This means that you cannot
-        *  rely on the method to be called on a regular basis, as needed when creating an animated
-        *  filter class. Instead, you can do so by listening for an <code>ENTER_FRAME</code>-event.
-        *  It is dispatched on the filter once every frame, as long as the filter is assigned to
-        *  a display object that is connected to the stage.</p>
-        *
-        *  <p><strong>Caching</strong></p>
-        *
-        *  <p>Per default, whenever the target display object is changed in any way (i.e. the render
-        *  cache fails), the filter is reprocessed. However, you can manually cache the filter output
-        *  via the method of the same name: this will let the filter redraw the current output texture,
-        *  even if the target object changes later on. That's especially useful if you add a filter
-        *  to an object that changes only rarely, e.g. a TextField or an Image. Keep in mind, though,
-        *  that you have to call <code>cache()</code> again in order for any changes to show up.</p>
-        *
-        *  @see starling.rendering.FilterEffect
-        */
+    *  All filters must extend this class. You can attach them to any display object through the
+    *  <code>filter</code> property.
+    *
+    *  <p>A fragment filter works in the following way:</p>
+    *  <ol>
+    *    <li>The object to be filtered is rendered into a texture.</li>
+    *    <li>That texture is passed to the <code>process</code> method.</li>
+    *    <li>This method processes the texture using a <code>FilterEffect</code> subclass
+    *        that processes the input via fragment and vertex shaders to achieve a certain
+    *        effect.</li>
+    *    <li>If the filter requires several passes, the process method may execute the
+    *        effect several times, or even make use of other filters in the process.</li>
+    *    <li>In the end, a quad with the output texture is added to the batch renderer.
+    *        In the next frame, if the object hasn't changed, the filter is drawn directly
+    *        from the render cache.</li>
+    *    <li>Alternatively, the last pass may be drawn directly to the back buffer. That saves
+    *        one draw call, but means that the object may not be drawn from the render cache in
+    *        the next frame. Starling makes an educated guess if that makes sense, but you can
+    *        also force it to do so via the <code>alwaysDrawToBackBuffer</code> property.</li>
+    *  </ol>
+    *
+    *  <p>All of this is set up by the basic FragmentFilter class. Concrete subclasses
+    *  just need to override the protected method <code>createEffect</code> and (optionally)
+    *  <code>process</code>. Multi-pass filters must also override <code>numPasses</code>.</p>
+    *
+    *  <p>Typically, any properties on the filter are just forwarded to an effect instance,
+    *  which is then used automatically by <code>process</code> to render the filter pass.
+    *  For a simple example on how to write a single-pass filter, look at the implementation of
+    *  the <code>ColorMatrixFilter</code>; for a composite filter (i.e. a filter that combines
+    *  several others), look at the <code>GlowFilter</code>.
+    *  </p>
+    *
+    *  <p>Beware that a filter instance may only be used on one object at a time!</p>
+    *
+    *  <p><strong>Animated filters</strong></p>
+    *
+    *  <p>The <code>process</code> method of a filter is only called when it's necessary, i.e.
+    *  when the filter properties or the target display object changes. This means that you cannot
+    *  rely on the method to be called on a regular basis, as needed when creating an animated
+    *  filter class. Instead, you can do so by listening for an <code>ENTER_FRAME</code>-event.
+    *  It is dispatched on the filter once every frame, as long as the filter is assigned to
+    *  a display object that is connected to the stage.</p>
+    *
+    *  <p><strong>Caching</strong></p>
+    *
+    *  <p>Per default, whenever the target display object is changed in any way (i.e. the render
+    *  cache fails), the filter is reprocessed. However, you can manually cache the filter output
+    *  via the method of the same name: this will let the filter redraw the current output texture,
+    *  even if the target object changes later on. That's especially useful if you add a filter
+    *  to an object that changes only rarely, e.g. a TextField or an Image. Keep in mind, though,
+    *  that you have to call <code>cache()</code> again in order for any changes to show up.</p>
+    *
+    *  @see starling.rendering.FilterEffect
+    */
     public abstract class FragmentFilter
     {
         public event DisplayObject.EnterFrameEventHandler EnterFrame;
@@ -84,8 +84,10 @@ namespace Sparrow.Filters
         private bool _cacheRequested;
         private bool _cached;
 
-        /** Creates a new instance. The base class' implementation just draws the unmodified
-         *  input texture. */
+        /// <summary>
+        /// Creates a new instance. The base class' implementation just draws the unmodified
+        /// input texture.
+        /// </summary>
         protected FragmentFilter()
         {
             _resolution = 1.0f;
@@ -95,7 +97,9 @@ namespace Sparrow.Filters
             SetRequiresRedraw();
         }
 
-        /** Disposes all resources that have been created by the filter. */
+        /// <summary>
+        /// Disposes all resources that have been created by the filter.
+        /// </summary>
         public void Dispose()
         {
             _helper?.Dispose();
@@ -106,9 +110,10 @@ namespace Sparrow.Filters
             _quad = null;
         }
 
-        /** Renders the filtered target object. Most users will never have to call this manually;
-         *  it's executed automatically in the rendering process of the filtered display object.
-         */
+        /// <summary>
+        /// Renders the filtered target object. Most users will never have to call this manually;
+        /// it's executed automatically in the rendering process of the filtered display object.
+        /// </summary>
         public void Render(Painter painter)
         {
             if (_target == null)
@@ -163,7 +168,7 @@ namespace Sparrow.Filters
                 // Unfortunately, the following bounds calculation yields the wrong result when
                 // drawing a filter to a RenderTexture using a custom matrix. The 'modelviewMatrix'
                 // should be used for the bounds calculation, but the API doesn't support this.
-                // A future version should change this to: "getBounds(modelviewMatrix, bounds)"
+                // A future version should change this to: "GetBounds(modelviewMatrix, bounds)"
 
                 bounds = _target.GetBounds(renderSpace);
 
@@ -297,10 +302,11 @@ namespace Sparrow.Filters
             return output;
         }
 
-        /** Creates the effect that does the actual, low-level rendering.
-         *  Must be overridden by all subclasses that do any rendering on their own (instead
-         *  of just forwarding processing to other filters).
-         */
+        /// <summary>
+        /// Creates the effect that does the actual, low-level rendering.
+        /// Must be overridden by all subclasses that do any rendering on their own (instead
+        /// of just forwarding processing to other filters).
+        /// </summary>
         protected virtual FilterEffect CreateEffect()
         {
             return new FilterEffect();
@@ -313,10 +319,6 @@ namespace Sparrow.Filters
         *  or location relative to the stage). A cached filter is only rendered once; the output
         *  stays unchanged until you call <code>cache</code> again or change the filter settings.
         *  </p>
-        *
-        *  <p>Beware: you cannot cache filters on 3D objects; if the object the filter is attached
-        *  to is a Sprite3D or has a Sprite3D as (grand-) parent, the request will be silently
-        *  ignored. However, you <em>can</em> cache a 2D object that has 3D children!</p>
         */
         public void Cache()
         {
@@ -324,8 +326,10 @@ namespace Sparrow.Filters
             SetRequiresRedraw();
         }
 
-        /** Clears the cached output of the filter. After calling this method, the filter will be
-        *  processed once per frame again. */
+        /// <summary>
+        /// Clears the cached output of the filter. After calling this method, the filter will be
+        /// processed once per frame again.
+        /// </summary>
         public void ClearCache()
         {
             _cached = _cacheRequested = false;
@@ -342,7 +346,9 @@ namespace Sparrow.Filters
         
         // properties
 
-        /** The effect instance returning the FilterEffect created via <code>createEffect</code>. */
+        /// <summary>
+        /// The effect instance returning the FilterEffect created via <code>createEffect</code>.
+        /// </summary>
         protected FilterEffect Effect
         {
             get

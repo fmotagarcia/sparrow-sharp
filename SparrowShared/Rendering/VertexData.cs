@@ -586,15 +586,19 @@ namespace Sparrow.Rendering
                    (b & 0xff) <<  8 | alpha;
         }
 
-        /** Creates a vertex buffer object with the right size to fit the complete data.
-         *  Optionally, the current data is uploaded right away. */
+        /// <summary>
+        /// Creates a vertex buffer object with the right size to fit the complete data.
+        /// Optionally, the current data is uploaded right away.
+        /// </summary>
         public uint[] CreateVertexBuffer(bool upload = false)
         {
             return CreateVertexBuffer(upload, BufferUsageARB.StaticDraw);
         }
 
-        /** Creates a vertex buffer object with the right size to fit the complete data.
-         *  Optionally, the current data is uploaded right away. */
+        /// <summary>
+        /// Creates a vertex buffer object with the right size to fit the complete data.
+        /// Optionally, the current data is uploaded right away.
+        /// </summary>
         public uint[] CreateVertexBuffer(bool upload, BufferUsageARB bufferUsage)
         {
             if (_numVertices == 0) return new uint[] { 0, 0 };

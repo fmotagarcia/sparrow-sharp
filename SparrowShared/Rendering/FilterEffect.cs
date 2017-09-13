@@ -21,13 +21,25 @@ namespace Sparrow.Rendering
     public class FilterEffect : Effect
     {
 
-        private Texture _texture;
-        private TextureSmoothing _textureSmoothing;
-        private bool _textureRepeat;
+        /// <summary>
+        /// The texture to be mapped onto the vertices.
+        /// </summary>
+        public Texture Texture;
+
+        /// <summary>
+        /// The smoothing filter that is used for the texture. @default bilinear
+        /// </summary>
+        public TextureSmoothing TextureSmoothing;
+
+        /// <summary>
+        /// Indicates if pixels at the edges will be repeated or clamped.
+        /// Only works for power-of-two textures. @default false
+        /// </summary>
+        public bool TextureRepeat;
         
         public FilterEffect()
         {
-            _textureSmoothing = TextureSmoothing.Bilinear;
+            TextureSmoothing = TextureSmoothing.Bilinear;
         }
 
         public static string StdVertexShader
@@ -59,12 +71,12 @@ namespace Sparrow.Rendering
         /// <para>Reserve 4 bits for the variant name of the base class.</para>
         /// </summary>
         protected override uint ProgramVariantName {
-            get { return _texture == null ? 0 : 1u; }
+            get { return Texture == null ? 0 : 1u; }
         }
         
         protected override Program CreateProgram()
         {
-            if (_texture != null)
+            if (Texture != null)
             {
                 string vertexShader = StdVertexShader;
 
@@ -99,7 +111,7 @@ namespace Sparrow.Rendering
         {
             base.BeforeDraw();
 
-            if (_texture == null)
+            if (Texture == null)
             {
                 return;
             }
@@ -109,17 +121,17 @@ namespace Sparrow.Rendering
 
             Gl.ActiveTexture(Gl.TEXTURE0);
                 
-            RenderUtil.SetSamplerStateAt(_texture.Base, _texture.NumMipMaps > 0, 
-                _textureSmoothing, _textureRepeat);
+            RenderUtil.SetSamplerStateAt(Texture.Base, Texture.NumMipMaps > 0, 
+                TextureSmoothing, TextureRepeat);
         }
 
         /// <summary>
         /// This method is called by <code>Render</code>, directly after
-        //  <code>GL.drawElement</code>. Resets texture and vertex buffer attributes.
+        /// <code>GL.drawElement</code>. Resets texture and vertex buffer attributes.
         /// </summary>
         protected override void AfterDraw()
         {
-            if (_texture != null)
+            if (Texture != null)
             {
                 Gl.BindTexture(TextureTarget.Texture2d, 0);
                 // do we need to unbind anything else?
@@ -130,31 +142,5 @@ namespace Sparrow.Rendering
             base.AfterDraw();
         }
 
-        /// <summary>
-        /// The texture to be mapped onto the vertices.
-        /// </summary>
-        public Texture Texture {
-            get { return _texture; }
-            set { _texture = value; }
-        }
-
-        /// <summary>
-        /// The smoothing filter that is used for the texture. @default bilinear
-        /// </summary>
-        public TextureSmoothing TextureSmoothing
-        {
-            get { return _textureSmoothing; }
-            set { _textureSmoothing = value; }
-        }
-
-        /// <summary>
-        /// Indicates if pixels at the edges will be repeated or clamped.
-        /// Only works for power-of-two textures. @default false
-        /// </summary>
-        public bool TextureRepeat
-        {
-            get { return _textureRepeat; }
-            set { _textureRepeat = value; }
-        }
     }
 }

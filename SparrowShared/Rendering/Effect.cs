@@ -147,26 +147,24 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** Uploads the given index data to the internal index buffer. If the buffer is too
-         *  small, a new one is created automatically.
-         *
-         *  @param indexData   The IndexData instance to upload.
-         *  @param bufferUsage The expected buffer usage. Use one of the constants defined in
-         *                     <code>Context3DBufferUsage</code>. Only used when the method call
-         *                     causes the creation of a new index buffer.
-         */
+        /// <summary>
+        /// Uploads the given index data to the internal index buffer. If the buffer is too
+        /// small, a new one is created automatically.
+        /// </summary>
+        /// <param name="indexData">The IndexData instance to upload.</param>
         public void UploadIndexData(IndexData indexData)
         {
             UploadIndexData(indexData, BufferUsageARB.StaticDraw);
         }
-        /** Uploads the given index data to the internal index buffer. If the buffer is too
-         *  small, a new one is created automatically.
-         *
-         *  @param indexData   The IndexData instance to upload.
-         *  @param bufferUsage The expected buffer usage. Use one of the constants defined in
-         *                     <code>Context3DBufferUsage</code>. Only used when the method call
-         *                     causes the creation of a new index buffer.
-         */
+        
+        /// <summary>
+        /// Uploads the given index data to the internal index buffer. If the buffer is too
+        /// small, a new one is created automatically.
+        /// </summary>
+        /// <param name="indexData">The IndexData instance to upload.</param>
+        /// <param name="bufferUsage">The expected buffer usage. Use one of the constants defined in
+        ///                    <code>BufferUsageARB</code>. Only used when the method call
+        ///                    causes the creation of a new index buffer.</param>
         public void UploadIndexData(IndexData indexData, BufferUsageARB bufferUsage)
         {
             int numIndices = indexData.NumIndices;
@@ -196,23 +194,24 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** Uploads the given vertex data to the internal vertex buffer. If the buffer is too
-         *  small, a new one is created automatically.
-         *
-         *  @param vertexData  The VertexData instance to upload.
-         */
+        /// <summary>
+        /// Uploads the given vertex data to the internal vertex buffer. If the buffer is too
+        /// small, a new one is created automatically.
+        /// </summary>
+        /// <param name="vertexData">The VertexData instance to upload.</param>
         public void UploadVertexData(VertexData vertexData)
         {
             UploadVertexData(vertexData, BufferUsageARB.StaticDraw);
         }
-        /** Uploads the given vertex data to the internal vertex buffer. If the buffer is too
-         *  small, a new one is created automatically.
-         *
-         *  @param vertexData  The VertexData instance to upload.
-         *  @param bufferUsage The expected buffer usage. Use one of the constants defined in
-         *                     <code>Context3DBufferUsage</code>. Only used when the method call
-         *                     causes the creation of a new vertex buffer.
-         */
+        
+        /// <summary>
+        /// Uploads the given vertex data to the internal vertex buffer. If the buffer is too
+        /// small, a new one is created automatically.
+        /// </summary>
+        /// <param name="vertexData">The VertexData instance to upload.</param>
+        /// <param name="bufferUsage"> The expected buffer usage. Use one of the constants defined in
+        ///                    <code>BufferUsageARB</code>. Only used when the method call
+        ///                    causes the creation of a new vertex buffer.</param>
         public void UploadVertexData(VertexData vertexData, BufferUsageARB bufferUsage)
         {
             if (_vertexBufferName != 0)
@@ -238,9 +237,11 @@ namespace Sparrow.Rendering
 
         // rendering
 
-        /** Draws the triangles described by the index- and vertex-buffers, or a range of them.
-         *  This calls <code>beforeDraw</code>, <code>context.drawTriangles</code>, and
-         *  <code>afterDraw</code>, in this order. */
+        /// <summary>
+        /// Draws the triangles described by the index- and vertex-buffers, or a range of them.
+        /// This calls <code>BeforeDraw</code>, <code>Gl.DrawElements</code>, and
+        /// <code>AfterDraw</code>, in this order.
+        /// </summary>
         public virtual void Render(int firstIndex = 0, int numTriangles= -1)
         {
             if (numTriangles < 0) numTriangles = _indexBufferSize;
@@ -292,13 +293,14 @@ namespace Sparrow.Rendering
 
         // program management
 
-        /** Creates the program (a combination of vertex- and fragment-shader) used to render
-         *  the effect with the current settings. Override this method in a subclass to create
-         *  your shaders. This method will only be called once; the program is automatically stored
-         *  in the <code>Painter</code> and re-used by all instances of this effect.
-         *
-         *  <p>The basic implementation always outputs pure white.</p>
-         */
+        /// <summary>
+        /// Creates the program (a combination of vertex- and fragment-shader) used to render
+        /// the effect with the current settings. Override this method in a subclass to create
+        /// your shaders. This method will only be called once; the program is automatically stored
+        /// in the <code>Painter</code> and re-used by all instances of this effect.
+        ///
+        /// <para>The basic implementation always outputs pure white.</para>
+        /// </summary>
         protected virtual Program CreateProgram()
         {
             StringBuilder source = new StringBuilder("");
@@ -395,11 +397,13 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** Returns the current program, either by creating a new one (via
-         *  <code>CreateProgram</code>) or by getting it from the <code>Painter</code>.
-         *  Do not override this method! Instead, implement <code>CreateProgram</code>. */
-         protected Program Program
-         {
+        /// <summary>
+        /// Returns the current program, either by creating a new one (via
+        /// <code>CreateProgram</code>) or by getting it from the <code>Painter</code>.
+        /// Do not override this method! Instead, implement <code>CreateProgram</code>.
+        /// </summary>
+        protected Program Program
+        {
             get
             {
                 string name = ProgramName;
