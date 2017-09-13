@@ -26,18 +26,12 @@ namespace Sparrow.Textures
 
         public int InternalFormat
         {
-            get
-            {
-                return _internalformat;
-            }
+            get { return _internalformat; }
         }
 
         public PixelFormat PixelFormat
         {
-            get
-            {
-                return _format;
-            }
+            get { return _format; }
         }
 
 
@@ -47,30 +41,20 @@ namespace Sparrow.Textures
         /// </summary>
         public int BitsPerPixel
         {
-            get
-            {
-                return _bitsPerPixel;
-            }
+            get { return _bitsPerPixel; }
         }
 
         private readonly bool _compressed;
-
         public bool Compressed
         {
-            get
-            {
-                return _compressed;
-            }
+            get { return _compressed; }
         }
 
         private readonly PixelType _texType;
 
         public PixelType PixelType
         {
-            get
-            {
-                return _texType;
-            }
+            get { return _texType; }
         }
 
         public TextureFormat(PixelFormat format, int internalFormat, int bitsPerPixel, bool compressed, PixelType texType)

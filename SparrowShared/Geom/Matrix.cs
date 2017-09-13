@@ -184,7 +184,6 @@ namespace Sparrow.Geom
         /// </summary>
         public void Skew(float sx, float sy)
         {
-            // TODO: optimize sin / cos
             float sinX = (float)Math.Sin(sx);
             float cosX = (float)Math.Cos(sx);
             float sinY = (float)Math.Sin(sy);
@@ -294,12 +293,12 @@ namespace Sparrow.Geom
 
         public Matrix3D ConvertToMatrix3D()
         {
-            float[] matrix = new float[] {
-                                 A, B, 0, 0,
-                                 C, D, 0, 0,
-                                 0, 0, 1, 0,
-                                 Tx, Ty, 0, 1
-                                };
+            float[] matrix = {
+                             A, B, 0, 0,
+                             C, D, 0, 0,
+                             0, 0, 1, 0,
+                             Tx, Ty, 0, 1
+                             };
             return Matrix3D.Create(matrix);
         }
 

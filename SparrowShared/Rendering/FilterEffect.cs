@@ -1,5 +1,4 @@
-﻿using Sparrow.Core;
-using Sparrow.Textures;
+﻿using Sparrow.Textures;
 using Sparrow.Utils;
 using System;
 using System.Text;
@@ -7,17 +6,18 @@ using OpenGL;
 
 namespace Sparrow.Rendering
 {
-    /** An effect drawing a mesh of textured vertices.
-    *  This is the standard effect that is the base for all fragment filters;
-    *  if you want to create your own fragment filters, you will have to extend this class.
-    *
-    *  <p>For more information about the usage and creation of effects, please have a look at
-    *  the documentation of the parent class, "Effect".</p>
-    *
-    *  @see Effect
-    *  @see MeshEffect
-    *  @see starling.filters.FragmentFilter
-    */
+    /// <summary>
+    /// An effect drawing a mesh of textured vertices.
+    /// This is the standard effect that is the base for all fragment filters;
+    /// if you want to create your own fragment filters, you will have to extend this class.
+    ///
+    /// <para>For more information about the usage and creation of effects, please have a look at
+    /// the documentation of the parent class, "Effect".</para>
+    ///
+    /// <see cref="Effect"/>
+    /// <see cref="MeshEffect"/>
+    /// <see cref="Sparrow.Filters.FragmentFilter"/>
+    /// </summary>
     public class FilterEffect : Effect
     {
 
@@ -50,27 +50,26 @@ namespace Sparrow.Rendering
                 return source.ToString();
             }
         }
-        /** Override this method if the effect requires a different program depending on the
-         *  current settings. Ideally, you do this by creating a bit mask encoding all the options.
-         *  This method is called often, so do not allocate any temporary objects when overriding.
-         *
-         *  <p>Reserve 4 bits for the variant name of the base class.</p>
-         */
+        
+        /// <summary>
+        /// Override this method if the effect requires a different program depending on the
+        /// current settings. Ideally, you do this by creating a bit mask encoding all the options.
+        /// This method is called often, so do not allocate any temporary objects when overriding.
+        ///
+        /// <para>Reserve 4 bits for the variant name of the base class.</para>
+        /// </summary>
         protected override uint ProgramVariantName {
-            get { return RenderUtil.GetTextureVariantBits(_texture); }
+            get { return _texture == null ? 0 : 1u; }
         }
-
-        /** @private */
+        
         protected override Program CreateProgram()
         {
             if (_texture != null)
             {
-                StringBuilder source = new StringBuilder("");
-
                 string vertexShader = StdVertexShader;
 
                 // fragment shader
-                source = new StringBuilder("");
+                var source = new StringBuilder("");
                 AddShaderInitCode(source);
                 // variables
                 source.AppendLine("varying lowp vec2 vTexCoords;");
@@ -83,42 +82,41 @@ namespace Sparrow.Rendering
                 string fragmentShader = source.ToString();
                 return new Program(vertexShader, fragmentShader);
             }
-            else
-            {
-                return base.CreateProgram();
-            }
+            return base.CreateProgram();
         }
 
-        /** This method is called by <code>render</code>, directly before
-         *  <code>context.drawTriangles</code>. It activates the program and sets up
-         *  the context with the following constants and attributes:
-         *
-         *  <ul>
-         *    <li><code>vc0-vc3</code> — MVP matrix</li>
-         *    <li><code>va0</code> — vertex position (xy)</li>
-         *    <li><code>va1</code> — texture coordinates (uv)</li>
-         *    <li><code>fs0</code> — texture</li>
-         *  </ul>
-         */
+        /// <summary>
+        /// This method is called by <code>Render</code>, directly before
+        /// <code>Gl.DrawElements</code>. It activates the program, activetes
+        /// GL Texture Unit 0 and sets up the GL context with the following 
+        /// constants and attributes:
+        /// 
+        /// <code>uMvpMatrix</code> — MVP matrix
+        /// <code>aPosition</code> — vertex position (xy)
+        /// <code>aTexCoords</code> — texture coordinates (uv)
+        /// </summary>
         protected override void BeforeDraw()
         {
             base.BeforeDraw();
 
-            if (_texture != null)
+            if (_texture == null)
             {
-                uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
-                Gl.EnableVertexAttribArray(aTexCoords);
-                Gl.VertexAttribPointer(aTexCoords, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
-
-                Gl.ActiveTexture(Gl.TEXTURE0);
-                
-                RenderUtil.SetSamplerStateAt(_texture.Base, _texture.NumMipMaps > 0, 
-                                _textureSmoothing, _textureRepeat);
+                return;
             }
+            uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
+            Gl.EnableVertexAttribArray(aTexCoords);
+            Gl.VertexAttribPointer(aTexCoords, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
+
+            Gl.ActiveTexture(Gl.TEXTURE0);
+                
+            RenderUtil.SetSamplerStateAt(_texture.Base, _texture.NumMipMaps > 0, 
+                _textureSmoothing, _textureRepeat);
         }
 
-        /** This method is called by <code>render</code>, directly after
-         *  <code>context.drawTriangles</code>. Resets texture and vertex buffer attributes. */
+        /// <summary>
+        /// This method is called by <code>Render</code>, directly after
+        //  <code>GL.drawElement</code>. Resets texture and vertex buffer attributes.
+        /// </summary>
         protected override void AfterDraw()
         {
             if (_texture != null)
@@ -132,21 +130,27 @@ namespace Sparrow.Rendering
             base.AfterDraw();
         }
 
-        /** The texture to be mapped onto the vertices. */
+        /// <summary>
+        /// The texture to be mapped onto the vertices.
+        /// </summary>
         public Texture Texture {
             get { return _texture; }
             set { _texture = value; }
         }
 
-        /** The smoothing filter that is used for the texture. @default bilinear */
+        /// <summary>
+        /// The smoothing filter that is used for the texture. @default bilinear
+        /// </summary>
         public TextureSmoothing TextureSmoothing
         {
             get { return _textureSmoothing; }
             set { _textureSmoothing = value; }
         }
 
-        /** Indicates if pixels at the edges will be repeated or clamped.
-         *  Only works for power-of-two textures. @default false */
+        /// <summary>
+        /// Indicates if pixels at the edges will be repeated or clamped.
+        /// Only works for power-of-two textures. @default false
+        /// </summary>
         public bool TextureRepeat
         {
             get { return _textureRepeat; }

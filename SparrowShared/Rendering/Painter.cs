@@ -430,16 +430,16 @@ namespace Sparrow.Rendering
 
                     if (i == startToken.BatchID)
                     {
-                        subset.VertexID = startToken.VertexID;
-                        subset.IndexID  = startToken.IndexID;
-                        subset.NumVertices = meshBatch.NumVertices - subset.VertexID;
-                        subset.NumIndices  = meshBatch.NumIndices  - subset.IndexID;
+                        subset.VertexId = startToken.VertexID;
+                        subset.IndexId  = startToken.IndexID;
+                        subset.NumVertices = meshBatch.NumVertices - subset.VertexId;
+                        subset.NumIndices  = meshBatch.NumIndices  - subset.IndexId;
                     }
 
                     if (i == endToken.BatchID)
                     {
-                        subset.NumVertices = endToken.VertexID - subset.VertexID;
-                        subset.NumIndices  = endToken.IndexID  - subset.IndexID;
+                        subset.NumVertices = endToken.VertexID - subset.VertexId;
+                        subset.NumIndices  = endToken.IndexID  - subset.IndexId;
                     }
 
                     if (subset.NumVertices != 0)

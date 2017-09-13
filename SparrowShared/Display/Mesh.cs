@@ -87,9 +87,9 @@ namespace Sparrow.Display
         /// <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
         /// For example, they may add support for color transformations or normal mapping.
         ///
-        /// <p>When assigning a new style, the vertex format will be changed to fit it.
+        /// <para>When assigning a new style, the vertex format will be changed to fit it.
         /// Do not use the same style instance on multiple objects! Instead, make use of
-        /// <code>Style.Clone()</code> to assign an identical style to multiple meshes.</p>
+        /// <code>Style.Clone()</code> to assign an identical style to multiple meshes.</para>
         /// </summary>
         /// <param name="meshStyle">the style to assign. If <code>null</code>, the default
         ///                         style will be created.</param>
@@ -156,31 +156,41 @@ namespace Sparrow.Display
             return _style.GetVertexAlpha(vertexId);
         }
 
-        /** Sets the alpha value of the vertex at the specified index to a certain value. */
+        /// <summary>
+        /// Sets the alpha value of the vertex at the specified index to a certain value.
+        /// </summary>
         public void SetVertexAlpha(int vertexId, float alpha)
         {
             _style.SetVertexAlpha(vertexId, alpha);
         }
 
-        /** Returns the RGB color of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the RGB color of the vertex at the specified index.
+        /// </summary>
         public uint GetVertexColor(int vertexId)
         {
             return _style.GetVertexColor(vertexId);
         }
 
-        /** Sets the RGB color of the vertex at the specified index to a certain value. */
+        /// <summary>
+        /// Sets the RGB color of the vertex at the specified index to a certain value.
+        /// </summary>
         public void SetVertexColor(int vertexId, uint color)
         {
             _style.SetVertexColor(vertexId, color);
         }
 
-        /** Returns the texture coordinates of the vertex at the specified index. */
+        /// <summary>
+        /// Returns the texture coordinates of the vertex at the specified index.
+        /// </summary>
         public Point GetTexCoords(int vertexId)
         {
             return _style.GetTexCoords(vertexId);
         }
 
-        /** Sets the texture coordinates of the vertex at the specified index to the given values. */
+        /// <summary>
+        /// Sets the texture coordinates of the vertex at the specified index to the given values.
+        /// </summary>
         public void SetTexCoords(int vertexId, float u, float v)
         {
             _style.SetTexCoords(vertexId, u, v);
@@ -188,28 +198,35 @@ namespace Sparrow.Display
 
         // properties
 
-        /** The vertex data describing all vertices of the mesh.
-         *  Any change requires a call to <code>setRequiresRedraw</code>. */
+        /// <summary>
+        /// The vertex data describing all vertices of the mesh.
+        /// Any change requires a call to <code>setRequiresRedraw</code>.
+        /// </summary>
         protected VertexData VertexData { get { return _vertexData; } }
 
-        /** The index data describing how the vertices are interconnected.
-         *  Any change requires a call to <code>setRequiresRedraw</code>. */
+        /// <summary>
+        /// The index data describing how the vertices are interconnected.
+        /// Any change requires a call to <code>setRequiresRedraw</code>.
+        /// </summary>
         protected IndexData IndexData { get { return _indexData; } }
 
-        /** The style that is used to render the mesh. Styles (which are always subclasses of
-         *  <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
-         *  For example, they may add support for color transformations or normal mapping.
-         *
-         *  <p>The setter will simply forward the assignee to <code>setStyle(value)</code>.</p>
-         *
-         *  @default MeshStyle
-         */
+        /// <summary>
+        /// The style that is used to render the mesh. Styles (which are always subclasses of
+        /// <code>MeshStyle</code>) provide a means to completely modify the way a mesh is rendered.
+        /// For example, they may add support for color transformations or normal mapping.
+        ///
+        /// <p>The setter will simply forward the assignee to <code>setStyle(value)</code>.</p>
+        ///
+        /// @default MeshStyle
+        /// </summary>
         public MeshStyle Style { 
             get { return _style; }
             set { SetStyle(value);}
         }
 
-        /** The texture that is mapped to the mesh (or <code>null</code>, if there is none). */
+        /// <summary>
+        /// The texture that is mapped to the mesh (or <code>null</code>, if there is none).
+        /// </summary>
         public virtual Texture Texture { 
             get { return _style.Texture; }
             set { _style.Texture = value; }

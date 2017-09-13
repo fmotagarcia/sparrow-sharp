@@ -51,7 +51,9 @@ namespace Sparrow.Rendering
         }
 
 
-        /** Disposes the internal Program3D instance. */
+        /// <summary>
+        /// Disposes the shaders.
+        /// </summary>
         public void Dispose()
         {
             SparrowSharp.ContextCreated -= DisposeProgram;

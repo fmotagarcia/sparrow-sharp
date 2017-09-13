@@ -23,7 +23,7 @@ namespace Sparrow.Rendering
         public OnBatchCompleteFunction OnBatchComplete;
 
         // helper objects
-        private static readonly MeshSubset sMeshSubset = new MeshSubset();
+        private static readonly MeshSubset SMeshSubset = new MeshSubset();
 
         /// <summary>
         /// Creates a new batch processor.
@@ -68,15 +68,15 @@ namespace Sparrow.Rendering
         {
             if (subset == null)
             {
-                subset = sMeshSubset;
-                subset.VertexID = subset.IndexID = 0;
+                subset = SMeshSubset;
+                subset.VertexId = subset.IndexId = 0;
                 subset.NumVertices = mesh.NumVertices;
                 subset.NumIndices  = mesh.NumIndices;
             }
             else
             {
-                if (subset.NumVertices < 0) subset.NumVertices = mesh.NumVertices - subset.VertexID;
-                if (subset.NumIndices < 0) subset.NumIndices  = mesh.NumIndices  - subset.IndexID;
+                if (subset.NumVertices < 0) subset.NumVertices = mesh.NumVertices - subset.VertexId;
+                if (subset.NumIndices < 0) subset.NumIndices  = mesh.NumIndices  - subset.IndexId;
             }
 
             if (subset.NumVertices > 0)

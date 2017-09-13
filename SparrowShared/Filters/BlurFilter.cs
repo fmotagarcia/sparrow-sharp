@@ -143,8 +143,8 @@ namespace Sparrow.Filters
         private float _strength;
         private BlurDirection _direction;
 
-        private float[] _offsets = new float[] { 0, 0, 0, 0 };
-        private float[] _weights = new float[] { 0, 0, 0, 0 };
+        private float[] _offsets = { 0, 0, 0, 0 };
+        private float[] _weights = { 0, 0, 0, 0 };
 
         // helpers
         private float[] sTmpWeights = new float[5];

@@ -9,39 +9,39 @@ namespace Sparrow.Rendering
     /// to OpenGL index buffers. <em>You only have to work with this class if you're writing
     /// your own rendering code (e.g. if you create custom display objects).</em>
     ///
-    /// <p>To render objects with OpenGL, you have to organize vertices and indices in so-called
+    /// <para>To render objects with OpenGL, you have to organize vertices and indices in so-called
     /// vertex- and index-buffers. Vertex buffers store the coordinates of the vertices that make
     /// up an object; index buffers reference those vertices to determine which vertices spawn
     /// up triangles. Those buffers reside in graphics memory and can be accessed very
-    /// efficiently by the GPU.</p>
+    /// efficiently by the GPU.</para>
     ///
-    /// <p>Before you can move data into the buffers, you have to set it up in conventional
+    /// <para>Before you can move data into the buffers, you have to set it up in conventional
     /// memory — that is, in a Vector or a ByteArray. Since it's quite cumbersome to manually
     /// create and manipulate those data structures, the IndexData and VertexData classes provide
     /// a simple way to do just that. The data is stored in a Byte Array (one index or vertex after
-    /// the other) that can easily be uploaded to a buffer.</p>
+    /// the other) that can easily be uploaded to a buffer.</para>
     /// 
     /// Basic Quad Layout
     ///
-    ///  <p>In many cases, the indices we are working with will reference just quads, i.e.
+    /// <para>In many cases, the indices we are working with will reference just quads, i.e.
     /// triangles composing rectangles. That means that many IndexData instances will contain
-    /// similar or identical data — a great opportunity for optimization!</p>
+    /// similar or identical data — a great opportunity for optimization!</para>
     ///
-    ///  <p>If an IndexData instance follows a specific layout, it will be recognized
+    /// <para>If an IndexData instance follows a specific layout, it will be recognized
     /// automatically and many operations can be executed much faster. In Starling, that
     /// layout is called "basic quad layout". In order to recognize this specific sequence,
-    ///  the indices of each quad have to use the following order:</p>
+    /// the indices of each quad have to use the following order:</para>
     ///
     ///  <pre>n, n+1, n+2, n+1, n+3, n+2</pre>
     ///
-    ///  <p>The subsequent quad has to use <code>n+4</code> as starting value, the next one
-    ///  <code>n+8</code>, etc. Here is an example with 3 quads / 6 triangles:</p>
+    ///  <para>The subsequent quad has to use <code>n+4</code> as starting value, the next one
+    ///  <code>n+8</code>, etc. Here is an example with 3 quads / 6 triangles:</para>
     ///
     ///  <pre>0, 1, 2, 1, 3, 2,   4, 5, 6, 5, 7, 6,   8, 9, 10, 9, 11, 10</pre>
     ///
-    ///  <p>If you are describing quad-like meshes, make sure to always use this layout.</p>
+    ///  <para>If you are describing quad-like meshes, make sure to always use this layout.</para>
     ///
-    ///  @see VertexData
+    ///  <see cref="VertexData"/>
     ///</summary>
     public class IndexData
     {

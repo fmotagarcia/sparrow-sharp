@@ -10,6 +10,7 @@
     <StartupObject>Sparrow.Samples.Desktop.MainClass</StartupObject>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -45,6 +46,7 @@
     <Externalconsole>true</Externalconsole>
     <DefineConstants>DEBUG;__WINDOWS__;</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

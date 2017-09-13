@@ -10,10 +10,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Benchmark.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomStyle\CustomMeshEffect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomStyle\CustomMeshStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TrigonometryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)benchmark_object.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)bigstar.png" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

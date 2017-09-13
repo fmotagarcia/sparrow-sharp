@@ -9,7 +9,7 @@ using Sparrow.Core;
 
 namespace Sparrow.Rendering
 {
-    /** An effect encapsulates all steps of a Stage3D draw operation. It configures the
+    /** An effect encapsulates all steps of a OpenGL draw operation. It configures the
      *  render context and sets up shader programs as well as index- and vertex-buffers, thus
      *  providing the basic mechanisms of all low-level rendering.
      *
@@ -26,19 +26,19 @@ namespace Sparrow.Rendering
      *
      *  <listing>
      *  // create effect
-     *  var effect:MeshEffect = new MeshEffect();
+     *  MeshEffect effect = new MeshEffect();
      *  
      *  // configure effect
-     *  effect.mvpMatrix3D = painter.state.mvpMatrix3D;
-     *  effect.texture = getHeroTexture();
-     *  effect.color = 0xf0f0f0;
+     *  effect.MvpMatrix3D = Painter.State.MvpMatrix3D;
+     *  effect.Texture = GetHeroTexture();
+     *  effect.Color = 0xf0f0f0;
      *  
      *  // upload vertex data
-     *  effect.uploadIndexData(indexData);
-     *  effect.uploadVertexData(vertexData);
+     *  effect.UploadIndexData(indexData);
+     *  effect.UploadVertexData(vertexData);
      *  
      *  // draw!
-     *  effect.render(0, numTriangles);</listing>
+     *  effect.Render(0, numTriangles);</listing>
      *
      *  <p>Note that the <code>VertexData</code> being uploaded has to be created with the same
      *  format as the one returned by the effect's <code>vertexFormat</code> property.</p>
@@ -55,19 +55,19 @@ namespace Sparrow.Rendering
      *  override the following methods:</p>
      *
      *  <ul>
-     *    <li><code>createProgram():Program</code> — must create the actual program containing 
+     *    <li><code>Program CreateProgram()</code> — must create the actual program containing 
      *        vertex- and fragment-shaders. A program will be created only once for each render
      *        context; this is taken care of by the base class.</li>
-     *    <li><code>get programVariantName():uint</code> (optional) — override this if your
+     *    <li><code>uint get programVariantName()</code> (optional) — override this if your
      *        effect requires different programs, depending on its settings. The recommended
      *        way to do this is via a bit-mask that uniquely encodes the current settings.</li>
-     *    <li><code>get vertexFormat():String</code> (optional) — must return the
+     *    <li><code>String get VertexFormat()</code> (optional) — must return the
      *        <code>VertexData</code> format that this effect requires for its vertices. If
      *        the effect does not require any special attributes, you can leave this out.</li>
-     *    <li><code>beforeDraw(context:Context3D):void</code> — Set up your context by
+     *    <li><code>beforeDraw()</code> — Set up your context by
      *        configuring program constants and buffer attributes.</li>
-     *    <li><code>afterDraw(context:Context3D):void</code> — Will be called directly after
-     *        <code>context.drawTriangles()</code>. Clean up any context configuration here.</li>
+     *    <li><code>AfterDraw()</code> — Will be called directly after
+     *        <code>context.drawElements()</code>. Clean up any context configuration here.</li>
      *  </ul>
      *
      *  <p>Furthermore, you need to add properties that manage the data you require on rendering,
@@ -91,22 +91,25 @@ namespace Sparrow.Rendering
         protected int _indexBufferSize;  // in number of indices
         protected bool _indexBufferUsesQuadLayout;
 
-        private Matrix3D _mvpMatrix3D;
-        private string _programBaseName;
+        private readonly Matrix3D _mvpMatrix3D;
 
         // helper objects
         public readonly Dictionary<string, Dictionary<uint, string>> sProgramNameCache = 
                                         new Dictionary<string, Dictionary<uint, string>>();
 
-        /** Creates a new effect. */
+        /// <summary>
+        /// Creates a new effect.
+        /// </summary>
         public Effect()
         {
             _mvpMatrix3D = Matrix3D.Create();
-            _programBaseName = GetType().Name;
+            ProgramBaseName = GetType().Name;
             SparrowSharp.ContextCreated += OnContextCreated;
         }
 
-        /** Purges the index- and vertex-buffers. */
+        /// <summary>
+        /// Purges the index- and vertex-buffers.
+        /// </summary>
         public void Dispose()
         {
             PurgeBuffers();
@@ -118,17 +121,19 @@ namespace Sparrow.Rendering
             PurgeBuffers();
         }
 
-        /** Purges one or both of the vertex- and index-buffers. */
+        /// <summary>
+        /// Purges one or both of the vertex- and index-buffers.
+        /// </summary>
         public void PurgeBuffers(bool vertexBuffer = true, bool indexBuffer = true)
         {
             if (_vertexBufferName != 0 && vertexBuffer)
             {
-                uint[] buffers = new uint[] { _vertexBufferName };
+                uint[] buffers = { _vertexBufferName };
                 Gl.DeleteBuffers(buffers);
                 _vertexBufferName = 0;
                 if (_vertexColorsBufferName != 0)
                 {
-                    uint[] colorBuffers = new uint[] { _vertexColorsBufferName };
+                    uint[] colorBuffers = { _vertexColorsBufferName };
                     Gl.DeleteBuffers(colorBuffers);
                     _vertexColorsBufferName = 0;
                 }
@@ -136,7 +141,7 @@ namespace Sparrow.Rendering
 
             if (_indexBufferName != 0 && indexBuffer)
             {
-                uint[] indexBuffers = new uint[] { _indexBufferName };
+                uint[] indexBuffers = { _indexBufferName };
                 Gl.DeleteBuffers(indexBuffers);
                 _indexBufferName = 0;
             }
@@ -248,15 +253,14 @@ namespace Sparrow.Rendering
             AfterDraw();
         }
 
-        /** This method is called by <code>render</code>, directly before
-         *  <code>context.drawTriangles</code>. It activates the program and sets up
-         *  the context with the following constants and attributes:
-         *
-         *  <ul>
-         *    <li><code>uMvpMatrix</code> — MVP matrix</li>
-         *    <li><code>aPosition</code> — vertex position (xy)</li>
-         *  </ul>
-         */
+        /// <summary>
+        /// This method is called by <code>Render</code>, directly before
+        /// <code>GL.drawElements</code>. It activates the program and sets up
+        /// the GL context with the following constants and attributes:
+        /// 
+        /// <code>uMvpMatrix</code> — MVP matrix
+        /// <code>aPosition</code> — vertex position (xy)
+        /// </summary>
         protected virtual void BeforeDraw()
         {
             Program.Activate(); // create, upload, use program
@@ -336,30 +340,29 @@ namespace Sparrow.Rendering
             source.AppendLine("#version 100");
 #endif
         }
-        /** Override this method if the effect requires a different program depending on the
-         *  current settings. Ideally, you do this by creating a bit mask encoding all the options.
-         *  This method is called often, so do not allocate any temporary objects when overriding.
-         *
-         *  @default 0
-         */
+        
+        /// <summary>
+        /// Override this method if the effect requires a different program depending on the
+        /// current settings. Ideally, you do this by creating a bit mask encoding all the options.
+        /// This method is called often, so do not allocate any temporary objects when overriding.
+        ///
+        /// @default 0
+        /// </summary>
         protected virtual uint ProgramVariantName { get { return 0; } }
 
-        /** Returns the base name for the program.
-         *  @default the fully qualified class name
-         */
-        protected string ProgramBaseName
-        {
-            get { return _programBaseName; }
-            set { _programBaseName = value;  }
-        }
+        /// <summary>
+        /// Returns the base name for the program. @default the fully qualified class name
+        /// </summary>
+        protected string ProgramBaseName;
 
-        /** Returns the full name of the program, which is used to register it at the current
-         *  <code>Painter</code>.
-         *
-         *  <p>The default implementation efficiently combines the program's base and variant
-         *  names (e.g. <code>LightEffect#42</code>). It shouldn't be necessary to override
-         *  this method.</p>
-         */
+        /// <summary>
+        /// Returns the full name of the program, which is used to register it at the current
+        /// <code>Painter</code>.
+        ///
+        /// <para>The default implementation efficiently combines the program's base and variant
+        /// names (e.g. <code>LightEffect#42</code>). It shouldn't be necessary to override
+        /// this method.</para>
+        /// </summary>
         protected string ProgramName
         {
             get
@@ -413,7 +416,7 @@ namespace Sparrow.Rendering
         }
 
         /** The function that you provide here will be called after a context loss.
-         *  Call both "upload..." methods from within the callback to restore any vertex or
+         *  Call both "Upload..." methods from within the callback to restore any vertex or
          *  index buffers. */
         public Action OnRestore;
 

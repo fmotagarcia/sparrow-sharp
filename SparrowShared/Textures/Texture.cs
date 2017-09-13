@@ -190,8 +190,10 @@ namespace Sparrow.Textures
             return outP;
         }
 
-        /** Transforms the given texture coordinates from the root texture's coordinate system
-         *  to the local coordinate system. */
+        /// <summary>
+        /// Transforms the given texture coordinates from the root texture's coordinate system
+        /// to the local coordinate system.
+        /// </summary>
         public Point GlobalToLocal(float u, float v)
         {
             Point outP = Point.Create(u, v);

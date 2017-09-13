@@ -18,11 +18,11 @@ namespace Sparrow.Styles
      *  <code>ColorStyle</code>:</p>
      *
      *  <listing>
-     *  var image:Image = new Image(heroTexture);
-     *  var colorStyle:ColorStyle = new ColorStyle();
-     *  colorStyle.redOffset = 0.5;
-     *  colorStyle.redMultiplier = 2.0;
-     *  image.style = colorStyle;</listing>
+     *  Image image = new Image(heroTexture);
+     *  ColorStyle colorStyle = new ColorStyle();
+     *  colorStyle.RedOffset = 0.5;
+     *  colorStyle.RedMultiplier = 2.0;
+     *  image.Style = colorStyle;</listing>
      *
      *  <p>Beware:</p>
      *
@@ -40,17 +40,17 @@ namespace Sparrow.Styles
      *  interact with.</p>
      *
      *  <p>Subclasses of <code>MeshStyle</code> will add specific properties that configure the
-     *  style's outcome, like the <code>redOffset</code> and <code>redMultiplier</code> properties
+     *  style's outcome, like the <code>RedOffset</code> and <code>RedMultiplier</code> properties
      *  in the sample above. Here's how to properly create such a class:</p>
      *
      *  <ul>
      *    <li>Always provide a constructor that can be called without any arguments.</li>
-     *    <li>Override <code>copyFrom</code> — that's necessary for batching.</li>
-     *    <li>Override <code>createEffect</code> — this method must return the
+     *    <li>Override <code>CopyFrom</code> — that's necessary for batching.</li>
+     *    <li>Override <code>CreateEffect</code> — this method must return the
      *        <code>MeshEffect</code> that will do the actual OpenGL rendering.</li>
-     *    <li>Override <code>updateEffect</code> — this configures the effect created above
+     *    <li>Override <code>UpdateEffect</code> — this configures the effect created above
      *        right before rendering.</li>
-     *    <li>Override <code>canBatchWith</code> if necessary — this method figures out if one
+     *    <li>Override <code>CanBatchWith</code> if necessary — this method figures out if one
      *        instance of the style can be batched with another. If they all can, you can leave
      *        this out.</li>
      *  </ul>
@@ -59,11 +59,11 @@ namespace Sparrow.Styles
      *
      *  <ul>
      *    <li>add a static constant called <code>VERTEX_FORMAT</code> to the class and</li>
-     *    <li>override <code>get vertexFormat</code> and let it return exactly that format.</li>
+     *    <li>override <code>get VertexFormat</code> and let it return exactly that format.</li>
      *  </ul>
      *
      *  <p>When that's done, you can turn to the implementation of your <code>MeshEffect</code>;
-     *  the <code>createEffect</code>-override will return an instance of this class.
+     *  the <code>CreateEffect</code>-override will return an instance of this class.
      *  Directly before rendering begins, Sparrow will then call <code>UpdateEffect()</code>
      *  to set it up.</p>
      *
@@ -75,16 +75,21 @@ namespace Sparrow.Styles
     {
 
         /// <summary>
-        ///  Dispatched every frame on styles assigned to display objects connected to the stage.
+        /// Dispatched every frame on styles assigned to display objects connected to the stage.
         /// </summary>
         public event DisplayObject.EnterFrameEventHandler EnterFrame;
 
+        /// <summary>
+        /// Indicates if pixels at the edges will be repeated or clamped.
+        /// Only works for power-of-two textures. @default false
+        /// </summary>
+        public bool TextureRepeat;
+        
         private readonly Type _type;
         private Mesh _target;
         private Texture _texture;
         private uint _textureBase;
         private TextureSmoothing _textureSmoothing;
-        private bool _textureRepeat;
         private VertexData _vertexData;   // just a reference to the target's vertex data
         private IndexData _indexData;     // just a reference to the target's index data
 
@@ -106,7 +111,7 @@ namespace Sparrow.Styles
         {
             _texture = meshStyle._texture;
             _textureBase = meshStyle._textureBase;
-            _textureRepeat = meshStyle._textureRepeat;
+            TextureRepeat = meshStyle.TextureRepeat;
             _textureSmoothing = meshStyle._textureSmoothing;
         }
 
@@ -133,14 +138,14 @@ namespace Sparrow.Styles
         /// <summary>
         /// Updates the settings of the given effect to match the current style.
         /// The given <code>effect</code> will always match the class returned by
-        /// <code>createEffect</code>.
+        /// <code>CreateEffect()</code>. Celled just before Render();
         ///
         /// <para>To be overridden by subclasses!</para>
         /// </summary>
         public virtual void UpdateEffect(MeshEffect effect, RenderState state)
         {
             effect.Texture = _texture;
-            effect.TextureRepeat = _textureRepeat;
+            effect.TextureRepeat = TextureRepeat;
             effect.TextureSmoothing = _textureSmoothing;
             effect.MvpMatrix3D = state.MvpMatrix3D;
             effect.Alpha = state.Alpha;
@@ -152,7 +157,7 @@ namespace Sparrow.Styles
         /// The base implementation just checks if the styles are of the same type
         /// and if the textures are compatible.
         /// </summary>
-        public bool CanBatchWith(MeshStyle meshStyle)
+        public virtual bool CanBatchWith(MeshStyle meshStyle)
         {
             if (_type == meshStyle._type)
             {
@@ -162,18 +167,18 @@ namespace Sparrow.Styles
                 if (_texture != null && newTexture != null)
                     return _textureBase == meshStyle._textureBase &&
                            _textureSmoothing == meshStyle._textureSmoothing &&
-                           _textureRepeat == meshStyle._textureRepeat;
+                           TextureRepeat == meshStyle.TextureRepeat;
                 return false;
             }
             return false;
         }
 
         /// <summary>
-        ///  Copies the vertex data of the style's current target to the target of another style.
-        ///  If you pass a matrix, all vertices will be transformed during the process.
+        /// Copies the vertex data of the style's current target to the target of another style.
+        /// If you pass a matrix, all vertices will be transformed during the process.
         ///
-        ///  Subclasses may override this method if they need to modify the vertex data in that
-        ///  process.
+        /// Subclasses may override this method if they need to modify the vertex data in that
+        /// process.
         /// </summary>
         /// <param name="targetStyle">Points to the style of a MeshBatch</param>
         /// <param name="targetVertexId">Where to start the copy in the target</param>
@@ -247,15 +252,16 @@ namespace Sparrow.Styles
 
         // vertex manipulation
 
-        /** The position of the vertex at the specified index, in the mesh's local coordinate
-         *  system.
-         *
-         *  <p>Only modify the position of a vertex if you know exactly what you're doing, as
-         *  some classes might not work correctly when their vertices are moved. E.g. the
-         *  <code>Quad</code> class expects its vertices to spawn up a perfectly rectangular
-         *  area; some of its optimized methods won't work correctly if that premise is no longer
-         *  fulfilled or the original bounds change.</p>
-         */
+        /// <summary>
+        /// The position of the vertex at the specified index, in the mesh's local coordinate
+        /// system.
+        ///
+        /// <para>Only modify the position of a vertex if you know exactly what you're doing, as
+        /// some classes might not work correctly when their vertices are moved. E.g. the
+        /// <code>Quad</code> class expects its vertices to spawn up a perfectly rectangular
+        /// area; some of its optimized methods won't work correctly if that premise is no longer
+        /// fulfilled or the original bounds change.</para>
+        /// </summary>
         public Point GetVertexPosition(int vertexId)
         {
             return _vertexData.GetPoint(vertexId);
@@ -323,14 +329,18 @@ namespace Sparrow.Styles
 
         // properties
 
-        /** Returns a reference to the vertex data of the assigned target (or <code>null</code>
-         *  if there is no target). Beware: the style itself does not own any vertices;
-         *  it is limited to manipulating those of the target mesh. */
+        /// <summary>
+        ///  Returns a reference to the vertex data of the assigned target (or <code>null</code>
+        /// if there is no target). Beware: the style itself does not own any vertices;
+        /// it is limited to manipulating those of the target mesh.
+        /// </summary>
         protected VertexData VertexData { get {return _vertexData; } }
 
-        /** Returns a reference to the index data of the assigned target (or <code>null</code>
-         *  if there is no target). Beware: the style itself does not own any indices;
-         *  it is limited to manipulating those of the target mesh. */
+        /// <summary>
+        /// Returns a reference to the index data of the assigned target (or <code>null</code>
+        /// if there is no target). Beware: the style itself does not own any indices;
+        /// it is limited to manipulating those of the target mesh.
+        /// </summary>
         protected IndexData indexData  { get { return _indexData; } }
 
         /// <summary>
@@ -338,8 +348,10 @@ namespace Sparrow.Styles
         /// </summary>
         public Type Type { get { return _type; } }
 
-        /** Changes the color of all vertices to the same value.
-         *  The getter simply returns the color of the first vertex. */
+        /// <summary>
+        /// Changes the color of all vertices to the same value.
+        /// The getter simply returns the color of the first vertex.
+        /// </summary>
         public uint Color
         {
             get
@@ -353,8 +365,9 @@ namespace Sparrow.Styles
                 int numVertices = _vertexData.NumVertices;
 
                 for (i = 0; i < numVertices; ++i)
+                {
                     _vertexData.SetColor(i, value);
-
+                }
                 SetRequiresRedraw();
             }
             
@@ -406,16 +419,6 @@ namespace Sparrow.Styles
                     SetRequiresRedraw();
                 }
             }
-        }
-
-        /// <summary>
-        /// Indicates if pixels at the edges will be repeated or clamped.
-        /// Only works for power-of-two textures. @default false
-        /// </summary>
-        public bool TextureRepeat
-        {
-            get { return _textureRepeat; }
-            set { _textureRepeat = value; }
         }
 
         /// <summary>

@@ -116,9 +116,9 @@ namespace Sparrow.Display
                 SetupFor(mesh);
             }
             
-            meshStyle.BatchVertexData(_style, targetVertexId, matrix, subset.VertexID, subset.NumVertices);
-            meshStyle.BatchIndexData(_style, targetIndexId, targetVertexId - subset.VertexID,
-                subset.IndexID, subset.NumIndices);
+            meshStyle.BatchVertexData(_style, targetVertexId, matrix, subset.VertexId, subset.NumVertices);
+            meshStyle.BatchIndexData(_style, targetIndexId, targetVertexId - subset.VertexId,
+                subset.IndexId, subset.NumIndices);
 
             if (alpha != 1.0f) _vertexData.ScaleAlphas(alpha, targetVertexId, subset.NumVertices);
             if (_parent != null) SetRequiresRedraw();

@@ -7,6 +7,7 @@ using Sparrow.Text;
 using Sparrow.Utils;
 using System.Collections.Generic;
 using Sparrow.Filters;
+using Sparrow.Samples.CustomStyle;
 
 namespace Sparrow.Samples
 {
@@ -63,6 +64,8 @@ namespace Sparrow.Samples
             TestMask();
 
             TestButton();
+            
+            TestCustomStyle();
 
             Stage.Touch += Benchmark_Touch;
         }
@@ -237,9 +240,17 @@ namespace Sparrow.Samples
             btn.Y = 200;
             btn.Triggered += button => Console.WriteLine("Button press");
             AddChild(btn);
-
         }
 
+        private void TestCustomStyle()
+        {
+            Quad quad = new Quad();
+            quad.Texture = textures[0];
+            quad.X = 40;
+            quad.Y = 480;
+            quad.SetStyle(new CustomMeshStyle());
+            AddChild(quad);
+        }
 
     }
 }
