@@ -12,7 +12,7 @@ namespace Sparrow.Animation
     public interface IAnimatable
     {
         /// <summary>
-        ///  Advance the animation by a number of seconds.
+        /// Advance the animation by a number of seconds.
         /// </summary>
         void AdvanceTime(float seconds);
 

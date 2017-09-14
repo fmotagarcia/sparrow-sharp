@@ -7,14 +7,15 @@ using Sparrow.Core;
 
 namespace Sparrow.Rendering
 {
-    /** A Program represents a pair of a fragment- and vertex-shader.
-    *
-    *  <p>It is recommended to store programs in Sparrow's "Painter" instance via the methods
-    *  <code>RegisterProgram</code> and <code>GetProgram</code>. That way, your programs may
-    *  be shared among different display objects or even Sparrow instances.</p>
-    *
-    *  @see Painter
-    */
+    /// <summary>
+    /// A Program represents a pair of a fragment- and vertex-shader.
+    ///
+    /// <para>It is recommended to store programs in Sparrow's "Painter" instance via the methods
+    /// <code>RegisterProgram()</code> and <code>GetProgram()</code>. That way, your programs may
+    /// be shared among different display objects or even Sparrow instances.</para>
+    ///
+    /// <see cref="Painter"/>
+    /// </summary>
     public class Program
     {
         /// <summary>

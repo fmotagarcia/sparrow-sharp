@@ -138,7 +138,7 @@ namespace Sparrow.Styles
         /// <summary>
         /// Updates the settings of the given effect to match the current style.
         /// The given <code>effect</code> will always match the class returned by
-        /// <code>CreateEffect()</code>. Celled just before Render();
+        /// <code>CreateEffect()</code>. Called just before Render();
         ///
         /// <para>To be overridden by subclasses!</para>
         /// </summary>

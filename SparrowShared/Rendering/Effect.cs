@@ -43,7 +43,7 @@ namespace Sparrow.Rendering
      *  <p>Note that the <code>VertexData</code> being uploaded has to be created with the same
      *  format as the one returned by the effect's <code>vertexFormat</code> property.</p>
      *
-     *  <p><strong>Extending the Effect class</strong></p>
+     *  <p>Extending the Effect class</p>
      *
      *  <p>The base <code>Effect</code>-class can only render white triangles, which is not much
      *  use in itself. However, it is designed to be extended; subclasses can easily implement any
@@ -303,27 +303,18 @@ namespace Sparrow.Rendering
         /// </summary>
         protected virtual Program CreateProgram()
         {
-            StringBuilder source = new StringBuilder("");
-
-            // vertex shader
-            AddShaderInitCode(source);
-            source.AppendLine("attribute vec4 aPosition;");
-            source.AppendLine("uniform mat4 uMvpMatrix;");
-            // main
-            source.AppendLine("void main() {");
-            source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-            source.Append("}");
-            string vertexShader = source.ToString();
-
-            // fragment shader
-            source = new StringBuilder("");
-            AddShaderInitCode(source);
-            // main
-            source.AppendLine("void main() {");
-            source.AppendLine("  gl_FragColor = vec4(1, 1, 1, 1);");
-            source.Append("}");
-            string fragmentShader = source.ToString();
-
+            string vertexShader = AddShaderInitCode() + @"
+            attribute vec4 aPosition;
+            uniform mat4 uMvpMatrix;
+            
+            void main() {
+              gl_Position = uMvpMatrix * aPosition;
+            }";
+            
+            string fragmentShader = AddShaderInitCode() + @"
+            void main() {
+                gl_FragColor = vec4(1, 1, 1, 1);
+            }";
             return new Program(vertexShader, fragmentShader);
         }
 
@@ -331,16 +322,19 @@ namespace Sparrow.Rendering
         /// Appends OpenGL shader defines, this is needed for shaders to work on both
         /// desktop OpenGL and OpenGL ES 2+.
         /// </summary>
-        public static void AddShaderInitCode(StringBuilder source)
+        public string AddShaderInitCode()
         {
+            string ret = "";
 #if __WINDOWS__
-            source.AppendLine("#version 110");
-            source.AppendLine("#define highp  ");
-            source.AppendLine("#define mediump  ");
-            source.AppendLine("#define lowp  ");
+            ret = @"
+                #version 110
+                #define highp
+                #define mediump
+                #define lowp";
 #else
-            source.AppendLine("#version 100");
+            ret = "#version 110";
 #endif
+            return ret;
         }
         
         /// <summary>

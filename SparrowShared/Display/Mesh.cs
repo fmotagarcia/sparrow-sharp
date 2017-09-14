@@ -268,7 +268,9 @@ namespace Sparrow.Display
             get { return _vertexData.NumVertices; }
         }
 
-        /** The total number of indices referencing vertices. */
+        /// <summary>
+        /// The total number of indices referencing vertices.
+        /// </summary>
         public virtual int NumIndices {
             set { }
             get { return _indexData.NumIndices;}

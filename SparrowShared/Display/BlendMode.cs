@@ -36,7 +36,9 @@ namespace Sparrow.Display
         private BlendingFactorDest _destinationFactor;
         private static Dictionary<uint, BlendMode> _sBlendModes;
 
-        /** Creates a new BlendMode instance. */
+        /// <summary>
+        /// Creates a new BlendMode instance.
+        /// </summary>
         private BlendMode(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
         {
             _name = name;
@@ -44,8 +46,10 @@ namespace Sparrow.Display
             _destinationFactor = dstFactor;
         }
 
-        /** Returns the blend mode with the given name.
-         *  Throws an ArgumentError if the mode does not exist. */
+        /// <summary>
+        /// Returns the blend mode with the given name.
+        /// </summary>
+        /// <exception cref="ArgumentException">The mode does not exist.</exception>
         public static BlendMode Get(uint modeName)
         {
             if (_sBlendModes == null) RegisterDefaults();
@@ -53,7 +57,9 @@ namespace Sparrow.Display
             else throw new ArgumentException("Blend mode not found: " + modeName);
         }
 
-        /** Registers a blending mode under a certain name. */
+        /// <summary>
+        /// Registers a blending mode under a certain name.
+        /// </summary>
         public static BlendMode Register(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
         {
             if (_sBlendModes == null) RegisterDefaults();
@@ -77,13 +83,14 @@ namespace Sparrow.Display
             Register(BELOW, BlendingFactorSrc.OneMinusDstAlpha, BlendingFactorDest.DstAlpha);
         }
 
-        /** Sets the appropriate blend factors for source and destination on the current context. */
+        /// <summary>
+        /// Sets the appropriate blend factors for source and destination on the current context.
+        /// </summary>
         public void Activate()
         {
             Gl.Enable(EnableCap.Blend);
             Gl.BlendFunc(_sourceFactor, _destinationFactor);
         }
-
-}
+    }
 }
 

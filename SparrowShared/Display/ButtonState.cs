@@ -1,7 +1,7 @@
 ﻿namespace Sparrow.Display
 {
     /// <summary>
-    ///  An enum that provides constant values for the states of the <code>Button</code> class. 
+    ///  An enum that provides constant values for the states of the <see cref="Button"/> class. 
     /// </summary>
     public enum ButtonState
     {

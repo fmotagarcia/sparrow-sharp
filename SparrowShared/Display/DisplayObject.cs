@@ -113,7 +113,7 @@ namespace Sparrow.Display
         private double _lastTouchTimestamp;
 
         // helper objects
-        private static readonly List<DisplayObject> sAncestors = new List<DisplayObject>();
+        private static readonly List<DisplayObject> SAncestors = new List<DisplayObject>();
         private static Matrix2D _sHelperMatrixAlt = Matrix2D.Create();
 
         protected DisplayObject()
@@ -490,17 +490,17 @@ namespace Sparrow.Display
 
             while (currentObject != null)
             {
-                sAncestors.Add(currentObject);
+                SAncestors.Add(currentObject);
                 currentObject = currentObject._parent;
             }
 
             currentObject = object2;
-            while (currentObject != null && sAncestors.Contains(currentObject) == false)
+            while (currentObject != null && SAncestors.Contains(currentObject) == false)
             {
                 currentObject = currentObject._parent;
             }
 
-            sAncestors.Clear();
+            SAncestors.Clear();
 
             if (currentObject != null) return currentObject;
             throw new ArgumentException("Object not connected to target");
@@ -690,10 +690,10 @@ namespace Sparrow.Display
         /// <summary>
         /// The 3D transformation matrix of the object relative to its parent.
         ///
-        /// <p>For 2D objects, this property returns just a 3D version of the 2D transformation
-        /// matrix. Only the 'Sprite3D' class supports real 3D transformations.</p>
+        /// <para>For 2D objects, this property returns just a 3D version of the 2D transformation
+        /// matrix. Only the 'Sprite3D' class supports real 3D transformations.</para>
         ///
-        /// <p>CAUTION: not a copy, but the actual object!</p>
+        /// <para>CAUTION: not a copy, but the actual object!</para>
         /// </summary>
         public virtual Matrix3D TransformationMatrix3D
         {
@@ -1005,9 +1005,9 @@ namespace Sparrow.Display
         /// several filters, assign an instance of the <code>FilterChain</code> class; to remove
         /// all filters, assign <code>null</code>.
         ///
-        /// <p>Beware that a filter instance may only be used on one object at a time! Furthermore,
+        /// <para>Beware that a filter instance may only be used on one object at a time! Furthermore,
         /// when you remove or replace a filter, it is NOT disposed automatically (since you might
-        /// want to reuse it on a different object).</p>
+        /// want to reuse it on a different object).</para>
         /// <see cref="FragmentFilter"/>
         /// </summary>
         public virtual FragmentFilter Filter { 

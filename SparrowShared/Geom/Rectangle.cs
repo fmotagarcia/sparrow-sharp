@@ -263,10 +263,13 @@ namespace Sparrow.Geom
                 Point position = positions[i];
 
                 if (matrix != null)
+                {
                     sPoint3D = matrix.TransformCoords3D(position.X, position.Y, 0);
+                }
                 else
+                {
                     sPoint3D = new[] { position.X, position.Y, 0};
-
+                }
                 Point sPoint = MathUtil.IntersectLineWithXYPlane(camPos, sPoint3D);
 
                 if (minX > sPoint.X) minX = sPoint.X;

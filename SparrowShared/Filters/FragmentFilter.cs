@@ -311,15 +311,13 @@ namespace Sparrow.Filters
         {
             return new FilterEffect();
         }
-
-        /** Caches the filter output into a texture.
-        *
-        *  <p>An uncached filter is rendered every frame (except if it can be rendered from the
-        *  global render cache, which happens if the target object does not change its appearance
-        *  or location relative to the stage). A cached filter is only rendered once; the output
-        *  stays unchanged until you call <code>cache</code> again or change the filter settings.
-        *  </p>
-        */
+        
+        /// <summary>
+        /// <para>An uncached filter is rendered every frame (except if it can be rendered from the
+        /// global render cache, which happens if the target object does not change its appearance
+        /// or location relative to the stage). A cached filter is only rendered once; the output
+        /// stays unchanged until you call <code>cache</code> again or change the filter settings.</para>
+        /// </summary>
         public void Cache()
         {
             _cached = _cacheRequested = true;
@@ -359,8 +357,10 @@ namespace Sparrow.Filters
            
         }
 
-        /** The VertexData used to process the effect. Per default, uses the format provided
-         *  by the effect, and contains four vertices enclosing the target object. */
+        /// <summary>
+        /// The VertexData used to process the effect. Per default, uses the format provided
+        /// by the effect, and contains four vertices enclosing the target object.
+        /// </summary>
         protected VertexData VertexData
         {
             get
@@ -371,8 +371,10 @@ namespace Sparrow.Filters
            
         }
 
-        /** The IndexData used to process the effect. Per default, references a quad (two triangles)
-         *  of four vertices. */
+        /// <summary>
+        /// The IndexData used to process the effect. Per default, references a quad (two triangles)
+        /// of four vertices.
+        /// </summary>
         protected IndexData IndexData
         {
             get
@@ -387,8 +389,10 @@ namespace Sparrow.Filters
             }
         }
 
-        /** Call this method when any of the filter's properties changes.
-         *  This will make sure the filter is redrawn in the next frame. */
+        /// <summary>
+        /// Call this method when any of the filter's properties changes.
+        /// This will make sure the filter is redrawn in the next frame.
+        /// </summary>
         protected virtual void SetRequiresRedraw()
         {
             OnChangedEvent?.Invoke();

@@ -9,11 +9,11 @@ namespace Sparrow.Display
 {
     /// <summary>
     /// A Stage is the root of the display tree. It represents the rendering area of the application.
-
+    /// <para>
     /// Sparrow will create the stage for you. The root object of your game will be the first child of
     /// the stage. You can access 'root' and 'stage' from any display object using the respective 
     /// properties. 
-
+    /// </para>
     /// The stage's 'StageWidth' and 'StageHeight' values define the coordinate system of your game. The color
     /// of the stage defines the background color of your game.
     /// </summary>
@@ -31,16 +31,17 @@ namespace Sparrow.Display
         /// </summary>
         public uint Color { get; set; }
 
-        /** Specifies an angle (radian, between zero and PI) for the field of view. This value
-         *  determines how strong the perspective transformation and distortion apply to a Sprite3D
-         *  object.
-         *
-         *  <p>A value close to zero will look similar to an orthographic projection; a value
-         *  close to PI results in a fisheye lens effect. If the field of view is set to 0 or PI,
-         *  nothing is seen on the screen.</p>
-         *
-         *  @default 1.0
-         */
+        /// <summary>
+        /// Specifies an angle (radian, between zero and PI) for the field of view. This value
+        /// determines how strong the perspective transformation and distortion apply to a Sprite3D
+        /// object.
+        ///
+        /// <para>A value close to zero will look similar to an orthographic projection; a value
+        /// close to PI results in a fisheye lens effect. If the field of view is set to 0 or PI,
+        /// nothing is seen on the screen.</para>
+        ///
+        /// @default 1.0
+        /// </summary>
         public float FieldOfView { get; set; }
         private readonly Point _projectionOffset;
         private float _width;
@@ -89,7 +90,7 @@ namespace Sparrow.Display
 
         /// <summary>
         /// Returns the stage bounds (i.e. not the bounds of its contents, but the rectangle
-        ///  spawned up by 'stageWidth' and 'stageHeight') in another coordinate system.
+        /// spawned up by 'stageWidth' and 'stageHeight') in another coordinate system.
         /// </summary>
         public Rectangle GetStageBounds(DisplayObject targetSpace)
         {
@@ -236,30 +237,34 @@ namespace Sparrow.Display
             set { _height = value; }
         }
 
-        /** The distance between the stage and the camera. Changing this value will update the
-         *  field of view accordingly. */
+        /// <summary>
+        /// The distance between the stage and the camera. Changing this value will update the
+        /// field of view accordingly.
+        /// </summary>
         public float FocalLength
         {
             get { return StageWidth / (2f * (float)Math.Tan(FieldOfView / 2f)); }
             set { FieldOfView = 2 * (float)Math.Atan(StageWidth / (2f * value)); }
         }
 
-        /** A vector that moves the camera away from its default position in the center of the
-         *  stage. Use this property to change the center of projection, i.e. the vanishing
-         *  point for 3D display objects. <p>CAUTION: not a copy, but the actual object!</p>
-         */
+        /// <summary>
+        /// A vector that moves the camera away from its default position in the center of the
+        /// stage. Use this property to change the center of projection, i.e. the vanishing
+        /// point for 3D display objects. <para>CAUTION: not a copy, but the actual object!</para>
+        /// </summary>
         public Point ProjectionOffset {
             get { return _projectionOffset; }
             set { _projectionOffset.SetTo(value.X, value.Y); }
         }
 
-        /** The global position of the camera. This property can only be used to find out the
-         *  current position, but not to modify it. For that, use the 'projectionOffset',
-         *  'fieldOfView' and 'focalLength' properties. If you need the camera position in
-         *  a certain coordinate space, use 'getCameraPosition' instead.
-         *
-         *  <p>CAUTION: not a copy, but the actual object!</p>
-         */
+        /// <summary>
+        /// The global position of the camera. This property can only be used to find out the
+        /// current position, but not to modify it. For that, use the 'projectionOffset',
+        /// 'fieldOfView' and 'focalLength' properties. If you need the camera position in
+        /// a certain coordinate space, use 'getCameraPosition' instead.
+        ///
+        /// <para>CAUTION: not a copy, but the actual object!</para>
+        /// </summary>
         public float[] CameraPosition
         {
             get { return GetCameraPosition(); }

@@ -136,10 +136,12 @@ namespace Sparrow.Display
             return null;
         }
 
-        /** Readjusts the dimensions of the quad. Use this method without any arguments to
-         *  synchronize quad and texture size after assigning a texture with a different size.
-         *  You can also force a certain width and height by passing positive, non-zero
-         *  values for width and height. */
+        /// <summary>
+        /// Readjusts the dimensions of the quad. Use this method without any arguments to
+        /// synchronize quad and texture size after assigning a texture with a different size.
+        /// You can also force a certain width and height by passing positive, non-zero
+        /// values for width and height.
+        /// </summary>
         public void ReadjustSize(float width = -1, float height = -1)
         {
             if (width  <= 0) width  = Texture != null ? Texture.FrameWidth  : _bounds.Width;
@@ -163,20 +165,21 @@ namespace Sparrow.Display
             return quad;
         }
 
-        /** The texture that is mapped to the quad (or <code>null</code>, if there is none).
-         *  Per default, it is mapped to the complete quad, i.e. to the complete area between the
-         *  top left and bottom right vertices. This can be changed with the
-         *  <code>SetTexCoords</code>-method.
-         *
-         *  <p>Note that the size of the quad will not change when you assign a texture, which
-         *  means that the texture might be distorted at first. Call <code>ReadjustSize</code> to
-         *  synchronize quad and texture size.</p>
-         *
-         *  <p>You could also set the texture via the <code>style.Texture</code> property.
-         *  That way, however, the texture frame won't be taken into account. Since only rectangular
-         *  objects can make use of a texture frame, only a property on the Quad class can do that.
-         *  </p>
-         */
+        /// <summary>
+        /// The texture that is mapped to the quad (or <code>null</code>, if there is none).
+        /// Per default, it is mapped to the complete quad, i.e. to the complete area between the
+        /// top left and bottom right vertices. This can be changed with the
+        /// <code>SetTexCoords()</code>-method.
+        ///
+        /// <para>Note that the size of the quad will not change when you assign a texture, which
+        /// means that the texture might be distorted at first. Call <code>ReadjustSize()</code> to
+        /// synchronize quad and texture size.</para>
+        ///
+        /// <para>You could also set the texture via the <code>style.Texture</code> property.
+        /// That way, however, the texture frame won't be taken into account. Since only rectangular
+        /// objects can make use of a texture frame, only a property on the Quad class can do that.
+        /// </para>
+        /// </summary>
         public override Texture Texture {
             get { return base.Texture; }
             set

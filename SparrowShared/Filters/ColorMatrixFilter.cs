@@ -142,25 +142,22 @@ namespace Sparrow.Filters
         
         protected override Program CreateProgram()
         {
-            StringBuilder source = new StringBuilder("");
-            AddShaderInitCode(source);
-            source.AppendLine("uniform lowp mat4 uColorMatrix;");
-            source.AppendLine("uniform lowp vec4 uColorOffset;");
-            source.AppendLine("uniform lowp sampler2D uTexture;");
-            source.AppendLine("varying lowp vec2 vTexCoords;");
-            source.AppendLine("const lowp vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);");
+            string fragmentShader = AddShaderInitCode() + @"
+            uniform lowp mat4 uColorMatrix;
+            uniform lowp vec4 uColorOffset;
+            uniform lowp sampler2D uTexture;
+            varying lowp vec2 vTexCoords;
+            const lowp vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);
 
-            source.AppendLine("void main() {");
-            source.AppendLine("  lowp vec4 texColor = texture2D(uTexture, vTexCoords);"); // read texture color
-            source.AppendLine("  texColor = max(texColor, MIN_COLOR);");                  // avoid division through zero in next step
-            source.AppendLine("  texColor.xyz /= texColor.www;");                         // restore original(non-PMA) RGB values
-            source.AppendLine("  texColor *= uColorMatrix;");                             // multiply color with 4x4 matrix
-            source.AppendLine("  texColor += uColorOffset;");                             // add offset
-            source.AppendLine("  texColor.xyz *= texColor.www;");                         // multiply with alpha again(PMA)
-            source.AppendLine("  gl_FragColor = texColor;");
-            source.AppendLine("}");
-            string fragmentShader = source.ToString();
-
+            void main() {
+              lowp vec4 texColor = texture2D(uTexture, vTexCoords); // read texture color
+              texColor = max(texColor, MIN_COLOR);                  // avoid division through zero in next step
+              texColor.xyz /= texColor.www;                         // restore original(non-PMA) RGB values
+              texColor *= uColorMatrix;                             // multiply color with 4x4 matrix
+              texColor += uColorOffset;                             // add offset
+              texColor.xyz *= texColor.www;                         // multiply with alpha again(PMA)
+              gl_FragColor = texColor;
+            }";
             return new Program(StdVertexShader, fragmentShader);
         }
 

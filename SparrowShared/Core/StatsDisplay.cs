@@ -126,7 +126,6 @@ namespace Sparrow.Core
             // By calling 'finishQuadBatch' and 'excludeFromCache', we can make sure that the stats
             // display is always rendered with exactly two draw calls. That is taken into account
             // when showing the drawCount value (see 'ignore self' comment above)
-
             painter.ExcludeFromCache(this);
             painter.FinishMeshBatch();
             base.Render(painter);

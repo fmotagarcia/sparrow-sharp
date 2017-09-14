@@ -6,31 +6,32 @@ namespace Sparrow.Animation
 {
     /// <summary>
     /// The Juggler takes objects that implement IAnimatable (e.g. 'MovieClip's) and executes them.
-    /// 
+    /// <para>
     /// A juggler is a simple object. It does no more than saving a list of objects implementing 
     /// 'IAnimatable' and advancing their time if it is told to do so (by calling its own 'AdvanceTime'
     /// method). Furthermore, an object can request to be removed from the juggler by dispatching an
     /// 'RemoveFromJuggler' event.
-    /// 
+    /// </para>
     /// There is a default juggler that you can access from anywhere with the following code:
-    /// 
+    /// <para>
     /// Juggler juggler = SparrowSharp.DefaultJuggler;
-    /// 
+    /// </para>
     /// You can, however, create juggler objects yourself, too. That way, you can group your game 
     /// into logical components that handle their animations independently.
     /// 
     /// A cool feature of the juggler is to delay method calls. Say you want to remove an object from its
     /// parent 2 seconds from now. Call:
-    /// 
+    /// <para>
     /// juggler.DelayInvocationAtTarget(object.RemoveFromParent, 2.0f);
-    /// 
+    /// </para>
     /// This line of code will execute the following method 2 seconds in the future:
-    /// 
+    /// <para>
     /// object.RemoveFromParent();
-    /// 
+    /// </para>
     /// Alternatively, you can use the block-based verson of the method:
-    /// 
+    /// <para>
     /// juggler.DelayInvocationByTime(delegate{ object.RemoveFromParent(); }, 2.0f);
+    /// </para>
     /// </summary>
     public class Juggler : IAnimatable
     {
@@ -101,17 +102,17 @@ namespace Sparrow.Animation
             return objectId;
         }
 
-        /** Removes an object from the juggler, identified by the unique numeric identifier you
-         *  received when adding it.
-         *
-         *  <p>It's not uncommon that an animatable object is added to a juggler repeatedly,
-         *  e.g. when using an object-pool. Thus, when using the <code>remove</code> method,
-         *  you might accidentally remove an object that has changed its context. By using
-         *  <code>removeByID</code> instead, you can be sure to avoid that, since the objectID
-         *  will always be unique.</p>
-         *
-         *  @return if successful, the passed objectID; if the object was not found, zero.
-         */
+        /// <summary>
+        /// Removes an object from the juggler, identified by the unique numeric identifier you
+        /// received when adding it.
+        ///
+        /// <para>It's not uncommon that an animatable object is added to a juggler repeatedly,
+        /// e.g. when using an object-pool. Thus, when using the <code>remove</code> method,
+        /// you might accidentally remove an object that has changed its context. By using
+        /// <code>removeByID</code> instead, you can be sure to avoid that, since the objectID
+        /// will always be unique.</para>
+        /// </summary>
+        /// <returns>if successful, the passed objectID; if the object was not found, zero.</returns>
         public uint RemoveById(uint objectId)
         {
             for (int i = _objects.Count - 1; i >= 0; --i)
@@ -138,7 +139,6 @@ namespace Sparrow.Animation
             // from an 'advanceTime' call, this would make the loop crash. Instead, the
             // vector is filled with 'null' values. They will be cleaned up on the next call
             // to 'advanceTime'.
-            
             for (int i = _objects.Count - 1; i >= 0; --i)
             {
                 IAnimatable obj = _objects[i];

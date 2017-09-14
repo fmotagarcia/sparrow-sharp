@@ -6,9 +6,9 @@
     <ProjectGuid>{49846257-890D-49D0-98D4-A315A55289ED}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SparrowSharp.Samples.iOS</RootNamespace>
+    <RootNamespace>SparrowSamples</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>SparrowSharpSampleiOS</AssemblyName>
+    <AssemblyName>SparrowSamples</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>

@@ -3,7 +3,6 @@ using System;
 using Sparrow.Textures;
 using Sparrow.Utils;
 using Sparrow.Rendering;
-using System.Text;
 using OpenGL;
 
 namespace Sparrow.Filters
@@ -163,79 +162,72 @@ namespace Sparrow.Filters
         protected override Program CreateProgram()
         {
             if (_strength == 0) return base.CreateProgram();
-
-            StringBuilder source = new StringBuilder("");
-            // vertex shader
-            AddShaderInitCode(source);
-            // attributes
-            source.AppendLine("attribute vec4 aPosition;");
-            source.AppendLine("attribute lowp vec2 aTexCoords;");
-            // uniforms
-            source.AppendLine("uniform mat4 uMvpMatrix;");
-            source.AppendLine("uniform lowp vec4 uOffsets;");
-            // varying
-            source.AppendLine("varying lowp vec2 v0;");
-            source.AppendLine("varying lowp vec2 v1;");
-            source.AppendLine("varying lowp vec2 v2;");
-            source.AppendLine("varying lowp vec2 v3;");
-            source.AppendLine("varying lowp vec2 v4;");
-
-            // main
-            source.AppendLine("void main() {");
-            source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");     // 4x4 matrix transform to output space
-            source.AppendLine("  v0 = aTexCoords;");                          // pos:  0 |
-            source.AppendLine("  v1 = aTexCoords - uOffsets.zw;");            // pos: -2 |
-            source.AppendLine("  v2 = aTexCoords - uOffsets.xy;");            // pos: -1 | --> kernel positions
-            source.AppendLine("  v3 = aTexCoords + uOffsets.xy;");            // pos: +1 |     (only 1st two parts are relevant)
-            source.AppendLine("  v4 = aTexCoords + uOffsets.zw;");            // pos: +2 |
-            source.AppendLine("}");
-            string vertexShader = source.ToString();
-
-            source = new StringBuilder("");
-            //fragment shader
-            AddShaderInitCode(source);
-            // variables
-            source.AppendLine("varying lowp vec2 v0;");
-            source.AppendLine("varying lowp vec2 v1;");
-            source.AppendLine("varying lowp vec2 v2;");
-            source.AppendLine("varying lowp vec2 v3;");
-            source.AppendLine("varying lowp vec2 v4;");
             
-            source.AppendLine("uniform sampler2D uTexture;");
-            source.AppendLine("uniform lowp vec4 uWeights;");
+            string vertexShader = AddShaderInitCode() + @"
+            // attributes
+            attribute vec4 aPosition;
+            attribute lowp vec2 aTexCoords;
+            // uniforms
+            uniform mat4 uMvpMatrix;
+            uniform lowp vec4 uOffsets;
+            // varying
+            varying lowp vec2 v0;
+            varying lowp vec2 v1;
+            varying lowp vec2 v2;
+            varying lowp vec2 v3;
+            varying lowp vec2 v4;
 
             // main
-            source.AppendLine("void main() {");
+            void main() {
+              gl_Position = uMvpMatrix * aPosition;     // 4x4 matrix transform to output space
+              v0 = aTexCoords;                          // pos:  0 |
+              v1 = aTexCoords - uOffsets.zw;            // pos: -2 |
+              v2 = aTexCoords - uOffsets.xy;            // pos: -1 | --> kernel positions
+              v3 = aTexCoords + uOffsets.xy;            // pos: +1 |     (only 1st two parts are relevant)
+              v4 = aTexCoords + uOffsets.zw;            // pos: +2 |
+            }";
+            
+            string fragmentShader = AddShaderInitCode() + @"
+            // variables
+            varying lowp vec2 v0;
+            varying lowp vec2 v1;
+            varying lowp vec2 v2;
+            varying lowp vec2 v3;
+            varying lowp vec2 v4;
+            
+            uniform sampler2D uTexture;
+            uniform lowp vec4 uWeights;
 
-            source.AppendLine("  lowp vec4 ft0;");
-            source.AppendLine("  lowp vec4 ft1;");
-            source.AppendLine("  lowp vec4 ft2;");
-            source.AppendLine("  lowp vec4 ft3;");
-            source.AppendLine("  lowp vec4 ft4;");
-            source.AppendLine("  lowp vec4 ft5;");
+            // main
+            void main() {
 
-            source.AppendLine("  ft0 = texture2D(uTexture,v0);");  // read center pixel
-            source.AppendLine("  ft5 = ft0 * uWeights.xxxx;");     // multiply with center weight
+              lowp vec4 ft0;
+              lowp vec4 ft1;
+              lowp vec4 ft2;
+              lowp vec4 ft3;
+              lowp vec4 ft4;
+              lowp vec4 ft5;
 
-            source.AppendLine("  ft1 = texture2D(uTexture,v1);");  // read pixel -2
-            source.AppendLine("  ft1 = ft1 * uWeights.zzzz;");     // multiply with weight
-            source.AppendLine("  ft5 = ft5 + ft1;");               // add to output color
+              ft0 = texture2D(uTexture,v0);  // read center pixel
+              ft5 = ft0 * uWeights.xxxx;     // multiply with center weight
 
-            source.AppendLine("  ft2 = texture2D(uTexture,v2);");  // read pixel -1
-            source.AppendLine("  ft2 = ft2 * uWeights.yyyy;");     // multiply with weight
-            source.AppendLine("  ft5 = ft5 + ft2;");               // add to output color
+              ft1 = texture2D(uTexture,v1);  // read pixel -2
+              ft1 = ft1 * uWeights.zzzz;     // multiply with weight
+              ft5 = ft5 + ft1;               // add to output color
 
-            source.AppendLine("  ft3 = texture2D(uTexture,v3);");  // read pixel +1
-            source.AppendLine("  ft3 = ft3 * uWeights.yyyy;");     // multiply with weight
-            source.AppendLine("  ft5 = ft5 + ft3;");               // add to output color
+              ft2 = texture2D(uTexture,v2);  // read pixel -1
+              ft2 = ft2 * uWeights.yyyy;     // multiply with weight
+              ft5 = ft5 + ft2;               // add to output color
 
-            source.AppendLine("  ft4 = texture2D(uTexture,v4);");  // read pixel +2
-            source.AppendLine("  ft4 = ft4 * uWeights.zzzz;");     // multiply with weight
+              ft3 = texture2D(uTexture,v3);  // read pixel +1
+              ft3 = ft3 * uWeights.yyyy;     // multiply with weight
+              ft5 = ft5 + ft3;               // add to output color
 
-            source.AppendLine("  gl_FragColor = ft5 + ft4;");      // add to output color
+              ft4 = texture2D(uTexture,v4);  // read pixel +2
+              ft4 = ft4 * uWeights.zzzz;     // multiply with weight
 
-            source.AppendLine("}");
-            string fragmentShader = source.ToString();
+              gl_FragColor = ft5 + ft4;      // add to output color
+            }";
 
             return new Program(vertexShader, fragmentShader);
         }

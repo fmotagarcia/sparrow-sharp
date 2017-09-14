@@ -10,7 +10,7 @@ namespace Sparrow.ResourceLoading
 {
     public class TextureLoader
     {
-        protected bool _isLoaded = false;
+        protected bool _isLoaded;
         protected Texture _glTexture;
 
         public bool IsLoaded { get { return _isLoaded; } }
@@ -19,7 +19,7 @@ namespace Sparrow.ResourceLoading
 
         public event EventHandler<Texture> ResourceLoaded;
 
-        public TextureLoader LoadRemoteImage(string remoteURL)
+        public TextureLoader LoadRemoteImage(string remoteUrl)
         {
             _isLoaded = false;
             return this; 
@@ -92,10 +92,7 @@ namespace Sparrow.ResourceLoading
             // a race condition if the last subscriber unsubscribes 
             // immediately after the null check and before the event is raised.
             EventHandler<Texture> handler = ResourceLoaded;
-            if (handler != null)
-            {
-                handler(this, _glTexture);
-            }
+            handler?.Invoke(this, _glTexture);
         }
 
     }

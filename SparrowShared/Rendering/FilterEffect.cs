@@ -42,26 +42,16 @@ namespace Sparrow.Rendering
             TextureSmoothing = TextureSmoothing.Bilinear;
         }
 
-        public static string StdVertexShader
-        {
-            get
-            {
-                StringBuilder source = new StringBuilder("");
-                // vertex shader
-                AddShaderInitCode(source);
-                source.AppendLine("attribute vec4 aPosition;");
-                source.AppendLine("attribute vec2 aTexCoords;");
-                source.AppendLine("uniform mat4 uMvpMatrix;");
-                source.AppendLine("varying lowp vec2 vTexCoords;");
+        public static readonly string StdVertexShader = @"
+                attribute vec4 aPosition;
+                attribute vec2 aTexCoords;
+                uniform mat4 uMvpMatrix;
+                varying lowp vec2 vTexCoords;;
                 // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-                source.AppendLine("  vTexCoords  = aTexCoords;");
-                source.Append("}");
-
-                return source.ToString();
-            }
-        }
+                void main() {
+                  gl_Position = uMvpMatrix * aPosition;
+                  vTexCoords  = aTexCoords;
+                }";
         
         /// <summary>
         /// Override this method if the effect requires a different program depending on the
@@ -76,25 +66,16 @@ namespace Sparrow.Rendering
         
         protected override Program CreateProgram()
         {
-            if (Texture != null)
-            {
-                string vertexShader = StdVertexShader;
-
-                // fragment shader
-                var source = new StringBuilder("");
-                AddShaderInitCode(source);
-                // variables
-                source.AppendLine("varying lowp vec2 vTexCoords;");
-                source.AppendLine("uniform lowp sampler2D uTexture;");
-                // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords);");
-                source.Append("}");
-
-                string fragmentShader = source.ToString();
-                return new Program(vertexShader, fragmentShader);
-            }
-            return base.CreateProgram();
+            if (Texture == null) return base.CreateProgram();
+            
+            var fragmentShader = AddShaderInitCode() + @"
+                varying lowp vec2 vTexCoords;
+                uniform lowp sampler2D uTexture;
+                
+                void main() {
+                  gl_FragColor = texture2D(uTexture, vTexCoords);
+                }";
+            return new Program(StdVertexShader, fragmentShader);
         }
 
         /// <summary>
