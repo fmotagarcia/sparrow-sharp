@@ -441,7 +441,7 @@ namespace Sparrow.Rendering
         /// <returns>the name of the created buffer</returns>
         public uint CreateIndexBuffer(bool upload = false)
         {
-            return CreateIndexBuffer(upload, BufferUsageARB.StaticDraw);
+            return CreateIndexBuffer(upload, BufferUsage.StaticDraw);
         }
 
         /// <summary>
@@ -449,13 +449,13 @@ namespace Sparrow.Rendering
         /// Optionally, the current data is uploaded right away.
         /// </summary>
         /// <returns>the name of the created buffer</returns>
-        public uint CreateIndexBuffer(bool upload, BufferUsageARB bufferUsage)
+        public uint CreateIndexBuffer(bool upload, BufferUsage bufferUsage)
         {
             if (_numIndices == 0) return 0;
 
             //IndexBuffer3D buffer = context.createIndexBuffer(_numIndices, bufferUsage);
             uint buffer = Gl.GenBuffer();
-            Gl.BindBuffer(BufferTargetARB.ArrayBuffer, buffer);
+            Gl.BindBuffer(BufferTarget.ArrayBuffer, buffer);
             if (upload) UploadToIndexBuffer(buffer, bufferUsage);
             return buffer;
         }
@@ -463,7 +463,7 @@ namespace Sparrow.Rendering
         /// <summary>
         /// Uploads the complete data (or a section of it) to the given buffer.
         /// </summary>
-        public void UploadToIndexBuffer(uint buffer, BufferUsageARB hint, int numIndices = -1)
+        public void UploadToIndexBuffer(uint buffer, BufferUsage hint, int numIndices = -1)
         {
             if (numIndices < 0 || numIndices > _numIndices)
             {
@@ -471,8 +471,8 @@ namespace Sparrow.Rendering
             }
             if (numIndices > 0)
             {
-                Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, buffer);
-                Gl.BufferData(BufferTargetARB.ElementArrayBuffer, (uint)(sizeof(short) * numIndices), RawData, hint);
+                Gl.BindBuffer(BufferTarget.ElementArrayBuffer, buffer);
+                Gl.BufferData(BufferTarget.ElementArrayBuffer, (uint)(sizeof(short) * numIndices), RawData, hint);
                 
             }
         }

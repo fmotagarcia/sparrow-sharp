@@ -18,7 +18,7 @@ namespace Sparrow.Utils
             Gl.Get(Gl.NUM_EXTENSIONS, out numExt);
             for (uint i = 0; i < numExt; i++)
             {
-                Extensions.Add(Gl.GetString(Gl.EXTENSIONS, i));
+                Extensions.Add(Gl.GetString(StringName.Extensions, i));
             }
             //TODO check this on Android
             //string extensionsString = Gl.GetString(StringName.Extensions);

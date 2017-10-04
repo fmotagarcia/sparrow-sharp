@@ -1,159 +1,151 @@
 ﻿using System;
 using Sparrow.Touches;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.Drawing;
 using OpenGL;
 using Sparrow.Utils;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms.Integration;
+using Cursors = System.Windows.Input.Cursors;
 
 namespace Sparrow.Core
 {
-    public class DesktopViewController : Form
+    public class DesktopViewController : Window
     {
         private readonly Type _rootClass;
-        private readonly TouchProcessor touchProcessor;
-        private const int pointerId = 1;
-        private readonly Stopwatch sw = new Stopwatch();
-        private GlControl control;
-
-        [System.Security.SuppressUnmanagedCodeSecurity]
-        [System.Runtime.InteropServices.DllImport("User32.dll")]
-        static extern bool PeekMessage(ref MSG msg, IntPtr hWnd, int messageFilterMin, int messageFilterMax, int flags);
-
-        struct MSG
-        {
-            public IntPtr HWnd;
-            public uint Message;
-            public IntPtr WParam;
-            public IntPtr LParam;
-            public uint Time;
-            public POINT Point;
-
-            public override string ToString()
-            {
-                return $"msg=0x{(int) Message:x} ({Message}) hwnd=0x{HWnd.ToInt32():x} wparam=0x{WParam.ToInt32():x} lparam=0x{LParam.ToInt32():x} pt=0x{Point:x}";
-            }
-        }
-        
-        struct POINT
-        {
-            private int X;
-            private int Y;
-
-            public POINT(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
-
-            public override string ToString()
-            {
-                return "Point {" + X + ", " + Y + ")";
-            }
-        }
-        MSG msg = new MSG();
-
+        private readonly TouchProcessor _touchProcessor;
+        private const int PointerId = 1;
+        private readonly CustomGlControl _control;
+        private float _scale = 1;
+        private bool _contextCreated;
+        /// <summary>
+        /// Initializes the game and the native window where your app will run.
+        /// </summary>
+        /// <param name="rootClass">The starting class of your app. Should be a subclass of Sprite.</param>
+        /// <param name="windowWidth">The width of the window. Note that the OS might scale this up on HDPI displays</param>
+        /// <param name="windowHeight">The height of the window. Note that the OS might scale this up on HDPI displays</param>
         public DesktopViewController(Type rootClass, int windowWidth, int windowHeight)
         {
+            SizeToContent = SizeToContent.WidthAndHeight; // size is determined by the children
             _rootClass = rootClass;
-            var windowSize = new Size(windowWidth, windowHeight);
-            ClientSize = windowSize;
-            touchProcessor = new TouchProcessor();
+            _touchProcessor = new TouchProcessor();
+            
+            Grid grid = new Grid();
+            grid.Width = windowWidth;
+            grid.Height = windowHeight;
+            Content = grid;
+            grid.Margin = new Thickness(0, 0, 0, 0);
+            var host = new WindowsFormsHost();
+            host.Margin = new Thickness(0, 0, 0, 0);
+            grid.Children.Add(host);
 
-            control = new GlControl();
-            control.DepthBits = 8;
-            control.StencilBits = 8;
-            control.ContextProfile = GlControl.ProfileType.Core;
-            control.DebugContext = GlControl.AttributePermission.Enabled;
-            control.Size = windowSize;
-     
-            Controls.Add(control);
-
-            control.MouseDown += OnMouseButtonDown;
-            control.MouseUp += OnMouseButtonUp;
-            control.MouseMove += OnMouseMove;
-            control.Resize += OnResize;
-
-            control.ContextCreated += OnContextCreated;
-            control.ContextDestroying += ContextDestroying;
+            Gl.Initialize();
+            _control = new CustomGlControl();
+            host.Child = _control;
+            //control.DepthBits = 8;
+            //control.StencilBits = 8;
+            _control.ContextProfile = CustomGlControl.ProfileType.Core;
+            _control.DebugContext = CustomGlControl.AttributePermission.Enabled;
+            _control.Animation = true;
+            _control.AnimationTime = 16;
+            _control.ContextCreated += OnContextCreated;
+            _control.ContextDestroying += ContextDestroying;
+            
+            Loaded += OnLoaded;
+        }
+        
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            if (_contextCreated)
+            {
+                InitApp();
+            }
         }
 
-        private void OnContextCreated(object sender, GlControlEventArgs e)
+        private void OnContextCreated(object sender, GlControlEventArgs glControlEventArgs)
         {
-            SparrowSharp.NativeWindow = this; 
-            SparrowSharp.Start((uint)ClientSize.Width, (uint)ClientSize.Height, _rootClass);
+            _contextCreated = true;
+            if (IsLoaded)
+            {
+                InitApp();
+            }
+        }
+
+        private void InitApp()
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            if (source != null && source.CompositionTarget != null) {
+                _scale = (float)source.CompositionTarget.TransformToDevice.M11;
+                //scaleY = source.CompositionTarget.TransformToDevice.M22;
+            }
+            SparrowSharp.NativeWindow = this;
+            var wi = ((Grid) Content).ActualWidth;
+            var he = ((Grid) Content).ActualHeight;
+            SparrowSharp.Start((uint)wi, (uint)he, (uint)_control.Width, (uint)_control.Height, _rootClass);
             SparrowSharp.MouseIconChange += OnCursorChange;
-            // Hook the application’s idle event
-            Application.Idle += OnApplicationIdle;
+            
+            _control.MouseDown += OnMouseButtonDown;
+            _control.MouseUp += OnMouseButtonUp;
+            _control.MouseMove += OnMouseMove;
+            
+            _control.Render += Control_Render;
+            _control.Resize += OnResize;
+        }
+        
+        private void OnResize(object sender, EventArgs e)
+        {
+            Console.Out.WriteLine($"Window resize {_control.Width}x{_control.Height}");
+            SparrowSharp.ViewPort.Width = _control.Width;
+            SparrowSharp.ViewPort.Height = _control.Height;
+        }
+
+        private void Control_Render(object sender, GlControlEventArgs e)
+        {
+            SparrowSharp.Step();
         }
 
         private void ContextDestroying(object sender, GlControlEventArgs e)
         {
             Console.WriteLine("Context loss on Windows is not impletented");
         }
-
-        private void OnApplicationIdle(object sender, EventArgs e)
-        {
-           
-            while (!PeekMessage(ref msg, IntPtr.Zero, 0, 0, 0))
-            {
-                sw.Restart();
-                bool needsSwap = SparrowSharp.Step();
-                if (needsSwap)
-                {
-                    control.Invalidate();
-                }
-                int msToSleep = 16 - (int)sw.ElapsedMilliseconds - 1;
-                if (msToSleep > 0)
-                {
-                    System.Threading.Thread.Sleep(msToSleep);
-                }
-            }
-        }
-
-        private void OnResize(object sender, EventArgs e)
-        {
-           // SparrowSharp.Stage.SetDrawableArea((uint)Width, (uint)Height);
-        }
-
+        
         // touch handling
-        private void OnMouseButtonDown(object sender, MouseEventArgs e)
+        private void OnMouseButtonDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                touchProcessor.OnPointerDown(e.X, e.Y, pointerId);
+                _touchProcessor.OnPointerDown(e.X, e.Y, PointerId);
             }
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+        private void OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                touchProcessor.OnPointerMove(e.X, e.Y, pointerId);
+                _touchProcessor.OnPointerMove(e.X, e.Y, PointerId);
             }
             else
             {
-                touchProcessor.OnMouseHover(e.X, e.Y, pointerId);
+                _touchProcessor.OnMouseHover(e.X, e.Y, PointerId);
             }
         }
 
-        private void OnMouseButtonUp(object sender, MouseEventArgs e)
+        private void OnMouseButtonUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            touchProcessor.OnPointerUp(pointerId);
+            _touchProcessor.OnPointerUp(PointerId);
         }
-
+        
         private void OnCursorChange(MouseCursor cursor)
         {
             switch (cursor)
             {
                 case MouseCursor.Default:
-                    Cursor = DefaultCursor;
+                    Cursor = null;
                     break;
                 case MouseCursor.Hand:
                     Cursor = Cursors.Hand;
                     break;
                 case MouseCursor.Wait:
-                    Cursor = Cursors.WaitCursor;
+                    Cursor = Cursors.Wait;
                     break;
             }
             

@@ -154,7 +154,7 @@ namespace Sparrow.Rendering
         /// <param name="indexData">The IndexData instance to upload.</param>
         public void UploadIndexData(IndexData indexData)
         {
-            UploadIndexData(indexData, BufferUsageARB.StaticDraw);
+            UploadIndexData(indexData, BufferUsage.StaticDraw);
         }
         
         /// <summary>
@@ -165,7 +165,7 @@ namespace Sparrow.Rendering
         /// <param name="bufferUsage">The expected buffer usage. Use one of the constants defined in
         ///                    <code>BufferUsageARB</code>. Only used when the method call
         ///                    causes the creation of a new index buffer.</param>
-        public void UploadIndexData(IndexData indexData, BufferUsageARB bufferUsage)
+        public void UploadIndexData(IndexData indexData, BufferUsage bufferUsage)
         {
             int numIndices = indexData.NumIndices;
             bool isQuadLayout = indexData.UseQuadLayout;
@@ -201,7 +201,7 @@ namespace Sparrow.Rendering
         /// <param name="vertexData">The VertexData instance to upload.</param>
         public void UploadVertexData(VertexData vertexData)
         {
-            UploadVertexData(vertexData, BufferUsageARB.StaticDraw);
+            UploadVertexData(vertexData, BufferUsage.StaticDraw);
         }
         
         /// <summary>
@@ -212,7 +212,7 @@ namespace Sparrow.Rendering
         /// <param name="bufferUsage"> The expected buffer usage. Use one of the constants defined in
         ///                    <code>BufferUsageARB</code>. Only used when the method call
         ///                    causes the creation of a new vertex buffer.</param>
-        public void UploadVertexData(VertexData vertexData, BufferUsageARB bufferUsage)
+        public void UploadVertexData(VertexData vertexData, BufferUsage bufferUsage)
         {
             if (_vertexBufferName != 0)
             {
@@ -267,12 +267,12 @@ namespace Sparrow.Rendering
             Program.Activate(); // create, upload, use program
             
             //is this the best place for this?
-            Gl.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexBufferName);
-            Gl.BindBuffer(BufferTargetARB.ElementArrayBuffer, _indexBufferName);
+            Gl.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
+            Gl.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
 
             uint attribPosition = (uint)Program.Attributes["aPosition"];
             Gl.EnableVertexAttribArray(attribPosition);
-            Gl.VertexAttribPointer(attribPosition, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.PositionOffset);
+            Gl.VertexAttribPointer(attribPosition, 2, VertexAttribType.Float, false, Vertex.Size, (IntPtr)Vertex.PositionOffset);
             
             int uMvpMatrix = Program.Uniforms["uMvpMatrix"];
             Gl.UniformMatrix4(uMvpMatrix, 1, false, MvpMatrix3D.RawData); // 1 is the number of matrices
@@ -322,17 +322,17 @@ namespace Sparrow.Rendering
         /// Appends OpenGL shader defines, this is needed for shaders to work on both
         /// desktop OpenGL and OpenGL ES 2+.
         /// </summary>
-        public string AddShaderInitCode()
+        public static string AddShaderInitCode()
         {
-            string ret = "";
+            string ret;
 #if __WINDOWS__
-            ret = @"
-                #version 110
-                #define highp
-                #define mediump
-                #define lowp";
+            ret = 
+                "#version 110\n" +
+                "#define highp\n" +
+                "#define mediump\n" +
+                "#define lowp\n";
 #else
-            ret = "#version 110";
+            ret = @"#version 110\n";
 #endif
             return ret;
         }

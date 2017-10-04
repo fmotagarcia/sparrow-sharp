@@ -56,9 +56,6 @@ namespace Sparrow.Core
 
         private static StatsDisplay _statsDisplay;
 
-        private static uint _width;
-        private static uint _height;
-
         /// <summary>
         /// Start your game.
         /// </summary>
@@ -66,24 +63,25 @@ namespace Sparrow.Core
         /// <param name="height"></param>
         /// <param name="rootType">The root class of your app</param>
         /// <exception cref="InvalidOperationException">When rootType is null or this function is called twice</exception>
-        public static void Start(uint width, uint height, Type rootType)
+        public static void Start(uint width, uint height, uint viewportWidth, uint viewportHeight, Type rootType)
         {
+            if (width < 32 || height < 32 || viewportWidth < 32 || viewportHeight < 32)
+            {
+                throw new ArgumentException($"Invalid dimensions: {width}x{height}");
+            }
             Gl.Disable(EnableCap.CullFace);
             Gl.Disable(EnableCap.Dither);
 
             Gl.Enable(EnableCap.Blend);
             Gl.Enable(EnableCap.DepthTest);
             Gl.DepthFunc(DepthFunction.Always);
-            
-            int status = Gl.CheckFramebufferStatus(Gl.FRAMEBUFFER);
-            if (status != Gl.FRAMEBUFFER_COMPLETE)
+
+            FramebufferStatus status = Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+            if (status != FramebufferStatus.FramebufferComplete)
             {
-                Console.WriteLine("Framebuffer error: " + status);
+                throw new Exception("GL Framebuffer creation error. Status: " + status);
             }
-            
-            _width = width;
-            _height = height;
-            _viewPort = Rectangle.Create(0, 0, _width, _height);
+            _viewPort = Rectangle.Create(0, 0, viewportWidth, viewportHeight);
             _previousViewPort = Rectangle.Create();
             GPUInfo.PrintGPUInfo();
 
@@ -114,6 +112,10 @@ namespace Sparrow.Core
 
         public static bool Step()
         {
+            if (Stage == null)
+            {
+                throw new Exception("Step() called before SparrowSharp.Start");
+            }
             long elapsed = Watch.ElapsedMilliseconds;
             Watch.Restart();
 
@@ -170,10 +172,14 @@ namespace Sparrow.Core
             // viewPort directly (without a copy) and we still know if it has changed.
             if (forceUpdate || !Rectangle.Compare(_viewPort, _previousViewPort))
             {
-                _clippedViewPort = Rectangle.Create(0, 0, _width, _height);
-                _previousViewPort.SetTo(_viewPort.X, _viewPort.Y, _viewPort.Width, _viewPort.Height);
+                // TODO Do we need viewports with X and Y values?
+                _clippedViewPort = Rectangle.Create(0, 0, _viewPort.Width, _viewPort.Height);
+                _previousViewPort.SetTo(0, 0, _viewPort.Width, _viewPort.Height);
 
                 _painter.ConfigureBackBuffer(_clippedViewPort);
+                
+                Stage.SetRequiresRedraw();
+                // + trigger Stage resize event?
             }
         }
 

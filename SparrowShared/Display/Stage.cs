@@ -3,6 +3,7 @@
 using Sparrow.Geom;
 using System;
 using OpenGL;
+using Sparrow.Core;
 using Sparrow.Filters;
 
 namespace Sparrow.Display
@@ -57,13 +58,6 @@ namespace Sparrow.Display
             FieldOfView = 1.0f;
             _projectionOffset = Point.Create();
            
-        }
-
-        internal void SetDrawableArea(uint width, uint height)
-        {
-            Gl.Viewport(0, 0, (int)width, (int)height);
-            OnResize?.Invoke(this);
-            SetRequiresRedraw();
         }
 
         public override DisplayObject HitTest(Point localPoint)

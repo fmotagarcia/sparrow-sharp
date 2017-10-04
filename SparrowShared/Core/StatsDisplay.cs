@@ -136,6 +136,7 @@ namespace Sparrow.Core
         /// </summary>
         private int GetGPUMemory()
         {
+#if __WINDOWS__
             if (GLExtensions.DeviceSupportsOpenGLExtension("GL_NVX_gpu_memory_info"))
             {
                 // this returns in Kb, Nvidia only extension
@@ -147,9 +148,9 @@ namespace Sparrow.Core
 
                 return (dedicated - available) / 1024;
             }
+#endif
             return 0;
         }
-
 
 }
 }

@@ -1,7 +1,6 @@
 ﻿using Sparrow.Textures;
 using Sparrow.Utils;
 using System;
-using System.Text;
 using OpenGL;
 
 namespace Sparrow.Rendering
@@ -42,17 +41,23 @@ namespace Sparrow.Rendering
             TextureSmoothing = TextureSmoothing.Bilinear;
         }
 
-        public static readonly string StdVertexShader = @"
-                attribute vec4 aPosition;
-                attribute vec2 aTexCoords;
-                uniform mat4 uMvpMatrix;
-                varying lowp vec2 vTexCoords;;
-                // main
-                void main() {
-                  gl_Position = uMvpMatrix * aPosition;
-                  vTexCoords  = aTexCoords;
-                }";
-        
+        public static string StdVertexShader
+        {
+            get
+            {
+                return AddShaderInitCode() + @"
+                    attribute vec4 aPosition;
+                    attribute vec2 aTexCoords;
+                    uniform mat4 uMvpMatrix;
+                    varying lowp vec2 vTexCoords;;
+                    // main
+                    void main() {
+                      gl_Position = uMvpMatrix * aPosition;
+                      vTexCoords  = aTexCoords;
+                    }";
+            }
+        }
+
         /// <summary>
         /// Override this method if the effect requires a different program depending on the
         /// current settings. Ideally, you do this by creating a bit mask encoding all the options.
@@ -98,9 +103,9 @@ namespace Sparrow.Rendering
             }
             uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
             Gl.EnableVertexAttribArray(aTexCoords);
-            Gl.VertexAttribPointer(aTexCoords, 2, Gl.FLOAT, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
+            Gl.VertexAttribPointer(aTexCoords, 2, VertexAttribType.Float, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
 
-            Gl.ActiveTexture(Gl.TEXTURE0);
+            Gl.ActiveTexture(TextureUnit.Texture0);
                 
             RenderUtil.SetSamplerStateAt(Texture.Base, Texture.NumMipMaps > 0, 
                 TextureSmoothing, TextureRepeat);

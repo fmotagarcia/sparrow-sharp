@@ -210,10 +210,8 @@ namespace Sparrow.Core
         {
             Console.WriteLine("Sparrow: Android view size changed");
             base.OnSizeChanged(w, h, oldw, oldh);
-            if (SparrowSharp.Stage != null)
-            {
-                SparrowSharp.Stage.SetDrawableArea((uint)w, (uint)h);
-            }
+            SparrowSharp.ViewPort.Width = w;
+            SparrowSharp.ViewPort.Height = h;
         }
         
         /// <summary>
@@ -221,7 +219,7 @@ namespace Sparrow.Core
         /// It is responsible for maintaining the currently active touch events and dispatching events.
         /// For details see http://developer.android.com/reference/android/view/View.html#onTouchEvent(android.view.MotionEvent)
         /// </summary>
-        override public bool OnTouchEvent(MotionEvent e)
+        public override bool OnTouchEvent(MotionEvent e)
         {
             float xConversion = SparrowSharp.Stage.StageWidth / Width;
             float yConversion = SparrowSharp.Stage.StageHeight / Height;

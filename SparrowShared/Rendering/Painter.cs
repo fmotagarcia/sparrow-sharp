@@ -542,11 +542,11 @@ namespace Sparrow.Rendering
                         uint[] fb = new uint[1];
                         Gl.GenFramebuffers(fb);
                         framebuffer = fb[0];
-                        Gl.BindFramebuffer(Gl.FRAMEBUFFER, framebuffer);
+                        Gl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
 
-                        Gl.FramebufferTexture2D(Gl.FRAMEBUFFER, Gl.COLOR_ATTACHMENT0, Gl.TEXTURE_2D, target, 0);
+                        Gl.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2d, target, 0);
 
-                        if (Gl.CheckFramebufferStatus(Gl.FRAMEBUFFER) != Gl.FRAMEBUFFER_COMPLETE)
+                        if (Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferStatus.FramebufferComplete)
                         {
                             Debug.WriteLine("Failed to create framebuffer for render texture");
                         }
@@ -558,7 +558,7 @@ namespace Sparrow.Rendering
                         {
                             throw new InvalidOperationException("Attempted to bind framebuffer ID 0");
                         }
-                        Gl.BindFramebuffer(Gl.FRAMEBUFFER, framebuffer);
+                        Gl.BindFramebuffer(FramebufferTarget.Framebuffer, framebuffer);
                     }
                     Gl.Viewport(0, 0, (int)_state.RenderTarget.NativeWidth, (int)_state.RenderTarget.NativeHeight);
                 }
@@ -566,9 +566,9 @@ namespace Sparrow.Rendering
                 {
                     // TODO: double check these on a device, the ifdef seems to be unneeded
 #if __IOS__
-                    Gl.BindFramebuffer(Gl.FRAMEBUFFER, 1);
+                    Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 1);
 #else
-                    Gl.BindFramebuffer(Gl.FRAMEBUFFER, 0);
+                    Gl.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 #endif
                     Gl.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
                 }

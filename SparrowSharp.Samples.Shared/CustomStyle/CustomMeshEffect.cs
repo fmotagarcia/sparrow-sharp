@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿
 using Sparrow.Rendering;
 
 namespace Sparrow.Samples.CustomStyle
@@ -8,64 +8,59 @@ namespace Sparrow.Samples.CustomStyle
         // just copypaste for now
         protected override Program CreateProgram()
         {
-            StringBuilder source = new StringBuilder("");
             string vertexShader;
             string fragmentShader;
 
             if (Texture != null)
             {
-                AddShaderInitCode(source);
-                source.AppendLine("attribute vec4 aPosition;");
-                source.AppendLine("attribute vec4 aColor;");
-                source.AppendLine("attribute vec2 aTexCoords;");
-                source.AppendLine("uniform mat4 uMvpMatrix;");
-                source.AppendLine("uniform vec4 uAlpha;");
-                source.AppendLine("varying lowp vec4 vColor;");
-                source.AppendLine("varying lowp vec2 vTexCoords;");
-                // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-                source.AppendLine("  vColor = aColor * uAlpha;");
-                source.AppendLine("  vTexCoords  = aTexCoords;");
-                source.Append("}");
-                vertexShader = source.ToString();
+                vertexShader = AddShaderInitCode() + @"
+                attribute vec4 aPosition;
+                attribute vec4 aColor;
+                attribute vec2 aTexCoords;
+
+                uniform mat4 uMvpMatrix;
+                uniform vec4 uAlpha;
+
+                varying lowp vec4 vColor;
+                varying lowp vec2 vTexCoords;
                 
-                source.Clear();
-                AddShaderInitCode(source);
-                // variables
-                source.AppendLine("varying lowp vec4 vColor;");
-                source.AppendLine("varying lowp vec2 vTexCoords;");
-                source.AppendLine("uniform lowp sampler2D uTexture;");
-                // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_FragColor = texture2D(uTexture, vTexCoords) * vColor;");
-                source.Append("}");
-                fragmentShader = source.ToString();
+                void main() {
+                  gl_Position = uMvpMatrix * aPosition;
+                  vColor = aColor * uAlpha;
+                  vTexCoords  = aTexCoords;
+                }";
+                
+                fragmentShader = AddShaderInitCode() + @"
+                varying lowp vec4 vColor;
+                varying lowp vec2 vTexCoords;
+                uniform lowp sampler2D uTexture;
+                
+                void main() {
+                  gl_FragColor = texture2D(uTexture, vTexCoords) * vColor;
+                }";
             }
             else
             {
-                AddShaderInitCode(source);
-                source.AppendLine("attribute vec4 aPosition;");
-                source.AppendLine("attribute vec4 aColor;");
-                source.AppendLine("uniform mat4 uMvpMatrix;");
-                source.AppendLine("uniform vec4 uAlpha;");
-                source.AppendLine("varying lowp vec4 vColor;");
-                // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_Position = uMvpMatrix * aPosition;");
-                source.AppendLine("  vColor = aColor * uAlpha;");
-                source.Append("}");
-                vertexShader = source.ToString();
+                vertexShader = AddShaderInitCode() + @"
+                attribute vec4 aPosition;
+                attribute vec4 aColor;
 
-                source.Clear();
-                AddShaderInitCode(source);
-                // variables
-                source.AppendLine("varying lowp vec4 vColor;");
-                // main
-                source.AppendLine("void main() {");
-                source.AppendLine("  gl_FragColor = vColor;");
-                source.Append("}");
-                fragmentShader = source.ToString();
+                uniform mat4 uMvpMatrix;
+                uniform vec4 uAlpha;
+
+                varying lowp vec4 vColor;
+                
+                void main() {
+                  gl_Position = uMvpMatrix * aPosition;
+                  vColor = aColor * uAlpha;
+                }";
+                
+                fragmentShader = AddShaderInitCode() + @"
+                varying lowp vec4 vColor;
+                
+                void main() {
+                  gl_FragColor = vColor;
+                }";
             }
             return new Program(vertexShader, fragmentShader);
         }

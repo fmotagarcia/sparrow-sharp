@@ -32,14 +32,14 @@ namespace Sparrow.Display
         public const uint MASK = 9;
 
         private uint _name;
-        private BlendingFactorSrc _sourceFactor;
-        private BlendingFactorDest _destinationFactor;
+        private BlendingFactor _sourceFactor;
+        private BlendingFactor _destinationFactor;
         private static Dictionary<uint, BlendMode> _sBlendModes;
 
         /// <summary>
         /// Creates a new BlendMode instance.
         /// </summary>
-        private BlendMode(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
+        private BlendMode(uint name, BlendingFactor srcFactor, BlendingFactor dstFactor)
         {
             _name = name;
             _sourceFactor = srcFactor;
@@ -60,7 +60,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Registers a blending mode under a certain name.
         /// </summary>
-        public static BlendMode Register(uint name, BlendingFactorSrc srcFactor, BlendingFactorDest dstFactor)
+        public static BlendMode Register(uint name, BlendingFactor srcFactor, BlendingFactor dstFactor)
         {
             if (_sBlendModes == null) RegisterDefaults();
             BlendMode blendMode = new BlendMode(name, srcFactor, dstFactor);
@@ -73,14 +73,14 @@ namespace Sparrow.Display
             if (_sBlendModes != null) return;
 
             _sBlendModes = new Dictionary<uint, BlendMode>();
-            Register(NONE, BlendingFactorSrc.One, BlendingFactorDest.Zero);
-            Register(NORMAL, BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
-            Register(ADD, BlendingFactorSrc.One, BlendingFactorDest.One);// was srcAlpha, one
-            Register(MULTIPLY, BlendingFactorSrc.DstColor, BlendingFactorDest.OneMinusSrcAlpha);
-            Register(SCREEN, BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcColor);
-            Register(ERASE, BlendingFactorSrc.Zero, BlendingFactorDest.OneMinusSrcAlpha);
-            Register(MASK, BlendingFactorSrc.Zero, BlendingFactorDest.SrcAlpha);
-            Register(BELOW, BlendingFactorSrc.OneMinusDstAlpha, BlendingFactorDest.DstAlpha);
+            Register(NONE, BlendingFactor.One, BlendingFactor.Zero);
+            Register(NORMAL, BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+            Register(ADD, BlendingFactor.One, BlendingFactor.One);// was srcAlpha, one
+            Register(MULTIPLY, BlendingFactor.DstColor, BlendingFactor.OneMinusSrcAlpha);
+            Register(SCREEN, BlendingFactor.One, BlendingFactor.OneMinusSrcColor);
+            Register(ERASE, BlendingFactor.Zero, BlendingFactor.OneMinusSrcAlpha);
+            Register(MASK, BlendingFactor.Zero, BlendingFactor.SrcAlpha);
+            Register(BELOW, BlendingFactor.OneMinusDstAlpha, BlendingFactor.DstAlpha);
         }
 
         /// <summary>

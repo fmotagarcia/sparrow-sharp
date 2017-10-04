@@ -41,8 +41,8 @@
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenGL.Net, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\OpenGL.Net.0.4.2\lib\MonoAndroid\OpenGL.Net.dll</HintPath>
+    <Reference Include="OpenGL.Net, Version=0.6.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\sparrow-game\packages\OpenGL.Net.0.6.1\lib\monoandroid\OpenGL.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +64,7 @@
     <AndroidResource Include="Resources\Values\Strings.xml" />
   </ItemGroup>
   <Import Project="..\SparrowShared\SparrowShared.projitems" Label="Shared" />
+  <Import Project="..\..\sparrow-game\SparrowGame.Shared\SparrowGame.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

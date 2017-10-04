@@ -55,7 +55,10 @@ namespace Sparrow.Textures
             _premultipliedAlpha = premultipliedAlpha;
             _optimizedForRenderTexture = optimizedForRenderTexture;
             SparrowSharp.ContextCreated += OnContextCreated;
-
+            if (_width < 1 || _height < 1)
+            {
+                throw new ArgumentException("Invalid dimensions: " + _width + "x" + _height);
+            }
             InitGPUTextureStorage();
         }
 
@@ -64,7 +67,7 @@ namespace Sparrow.Textures
             _base = Gl.GenTexture();
             Gl.BindTexture(TextureTarget.Texture2d, _base);
 
-            Gl.TexStorage2D(Gl.TEXTURE_2D,
+            Gl.TexStorage2D(TextureTarget.Texture2d,
                 _numMipMaps + 1, // mipmap level, min 1
                 _format.InternalFormat,
                 _width,
@@ -136,7 +139,7 @@ namespace Sparrow.Textures
 
             if (_numMipMaps > 0)
             {
-                Gl.GenerateMipmap(Gl.TEXTURE_2D);
+                Gl.GenerateMipmap(TextureTarget.Texture2d);
             }
         }
 

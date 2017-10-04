@@ -13,6 +13,7 @@ namespace Sparrow.Touches
 
         public void OnPointerDown(float xPosition, float yPosition, int touchId)
         {
+            if (SparrowSharp.Stage == null) return;
             double now = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
             Touch newTouch = new Touch();
             newTouch.TouchID = touchId;
@@ -31,6 +32,7 @@ namespace Sparrow.Touches
 
         public void OnPointerMove(float xPosition, float yPosition, int touchId)
         {
+            if (SparrowSharp.Stage == null) return;
             Touch movedTouch;
             _touches.TryGetValue(touchId, out movedTouch);
             if (movedTouch != null)
@@ -64,6 +66,7 @@ namespace Sparrow.Touches
         
         public void OnMouseHover(float xPosition, float yPosition, int touchId)
         {
+            if (SparrowSharp.Stage == null) return;
             if (_hoverTouch == null)
             {
                 _hoverTouch = new Touch();
@@ -99,6 +102,7 @@ namespace Sparrow.Touches
 
         public void OnPointerUp(int touchId)
         {
+            if (SparrowSharp.Stage == null) return;
             if (_touches.ContainsKey(touchId) == false)
             {
                 return; // right click/middle click/..
@@ -121,6 +125,7 @@ namespace Sparrow.Touches
 
         public void OnPointerCancel(int touchId)
         {
+            if (SparrowSharp.Stage == null) return;
             Touch touchInFocus = _touches[touchId];
             touchInFocus.Phase = TouchPhase.Cancelled;
             ProcessTouch();

@@ -28,7 +28,7 @@ namespace Sparrow.Rendering
             {
                 throw new NotSupportedException("You need at least OpenGL " + minVersion + " to run Sparrow!");
             }
-
+            
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 0, out workGrpCnt[0]);
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 1, out workGrpCnt[1]);
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 2, out workGrpCnt[2]);

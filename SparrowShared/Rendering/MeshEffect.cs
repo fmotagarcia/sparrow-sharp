@@ -105,8 +105,8 @@ namespace Sparrow.Rendering
 
             uint attribColor = (uint)Program.Attributes["aColor"];
             Gl.EnableVertexAttribArray(attribColor);
-            Gl.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexColorsBufferName);
-            Gl.VertexAttribPointer(attribColor, 4, Gl.UNSIGNED_BYTE, true, sizeof(float), (IntPtr)0);
+            Gl.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
+            Gl.VertexAttribPointer(attribColor, 4, VertexAttribType.UnsignedByte, true, sizeof(float), (IntPtr)0);
         }
 
         /// <summary>
