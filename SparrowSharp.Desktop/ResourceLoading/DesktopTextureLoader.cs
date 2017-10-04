@@ -83,7 +83,7 @@ namespace Sparrow.ResourceLoading
                 data[i + 2] = (byte)(b * alpha);
                 data[i + 3] = (byte)(alpha * 255);
             }
-            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888, SparrowSharp.ContentScaleFactor);
+            TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888);
 
             _glTexture = Texture.FromData(data, opts, bitmapData.Width, bitmapData.Height);
 

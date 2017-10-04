@@ -67,6 +67,8 @@ namespace Sparrow.Samples
             
             TestCustomStyle();
 
+            TestBorders();
+
             Stage.Touch += Benchmark_Touch;
         }
 
@@ -250,6 +252,29 @@ namespace Sparrow.Samples
             quad.Y = 480;
             quad.SetStyle(new CustomMeshStyle());
             AddChild(quad);
+        }
+
+        private void TestBorders()
+        {
+            Quad q1 = new Quad(4, 4, 0xdadada);
+            q1.X = 0;
+            q1.Y = 0;
+            AddChild(q1);
+            
+            Quad q2 = new Quad(4, 4, 0xdadada);
+            q2.X = SparrowSharp.Stage.StageWidth - 4;
+            q2.Y = 0;
+            AddChild(q2);
+            
+            Quad q3 = new Quad(4, 4, 0xdadada);
+            q3.X = 0;
+            q3.Y = SparrowSharp.Stage.StageHeight - 4;
+            AddChild(q3);
+            
+            Quad q4 = new Quad(4, 4, 0xdadada);
+            q4.X = SparrowSharp.Stage.StageWidth - 4;
+            q4.Y = SparrowSharp.Stage.StageHeight - 4;
+            AddChild(q4);
         }
 
     }

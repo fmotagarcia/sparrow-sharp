@@ -43,7 +43,7 @@ namespace Sparrow.Core
             const string gpuLabel = "\ngpu memory:";
             const string labels = "frames/sec:\nstd memory:" + gpuLabel + "\ndraw calls:";
 
-            var labels1 = new TextField(width, height, labels);
+            var labels1 = new TextField(width - 2, height, labels);
             labels1.Format.SetTo(fontName, fontSize, fontColor, HAlign.Left);
             labels1.Batchable = true;
             labels1.X = 2;
@@ -53,7 +53,7 @@ namespace Sparrow.Core
             _values.Batchable = true;
 
             _background = new Quad(width, height, 0x0);
-            _background.Alpha = 0.75f;
+            _background.Alpha = 0.7f;
 
             // make sure that rendering takes 2 draw calls
             if (_background.Style.Type != typeof(MeshStyle)) _background.Style = new MeshStyle();

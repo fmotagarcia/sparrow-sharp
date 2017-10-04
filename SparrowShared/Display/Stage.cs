@@ -11,12 +11,16 @@ namespace Sparrow.Display
     /// <summary>
     /// A Stage is the root of the display tree. It represents the rendering area of the application.
     /// <para>
-    /// Sparrow will create the stage for you. The root object of your game will be the first child of
-    /// the stage. You can access 'root' and 'stage' from any display object using the respective 
-    /// properties. 
+    /// Sparrow will create the stage for you. You can access 'Stage' from anywhere with SparrowSharp.Stage.
     /// </para>
-    /// The stage's 'StageWidth' and 'StageHeight' values define the coordinate system of your game. The color
+    /// <para>
+    /// The Stage's 'StageWidth' and 'StageHeight' values define the coordinate system of your game. The color
     /// of the stage defines the background color of your game.
+    /// </para>
+    /// <para>
+    /// The Stage's Width and Height properties return the enclosing bounds of your game. This can be bigger than
+    /// StageWidth/StageHeight if you place objects outside the Stage coordinates.
+    /// </para>
     /// </summary>
     public class Stage : DisplayObjectContainer
     {

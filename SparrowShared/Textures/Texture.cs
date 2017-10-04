@@ -14,7 +14,7 @@ namespace Sparrow.Textures
         /// Uploads a texture to the GPU.
         /// Currently only 24 bit RBGA images are supported
         /// </summary>
-        /// <param name="imgData">The image data, either an Array or IntPtr</param>
+        /// <param name="imgData">The image data, either an byte[] or IntPtr</param>
         /// <param name="properties"></param>
         /// <param name="width">in points; number of pixels depends on scale parameter.</param>
         /// <param name="height">in points; number of pixels depends on scale parameter.</param>
