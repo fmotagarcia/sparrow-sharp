@@ -72,15 +72,11 @@ namespace Sparrow.Core
 
         private void InitApp()
         {
-            PresentationSource source = PresentationSource.FromVisual(this);
-            if (source != null && source.CompositionTarget != null) {
-                _scale = (float)source.CompositionTarget.TransformToDevice.M11;
-                //scaleY = source.CompositionTarget.TransformToDevice.M22;
-            }
             SparrowSharp.NativeWindow = this;
             var wi = ((Grid) Content).ActualWidth;
             var he = ((Grid) Content).ActualHeight;
             SparrowSharp.Start((uint)wi, (uint)he, (uint)_control.Width, (uint)_control.Height, _rootClass);
+            _scale = (float)(_control.Width / wi);
             SparrowSharp.MouseIconChange += OnCursorChange;
             
             _control.MouseDown += OnMouseButtonDown;
@@ -113,7 +109,7 @@ namespace Sparrow.Core
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                _touchProcessor.OnPointerDown(e.X, e.Y, PointerId);
+                _touchProcessor.OnPointerDown(e.X / _scale, e.Y / _scale, PointerId);
             }
         }
 
@@ -121,11 +117,11 @@ namespace Sparrow.Core
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                _touchProcessor.OnPointerMove(e.X, e.Y, PointerId);
+                _touchProcessor.OnPointerMove(e.X / _scale, e.Y / _scale, PointerId);
             }
             else
             {
-                _touchProcessor.OnMouseHover(e.X, e.Y, PointerId);
+                _touchProcessor.OnMouseHover(e.X / _scale, e.Y / _scale, PointerId);
             }
         }
 

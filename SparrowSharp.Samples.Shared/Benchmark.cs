@@ -238,8 +238,8 @@ namespace Sparrow.Samples
         private void TestButton()
         {
             Button btn = new Button(Texture.FromColor(100, 40, 0x23F502), "Test button");
-            btn.X = 150;
-            btn.Y = 200;
+            btn.X = 750;
+            btn.Y = 500;
             btn.Triggered += button => Console.WriteLine("Button press");
             AddChild(btn);
         }

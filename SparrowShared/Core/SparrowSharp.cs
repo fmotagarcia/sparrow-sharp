@@ -59,8 +59,10 @@ namespace Sparrow.Core
         /// <summary>
         /// Start your game.
         /// </summary>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
+        /// <param name="width">Stage width</param>
+        /// <param name="height">Stage height</param>
+        /// <param name="viewportHeight"></param>
+        /// <param name="viewportWidth"></param>
         /// <param name="rootType">The root class of your app</param>
         /// <exception cref="InvalidOperationException">When rootType is null or this function is called twice</exception>
         public static void Start(uint width, uint height, uint viewportWidth, uint viewportHeight, Type rootType)

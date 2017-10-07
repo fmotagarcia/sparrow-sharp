@@ -246,10 +246,12 @@ namespace Sparrow.Geom
             return outRect;
         }
 
-        /** Calculates the bounds of a rectangle projected into the XY-plane of a certain 3D space
-         *  as they appear from the given camera position. Note that 'camPos' is expected in the
-         *  target coordinate system (the same that the XY-plane lies in).
-         **/
+        /// <summary>
+        /// Calculates the bounds of a rectangle projected into the XY-plane of a certain 3D space
+        /// as they appear from the given camera position. Note that 'camPos' is expected in the
+        /// target coordinate system (the same that the XY-plane lies in).
+        /// </summary>
+        /// <exception cref="ArgumentNullException">if camPos is null</exception>
         public void SetBoundsProjected(Matrix3D matrix, float[] camPos)
         {
             if (camPos == null) throw new ArgumentNullException(nameof(camPos));
@@ -257,11 +259,11 @@ namespace Sparrow.Geom
             float minX = float.MaxValue, maxX = float.MinValue;
             float minY = float.MaxValue, maxY = float.MinValue;
             var positions = GetPositions();
-            float[] sPoint3D;
             for (int i=0; i<4; ++i)
             {
                 Point position = positions[i];
 
+                float[] sPoint3D;
                 if (matrix != null)
                 {
                     sPoint3D = matrix.TransformCoords3D(position.X, position.Y, 0);

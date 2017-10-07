@@ -21,14 +21,14 @@ namespace Sparrow.Core
         private readonly Quad _background;
         private readonly TextField _values;
         
-        private int _frameCount = 0;
-        private float _totalTime = 0;
+        private int _frameCount;
+        private float _totalTime;
 
-        public float Fps = 0;
-        public float Memory = 0;
-        public float GpuMemory = 0;
+        public float Fps;
+        public float Memory;
+        public float GpuMemory;
         public int DrawCount = 0;
-        private int _skipCount = 0;
+        private int _skipCount;
 
         /// <summary>
         /// Creates a new Statistics Box.

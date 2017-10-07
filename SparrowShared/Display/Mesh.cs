@@ -262,7 +262,9 @@ namespace Sparrow.Display
             set { _pixelSnapping = value;  }
         }
 
-        /** The total number of vertices in the mesh. */
+        /// <summary>
+        /// The total number of vertices in the mesh.
+        /// </summary>
         public virtual int NumVertices {
             set { }
             get { return _vertexData.NumVertices; }

@@ -2,8 +2,6 @@
 
 using Sparrow.Geom;
 using System;
-using OpenGL;
-using Sparrow.Core;
 using Sparrow.Filters;
 
 namespace Sparrow.Display
@@ -88,7 +86,7 @@ namespace Sparrow.Display
 
         /// <summary>
         /// Returns the stage bounds (i.e. not the bounds of its contents, but the rectangle
-        /// spawned up by 'stageWidth' and 'stageHeight') in another coordinate system.
+        /// spawned up by 'StageWidth' and 'StageHeight') in another coordinate system.
         /// </summary>
         public Rectangle GetStageBounds(DisplayObject targetSpace)
         {

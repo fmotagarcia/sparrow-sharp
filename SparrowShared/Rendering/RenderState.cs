@@ -6,11 +6,11 @@ using Sparrow.Utils;
 namespace Sparrow.Rendering
 {
     /** The RenderState stores a combination of settings that are currently used for rendering.
-     *  This includes modelview and transformation matrices as well as context3D related settings.
+     *  This includes modelview and transformation matrices as well as OpenGL related settings.
      *
-     *  <p>Sparrow's Painter instance stores a reference to the current RenderState.
+     *  <para>Sparrow's Painter instance stores a reference to the current RenderState.
      *  Via a stack mechanism, you can always save a specific state and restore it later.
-     *  That makes it easy to write rendering code that doesn't have any side effects.</p>
+     *  That makes it easy to write rendering code that doesn't have any side effects.</para>
      *
      *  <p>Beware that any context-related settings are not applied on the context
      *  right away, but only after calling <code>painter.prepareToDraw()</code>.
@@ -26,9 +26,7 @@ namespace Sparrow.Rendering
      *  the RenderState contains a set of matrices.</p>
      *
      *  <p>By multiplying vertex coordinates with the <code>modelviewMatrix</code>, you'll get the
-     *  coordinates in "screen-space", or in other words: in stage coordinates. (Optionally,
-     *  there's also a 3D version of this matrix. It comes into play when you're working with
-     *  <code>Sprite3D</code> containers.)</p>
+     *  coordinates in "screen-space", or in other words: in stage coordinates.
      *
      *  <p>By feeding the result of the previous transformation into the
      *  <code>projectionMatrix</code>, you'll end up with so-called "clipping coordinates",
@@ -43,7 +41,6 @@ namespace Sparrow.Rendering
      *  position.</p>
      *
      *  @see Painter
-     *  @see Sparrow.Display.Sprite3D
      */
     public class RenderState
     {
@@ -57,7 +54,7 @@ namespace Sparrow.Rendering
         private string _culling;
         private Rectangle _clipRect;
         public delegate void OnDrawRequiredFunction();
-        public OnDrawRequiredFunction _onDrawRequired;
+        public OnDrawRequiredFunction OnDrawRequired;
  
         private Matrix3D _projectionMatrix3D;
         private Matrix3D _mvpMatrix3D;
@@ -69,7 +66,7 @@ namespace Sparrow.Rendering
 
         public void CopyFrom(RenderState renderState)
         {
-            if (_onDrawRequired != null)
+            if (OnDrawRequired != null)
             {
                 uint currentTarget = _renderTarget != null ? _renderTarget.Base : 0;
                 uint nextTarget = renderState._renderTarget != null ? renderState._renderTarget.Base : 0;
@@ -79,7 +76,7 @@ namespace Sparrow.Rendering
                 if (_blendMode != renderState._blendMode || _culling != renderState._culling ||
                     currentTarget != nextTarget || clipRectChanges)
                 {
-                    _onDrawRequired();
+                    OnDrawRequired();
                 }
             }
 
@@ -199,7 +196,7 @@ namespace Sparrow.Rendering
 
             if (currentTarget != newTarget || _renderTargetOptions != newOptions)
             {
-                if (_onDrawRequired != null) _onDrawRequired();
+                OnDrawRequired?.Invoke();
 
                 _renderTarget = target;
                 _renderTargetOptions = newOptions;
@@ -213,7 +210,7 @@ namespace Sparrow.Rendering
             {
                 if (value != Display.BlendMode.AUTO && _blendMode != value)
                 {
-                    if (_onDrawRequired != null) _onDrawRequired();
+                    OnDrawRequired?.Invoke();
                     _blendMode = value;
                 }
             }
@@ -246,13 +243,13 @@ namespace Sparrow.Rendering
             {
                 if (!Rectangle.Compare(_clipRect, value))
                 {
-                    if (_onDrawRequired != null) _onDrawRequired();
+                    if (OnDrawRequired != null) OnDrawRequired();
                     if (value != null)
                     {
                         if (_clipRect == null) _clipRect = Rectangle.Create();
                         _clipRect.CopyFrom(value);
                     }
-                    else if (_clipRect != null)
+                    else
                     {
                         _clipRect = null;
                     }
@@ -260,8 +257,10 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** The anti-alias setting used when setting the current render target
-         *  via <code>SetRenderTarget</code>. */
+        /// <summary>
+        /// The anti-alias setting used when setting the current render target
+        /// via <code>SetRenderTarget</code>.
+        /// </summary>
         public uint RenderTargetAntiAlias
         {
             get { return _renderTargetOptions >> 4; }

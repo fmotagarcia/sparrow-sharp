@@ -49,10 +49,7 @@ namespace Sparrow.Display
         /// </summary>
         public void RemoveFromJuggler()
         {
-            if (RemoveFromJugglerEvent != null)
-            {
-                RemoveFromJugglerEvent(this);
-            }
+            RemoveFromJugglerEvent?.Invoke(this);
         }
 
         /// <summary>

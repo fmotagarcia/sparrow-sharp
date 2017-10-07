@@ -59,6 +59,13 @@ namespace Sparrow.Display
         private static readonly BatchToken SCacheToken = new BatchToken();
 
         /// <summary>
+        /// If a container is a 'TouchGroup', it will act as a single touchable object.
+        /// Touch events will have the container as target, not the touched child.
+        /// default:false
+        /// </summary>
+        public bool TouchGroup;
+        
+        /// <summary>
         /// Disposes the resources of all children. 
         /// </summary>
         public override void Dispose()
@@ -76,15 +83,11 @@ namespace Sparrow.Display
         public int NumChildren { get { return _children.Count; } }
 
         private readonly List<DisplayObject> _children = new List<DisplayObject>();
-        private bool _touchGroup;
 
         /// <summary>
         /// Returns the children of this container 
         /// </summary>
-        public IReadOnlyList<DisplayObject> Children
-        {
-            get { return _children; }
-        }
+        public IReadOnlyList<DisplayObject> Children { get { return _children; } }
 
         /// <summary>
         /// Adds a child to the container. It will be at the topmost position.
@@ -110,7 +113,7 @@ namespace Sparrow.Display
                 else
                 {
                     child.RemoveFromParent();
-                    _children.Insert(index, child); // TODO this is different in Starling
+                    _children.Insert(index, child);
                     child.Parent = this;
 
                     child.InvokeAdded(child, this);
@@ -237,10 +240,7 @@ namespace Sparrow.Display
 
                 return child;
             }
-            else
-            {
-                throw new IndexOutOfRangeException("Invalid child index");
-            }
+            throw new IndexOutOfRangeException("Invalid child index");
         }
 
         /// <summary>
@@ -384,22 +384,11 @@ namespace Sparrow.Display
                 DisplayObject target = child.HitTest(transformedPoint);
                 if (target != null)
                 {
-                    return _touchGroup ? this : target;
+                    return TouchGroup ? this : target;
                 }
             }
             return null;
         }
-
-        /// <summary>
-        /// If a container is a 'TouchGroup', it will act as a single touchable object.
-        /// Touch events will have the container as target, not the touched child.
-        /// default false
-        /// </summary>
-        public bool TouchGroup
-        {
-            get { return _touchGroup; }
-            set { _touchGroup = value; }
-        } 
 
         /// <summary>
         /// Sorts the children using the given IComparer.

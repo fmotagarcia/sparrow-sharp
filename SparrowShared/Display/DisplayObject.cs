@@ -1121,7 +1121,7 @@ namespace Sparrow.Display
                 {
                     DisplayObject currParent = currentObject._parent;
                     if (currParent.GetType() == typeof(Stage) ) return currentObject;
-                    else currentObject = currentObject._parent;
+                    currentObject = currentObject._parent;
                 }
                 return null;
             }

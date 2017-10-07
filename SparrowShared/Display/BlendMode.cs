@@ -54,7 +54,7 @@ namespace Sparrow.Display
         {
             if (_sBlendModes == null) RegisterDefaults();
             if (_sBlendModes.ContainsKey(modeName)) return _sBlendModes[modeName];
-            else throw new ArgumentException("Blend mode not found: " + modeName);
+            throw new ArgumentException("Blend mode not found: " + modeName);
         }
 
         /// <summary>

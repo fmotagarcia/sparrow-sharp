@@ -104,7 +104,7 @@ namespace Sparrow.Rendering
             _batchCacheExclusions = new List<DisplayObject>();
 
             _state = new RenderState();
-            _state._onDrawRequired = FinishMeshBatch;
+            _state.OnDrawRequired = FinishMeshBatch;
             _stateStack = new List<RenderState>();
             _stateStackPos = -1;
             _stateStackLength = 0;
