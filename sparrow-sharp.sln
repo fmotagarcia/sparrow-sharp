@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparrowSharp.Samples.Droid", "SparrowSharp.Samples.Android\SparrowSharp.Samples.Droid.csproj", "{B68B75BA-A18C-4513-8BFF-53346D4840B2}"
 EndProject
@@ -30,6 +30,7 @@ Global
 		SparrowSharp.Samples.Shared\SparrowSharp.Samples.Shared.projitems*{b68b75ba-a18c-4513-8bff-53346d4840b2}*SharedItemsImports = 4
 		SparrowSharp.Samples.Shared\SparrowSharp.Samples.Shared.projitems*{bc46ac11-1fd4-4720-a94e-df5f279c5ee0}*SharedItemsImports = 4
 		SparrowSharp.Samples.Shared\SparrowSharp.Samples.Shared.projitems*{d5cbe574-b842-44c2-9430-73c5fe1aa04b}*SharedItemsImports = 13
+		..\sparrow-game\SparrowGame.Shared\SparrowGame.Shared.projitems*{de0fcad8-2c32-4b99-9962-e403853c3c4e}*SharedItemsImports = 4
 		SparrowShared\SparrowShared.projitems*{de0fcad8-2c32-4b99-9962-e403853c3c4e}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,6 +236,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0D4640D-6E9A-4B6D-9F36-EA469DA309A3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = UnitTests\Windows\UnitTests.Windows.csproj

@@ -24,7 +24,7 @@ namespace Sparrow.Core
 
         public delegate void OnLoadedAction(int viewWidth,int viewHeight);
 
-        private Type _rootClass;
+        private readonly Type _rootClass;
         public static Android.Content.Context AndroidContext;
         private readonly TouchProcessor touchProcessor;
         private readonly Stopwatch sw = new Stopwatch();
@@ -132,7 +132,8 @@ namespace Sparrow.Core
             if (SparrowSharp.Root == null)
             {
                 SparrowSharp.NativeWindow = this;
-                SparrowSharp.Start((uint)Width, (uint)Height, _rootClass);
+                // TODO get viewport dimensions?
+                SparrowSharp.Start((uint)Width, (uint)Height, (uint)Width, (uint)Height, _rootClass);
             }
             else
             {

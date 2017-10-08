@@ -104,7 +104,8 @@ namespace Sparrow.Rendering
                 {
                     int logSize;
                     StringBuilder sb = new StringBuilder();
-                    Gl.GetProgramInfoLog(program, 9999, out logSize, sb);
+                    sb.EnsureCapacity(999);
+                    Gl.GetProgramInfoLog(program, 999, out logSize, sb);
                     Debug.WriteLine("Sparrow: Error linking program: " + sb);
                 }
             }
@@ -145,7 +146,8 @@ namespace Sparrow.Rendering
                 if (logLength != 0)
                 {
                     StringBuilder sb = new StringBuilder();
-                    Gl.GetShaderInfoLog(shader, 9999, out int logSize, sb);
+                    sb.EnsureCapacity(999); // this is needed due to a rare Mono bug
+                    Gl.GetShaderInfoLog(shader, 999, out int logSize, sb);
                     Debug.WriteLine("Sparrow: Error compiling shader: " + sb);
                 }
                 Gl.DeleteShader(shader);
@@ -179,6 +181,7 @@ namespace Sparrow.Rendering
 
             Attributes.Clear();
             StringBuilder sb = new StringBuilder();
+            sb.EnsureCapacity(200);
             for (uint i = 0; i < numAttributes; i++)
             {
                 sb.Clear();

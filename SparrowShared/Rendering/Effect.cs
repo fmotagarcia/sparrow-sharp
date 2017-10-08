@@ -327,12 +327,12 @@ namespace Sparrow.Rendering
             string ret;
 #if __WINDOWS__
             ret = 
-                "#version 110\n" +
+                "#version 120\n" + // TODO rewrite shaders for GL 4+
                 "#define highp\n" +
                 "#define mediump\n" +
                 "#define lowp\n";
 #else
-            ret = @"#version 110\n";
+            ret = @"#version 100 es\n"; // this should be 300
 #endif
             return ret;
         }
