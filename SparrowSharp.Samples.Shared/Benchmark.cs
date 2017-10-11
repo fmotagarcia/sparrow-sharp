@@ -74,7 +74,7 @@ namespace Sparrow.Samples
 
         private void Benchmark_Touch(Touches.TouchEvent touch)
         {
-            Console.WriteLine(touch);
+            //Console.WriteLine(touch);
         }
 
         private void AddTestObjects(int numObjects)

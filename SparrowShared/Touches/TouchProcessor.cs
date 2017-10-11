@@ -84,7 +84,7 @@ namespace Sparrow.Touches
             Point touchPosition = Point.Create(xPosition, yPosition);
             var oldTarget = _hoverTouch.Target;
             _hoverTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
-            Console.WriteLine("hover target: " + _hoverTouch.Target);
+            //Console.WriteLine("hover target: " + _hoverTouch.Target);
             
             var touches = new List<Touch> {_hoverTouch};
             TouchEvent touchEvent = new TouchEvent(touches);

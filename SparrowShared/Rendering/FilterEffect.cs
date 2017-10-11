@@ -46,10 +46,10 @@ namespace Sparrow.Rendering
             get
             {
                 return AddShaderInitCode() + @"
-                    attribute vec4 aPosition;
-                    attribute vec2 aTexCoords;
+                    in vec4 aPosition;
+                    in vec2 aTexCoords;
                     uniform mat4 uMvpMatrix;
-                    varying lowp vec2 vTexCoords;;
+                    out lowp vec2 vTexCoords;;
                     // main
                     void main() {
                       gl_Position = uMvpMatrix * aPosition;
@@ -74,11 +74,12 @@ namespace Sparrow.Rendering
             if (Texture == null) return base.CreateProgram();
             
             var fragmentShader = AddShaderInitCode() + @"
-                varying lowp vec2 vTexCoords;
+                in lowp vec2 vTexCoords;
                 uniform lowp sampler2D uTexture;
+                out lowp vec4 fragColor;
                 
                 void main() {
-                  gl_FragColor = texture2D(uTexture, vTexCoords);
+                  fragColor = texture(uTexture, vTexCoords);
                 }";
             return new Program(StdVertexShader, fragmentShader);
         }

@@ -165,17 +165,17 @@ namespace Sparrow.Filters
             
             string vertexShader = AddShaderInitCode() + @"
             // attributes
-            attribute vec4 aPosition;
-            attribute lowp vec2 aTexCoords;
+            in vec4 aPosition;
+            in lowp vec2 aTexCoords;
             // uniforms
             uniform mat4 uMvpMatrix;
             uniform lowp vec4 uOffsets;
-            // varying
-            varying lowp vec2 v0;
-            varying lowp vec2 v1;
-            varying lowp vec2 v2;
-            varying lowp vec2 v3;
-            varying lowp vec2 v4;
+            // out
+            out lowp vec2 v0;
+            out lowp vec2 v1;
+            out lowp vec2 v2;
+            out lowp vec2 v3;
+            out lowp vec2 v4;
 
             // main
             void main() {
@@ -189,11 +189,12 @@ namespace Sparrow.Filters
             
             string fragmentShader = AddShaderInitCode() + @"
             // variables
-            varying lowp vec2 v0;
-            varying lowp vec2 v1;
-            varying lowp vec2 v2;
-            varying lowp vec2 v3;
-            varying lowp vec2 v4;
+            in lowp vec2 v0;
+            in lowp vec2 v1;
+            in lowp vec2 v2;
+            in lowp vec2 v3;
+            in lowp vec2 v4;
+            out vec4 fragColor;
             
             uniform sampler2D uTexture;
             uniform lowp vec4 uWeights;
@@ -208,25 +209,25 @@ namespace Sparrow.Filters
               lowp vec4 ft4;
               lowp vec4 ft5;
 
-              ft0 = texture2D(uTexture,v0);  // read center pixel
+              ft0 = texture(uTexture,v0);  // read center pixel
               ft5 = ft0 * uWeights.xxxx;     // multiply with center weight
 
-              ft1 = texture2D(uTexture,v1);  // read pixel -2
+              ft1 = texture(uTexture,v1);  // read pixel -2
               ft1 = ft1 * uWeights.zzzz;     // multiply with weight
               ft5 = ft5 + ft1;               // add to output color
 
-              ft2 = texture2D(uTexture,v2);  // read pixel -1
+              ft2 = texture(uTexture,v2);  // read pixel -1
               ft2 = ft2 * uWeights.yyyy;     // multiply with weight
               ft5 = ft5 + ft2;               // add to output color
 
-              ft3 = texture2D(uTexture,v3);  // read pixel +1
+              ft3 = texture(uTexture,v3);  // read pixel +1
               ft3 = ft3 * uWeights.yyyy;     // multiply with weight
               ft5 = ft5 + ft3;               // add to output color
 
-              ft4 = texture2D(uTexture,v4);  // read pixel +2
+              ft4 = texture(uTexture,v4);  // read pixel +2
               ft4 = ft4 * uWeights.zzzz;     // multiply with weight
 
-              gl_FragColor = ft5 + ft4;      // add to output color
+              fragColor = ft5 + ft4;      // add to output color
             }";
 
             return new Program(vertexShader, fragmentShader);

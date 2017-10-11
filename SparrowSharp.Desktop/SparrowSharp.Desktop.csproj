@@ -62,7 +62,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\CustomGlControl.cs" />
+    <Compile Include="Core\CustomGlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Core\CustomGlControl.Designer.cs" />
     <Compile Include="Core\DesktopViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

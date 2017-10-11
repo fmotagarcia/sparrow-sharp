@@ -304,7 +304,7 @@ namespace Sparrow.Rendering
         protected virtual Program CreateProgram()
         {
             string vertexShader = AddShaderInitCode() + @"
-            attribute vec4 aPosition;
+            in vec4 aPosition;
             uniform mat4 uMvpMatrix;
             
             void main() {
@@ -312,8 +312,10 @@ namespace Sparrow.Rendering
             }";
             
             string fragmentShader = AddShaderInitCode() + @"
+            out lowp vec4 fragColor;
+
             void main() {
-                gl_FragColor = vec4(1, 1, 1, 1);
+                fragColor = vec4(1, 1, 1, 1);
             }";
             return new Program(vertexShader, fragmentShader);
         }
@@ -327,12 +329,12 @@ namespace Sparrow.Rendering
             string ret;
 #if __WINDOWS__
             ret = 
-                "#version 120\n" + // TODO rewrite shaders for GL 4+
+                "#version 430\n" + // TODO rewrite shaders for GL 4+
                 "#define highp\n" +
                 "#define mediump\n" +
                 "#define lowp\n";
 #else
-            ret = @"#version 100 es\n"; // this should be 300
+            ret = @"#version 100 es\n"; // this should be 300 es
 #endif
             return ret;
         }

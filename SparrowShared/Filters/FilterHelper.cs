@@ -181,7 +181,9 @@ namespace Sparrow.Filters
             set { _target = value; }
         }
 
-        /** The scale factor of the returned textures. */
+        /// <summary>
+        /// The scale factor of the returned textures.
+        /// </summary>
         public float TextureScale { 
             get { return _preferredScale; }
             set { _preferredScale = value > 0 ? value : SparrowSharp.ContentScaleFactor; }

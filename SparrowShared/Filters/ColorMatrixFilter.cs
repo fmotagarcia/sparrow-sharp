@@ -146,17 +146,18 @@ namespace Sparrow.Filters
             uniform lowp mat4 uColorMatrix;
             uniform lowp vec4 uColorOffset;
             uniform lowp sampler2D uTexture;
-            varying lowp vec2 vTexCoords;
+            in lowp vec2 vTexCoords;
+            out lowp vec4 fragColor;
             const lowp vec4 MIN_COLOR = vec4(0, 0, 0, 0.0001);
-
+            
             void main() {
-              lowp vec4 texColor = texture2D(uTexture, vTexCoords); // read texture color
+              lowp vec4 texColor = texture(uTexture, vTexCoords);   // read texture color
               texColor = max(texColor, MIN_COLOR);                  // avoid division through zero in next step
               texColor.xyz /= texColor.www;                         // restore original(non-PMA) RGB values
               texColor *= uColorMatrix;                             // multiply color with 4x4 matrix
               texColor += uColorOffset;                             // add offset
               texColor.xyz *= texColor.www;                         // multiply with alpha again(PMA)
-              gl_FragColor = texColor;
+              fragColor = texColor;
             }";
             return new Program(StdVertexShader, fragmentShader);
         }
