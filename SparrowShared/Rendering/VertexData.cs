@@ -101,7 +101,6 @@ namespace Sparrow.Rendering
                             {
                                 //add some buffer to prevent frequent resizing
                                 int newLenght = Math.Max((int)(_vertices.Length * 1.4f), (int)(value * 1.4f));
-                                //Console.WriteLine("expand buffer " + newLenght);
                                 Array.Resize(ref _vertices, newLenght);
                                 Array.Resize(ref _vertexColors, newLenght);
                             }

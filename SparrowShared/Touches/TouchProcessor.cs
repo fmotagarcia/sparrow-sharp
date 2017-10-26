@@ -3,6 +3,7 @@ using Sparrow.Core;
 using Sparrow.Geom;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Sparrow.Touches
 {
@@ -25,7 +26,7 @@ namespace Sparrow.Touches
             newTouch.Phase = TouchPhase.Began;
             Point touchPosition = Point.Create(newTouch.GlobalX, newTouch.GlobalY);
             newTouch.Target = SparrowSharp.Stage.HitTest(touchPosition);
-            Console.WriteLine("TARGET: " + newTouch.Target);
+            Debug.WriteLine("touch target: " + newTouch.Target);
             _touches.Add(newTouch.TouchID, newTouch);
             ProcessTouch();
         }

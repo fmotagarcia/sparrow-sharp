@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Sparrow.Touches;
 using OpenGL;
 using Sparrow.Utils;
@@ -46,7 +47,7 @@ namespace Sparrow.Core
             _control.ContextProfile = CustomGlControl.ProfileType.Core;
             _control.DebugContext = CustomGlControl.AttributePermission.Enabled;
             _control.Animation = true;
-            _control.AnimationTime = 16;
+            _control.AnimationTime = 7;
             _control.ContextCreated += OnContextCreated;
             _control.ContextDestroying += ContextDestroying;
             
@@ -89,7 +90,7 @@ namespace Sparrow.Core
         
         private void OnResize(object sender, EventArgs e)
         {
-            Console.Out.WriteLine($"Window resize {_control.Width}x{_control.Height}");
+            Debug.WriteLine($"Window resize {_control.Width}x{_control.Height}");
             SparrowSharp.ViewPort.Width = _control.Width;
             SparrowSharp.ViewPort.Height = _control.Height;
         }
@@ -101,7 +102,7 @@ namespace Sparrow.Core
 
         private void ContextDestroying(object sender, GlControlEventArgs e)
         {
-            Console.WriteLine("Context loss on Windows is not impletented");
+            Debug.WriteLine("Context loss on Windows is not impletented");
         }
         
         // touch handling

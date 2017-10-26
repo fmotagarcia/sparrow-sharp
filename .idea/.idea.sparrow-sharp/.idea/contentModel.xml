@@ -1,5 +1,298 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\CODE\sparrow-game\SparrowGame.Shared" t="Include">
+      <e p="benchmark_object.png" t="Include" />
+      <e p="bigstar.png" t="Include" />
+      <e p="ComputeShaderTest.cs" t="Include" />
+      <e p="CustomMesh" t="Include">
+        <e p="CustomEffect.cs" t="Include" />
+        <e p="CustomStyle.cs" t="Include" />
+        <e p="FragShader.frag" t="Include" />
+        <e p="VertShader.vert" t="Include" />
+      </e>
+      <e p="GameMain.cs" t="Include" />
+      <e p="lightComputeShader.glsl" t="Include" />
+      <e p="testbg.png" t="Include" />
+      <e p="testbg_google.png" t="Include" />
+      <e p="testbg_transparency.png" t="Include" />
+      <e p="testbg_white.png" t="Include" />
+    </e>
+    <e p="C:\CODE\sparrow-sharp" t="IncludeFlat">
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="sparrow-sharp.sln" t="IncludeFlat" />
+      <e p="SparrowShared" t="IncludeRecursive">
+        <e p="Animation" t="Include">
+          <e p="IAnimatable.cs" t="Include" />
+          <e p="Juggler.cs" t="Include" />
+        </e>
+        <e p="Core" t="Include">
+          <e p="SparrowSharp.cs" t="Include" />
+          <e p="StatsDisplay.cs" t="Include" />
+        </e>
+        <e p="display" t="Include">
+          <e p="BlendMode.cs" t="Include" />
+          <e p="Button.cs" t="Include" />
+          <e p="ButtonState.cs" t="Include" />
+          <e p="DisplayObject.cs" t="Include" />
+          <e p="DisplayObjectContainer.cs" t="Include" />
+          <e p="Image.cs" t="Include" />
+          <e p="Mesh.cs" t="Include" />
+          <e p="MeshBatch.cs" t="Include" />
+          <e p="MovieClip.cs" t="Include" />
+          <e p="Quad.cs" t="Include" />
+          <e p="Sprite.cs" t="Include" />
+          <e p="Stage.cs" t="Include" />
+        </e>
+        <e p="Filters" t="Include">
+          <e p="BlurFilter.cs" t="Include" />
+          <e p="ColorMatrix.cs" t="Include" />
+          <e p="ColorMatrixFilter.cs" t="Include" />
+          <e p="FilterHelper.cs" t="Include" />
+          <e p="FragmentFilter.cs" t="Include" />
+          <e p="IFilterHelper.cs" t="Include" />
+        </e>
+        <e p="geom" t="Include">
+          <e p="Matrix.cs" t="Include" />
+          <e p="Matrix3D.cs" t="Include" />
+          <e p="Point.cs" t="Include" />
+          <e p="Rectangle.cs" t="Include" />
+          <e p="Vector2.cs" t="Include" />
+        </e>
+        <e p="Pool" t="Include">
+          <e p="ObjectPool.cs" t="Include" />
+          <e p="PooledObject.cs" t="Include" />
+        </e>
+        <e p="rendering" t="Include">
+          <e p="BatchProcessor.cs" t="Include" />
+          <e p="BatchToken.cs" t="Include" />
+          <e p="Effect.cs" t="Include" />
+          <e p="FilterEffect.cs" t="Include" />
+          <e p="GPUInfo.cs" t="Include" />
+          <e p="IndexData.cs" t="Include" />
+          <e p="MeshEffect.cs" t="Include" />
+          <e p="OpenGLDebugCallback.cs" t="Include" />
+          <e p="Painter.cs" t="Include" />
+          <e p="Program.cs" t="Include" />
+          <e p="RenderState.cs" t="Include" />
+          <e p="Vertex.cs" t="Include" />
+          <e p="VertexColor.cs" t="Include" />
+          <e p="VertexData.cs" t="Include" />
+        </e>
+        <e p="ResourceLoading" t="Include">
+          <e p="EmbeddedResourceLoader.cs" t="Include" />
+          <e p="SimpleTextureLoader.cs" t="Include" />
+        </e>
+        <e p="SparrowShared.projitems" t="Include" />
+        <e p="SparrowShared.shproj" t="IncludeRecursive" />
+        <e p="Styles" t="Include">
+          <e p="MeshStyle.cs" t="Include" />
+        </e>
+        <e p="text" t="Include">
+          <e p="BitmapChar.cs" t="Include" />
+          <e p="BitmapFont.cs" t="Include" />
+          <e p="CharLocation.cs" t="Include" />
+          <e p="ITextCompositor.cs" t="Include" />
+          <e p="MiniBitmapFont.cs" t="Include" />
+          <e p="TextField.cs" t="Include" />
+          <e p="TextFieldAutoSize.cs" t="Include" />
+          <e p="TextFormat.cs" t="Include" />
+          <e p="TextOptions.cs" t="Include" />
+        </e>
+        <e p="Textures" t="Include">
+          <e p="ConcreteTexture.cs" t="Include" />
+          <e p="RenderTexture.cs" t="Include" />
+          <e p="SubTexture.cs" t="Include" />
+          <e p="Texture.cs" t="Include" />
+          <e p="TextureAtlas.cs" t="Include" />
+          <e p="TextureFormat.cs" t="Include" />
+          <e p="TextureInfo.cs" t="Include" />
+          <e p="TextureOptions.cs" t="Include" />
+          <e p="TextureSmoothing.cs" t="Include" />
+        </e>
+        <e p="Touches" t="Include">
+          <e p="Touch.cs" t="Include" />
+          <e p="TouchEvent.cs" t="Include" />
+          <e p="TouchPhase.cs" t="Include" />
+          <e p="TouchProcessor.cs" t="Include" />
+        </e>
+        <e p="utils" t="Include">
+          <e p="ColorUtil.cs" t="Include" />
+          <e p="Extensions.cs" t="Include" />
+          <e p="GLExtensions.cs" t="Include" />
+          <e p="HAlign.cs" t="Include" />
+          <e p="MathUtil.cs" t="Include" />
+          <e p="MatrixUtil.cs" t="Include" />
+          <e p="MeshSubset.cs" t="Include" />
+          <e p="MeshUtil.cs" t="Include" />
+          <e p="MouseCursor.cs" t="Include" />
+          <e p="Padding.cs" t="Include" />
+          <e p="RenderUtil.cs" t="Include" />
+          <e p="VAlign.cs" t="Include" />
+          <e p="VertexColorHelper.cs" t="Include" />
+        </e>
+      </e>
+      <e p="SparrowSharp.Android" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Core" t="Include">
+          <e p="AndroidViewController.cs" t="Include" />
+        </e>
+        <e p="CustomMesh" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="ResourceLoading" t="Include">
+          <e p="AndroidTextureLoader.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="AboutResources.txt" t="Include" />
+          <e p="Resource.designer.cs" t="Include" />
+          <e p="values" t="Include">
+            <e p="Strings.xml" t="Include" />
+          </e>
+        </e>
+        <e p="SparrowSharp.Droid.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SparrowSharp.Core\SparrowSharp.Core.iOS.csproj" t="IncludeRecursive" />
+      <e p="SparrowSharp.Desktop" t="IncludeRecursive">
+        <e p="app.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Core" t="Include">
+          <e p="CustomGlControl.cs" t="Include" />
+          <e p="CustomGlControl.Designer.cs" t="Include" />
+          <e p="DesktopViewController.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="ResourceLoading" t="Include">
+          <e p="DesktopTextureLoader.cs" t="Include" />
+        </e>
+        <e p="SparrowSharp.Desktop.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SparrowSharp.Samples.Android" t="IncludeRecursive">
+        <e p="Assets" t="Include">
+          <e p="AboutAssets.txt" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="environment.txt" t="Include" />
+        <e p="MainActivity.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Properties" t="Include">
+          <e p="AndroidManifest.xml" t="Include" />
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="AboutResources.txt" t="Include" />
+          <e p="drawable" t="Include">
+            <e p="Icon.png" t="Include" />
+          </e>
+          <e p="drawable-nodpi" t="Include" />
+          <e p="layout" t="Include">
+            <e p="Main.axml" t="Include" />
+          </e>
+          <e p="Resource.designer.cs" t="Include" />
+          <e p="values" t="Include">
+            <e p="Strings.xml" t="Include" />
+          </e>
+        </e>
+        <e p="SparrowSharp.Samples.Droid.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SparrowSharp.Samples.Desktop" t="IncludeRecursive">
+        <e p="app.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="MainClass.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="SparrowSharp.Samples.Desktop.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SparrowSharp.Samples.iOS" t="IncludeRecursive">
+        <e p="app.config" t="Include" />
+        <e p="AppDelegate.cs" t="Include" />
+        <e p="Benchmark.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Entitlements.plist" t="Include" />
+        <e p="Info.plist" t="Include" />
+        <e p="Main.cs" t="Include" />
+        <e p="OpenGLViewController.cs" t="Include" />
+        <e p="OpenGLViewController.xib" t="Include" />
+        <e p="Resources" t="Include">
+          <e p="atlas_1.png" t="Include" />
+          <e p="atlas_1.xml" t="Include" />
+          <e p="benchmark_object.png" t="Include" />
+          <e p="Default-568h@2x.png" t="Include" />
+          <e p="star.png" t="Include" />
+        </e>
+        <e p="SparrowSharp.Samples.iOS.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="SparrowSharp.Samples.Shared" t="IncludeRecursive">
+        <e p="Benchmark.cs" t="Include" />
+        <e p="benchmark_object.png" t="Include" />
+        <e p="bigstar.png" t="Include" />
+        <e p="CustomStyle" t="Include">
+          <e p="CustomMeshEffect.cs" t="Include" />
+          <e p="CustomMeshStyle.cs" t="Include" />
+        </e>
+        <e p="SparrowSharp.Samples.Shared.projitems" t="Include" />
+        <e p="SparrowSharp.Samples.Shared.shproj" t="IncludeRecursive" />
+        <e p="TrigonometryTest.cs" t="Include" />
+      </e>
+      <e p="UnitTests\Android" t="IncludeRecursive">
+        <e p="Assets" t="Include">
+          <e p="AboutAssets.txt" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="MainActivity.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Properties" t="Include">
+          <e p="AndroidManifest.xml" t="Include" />
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="Resources" t="Include">
+          <e p="drawable" t="Include">
+            <e p="Icon.png" t="Include" />
+          </e>
+          <e p="Resource.designer.cs" t="Include" />
+        </e>
+        <e p="UnitTests.Android.csproj" t="IncludeRecursive" />
+      </e>
+      <e p="UnitTests\Shared" t="Include">
+        <e p="DisplayObjectContainerTest.cs" t="Include" />
+        <e p="DisplayObjectTest.cs" t="Include" />
+        <e p="MatrixTest.cs" t="Include" />
+        <e p="TestBase.cs" t="Include" />
+        <e p="VertexDataTest.cs" t="Include" />
+      </e>
+      <e p="UnitTests\Windows" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="display" t="Include">
+          <e p="MeshTest.cs" t="Include" />
+          <e p="QuadTest.cs" t="Include" />
+        </e>
+        <e p="geom" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="packages.config" t="Include" />
+        <e p="rendering" t="Include">
+          <e p="IndexDataTest.cs" t="Include" />
+          <e p="MeshStyleTest.cs" t="Include" />
+        </e>
+        <e p="text" t="Include">
+          <e p="TextFieldTest.cs" t="Include" />
+        </e>
+        <e p="UnitTests.Windows.csproj" t="IncludeRecursive" />
+        <e p="utils" t="Include">
+          <e p="MockTexture.cs" t="Include" />
+        </e>
+      </e>
+    </e>
+    <e p="C:\Users\Matyas\.Rider2017.2\system\resharper-host\local\Transient\ReSharperHost\v10\SolutionCaches\_sparrow-sharp.1659340064.00" t="ExcludeRecursive" />
+  </component>
   <component name="RiderRiderContentModelStore">
     <excludedPaths />
   </component>

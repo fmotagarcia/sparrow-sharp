@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using OpenGL;
 using System.Runtime.InteropServices;
 
@@ -29,7 +30,7 @@ namespace Sparrow.Core
             catch (Exception ex)
             {
                 // Google was lazy to implement this in Android 5 and 6, even though the drivers support it.
-                Console.Out.WriteLine("WARNING: No support for OpenGL debug callback, likely its not implemented. " + ex);
+                Debug.WriteLine("WARNING: No support for OpenGL debug callback, likely its not implemented. " + ex);
             }
         }
 
@@ -38,11 +39,11 @@ namespace Sparrow.Core
             string msg = Marshal.PtrToStringAnsi(message);
             if (severity == Gl.DebugSeverity.High || severity == Gl.DebugSeverity.Medium)
             {
-                Console.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
+                Debug.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
             }
             else if (severity == Gl.DebugSeverity.Low)
             {
-                Console.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
+                Debug.WriteLine("[GL] {0}; {1}; {2}; {3}; {4}", source, type, id, severity, msg);
             }
         }
     }

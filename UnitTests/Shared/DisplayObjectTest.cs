@@ -1,10 +1,8 @@
 ﻿using NUnit.Framework;
 using Sparrow.Display;
-using Sparrow;
 using System;
 using Sparrow.Geom;
 using Sparrow.Utils;
-using System.Reflection;
 
 namespace Tests
 {
@@ -151,8 +149,8 @@ namespace Tests
             Sprite sprite = new Sprite();
             float[] angles = { (float)(Math.PI / 2.0f), (float)(-Math.PI / 2.0f) };
             Matrix2D[] matrices = {
-                Matrix2D.Create(0, 1,-1,0,0,0),
-                Matrix2D.Create(0,-1, 1,0,0,0)
+                Matrix2D.Create(0, 1,-1, 0),
+                Matrix2D.Create(0,-1, 1, 0)
             };
 
             for (int i=0; i<2; ++i)

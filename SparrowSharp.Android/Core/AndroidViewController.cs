@@ -68,7 +68,7 @@ namespace Sparrow.Core
 
         public AndroidViewController(Android.Content.Context context, Type rootClass) : base(context)
         {
-            Console.WriteLine("Sparrow: Starting");
+            Debug.WriteLine("Sparrow: Starting");
             _rootClass = rootClass;
             touchProcessor = new TouchProcessor();
 
@@ -90,7 +90,7 @@ namespace Sparrow.Core
         /// </param>
         public void SurfaceCreated(ISurfaceHolder holder)
         {
-            Console.WriteLine("Sparrow: SurfaceCreated");
+            Debug.WriteLine("Sparrow: SurfaceCreated");
             // Get actual native window handle
             _NativeWindowHandle = ANativeWindow_fromSurface(JNIEnv.Handle, holder.Surface.Handle);
 
@@ -171,12 +171,12 @@ namespace Sparrow.Core
 
         public void SurfaceChanged(ISurfaceHolder holder, Format format, int w, int h)
         {
-            Console.WriteLine("Sparrow: SurfaceChanged");
+            Debug.WriteLine("Sparrow: SurfaceChanged");
         }
 
         public void SurfaceDestroyed(ISurfaceHolder holder)
         {
-            Console.WriteLine("Sparrow: SurfaceDestroyed");
+            Debug.WriteLine("Sparrow: SurfaceDestroyed");
             if (_RenderTimer != null)
             {
                 _RenderTimer.Change(Timeout.Infinite, Timeout.Infinite);
@@ -209,7 +209,7 @@ namespace Sparrow.Core
 
         protected override void OnSizeChanged(int w, int h, int oldw, int oldh)
         {
-            Console.WriteLine("Sparrow: Android view size changed");
+            Debug.WriteLine("Sparrow: Android view size changed");
             base.OnSizeChanged(w, h, oldw, oldh);
             SparrowSharp.ViewPort.Width = w;
             SparrowSharp.ViewPort.Height = h;

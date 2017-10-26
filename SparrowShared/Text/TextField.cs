@@ -66,8 +66,10 @@ namespace Sparrow.Text
             base.Render(painter);
         }
 
-        /** Forces the text contents to be composed right away.
-         *  Normally, it will only do so lazily, i.e. before being rendered. */
+        /// <summary>
+        /// Forces the text contents to be composed right away.
+        /// Normally, it will only do so lazily, i.e. before being rendered.
+        /// </summary>
         private void Recompose()
         {
             if (_requiresRecomposition)
@@ -402,11 +404,13 @@ namespace Sparrow.Text
             set { _sDefaultTextureFormat = value; }
         }
 
-        /** The default compositor used to arrange the letters of the text.
-         *  If a specific compositor was registered for a font, it takes precedence.
-         *
-         *  @default TrueTypeCompositor
-         */
+        /// <summary>
+        /// The default compositor used to arrange the letters of the text.
+        /// If a specific compositor was registered for a font, it takes precedence.
+        ///
+        /// @default TrueTypeCompositor
+        /// </summary>
+        /// <exception cref="ArgumentNullException">If trying to set to null</exception>
         public static ITextCompositor DefaultCompositor { 
             get
             {

@@ -8,21 +8,20 @@ namespace Tests
     [TestFixture]
     public class DisplayObjectContainerTest
     {
-
-        Sprite testRoot;
+        private Sprite _testRoot;
 
         [SetUp]
         protected void SetUp()
         {
-            SparrowSharp.Start(12, 12, typeof(Sprite));
-            testRoot = new Sprite();
-            SparrowSharp.Stage.AddChild(testRoot);
+            SparrowSharp.Start(32, 32, 32, 32, typeof(Sprite));
+            _testRoot = new Sprite();
+            SparrowSharp.Stage.AddChild(_testRoot);
         }
 
         [TearDown]
         protected void TearDown()
         {
-            testRoot.RemoveAllChildren();
+            _testRoot.RemoveAllChildren();
             SparrowSharp.Destroy();
         }
 
@@ -37,7 +36,7 @@ namespace Tests
                 sp.AddChild(new Sprite());
             };
 
-            testRoot.AddChild(sp);
+            _testRoot.AddChild(sp);
 
             Assert.AreEqual(2, sp.NumChildren);
         }
@@ -59,7 +58,7 @@ namespace Tests
             sp.AddChild(sp2);
 
             order = order + "1";
-            testRoot.AddChild(sp);
+            _testRoot.AddChild(sp);
             order = order + "4";
 
             Assert.AreEqual(2, sp.NumChildren);

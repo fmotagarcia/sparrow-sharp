@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Sparrow.Textures;
 using System.Xml;
 using System.IO;
@@ -162,7 +163,7 @@ namespace Sparrow.Text
 
             if (Size <= 0)
             {
-                Console.WriteLine("[Sparrow] Warning: invalid font size in '" + Name + "' font.");
+                Debug.WriteLine("[Sparrow] Warning: invalid font size in '" + Name + "' font.");
                 Size = (Size == 0.0f ? 16.0f : Size * -1.0f);
             }
 
@@ -304,7 +305,7 @@ namespace Sparrow.Text
                         }
                         else if (bitmapChar == null)
                         {
-                            Console.WriteLine("font " + Name + " missing character: " + text[i] + " ID:" + charId);
+                            Debug.WriteLine("font " + Name + " missing character: " + text[i] + " ID:" + charId);
                         }
                         else
                         {

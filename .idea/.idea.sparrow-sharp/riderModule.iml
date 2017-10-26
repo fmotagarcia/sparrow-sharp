@@ -1,40 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$/../../../sparrow-game/SparrowGame.Shared">
-      <sourceFolder url="file://$MODULE_DIR$/../../../sparrow-game/SparrowGame.Shared" isTestSource="false" />
-    </content>
-    <content url="file://$MODULE_DIR$/../..">
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowShared" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Android" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Core/SparrowSharp.Core.iOS.csproj" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Desktop" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Android" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Desktop" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.iOS" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Shared" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../UnitTests/Android" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../UnitTests/Shared" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../UnitTests/Windows" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowShared/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowShared/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Android/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Android/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Desktop/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Desktop/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Android/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Android/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Desktop/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Desktop/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Shared/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.Shared/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../SparrowSharp.Samples.iOS/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/Android/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/Android/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/Windows/bin" />
-      <excludeFolder url="file://$MODULE_DIR$/../../UnitTests/Windows/obj" />
-      <excludeFolder url="file://$MODULE_DIR$/../../packages" />
-    </content>
+    <content url="file://$MODULE_DIR$/../../../sparrow-game/SparrowGame.Shared" />
+    <content url="file://$MODULE_DIR$/../.." />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

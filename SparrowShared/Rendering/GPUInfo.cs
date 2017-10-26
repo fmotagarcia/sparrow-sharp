@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using OpenGL;
 
 namespace Sparrow.Rendering
@@ -8,7 +9,7 @@ namespace Sparrow.Rendering
         public static void PrintGPUInfo()
         {
             string versionOpenGL = Gl.GetString(StringName.Version);
-            Console.Out.WriteLine("GL version:" + versionOpenGL);
+            Debug.WriteLine("GL version:" + versionOpenGL);
 
             int[] workGrpCnt = new int[3];
             int[] workGrpSize = new int[3];
@@ -48,9 +49,9 @@ namespace Sparrow.Rendering
             //    dimensions, and 64 in the case of z           
             //
             // GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS is guaranteed to be no lower than 128.
-            Console.Out.WriteLine("max global (total) work group size " + string.Join(",", workGrpCnt));
-            Console.Out.WriteLine("max local (in one shader) work group sizes " + string.Join(",", workGrpSize));
-            Console.Out.WriteLine("max total local workgroup elements " + maxComputeWorkGroupInvocations);
+            Debug.WriteLine("max global (total) work group size " + string.Join(",", workGrpCnt));
+            Debug.WriteLine("max local (in one shader) work group sizes " + string.Join(",", workGrpSize));
+            Debug.WriteLine("max total local workgroup elements " + maxComputeWorkGroupInvocations);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Sparrow.Rendering
             }
             if (errstr != "")
             {
-                Console.WriteLine(errstr);
+                Debug.WriteLine(errstr);
             }
             return (uint)err;
         }

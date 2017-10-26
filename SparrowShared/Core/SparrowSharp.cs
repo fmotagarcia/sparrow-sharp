@@ -65,8 +65,11 @@ namespace Sparrow.Core
         /// <param name="viewportWidth"></param>
         /// <param name="rootType">The root class of your app</param>
         /// <exception cref="InvalidOperationException">When rootType is null or this function is called twice</exception>
+        /// <exception cref="NotSupportedException">When the OpenGL framebuffer creation fails.</exception>
+        /// <exception cref="ArgumentException">When width or height are less than 32.</exception>
         public static void Start(uint width, uint height, uint viewportWidth, uint viewportHeight, Type rootType)
         {
+            Debug.WriteLine("Sparrow starting");
             if (width < 32 || height < 32 || viewportWidth < 32 || viewportHeight < 32)
             {
                 throw new ArgumentException($"Invalid dimensions: {width}x{height}");
@@ -81,7 +84,7 @@ namespace Sparrow.Core
             FramebufferStatus status = Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (status != FramebufferStatus.FramebufferComplete)
             {
-                throw new Exception("GL Framebuffer creation error. Status: " + status);
+                throw new NotSupportedException("GL Framebuffer creation error. Status: " + status);
             }
             _viewPort = Rectangle.Create(0, 0, viewportWidth, viewportHeight);
             _previousViewPort = Rectangle.Create();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Sparrow.Geom;
 
 namespace Sparrow.Textures
@@ -80,7 +81,7 @@ namespace Sparrow.Textures
             if (_frame != null && (_frame.X > 0f || _frame.Y > 0f ||
                 _frame.Right < _width || _frame.Bottom< _height))
             {
-                Console.WriteLine("[Sparrow] Warning: frames inside the texture's region are unsupported.");
+                Debug.WriteLine("[Sparrow] Warning: frames inside the texture's region are unsupported.");
             }
 
             UpdateMatrices();

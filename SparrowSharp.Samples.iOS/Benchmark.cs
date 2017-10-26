@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Sparrow.Display;
 using Sparrow.Textures;
 using Sparrow.ResourceLoading;
@@ -53,8 +54,8 @@ namespace Sparrow.Samples.iOS
 
         private void BenchmarkComplete()
         {
-            Console.WriteLine("benchmark complete!");
-            Console.WriteLine("number of objects: " + _container.NumChildren);
+            Debug.WriteLine("benchmark complete!");
+            Debug.WriteLine("number of objects: " + _container.NumChildren);
 
             UIAlertView alert = new UIAlertView("Benchmark Completed", "Total objects: " + _container.NumChildren, null, "ok", null);
             alert.Show();
@@ -84,7 +85,7 @@ namespace Sparrow.Samples.iOS
             {
                 float targetFPS = 60;
                 float realFPS = _waitFrames / _elapsed;
-                //Console.WriteLine ("FPS: " + realFPS);
+                //Debug.WriteLine ("FPS: " + realFPS);
                 if (realFPS >= targetFPS)
                 {
                     int numObjects = _failCount != 0 ? 5 : 25;

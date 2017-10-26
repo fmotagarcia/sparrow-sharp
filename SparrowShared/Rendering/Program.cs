@@ -36,8 +36,7 @@ namespace Sparrow.Rendering
         }
 
         /// <summary>
-        /// Initializes a GLSL program by compiling vertex and fragment shaders from source. In debug
-        /// mode, compilation erros are logged into the console.
+        /// Constructor
         /// </summary>
         public Program(string vertexShader, string fragmentShader)
         {

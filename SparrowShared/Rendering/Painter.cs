@@ -11,37 +11,34 @@ using OpenGL;
 namespace Sparrow.Rendering
 {
 
-    /** A class that orchestrates rendering of all Sparrow display objects.
-    *
-    *  <p>A Sparrow instance contains exactly one 'Painter' instance that should be used for all
-    *  rendering purposes. Each frame, it is passed to the render methods of all rendered display
-    *  objects. To access it outside a render method, call <code>Sparrow.Painter</code>.</p>
-    *
-    *  <p>The painter is responsible for drawing all display objects to the screen. At its
-    *  core, it is a wrapper for many Context3D methods, but that's not all: it also provides
-    *  a convenient state mechanism, supports masking and acts as middleman between display
-    *  objects and renderers.</p>
-    *
-    *  <strong>The State Stack</strong>
-    *
-    *  <p>The most important concept of the Painter class is the state stack. A RenderState
-    *  stores a combination of settings that are currently used for rendering, e.g. the current
-    *  projection- and modelview-matrices and context-related settings. It can be accessed
-    *  and manipulated via the <code>state</code> property. Use the methods
-    *  <code>pushState</code> and <code>popState</code> to store a specific state and restore
-    *  it later. That makes it easy to write rendering code that doesn't have any side effects.</p>
-    *
-    *  <listing>
-    *  painter.PushState(); // save a copy of the current state on the stack
-    *  painter.State.RenderTarget = renderTexture;
-    *  painter.State.TransformModelviewMatrix(object.TransformationMatrix);
-    *  painter.State.Alpha = 0.5;
-    *  painter.PrepareToDraw(); // apply all state settings at the render context
-    *  drawSomething(); // insert Stage3D rendering code here
-    *  painter.PopState(); // restores previous state</listing>
-    *
-    *  @see RenderState
-    */
+    /// <summary>
+    /// A class that orchestrates rendering of all Sparrow display objects.
+    ///
+    /// <para>A Sparrow instance contains exactly one 'Painter' instance that should be used for all
+    /// rendering purposes. Each frame, it is passed to the render methods of all rendered display
+    /// objects. To access it outside a render method, call <code>Sparrow.Painter</code>.</para>
+    ///
+    /// <strong>The State Stack</strong>
+    /// 
+    /// <para>The most important concept of the Painter class is the state stack. A RenderState
+    /// stores a combination of settings that are currently used for rendering, e.g. the current
+    /// projection- and modelview-matrices and context-related settings. It can be accessed
+    /// and manipulated via the <code>State</code> property. Use the methods
+    /// <code>PushState</code> and <code>PopState</code> to store a specific state and restore
+    /// it later. That makes it easy to write rendering code that doesn't have any side effects.</para>
+    /// 
+    /// <code>
+    /// painter.PushState(); // save a copy of the current state on the stack
+    /// painter.State.RenderTarget = renderTexture;
+    /// painter.State.TransformModelviewMatrix(object.TransformationMatrix);
+    /// painter.State.Alpha = 0.5;
+    /// painter.PrepareToDraw(); // apply all state settings at the render context
+    /// DrawSomething(); // insert OpenGL rendering code here
+    /// painter.PopState(); // restores previous state
+    /// </code>
+    /// 
+    /// <see cref="RenderState"/>
+    /// </summary>
     public class Painter
     {
         
@@ -137,15 +134,19 @@ namespace Sparrow.Rendering
 
         // program management
 
-        /** Registers a program under a certain name.
-         *  If the name was already used, the previous program is overwritten. */
+        /// <summary>
+        /// Registers a program under a certain name.
+        /// If the name was already used, the previous program is overwritten.
+        /// </summary>
         public void RegisterProgram(string name, Program program)
         {
             DeleteProgram(name);
             Programs.Add(name, program);
         }
 
-        /** Deletes the program of a certain name. */
+        /// <summary>
+        /// Deletes the program of a certain name.
+        /// </summary>
         public void DeleteProgram(string name)
         {
             Program program = GetProgram(name);
@@ -177,12 +178,13 @@ namespace Sparrow.Rendering
 
         // state stack
 
-        /** Pushes the current render state to a stack from which it can be restored later.
-         *
-         *  <p>If you pass a BatchToken, it will be updated to point to the current location within
-         *  the render cache. That way, you can later reference this location to render a subset of
-         *  the cache.</p>
-         */
+        /// <summary>
+        /// Pushes the current render state to a stack from which it can be restored later.
+        ///
+        /// <para>If you pass a BatchToken, it will be updated to point to the current location within
+        /// the render cache. That way, you can later reference this location to render a subset of
+        /// the cache.</para>
+        /// </summary>
         public void PushState(BatchToken token = null)
         {
             _stateStackPos++;
