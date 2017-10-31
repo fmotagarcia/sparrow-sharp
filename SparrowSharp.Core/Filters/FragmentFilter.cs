@@ -355,7 +355,7 @@ namespace SparrowSharp.Filters
             SparrowSharpApp.Context.ScissorBox = null; // we want the entire texture cleared
             support.Clear();
             support.BlendMode = BlendMode.NORMAL;
-            support.SetupOrthographicProjection(boundsPOT.Left, boundsPOT.Right, boundsPOT.Bottom, boundsPOT.Top);
+            support.SetupOrthographicProjection(boundsPOT.Left, boundsPOT.Right, boundsPOT.Top, boundsPOT.Bottom);
             obj.Render(support);
             support.FinishQuadBatch();
 
