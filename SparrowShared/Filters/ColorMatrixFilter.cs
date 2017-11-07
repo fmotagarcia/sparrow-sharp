@@ -100,7 +100,7 @@ namespace Sparrow.Filters
             SetRequiresRedraw();
         }
 
-        protected override FilterEffect CreateEffect()
+        protected override Effect CreateEffect()
         {
             return new ColorMatrixEffect();
         }
@@ -123,7 +123,7 @@ namespace Sparrow.Filters
 }
 
 
-    internal class ColorMatrixEffect : FilterEffect
+    internal class ColorMatrixEffect : Effect
     {
         /// <summary>
         /// The color matrix object used to apply the filter.

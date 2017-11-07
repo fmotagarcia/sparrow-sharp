@@ -225,7 +225,7 @@ namespace Sparrow.Display
                 }
 
                 _style.UpdateEffect(_effect, painter.State);
-                _effect.Render(0, _indexData.NumTriangles);
+                _effect.Render(_indexData.NumTriangles);
             }
         }
         

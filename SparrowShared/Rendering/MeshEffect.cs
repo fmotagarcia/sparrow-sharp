@@ -14,10 +14,9 @@ namespace Sparrow.Rendering
     /// the documentation of the root class, "Effect".</para>
     ///
     /// <see cref="Effect"/> 
-    /// <see cref="FilterEffect"/>
     /// <see cref="Styles.MeshStyle"/>
     /// </summary>
-    public class MeshEffect : FilterEffect
+    public class MeshEffect : Effect
     {
         /// <summary>
         /// The alpha value of the object rendered by the effect. Must be taken into account
@@ -107,7 +106,7 @@ namespace Sparrow.Rendering
 
             uint attribColor = (uint)Program.Attributes["aColor"];
             Gl.EnableVertexAttribArray(attribColor);
-            Gl.BindBuffer(BufferTarget.ArrayBuffer, _vertexColorsBufferName);
+            Gl.BindBuffer(BufferTarget.ArrayBuffer, VertexColorsBufferName);
             Gl.VertexAttribPointer(attribColor, 4, VertexAttribType.UnsignedByte, true, sizeof(float), (IntPtr)0);
         }
 
@@ -117,7 +116,6 @@ namespace Sparrow.Rendering
         /// </summary>
         protected override void AfterDraw()
         {
-            //?? context.setVertexBufferAt(2, null);
             uint attribColor = (uint)Program.Attributes["aColor"];
             Gl.DisableVertexAttribArray(attribColor);
             base.AfterDraw();

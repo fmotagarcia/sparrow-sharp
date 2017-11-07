@@ -130,6 +130,7 @@ namespace Sparrow.Rendering
         {
             _backBufferWidth  = viewPort.Width;
             _backBufferHeight = viewPort.Height;
+            Gl.Viewport(0, 0, (int)_backBufferWidth, (int)_backBufferHeight);
         }
 
         // program management
@@ -163,8 +164,7 @@ namespace Sparrow.Rendering
         /// </summary>
         public Program GetProgram(string name)
         {
-            Program ret;
-            Programs.TryGetValue(name, out ret);
+            Programs.TryGetValue(name, out var ret);
             return ret;
         }
 
@@ -214,14 +214,16 @@ namespace Sparrow.Rendering
             if (blendMode != BlendMode.AUTO) _state.BlendMode = blendMode;
         }
 
-        /** Restores the render state that was last pushed to the stack. If this changes
-        *  blend mode, clipping rectangle, render target or culling, the current batch
-        *  will be drawn right away.
-        *
-        *  <p>If you pass a BatchToken, it will be updated to point to the current location within
-        *  the render cache. That way, you can later reference this location to render a subset of
-        *  the cache.</p>
-        */
+        /// <summary>
+        /// Restores the render state that was last pushed to the stack. If this changes
+        /// blend mode, clipping rectangle, render target or culling, the current batch
+        /// will be drawn right away.
+        ///
+        /// <para>If you pass a BatchToken, it will be updated to point to the current location within
+        /// the render cache. That way, you can later reference this location to render a subset of
+        /// the cache.</para>
+        /// </summary>
+        /// <exception cref="IndexOutOfRangeException">if the state stack is empty</exception>
         public void PopState(BatchToken token = null)
         {
             if (_stateStackPos < 0)
@@ -418,7 +420,6 @@ namespace Sparrow.Rendering
          *  rendered in the previous frame. */
         public void DrawFromCache(BatchToken startToken, BatchToken endToken)
         {
-            MeshBatch meshBatch;
             MeshSubset subset = sMeshSubset;
 
             if (!startToken.Equals(endToken))
@@ -427,7 +428,7 @@ namespace Sparrow.Rendering
 
                 for (int i = startToken.BatchID; i <= endToken.BatchID; ++i)
                 {
-                    meshBatch = _batchProcessorPrev.GetBatchAt(i);
+                    var meshBatch = _batchProcessorPrev.GetBatchAt(i);
                     subset.SetTo(); // resets subset
 
                     if (i == startToken.BatchID)
@@ -487,10 +488,11 @@ namespace Sparrow.Rendering
 
         // helper methods
 
-        /** Applies all relevant state settings to at the render context. This includes
-         *  blend mode, render target and clipping rectangle. Always call this method before
-         *  <code>context.drawTriangles()</code>.
-         */
+        /// <summary>
+        /// Applies all relevant state settings to at the render context. This includes
+        /// blend mode, render target and clipping rectangle. Always call this method before
+        /// <code>Gl.DrawElements()</code>.
+        /// </summary>
         public void PrepareToDraw()
         {
             ApplyBlendMode();
@@ -538,8 +540,7 @@ namespace Sparrow.Rendering
                 if (target != 0)
                 {
                     // TODO set this uint antiAlias  = _state.RenderTargetAntiAlias;
-                    uint framebuffer;
-                    if (!_framebufferCache.TryGetValue(target, out framebuffer))
+                    if (!_framebufferCache.TryGetValue(target, out var framebuffer))
                     {
                         uint[] fb = new uint[1];
                         Gl.GenFramebuffers(fb);
@@ -580,8 +581,7 @@ namespace Sparrow.Rendering
 
         public void DestroyFramebufferForTexture(Texture texture)
         {
-            uint framebuffer;
-            if (_framebufferCache.TryGetValue(texture.Base, out framebuffer))
+            if (_framebufferCache.TryGetValue(texture.Base, out var framebuffer))
             {
                 Gl.DeleteFramebuffers(framebuffer);
                 _framebufferCache.Remove(texture.Base);

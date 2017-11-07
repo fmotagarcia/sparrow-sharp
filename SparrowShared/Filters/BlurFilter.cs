@@ -73,7 +73,7 @@ namespace Sparrow.Filters
         }
 
         /** @private */
-        protected override FilterEffect CreateEffect()
+        protected override Effect CreateEffect()
         {
             return new BlurEffect();
         }
@@ -129,7 +129,7 @@ namespace Sparrow.Filters
     }
 
 
-    internal class BlurEffect : FilterEffect
+    internal class BlurEffect : Effect
     {
 
         public enum BlurDirection

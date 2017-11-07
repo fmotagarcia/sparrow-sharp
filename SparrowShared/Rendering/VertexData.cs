@@ -189,7 +189,6 @@ namespace Sparrow.Rendering
             // TODO optimize this. Maybe do it inside Vertex.copy with unsafe code?
             if (matrix != null && !matrix.IsIdentity())
             {
-                int len = target._numVertices;
                 for (int i = targetOffset; i < targetOffset + numVertices; i++)
                 {
                     float x = target._vertices[i].Position.X;

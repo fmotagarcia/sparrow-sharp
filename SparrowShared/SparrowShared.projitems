@@ -41,7 +41,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchProcessor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\BatchToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\Effect.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Rendering\FilterEffect.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\GPUInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\IndexData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\MeshEffect.cs" />

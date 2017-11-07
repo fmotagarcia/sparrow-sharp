@@ -64,6 +64,7 @@ namespace Sparrow.ResourceLoading
 
         private async void LoadLocalBitmapAsync(string path)
         {
+            // TODO use Monogame's loader to support 16 bit textures
             Bitmap newBitmap = await BitmapFactory.DecodeFileAsync(path);
             GenerateTexture(newBitmap);
         }

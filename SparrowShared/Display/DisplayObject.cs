@@ -873,7 +873,10 @@ namespace Sparrow.Display
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Sets both ScaleX and ScaleY. Returns ScaleX.
+        /// </summary>
         public virtual float Scale
         {
             get { return ScaleX; }

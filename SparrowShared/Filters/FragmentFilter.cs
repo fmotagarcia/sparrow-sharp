@@ -72,7 +72,7 @@ namespace Sparrow.Filters
 
         private FilterQuad _quad;
         private DisplayObject _target;
-        private FilterEffect _effect;
+        private Effect _effect;
         private VertexData _vertexData;
         private IndexData _indexData;
         private Padding _padding;
@@ -264,7 +264,7 @@ namespace Sparrow.Filters
                                        Texture input0 = null, Texture input1 = null,
                                        Texture input2 = null, Texture input3 = null)
         {
-            FilterEffect effect = Effect;
+            Effect effect = this.Effect;
             Texture output = helper.GetTexture(_resolution);
             Matrix3D projectionMatrix;
             Rectangle bounds = null;
@@ -297,7 +297,7 @@ namespace Sparrow.Filters
             effect.MvpMatrix3D = projectionMatrix;
             effect.UploadVertexData(VertexData);
             effect.UploadIndexData(IndexData);
-            effect.Render(0, IndexData.NumTriangles);
+            effect.Render(IndexData.NumTriangles);
 
             return output;
         }
@@ -307,9 +307,9 @@ namespace Sparrow.Filters
         /// Must be overridden by all subclasses that do any rendering on their own (instead
         /// of just forwarding processing to other filters).
         /// </summary>
-        protected virtual FilterEffect CreateEffect()
+        protected virtual Effect CreateEffect()
         {
-            return new FilterEffect();
+            return new Effect();
         }
         
         /// <summary>
@@ -347,7 +347,7 @@ namespace Sparrow.Filters
         /// <summary>
         /// The effect instance returning the FilterEffect created via <code>createEffect</code>.
         /// </summary>
-        protected FilterEffect Effect
+        protected Effect Effect
         {
             get
             {

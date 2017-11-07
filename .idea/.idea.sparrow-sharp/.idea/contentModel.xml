@@ -13,8 +13,11 @@
       </e>
       <e p="GameMain.cs" t="Include" />
       <e p="lightComputeShader.glsl" t="Include" />
+      <e p="lightComputeShaderOneLight.glsl" t="Include" />
+      <e p="SampleMovingStuff.cs" t="Include" />
       <e p="testbg.png" t="Include" />
       <e p="testbg_google.png" t="Include" />
+      <e p="testbg_google_16.png" t="Include" />
       <e p="testbg_transparency.png" t="Include" />
       <e p="testbg_white.png" t="Include" />
     </e>
@@ -67,7 +70,6 @@
           <e p="BatchProcessor.cs" t="Include" />
           <e p="BatchToken.cs" t="Include" />
           <e p="Effect.cs" t="Include" />
-          <e p="FilterEffect.cs" t="Include" />
           <e p="GPUInfo.cs" t="Include" />
           <e p="IndexData.cs" t="Include" />
           <e p="MeshEffect.cs" t="Include" />

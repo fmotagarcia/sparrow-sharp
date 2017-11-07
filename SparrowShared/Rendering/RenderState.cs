@@ -90,7 +90,9 @@ namespace Sparrow.Rendering
             _projectionMatrix3D.CopyFrom(renderState._projectionMatrix3D);
 
             if (_clipRect != null || renderState._clipRect != null)
+            {
                 ClipRect = renderState._clipRect;
+            }
         }
 
         /** Resets the RenderState to the default settings.

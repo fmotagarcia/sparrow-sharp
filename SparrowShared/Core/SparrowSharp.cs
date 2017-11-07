@@ -266,7 +266,7 @@ namespace Sparrow.Core
             }
         }
 
-        public static void Destroy() // TODO check
+        public static void Destroy()
         {
             _statsDisplay = null;
             Stage.RemoveAllChildren();

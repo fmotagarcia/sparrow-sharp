@@ -1,7 +1,6 @@
 ﻿using System;
 using Sparrow.Display;
 using Sparrow.Core;
-using Sparrow.Utils;
 using Sparrow.Geom;
 using Sparrow.Rendering;
 using Sparrow.Filters;
@@ -9,45 +8,48 @@ using Sparrow.Filters;
 namespace Sparrow.Textures
 {
     /// <summary>
-    // A RenderTexture is a dynamic texture on which you can draw any display object.
-
-    // After creating a render texture, just call the 'DrawObject' method to render an object directly 
-    // onto the texture. The object will be drawn onto the texture at its current position, adhering 
-    // its current rotation, scale and alpha properties. 
-
-    // Drawing is done very efficiently, as it is happening directly in graphics memory. After you have 
-    // drawn objects on the texture, the performance will be just like that of a normal texture - no
-    // matter how many objects you have drawn.
-
-    // If you draw lots of objects at once, it is recommended to bundle the drawing calls in a block
-    // via the 'DrawBundled' method, like shown below. That will speed it up immensely, allowing
-    // you to draw hundreds of objects very quickly.
-
-    // renderTexture.DrawBundled(delegate
-    // {
-    //     for (int i=0; i<numDrawings; ++i)
-    //	   {
-    //         image.Rotation = (2 * (float)Math.PI / numDrawings) * i;
-    //	       renderTexture.Draw(image);            
-    //     }             
-    // });
+    /// A RenderTexture is a dynamic texture on which you can draw any display object.
+    ///
+    /// After creating a render texture, just call the 'DrawObject' method to render an object directly 
+    /// onto the texture. The object will be drawn onto the texture at its current position, adhering 
+    /// its current rotation, scale and alpha properties. 
+    ///
+    /// Drawing is done very efficiently, as it is happening directly in graphics memory. After you have 
+    /// drawn objects on the texture, the performance will be just like that of a normal texture - no
+    /// matter how many objects you have drawn.
+    ///
+    /// If you draw lots of objects at once, it is recommended to bundle the drawing calls in a block
+    /// via the 'DrawBundled' method, like shown below. That will speed it up immensely, allowing
+    /// you to draw hundreds of objects very quickly.
+    ///
+    /// <code>
+    /// renderTexture.DrawBundled(delegate
+    /// {
+    ///     for (int i=0; i &lt; numDrawings; ++i)
+    ///	    {
+    ///         image.Rotation = (2 * (float)Math.PI / numDrawings) * i;
+    ///	        renderTexture.Draw(image);            
+    ///     }             
+    /// });
+    /// </code>
     /// </summary>
     public class RenderTexture : SubTexture
     {
         private Texture _activeTexture;
         private bool _drawing;
         private bool _bufferReady;
-        private bool _isPersistent;
+        private readonly bool _isPersistent;
 
 
-        /** Creates a new RenderTexture with a certain size(in points). If the texture is
-         *  persistent, its contents remains intact after each draw call, allowing you to use the
-         *  texture just like a canvas.If it is not, it will be cleared before each draw call.
-         *
-         *  <p>Non-persistent textures can be used more efficiently on older devices; on modern
-         *  hardware, it does not make a difference.For more information, have a look at the
-         * documentation of the <code>useDoubleBuffering</code> property.</p>
-         */
+        /// <summary>
+        /// Creates a new RenderTexture with a certain size(in points). If the texture is
+        /// persistent, its contents remains intact after each draw call, allowing you to use the
+        /// texture just like a canvas.If it is not, it will be cleared before each draw call.
+        ///
+        /// <para>Non-persistent textures can be used more efficiently on older devices; on modern
+        /// hardware, it does not make a difference.For more information, have a look at the
+        /// documentation of the <code>useDoubleBuffering</code> property.</para>
+        /// </summary>
         public RenderTexture(int width, int height, bool persistent = true,
                              float scale = -1, TextureFormat format = null)
         {
@@ -59,7 +61,7 @@ namespace Sparrow.Textures
             _isPersistent = persistent;
             _activeTexture = Empty(width, height, true, 0, true, scale, format);
 
-            SetTo(_activeTexture, Rectangle.Create(0, 0, width, height), true, null, false);
+            SetTo(_activeTexture, Rectangle.Create(0, 0, width, height), true);
         }
 
         public override void Dispose()
@@ -68,19 +70,17 @@ namespace Sparrow.Textures
             _activeTexture = null;
             base.Dispose();
         }
-
-        /** Draws an object into the texture. Note that any filters on the object will currently
-        *  be ignored.
-        * 
-        *  @param object       The object to draw.
-        *  @param matrix       If 'matrix' is null, the object will be drawn adhering its 
-        *                      properties for position, scale, and rotation. If it is not null,
-        *                      the object will be drawn in the orientation depicted by the matrix.
-        *  @param alpha        The object's alpha value will be multiplied with this value.
-        *  @param antiAliasing Values range from 0 (no antialiasing) to 4 (best quality).
-        *                      Beginning with AIR 22, this feature is supported on all platforms
-        *                      (except for software rendering mode).
-        */
+        
+        /// <summary>
+        /// Draws an object into the texture. Note that any filters on the object will currently
+        /// be ignored.
+        /// </summary>
+        /// <param name="obj">The object to draw.</param>
+        /// <param name="matrix">If 'matrix' is null, the object will be drawn adhering its 
+        ///                      properties for position, scale, and rotation. If it is not null,
+        ///                       the object will be drawn in the orientation depicted by the matrix.</param>
+        /// <param name="alpha">The object's alpha value will be multiplied with this value.</param>
+        /// <param name="antiAliasing">Values range from 0 (no antialiasing) to 4 (best quality).</param>
         public void Draw(DisplayObject obj, Matrix2D matrix = null, float alpha = 1.0f,
                          int antiAliasing = 0)
         {
@@ -176,8 +176,10 @@ namespace Sparrow.Textures
             painter.PopState();
         }
 
-        /** Clears the render texture with a certain color and alpha value. Call without any
-         *  arguments to restore full transparency. */
+        /// <summary>
+        /// Clears the render texture with a certain color and alpha value. Call without any
+        /// arguments to restore full transparency.
+        /// </summary>
         public void Clear(uint color = 0, float alpha = 0.0f)
         {
             _activeTexture.Root.Clear(color, alpha);
@@ -186,13 +188,16 @@ namespace Sparrow.Textures
 
         // properties
 
-        /** Indicates if the texture is persistent over multiple draw calls. */
+        /// <summary>
+        /// Indicates if the texture is persistent over multiple draw calls.
+        /// </summary>
         public bool IsPersistent { get { return _isPersistent; } }
 
-        /** @inheritDoc */
+        
+        /// <inheritdoc cref="SubTexture.Base"/>
         public override uint Base { get { return _activeTexture.Base; } }
         
-        /** @inheritDoc */
+        /// <inheritdoc cref="SubTexture.Root"/>
         public override ConcreteTexture Root { get { return _activeTexture.Root; } }
 
 }

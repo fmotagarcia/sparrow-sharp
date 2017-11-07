@@ -124,10 +124,14 @@ namespace Sparrow.Textures
             }
         }
 
-        /** The texture which the SubTexture is based on. */
+        /// <summary>
+        /// The texture which the SubTexture is based on.
+        /// </summary>
         public Texture Parent { get { return _parent; } }
 
-        /** Indicates if the parent texture is disposed when this object is disposed. */
+        /// <summary>
+        /// Indicates if the parent texture is disposed when this object is disposed.
+        /// </summary>
         public bool OwnsParent { get { return _ownsParent; } }
 
         /** If true, the SubTexture will show the parent region rotated by 90 degrees (CCW). */
@@ -142,27 +146,28 @@ namespace Sparrow.Textures
 
         public override Matrix2D TransformationMatrixToRoot { get { return _transformationMatrixToRoot; } }
 
-        override public uint Base { get { return _parent.Base; } }
+        /// <inheritdoc cref="Texture.Base"/>
+        public override uint Base { get { return _parent.Base; } }
 
-        override public ConcreteTexture Root { get { return _parent.Root; } }
+        public override ConcreteTexture Root { get { return _parent.Root; } }
 
-        override public TextureFormat Format { get { return _parent.Format; } }
+        public override TextureFormat Format { get { return _parent.Format; } }
 
-        override public float Width { get { return _width; } }
+        public override float Width { get { return _width; } }
 
-        override public float Height { get { return _height; } }
+        public override float Height { get { return _height; } }
 
-        override public float NativeWidth { get { return _width * _scale; } }
+        public override float NativeWidth { get { return _width * _scale; } }
 
-        override public float NativeHeight { get { return _height * _scale; } }
+        public override float NativeHeight { get { return _height * _scale; } }
 
-        override public int NumMipMaps { get { return _parent.NumMipMaps; } }
+        public override int NumMipMaps { get { return _parent.NumMipMaps; } }
 
-        override public bool PremultipliedAlpha { get { return _parent.PremultipliedAlpha; } }
+        public override bool PremultipliedAlpha { get { return _parent.PremultipliedAlpha; } }
         
-        override public float Scale { get { return _parent.Scale; } }
+        public override float Scale { get { return _parent.Scale; } }
 
-        override public Rectangle Frame { get { return _frame; } }
+        public override Rectangle Frame { get { return _frame; } }
     }
 }
 

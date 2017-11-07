@@ -47,7 +47,7 @@ namespace Sparrow.Core
             _control.ContextProfile = CustomGlControl.ProfileType.Core;
             _control.DebugContext = CustomGlControl.AttributePermission.Enabled;
             _control.Animation = true;
-            _control.AnimationTime = 7;
+            _control.AnimationTime = 14;
             _control.ContextCreated += OnContextCreated;
             _control.ContextDestroying += ContextDestroying;
             

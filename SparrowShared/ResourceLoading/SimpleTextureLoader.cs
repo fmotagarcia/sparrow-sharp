@@ -20,9 +20,9 @@ namespace Sparrow.ResourceLoading
             return new TextureLoader().LoadLocalImageAsync(pathToFile);
         }
 
-        public static Texture LoadImageFromStream(Stream strean)
+        public static Texture LoadImageFromStream(Stream stream)
         {
-            return new TextureLoader().LoadFromStream(strean);
+            return new TextureLoader().LoadFromStream(stream);
         }
 
 #if __ANDROID__

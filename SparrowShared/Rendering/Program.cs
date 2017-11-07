@@ -92,19 +92,16 @@ namespace Sparrow.Rendering
             Gl.LinkProgram(program);
 
 #if DEBUG
-            int linked;
-            Gl.GetProgram(program, ProgramProperty.LinkStatus, out linked);
+            Gl.GetProgram(program, ProgramProperty.LinkStatus, out var linked);
             if (linked == 0)
             {
-                int logLength;
-                Gl.GetProgram(program, ProgramProperty.LinkStatus, out logLength);
+                Gl.GetProgram(program, ProgramProperty.LinkStatus, out var logLength);
 
                 if (logLength != 0)
                 {
-                    int logSize;
                     StringBuilder sb = new StringBuilder();
                     sb.EnsureCapacity(999);
-                    Gl.GetProgramInfoLog(program, 999, out logSize, sb);
+                    Gl.GetProgramInfoLog(program, 999, out _, sb);
                     Debug.WriteLine("Sparrow: Error linking program: " + sb);
                 }
             }
@@ -134,19 +131,17 @@ namespace Sparrow.Rendering
             Gl.CompileShader(shader);
 
 #if DEBUG
-            int compiled;
-            Gl.GetShader(shader,ShaderParameterName.CompileStatus, out compiled);
+            Gl.GetShader(shader,ShaderParameterName.CompileStatus, out var compiled);
 
             if (compiled == 0)
             {
-                int logLength;
-                Gl.GetShader(shader, ShaderParameterName.InfoLogLength, out logLength);
+                Gl.GetShader(shader, ShaderParameterName.InfoLogLength, out var logLength);
 
                 if (logLength != 0)
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.EnsureCapacity(999); // this is needed due to a rare Mono bug
-                    Gl.GetShaderInfoLog(shader, 999, out int logSize, sb);
+                    Gl.GetShaderInfoLog(shader, 999, out int _, sb);
                     Debug.WriteLine("Sparrow: Error compiling shader: " + sb);
                 }
                 Gl.DeleteShader(shader);
@@ -158,15 +153,14 @@ namespace Sparrow.Rendering
 
         private void UpdateUniforms()
         {
-            int numUniforms;
-            Gl.GetProgram(Name, ProgramProperty.ActiveUniforms, out numUniforms);
+            Gl.GetProgram(Name, ProgramProperty.ActiveUniforms, out var numUniforms);
 
             Uniforms.Clear();
             StringBuilder sb = new StringBuilder();
             for (uint i = 0; i < numUniforms; i++)
             {
                 sb.Clear();
-                Gl.GetActiveUniform(Name, i, 200, out int len, out int size, out int type, sb);
+                Gl.GetActiveUniform(Name, i, 200, out int _, out int _, out int _, sb);
                 string nameStr = sb.ToString();
                 int uLoc = Gl.GetUniformLocation(Name, nameStr);
                 Uniforms.Add(nameStr, uLoc);// should return uint..
@@ -175,8 +169,7 @@ namespace Sparrow.Rendering
 
         private void UpdateAttributes()
         {
-            int numAttributes;
-            Gl.GetProgram(Name, ProgramProperty.ActiveAttributes, out numAttributes);
+            Gl.GetProgram(Name, ProgramProperty.ActiveAttributes, out var numAttributes);
 
             Attributes.Clear();
             StringBuilder sb = new StringBuilder();
@@ -184,10 +177,7 @@ namespace Sparrow.Rendering
             for (uint i = 0; i < numAttributes; i++)
             {
                 sb.Clear();
-                int size;
-                int len;
-                int type;
-                Gl.GetActiveAttrib(Name, i, 200, out len, out size, out type, sb);
+                Gl.GetActiveAttrib(Name, i, 200, out _, out _, out _, sb);
                 string nameStr = sb.ToString();
                 Attributes.Add(nameStr, Gl.GetAttribLocation(Name, nameStr)); // should return uint..
             }

@@ -259,7 +259,9 @@ namespace Sparrow.Textures
         /** The scale factor, which influences width and height properties. */
         public virtual float Scale { get { return 1.0f; } }
 
-        /** The Stage3D texture object the texture is based on. */
+        /// <summary>
+        /// The OpenGL texture object the texture is based on.
+        /// </summary>
         public virtual uint Base { get { return 0; } }
 
         /// <summary>

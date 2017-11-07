@@ -3,9 +3,9 @@ using Sparrow.Utils;
 using Sparrow.Geom;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OpenGL;
 using Sparrow.Core;
+using Sparrow.Textures;
 
 namespace Sparrow.Rendering
 {
@@ -84,17 +84,33 @@ namespace Sparrow.Rendering
     public class Effect
     {
 
-        protected uint _vertexBufferName;
-        protected uint _vertexColorsBufferName;
-        protected uint _indexBufferName;
-        protected int _vertexBufferSize; // in number of vertices
-        protected int _indexBufferSize;  // in number of indices
-        protected bool _indexBufferUsesQuadLayout;
+        protected uint VertexBufferName;
+        protected uint VertexColorsBufferName;
+        protected uint IndexBufferName;
+        protected int VertexBufferSize; // in number of vertices
+        protected int IndexBufferSize;  // in number of indices
+        protected bool IndexBufferUsesQuadLayout;
 
         private readonly Matrix3D _mvpMatrix3D;
-
+        
+        /// <summary>
+        /// The texture to be mapped onto the vertices.
+        /// </summary>
+        public Texture Texture;
+        
+        /// <summary>
+        /// The smoothing filter that is used for the texture. @default bilinear
+        /// </summary>
+        public TextureSmoothing TextureSmoothing;
+        
+        /// <summary>
+        /// Indicates if pixels at the edges will be repeated or clamped.
+        /// Only works for power-of-two textures. @default false
+        /// </summary>
+        public bool TextureRepeat;
+        
         // helper objects
-        public readonly Dictionary<string, Dictionary<uint, string>> sProgramNameCache = 
+        public readonly Dictionary<string, Dictionary<uint, string>> SProgramNameCache = 
                                         new Dictionary<string, Dictionary<uint, string>>();
 
         /// <summary>
@@ -105,7 +121,19 @@ namespace Sparrow.Rendering
             _mvpMatrix3D = Matrix3D.Create();
             ProgramBaseName = GetType().Name;
             SparrowSharp.ContextCreated += OnContextCreated;
+            TextureSmoothing = TextureSmoothing.Bilinear;
         }
+        
+        public static string StdVertexShader => AddShaderInitCode() + @"
+                    in vec4 aPosition;
+                    in vec2 aTexCoords;
+                    uniform mat4 uMvpMatrix;
+                    out lowp vec2 vTexCoords;
+                    // main
+                    void main() {
+                      gl_Position = uMvpMatrix * aPosition;
+                      vTexCoords  = aTexCoords;
+                    }";
 
         /// <summary>
         /// Purges the index- and vertex-buffers.
@@ -126,37 +154,27 @@ namespace Sparrow.Rendering
         /// </summary>
         public void PurgeBuffers(bool vertexBuffer = true, bool indexBuffer = true)
         {
-            if (_vertexBufferName != 0 && vertexBuffer)
+            if (VertexBufferName != 0 && vertexBuffer)
             {
-                uint[] buffers = { _vertexBufferName };
+                uint[] buffers = { VertexBufferName };
                 Gl.DeleteBuffers(buffers);
-                _vertexBufferName = 0;
-                if (_vertexColorsBufferName != 0)
+                VertexBufferName = 0;
+                if (VertexColorsBufferName != 0)
                 {
-                    uint[] colorBuffers = { _vertexColorsBufferName };
+                    uint[] colorBuffers = { VertexColorsBufferName };
                     Gl.DeleteBuffers(colorBuffers);
-                    _vertexColorsBufferName = 0;
+                    VertexColorsBufferName = 0;
                 }
             }
 
-            if (_indexBufferName != 0 && indexBuffer)
+            if (IndexBufferName != 0 && indexBuffer)
             {
-                uint[] indexBuffers = { _indexBufferName };
+                uint[] indexBuffers = { IndexBufferName };
                 Gl.DeleteBuffers(indexBuffers);
-                _indexBufferName = 0;
+                IndexBufferName = 0;
             }
         }
 
-        /// <summary>
-        /// Uploads the given index data to the internal index buffer. If the buffer is too
-        /// small, a new one is created automatically.
-        /// </summary>
-        /// <param name="indexData">The IndexData instance to upload.</param>
-        public void UploadIndexData(IndexData indexData)
-        {
-            UploadIndexData(indexData, BufferUsage.StaticDraw);
-        }
-        
         /// <summary>
         /// Uploads the given index data to the internal index buffer. If the buffer is too
         /// small, a new one is created automatically.
@@ -165,20 +183,20 @@ namespace Sparrow.Rendering
         /// <param name="bufferUsage">The expected buffer usage. Use one of the constants defined in
         ///                    <code>BufferUsageARB</code>. Only used when the method call
         ///                    causes the creation of a new index buffer.</param>
-        public void UploadIndexData(IndexData indexData, BufferUsage bufferUsage)
+        public void UploadIndexData(IndexData indexData, BufferUsage bufferUsage = BufferUsage.StaticDraw)
         {
             int numIndices = indexData.NumIndices;
             bool isQuadLayout = indexData.UseQuadLayout;
-            bool wasQuadLayout = _indexBufferUsesQuadLayout;
+            bool wasQuadLayout = IndexBufferUsesQuadLayout;
 
-            if (_indexBufferName != 0)
+            if (IndexBufferName != 0)
             {
-                if (numIndices <= _indexBufferSize)
+                if (numIndices <= IndexBufferSize)
                 {
                     if (!isQuadLayout || !wasQuadLayout)
                     {
-                        indexData.UploadToIndexBuffer(_indexBufferName, bufferUsage);
-                        _indexBufferUsesQuadLayout = isQuadLayout && numIndices == _indexBufferSize;
+                        indexData.UploadToIndexBuffer(IndexBufferName, bufferUsage);
+                        IndexBufferUsesQuadLayout = isQuadLayout && numIndices == IndexBufferSize;
                     }
                 }
                 else
@@ -186,24 +204,14 @@ namespace Sparrow.Rendering
                     PurgeBuffers(false);
                 }
             }
-            if (_indexBufferName == 0)
+            if (IndexBufferName == 0)
             {
-                _indexBufferName = indexData.CreateIndexBuffer(true, bufferUsage);
-                _indexBufferSize = numIndices;
-                _indexBufferUsesQuadLayout = isQuadLayout;
+                IndexBufferName = indexData.CreateIndexBuffer(true, bufferUsage);
+                IndexBufferSize = numIndices;
+                IndexBufferUsesQuadLayout = isQuadLayout;
             }
         }
 
-        /// <summary>
-        /// Uploads the given vertex data to the internal vertex buffer. If the buffer is too
-        /// small, a new one is created automatically.
-        /// </summary>
-        /// <param name="vertexData">The VertexData instance to upload.</param>
-        public void UploadVertexData(VertexData vertexData)
-        {
-            UploadVertexData(vertexData, BufferUsage.StaticDraw);
-        }
-        
         /// <summary>
         /// Uploads the given vertex data to the internal vertex buffer. If the buffer is too
         /// small, a new one is created automatically.
@@ -212,13 +220,13 @@ namespace Sparrow.Rendering
         /// <param name="bufferUsage"> The expected buffer usage. Use one of the constants defined in
         ///                    <code>BufferUsageARB</code>. Only used when the method call
         ///                    causes the creation of a new vertex buffer.</param>
-        public void UploadVertexData(VertexData vertexData, BufferUsage bufferUsage)
+        public void UploadVertexData(VertexData vertexData, BufferUsage bufferUsage = BufferUsage.StaticDraw)
         {
-            if (_vertexBufferName != 0)
+            if (VertexBufferName != 0)
             {
-                if (vertexData.NumVertices <= _vertexBufferSize)
+                if (vertexData.NumVertices <= VertexBufferSize)
                 {
-                    vertexData.UploadToVertexBuffer(_vertexBufferName, _vertexColorsBufferName, bufferUsage);
+                    vertexData.UploadToVertexBuffer(VertexBufferName, VertexColorsBufferName, bufferUsage);
                 }
                 else
                 {
@@ -226,12 +234,12 @@ namespace Sparrow.Rendering
                 }
                     
             }
-            if (_vertexBufferName == 0)
+            if (VertexBufferName == 0)
             {
                 uint[] names = vertexData.CreateVertexBuffer(true);
-                _vertexBufferName = names[0];
-                _vertexColorsBufferName = names[1];
-                _vertexBufferSize = vertexData.NumVertices;
+                VertexBufferName = names[0];
+                VertexColorsBufferName = names[1];
+                VertexBufferSize = vertexData.NumVertices;
             }
         }
 
@@ -242,9 +250,9 @@ namespace Sparrow.Rendering
         /// This calls <code>BeforeDraw</code>, <code>Gl.DrawElements</code>, and
         /// <code>AfterDraw</code>, in this order.
         /// </summary>
-        public virtual void Render(int firstIndex = 0, int numTriangles= -1)
+        public virtual void Render(int numTriangles= -1)
         {
-            if (numTriangles < 0) numTriangles = _indexBufferSize;
+            if (numTriangles < 0) numTriangles = IndexBufferSize;
             if (numTriangles == 0) return;
             
             BeforeDraw();
@@ -267,8 +275,8 @@ namespace Sparrow.Rendering
             Program.Activate(); // create, upload, use program
             
             //is this the best place for this?
-            Gl.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferName);
-            Gl.BindBuffer(BufferTarget.ElementArrayBuffer, _indexBufferName);
+            Gl.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferName);
+            Gl.BindBuffer(BufferTarget.ElementArrayBuffer, IndexBufferName);
 
             uint attribPosition = (uint)Program.Attributes["aPosition"];
             Gl.EnableVertexAttribArray(attribPosition);
@@ -276,17 +284,33 @@ namespace Sparrow.Rendering
             
             int uMvpMatrix = Program.Uniforms["uMvpMatrix"];
             Gl.UniformMatrix4(uMvpMatrix, 1, false, MvpMatrix3D.RawData); // 1 is the number of matrices
-
+            
+            if (Texture != null)
+            {
+                uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
+                Gl.EnableVertexAttribArray(aTexCoords);
+                Gl.VertexAttribPointer(aTexCoords, 2, VertexAttribType.Float, false, Vertex.Size, (IntPtr)Vertex.TextureOffset);
+                Gl.ActiveTexture(TextureUnit.Texture0);
+                
+                RenderUtil.SetSamplerStateAt(Texture.Base, Texture.NumMipMaps > 0, TextureSmoothing, TextureRepeat);   
+            }
             // color & alpha are set in subclasses
         }
 
         /// <summary>
         /// This method is called by <code>Render</code>, directly after
-        /// <code>Gl.DrawElements</code>. Resets vertex buffer attributes.
+        /// <code>Gl.DrawElements()</code>. Resets vertex buffer attributes.
         /// </summary>
         protected virtual void AfterDraw()
         {
-            //?? context.setVertexBufferAt(0, null);
+            if (Texture != null)
+            {
+                Gl.BindTexture(TextureTarget.Texture2d, 0);
+                // do we need to unbind anything else?
+
+                uint aTexCoords = (uint)Program.Attributes["aTexCoords"];
+                Gl.DisableVertexAttribArray(aTexCoords);
+            }
             uint attribPosition = (uint)Program.Attributes["aPosition"];
             Gl.DisableVertexAttribArray(attribPosition);
         }
@@ -303,42 +327,55 @@ namespace Sparrow.Rendering
         /// </summary>
         protected virtual Program CreateProgram()
         {
-            string vertexShader = AddShaderInitCode() + @"
-            in vec4 aPosition;
-            uniform mat4 uMvpMatrix;
-            
-            void main() {
-              gl_Position = uMvpMatrix * aPosition;
-            }";
-            
-            string fragmentShader = AddShaderInitCode() + @"
-            out lowp vec4 fragColor;
+            if (Texture == null)
+            {
+                string vertexShader = AddShaderInitCode() + @"
+                    in vec4 aPosition;
+                    uniform mat4 uMvpMatrix;
+                    
+                    void main() {
+                      gl_Position = uMvpMatrix * aPosition;
+                    }";
+                    
+                string fragmentShader = AddShaderInitCode() + @"
+                    out lowp vec4 fragColor;
+        
+                    void main() {
+                        fragColor = vec4(1, 1, 1, 1);
+                    }";
+                return new Program(vertexShader, fragmentShader);       
+            }
+            var fragmentShaderTex = AddShaderInitCode() + @"
+                in lowp vec2 vTexCoords;
+                uniform lowp sampler2D uTexture;
+                out lowp vec4 fragColor;
+                
+                void main() {
+                  fragColor = texture(uTexture, vTexCoords);
+                }";
+            return new Program(StdVertexShader, fragmentShaderTex);
 
-            void main() {
-                fragColor = vec4(1, 1, 1, 1);
-            }";
-            return new Program(vertexShader, fragmentShader);
         }
 
         /// <summary>
         /// Appends OpenGL shader defines, this is needed for shaders to work on both
-        /// desktop OpenGL and OpenGL ES 2+.
+        /// desktop OpenGL and OpenGL ES 3+.
         /// </summary>
         public static string AddShaderInitCode()
         {
             string ret;
 #if __WINDOWS__
             ret = 
-                "#version 430\n" + // TODO rewrite shaders for GL 4+
+                "#version 430\n" + 
                 "#define highp\n" +
                 "#define mediump\n" +
                 "#define lowp\n";
 #else
-            ret = @"#version 100 es\n"; // this should be 300 es
+            ret = @"#version 300 es\n";
 #endif
             return ret;
         }
-        
+
         /// <summary>
         /// Override this method if the effect requires a different program depending on the
         /// current settings. Ideally, you do this by creating a bit mask encoding all the options.
@@ -346,12 +383,12 @@ namespace Sparrow.Rendering
         ///
         /// @default 0
         /// </summary>
-        protected virtual uint ProgramVariantName { get { return 0; } }
+        protected virtual uint ProgramVariantName => Texture == null ? 0 : 1u;
 
         /// <summary>
         /// Returns the base name for the program. @default the fully qualified class name
         /// </summary>
-        protected string ProgramBaseName;
+        protected readonly string ProgramBaseName;
 
         /// <summary>
         /// Returns the full name of the program, which is used to register it at the current
@@ -368,14 +405,14 @@ namespace Sparrow.Rendering
                 string baseName = ProgramBaseName;
                 uint variantName = ProgramVariantName;
                 Dictionary<uint, string> nameCache;
-                if (!sProgramNameCache.ContainsKey(baseName))
+                if (!SProgramNameCache.ContainsKey(baseName))
                 {
                     nameCache = new Dictionary<uint, string>();
-                    sProgramNameCache[baseName] = nameCache;
+                    SProgramNameCache[baseName] = nameCache;
                 }
                 else
                 {
-                    nameCache = sProgramNameCache[baseName];
+                    nameCache = SProgramNameCache[baseName];
                 }
 
                 string name;
@@ -422,7 +459,7 @@ namespace Sparrow.Rendering
 
         public Matrix3D MvpMatrix3D
         {
-            get { return _mvpMatrix3D; }
+            get => _mvpMatrix3D;
             set { _mvpMatrix3D.CopyFrom(value); }
         }
     }
