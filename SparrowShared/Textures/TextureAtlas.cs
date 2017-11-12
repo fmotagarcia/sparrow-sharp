@@ -46,8 +46,8 @@ namespace Sparrow.Textures
     public class TextureAtlas
     {
         
-        private readonly Texture _atlasTexture;
-        private readonly Dictionary<string, TextureInfo> _textureInfos;
+        private Texture _atlasTexture;
+        private Dictionary<string, TextureInfo> _textureInfos;
 
         /// <summary>
         /// The number of available subtextures.
@@ -221,8 +221,16 @@ namespace Sparrow.Textures
         {
             _textureInfos.Remove(name);
         }
+        
+        public void Dispose()
+        {
+            _textureInfos = null;
+            _atlasTexture.Dispose();
+            _atlasTexture = null;
 
-        float GetFloat(XmlNode node, string attribute)
+        }
+
+        private static float GetFloat(XmlNode node, string attribute)
         {
             float result = 0;
             if (node.Attributes.GetNamedItem(attribute) != null)
@@ -232,7 +240,7 @@ namespace Sparrow.Textures
             return result;
         }
 
-        bool GetBool(XmlNode node, string attribute)
+        private static bool GetBool(XmlNode node, string attribute)
         {
             bool result = false;
             if (node.Attributes.GetNamedItem(attribute) != null)
@@ -242,7 +250,7 @@ namespace Sparrow.Textures
             return result;
         }
 
-        string GetString(XmlNode node, string attribute)
+        private static string GetString(XmlNode node, string attribute)
         {
             string result = "";
             if (node.Attributes.GetNamedItem(attribute) != null)
@@ -251,6 +259,7 @@ namespace Sparrow.Textures
             }
             return result;
         }
+
     }
 
     public class AlphanumComparatorFast : IComparer<string>

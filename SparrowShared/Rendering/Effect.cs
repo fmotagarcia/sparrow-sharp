@@ -305,7 +305,7 @@ namespace Sparrow.Rendering
         {
             if (Texture != null)
             {
-                Gl.BindTexture(TextureTarget.Texture2d, 0);
+                Gl.BindTexture(TextureTarget.Texture2d, 0); // TODO dont we need Texture.Base here?
                 // do we need to unbind anything else?
 
                 uint aTexCoords = (uint)Program.Attributes["aTexCoords"];

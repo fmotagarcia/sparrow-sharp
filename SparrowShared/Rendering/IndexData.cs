@@ -16,9 +16,9 @@ namespace Sparrow.Rendering
     /// efficiently by the GPU.</para>
     ///
     /// <para>Before you can move data into the buffers, you have to set it up in conventional
-    /// memory — that is, in a Vector or a ByteArray. Since it's quite cumbersome to manually
+    /// memory — that is, in an Array. Since it's quite cumbersome to manually
     /// create and manipulate those data structures, the IndexData and VertexData classes provide
-    /// a simple way to do just that. The data is stored in a Byte Array (one index or vertex after
+    /// a simple way to do just that. The data is stored in an Array (one index or vertex after
     /// the other) that can easily be uploaded to a buffer.</para>
     /// 
     /// Basic Quad Layout
@@ -28,7 +28,7 @@ namespace Sparrow.Rendering
     /// similar or identical data — a great opportunity for optimization!</para>
     ///
     /// <para>If an IndexData instance follows a specific layout, it will be recognized
-    /// automatically and many operations can be executed much faster. In Starling, that
+    /// automatically and many operations can be executed much faster. In Sparrow, that
     /// layout is called "basic quad layout". In order to recognize this specific sequence,
     /// the indices of each quad have to use the following order:</para>
     ///

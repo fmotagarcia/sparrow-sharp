@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Sparrow.ResourceLoading
 {
-    public class TextureLoader
+    public class TextureLoader // TODO makes this an interface
     {
         protected bool _isLoaded;
         protected Texture _glTexture;
