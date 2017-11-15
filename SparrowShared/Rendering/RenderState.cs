@@ -46,7 +46,7 @@ namespace Sparrow.Rendering
     {
 
         public float Alpha;
-        protected uint _blendMode;
+        protected string _blendMode;
         internal Matrix2D _modelviewMatrix;
 
         private Texture _renderTarget;
@@ -205,7 +205,7 @@ namespace Sparrow.Rendering
             }
         }
 
-        public uint BlendMode
+        public string BlendMode
         {
             get { return _blendMode; }
             set

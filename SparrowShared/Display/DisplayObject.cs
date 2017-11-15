@@ -92,7 +92,7 @@ namespace Sparrow.Display
         protected float _alpha;
         private bool _visible;
         private bool _touchable;
-        private uint _blendmode;
+        private string _blendmode;
         private string _name;
         private bool _useHandCursor;
         private readonly Matrix2D _transformationMatrix;
@@ -984,7 +984,7 @@ namespace Sparrow.Display
         /// <summary>
         ///  The blend mode determines how the object is blended with the objects underneath. Default: BlendMode.AUTO
         /// </summary>
-        public virtual uint BlendMode
+        public virtual string BlendMode
         {
             get { return _blendmode; }
             set {

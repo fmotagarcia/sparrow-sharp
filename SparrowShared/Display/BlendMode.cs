@@ -21,25 +21,25 @@ namespace Sparrow.Display
     /// </summary>
     public class BlendMode
     {
-        public const uint AUTO = 0;
-        public const uint NONE = 2;
-        public const uint NORMAL = 3;
-        public const uint ADD = 4;
-        public const uint MULTIPLY = 5;
-        public const uint SCREEN = 6;
-        public const uint ERASE = 7;
-        public const uint BELOW = 8;
-        public const uint MASK = 9;
+        public const string AUTO = "auto";
+        public const string NONE = "none";
+        public const string NORMAL = "normal";
+        public const string ADD = "add";
+        public const string MULTIPLY = "multiply";
+        public const string SCREEN = "screen";
+        public const string ERASE = "erase";
+        public const string BELOW = "below";
+        public const string MASK = "mask";
 
-        private uint _name;
+        private string _name;
         private BlendingFactor _sourceFactor;
         private BlendingFactor _destinationFactor;
-        private static Dictionary<uint, BlendMode> _sBlendModes;
+        private static Dictionary<string, BlendMode> _sBlendModes;
 
         /// <summary>
         /// Creates a new BlendMode instance.
         /// </summary>
-        private BlendMode(uint name, BlendingFactor srcFactor, BlendingFactor dstFactor)
+        private BlendMode(string name, BlendingFactor srcFactor, BlendingFactor dstFactor)
         {
             _name = name;
             _sourceFactor = srcFactor;
@@ -50,7 +50,7 @@ namespace Sparrow.Display
         /// Returns the blend mode with the given name.
         /// </summary>
         /// <exception cref="ArgumentException">The mode does not exist.</exception>
-        public static BlendMode Get(uint modeName)
+        public static BlendMode Get(string modeName)
         {
             if (_sBlendModes == null) RegisterDefaults();
             if (_sBlendModes.ContainsKey(modeName)) return _sBlendModes[modeName];
@@ -60,7 +60,7 @@ namespace Sparrow.Display
         /// <summary>
         /// Registers a blending mode under a certain name.
         /// </summary>
-        public static BlendMode Register(uint name, BlendingFactor srcFactor, BlendingFactor dstFactor)
+        public static BlendMode Register(string name, BlendingFactor srcFactor, BlendingFactor dstFactor)
         {
             if (_sBlendModes == null) RegisterDefaults();
             BlendMode blendMode = new BlendMode(name, srcFactor, dstFactor);
@@ -72,7 +72,7 @@ namespace Sparrow.Display
         {
             if (_sBlendModes != null) return;
 
-            _sBlendModes = new Dictionary<uint, BlendMode>();
+            _sBlendModes = new Dictionary<string, BlendMode>();
             Register(NONE, BlendingFactor.One, BlendingFactor.Zero);
             Register(NORMAL, BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
             Register(ADD, BlendingFactor.One, BlendingFactor.One);// was srcAlpha, one

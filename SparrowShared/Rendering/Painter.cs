@@ -57,7 +57,7 @@ namespace Sparrow.Rendering
         private readonly BatchProcessor _batchProcessorSpec; // special  processor (no cache)
 
         private uint _actualRenderTarget;
-        private uint _actualBlendMode;
+        private string _actualBlendMode;
 
         private float _backBufferWidth;
         private float _backBufferHeight;
@@ -81,7 +81,7 @@ namespace Sparrow.Rendering
         public Painter(float width, float height)
         {
             _framebufferCache = new Dictionary<uint, uint>();
-            _actualBlendMode = 0;
+            _actualBlendMode = BlendMode.NORMAL;
 
             _backBufferWidth = width;
             _backBufferHeight = height;
@@ -207,7 +207,7 @@ namespace Sparrow.Rendering
          *                              means the current value remains unchanged.
          */
         public void SetStateTo(Matrix2D transformationMatrix, float alphaFactor = 1.0f,
-                               uint blendMode = BlendMode.AUTO)
+                               string blendMode = BlendMode.AUTO)
         {
             if (transformationMatrix != null) _state._modelviewMatrix.PrependMatrix(transformationMatrix);
             if (alphaFactor != 1.0f) _state.Alpha *= alphaFactor;
@@ -399,7 +399,7 @@ namespace Sparrow.Rendering
             _batchProcessorSpec.Clear();
 
             // enforce reset of basic context settings
-            _actualBlendMode = 0;
+            _actualBlendMode = BlendMode.NORMAL;
             Gl.DepthFunc(DepthFunction.Always);
 
             // reset everything else
@@ -523,7 +523,7 @@ namespace Sparrow.Rendering
 
         private void ApplyBlendMode()
         {
-            uint blendMode = _state.BlendMode;
+            string blendMode = _state.BlendMode;
 
             if (blendMode != _actualBlendMode)
             {
