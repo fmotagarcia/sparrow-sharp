@@ -30,11 +30,13 @@ namespace Sparrow.Textures
         protected bool _optimizedForRenderTexture;
         protected uint _base;
         protected float _scale;
+        
         /// <summary>
         /// Stores the pointer/array for the texture in the normal memory.
         /// This is needed for the app be able to restore it on a context loss.
         /// </summary>
         protected object rawData;
+        
         /// <summary>
         ///  Creates a ConcreteTexture object from a TextureBase, storing information about size,
         ///  mip-mapping, and if the channels contain premultiplied alpha values. May only be
@@ -59,10 +61,10 @@ namespace Sparrow.Textures
             {
                 throw new ArgumentException("Invalid dimensions: " + _width + "x" + _height);
             }
-            InitGPUTextureStorage();
+            InitGpuTextureStorage();
         }
 
-        protected virtual void InitGPUTextureStorage()
+        protected virtual void InitGpuTextureStorage()
         {
             _base = Gl.GenTexture();
             Gl.BindTexture(TextureTarget.Texture2d, _base);
@@ -89,7 +91,7 @@ namespace Sparrow.Textures
         {
             SparrowSharp.Painter.DestroyFramebufferForTexture(this);
 
-            InitGPUTextureStorage();
+            InitGpuTextureStorage();
 
             if (rawData != null)
             {
@@ -172,27 +174,26 @@ namespace Sparrow.Textures
         /// <summary>
         /// Indicates if the base texture was optimized for being used in a render texture.
         /// </summary>
-        public bool OptimizedForRenderTexture { get { return _optimizedForRenderTexture; } }
+        public bool OptimizedForRenderTexture => _optimizedForRenderTexture;
 
-        public override uint Base { get { return _base; } }
-        
-        public override ConcreteTexture Root { get { return this; } }
-        
-        public override TextureFormat Format { get { return _format; } }
-        
-        public override float Width { get { return _width / _scale; } }
-        
-        public override float Height { get { return _height / _scale; } }
-        
-        public override float NativeWidth { get { return _width; } }
-        
-        public override float NativeHeight { get { return _height; } }
-        
-        public override float Scale { get { return _scale; } }
-        
-        public override int NumMipMaps { get { return _numMipMaps; } }
-        
-        public override bool PremultipliedAlpha { get { return _premultipliedAlpha; } }
+        public override uint Base => _base;
 
+        public override ConcreteTexture Root => this;
+
+        public override TextureFormat Format => _format;
+
+        public override float Width => _width / _scale;
+
+        public override float Height => _height / _scale;
+
+        public override float NativeWidth => _width;
+
+        public override float NativeHeight => _height;
+
+        public override float Scale => _scale;
+
+        public override int NumMipMaps => _numMipMaps;
+
+        public override bool PremultipliedAlpha => _premultipliedAlpha;
     }
 }

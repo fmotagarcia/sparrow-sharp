@@ -35,7 +35,7 @@ namespace Sparrow.Textures
         /// <summary>
         /// Creates an empty texture of a certain size.
         ///  Beware that the texture can only be used after you either upload some color data
-        ///  ("Texture.Root.Upload()") or clear the texture("Texture.Root.Clear()").
+        ///  or clear the texture("Texture.Root.Clear()").
         /// </summary>
         /// <param name="width">in points; number of pixels depends on scale parameter</param>
         /// <param name="height">in points; number of pixels depends on scale parameter</param>
@@ -175,8 +175,10 @@ namespace Sparrow.Textures
             SetTexCoords(vertexData, vertexId + 3, 1.0f, 1.0f);
         }
 
-        /** Transforms the given texture coordinates from the local coordinate system
-         *  into the root texture's coordinate system. */
+        /// <summary>
+        /// Transforms the given texture coordinates from the local coordinate system
+        /// into the root texture's coordinate system. 
+        /// </summary>
         public Point LocalToGlobal(float u, float v)
         {
             Point outP = Point.Create();
@@ -243,10 +245,14 @@ namespace Sparrow.Textures
          *  (if there is one). */
         public virtual float FrameHeight { get { return Frame != null ? Frame.Height : Height; } }
 
-        /** The width of the texture in points. */
+        /// <summary>
+        /// The width of the texture in points.
+        /// </summary>
         public virtual float Width { get { return 0; } }
 
-        /** The height of the texture in points. */
+        /// <summary>
+        /// The height of the texture in points.
+        /// </summary>
         public virtual float Height { get { return 0; } }
 
         /** The width of the texture in pixels (without scale adjustment). */
@@ -268,13 +274,19 @@ namespace Sparrow.Textures
         /// </summary>
         public virtual ConcreteTexture Root { get { return null; } }
 
-        /** The <code>TextureFormat</code> of the underlying texture data. */
-        public virtual TextureFormat Format { get { return TextureFormat.Rgba4444; } }
+        /// <summary>
+        /// The <code>TextureFormat</code> of the underlying texture data.
+        /// </summary>
+        public virtual TextureFormat Format => TextureFormat.Rgba4444;
 
-        /** Indicates if the texture contains mip maps. */
+        /// <summary>
+        /// Indicates if the texture contains mip maps.
+        /// </summary>
         public virtual int NumMipMaps { get { return 0; } }
 
-        /** Indicates if the alpha values are premultiplied into the RGB values. */
+        /// <summary>
+        /// Indicates if the alpha values are premultiplied into the RGB values.
+        /// </summary>
         public virtual bool PremultipliedAlpha { get { return false; } }
 
         /** The matrix that is used to transform the texture coordinates into the coordinate

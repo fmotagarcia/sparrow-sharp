@@ -95,8 +95,10 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** Resets the RenderState to the default settings.
-        *  (Check each property documentation for its default value.) */
+        /// <summary>
+        /// Resets the RenderState to the default settings.
+        /// (Check each property documentation for its default value.)
+        /// </summary>
         public void Reset()
         {
             Alpha = 1.0f;
@@ -120,20 +122,21 @@ namespace Sparrow.Rendering
         {
             _modelviewMatrix.PrependMatrix(matrix);
         }
-
-        /** Creates a perspective projection matrix suitable for 2D and 3D rendering.
-         *
-         *  <p>The first 4 parameters define which area of the stage you want to view (the camera
-         *  will 'zoom' to exactly this region). The final 3 parameters determine the perspective
-         *  in which you're looking at the stage.</p>
-         *
-         *  <p>The stage is always on the rectangle that is spawned up between x- and y-axis (with
-         *  the given size). All objects that are exactly on that rectangle (z equals zero) will be
-         *  rendered in their true size, without any distortion.</p>
-         *
-         *  <p>If you pass only the first 4 parameters, the camera will be set up above the center
-         *  of the stage, with a field of view of 1.0 rad.</p>
-         */
+        
+        /// <summary>
+        /// Creates a perspective projection matrix suitable for 2D and 3D rendering.
+        ///
+        /// <para>The first 4 parameters define which area of the stage you want to view (the camera
+        /// will 'zoom' to exactly this region). The final 3 parameters determine the perspective
+        /// in which you're looking at the stage.</para>
+        ///
+        /// <para>The stage is always on the rectangle that is spawned up between x- and y-axis (with
+        /// the given size). All objects that are exactly on that rectangle (z equals zero) will be
+        /// rendered in their true size, without any distortion.</para>
+        ///
+        /// <para>If you pass only the first 4 parameters, the camera will be set up above the center
+        /// of the stage, with a field of view of 1.0 rad.</para>
+        /// </summary>
         public void SetProjectionMatrix(float x, float y, float width, float height,
                                         float stageWidth = 0, float stageHeight = 0,
                                         float[] cameraPos = null)
@@ -142,9 +145,10 @@ namespace Sparrow.Rendering
                             x, y, width, height, stageWidth, stageHeight, cameraPos);
         }
         
-        /** Changes the modelview matrices (2D and, if available, 3D) to identity matrices.
-         *  An object transformed an identity matrix performs no transformation.
-         */
+        /// <summary>
+        /// Changes the modelview matrix to identity matrices.
+        /// An object transformed by an identity matrix performs no transformation.
+        /// </summary>
         public void SetModelviewMatricesToIdentity()
         {
             _modelviewMatrix.Identity();
@@ -152,8 +156,8 @@ namespace Sparrow.Rendering
 
         public Matrix2D ModelviewMatrix
         {
-            get { return _modelviewMatrix; }
-            set { _modelviewMatrix.CopyFromMatrix(value); }
+            get => _modelviewMatrix;
+            set => _modelviewMatrix.CopyFromMatrix(value);
         }
 
         /** Returns the current projection matrix. You can use the method 'setProjectionMatrix3D'
@@ -162,9 +166,9 @@ namespace Sparrow.Rendering
          *  @default identity matrix */
          public Matrix3D ProjectionMatrix3D
         {
-            get { return _projectionMatrix3D; }
-            set { _projectionMatrix3D.CopyFrom(value); }
-        }
+            get => _projectionMatrix3D;
+            set => _projectionMatrix3D.CopyFrom(value);
+         }
 
         /** Calculates the product of modelview and projection matrix and stores it in a 3D matrix.
          *  CAUTION: Use with care! Each call returns the same instance. */
@@ -178,18 +182,16 @@ namespace Sparrow.Rendering
         }
 
         // other methods
-
-        /** Changes the the current render target.
-         *
-         *  @param target     Either a texture or <code>null</code> to render into the back buffer.
-         *  @param enableDepthAndStencil  Indicates if depth and stencil testing will be available.
-         *                    This parameter affects only texture targets.
-         *  @param antiAlias  The anti-aliasing quality (<code>0</code> meaning: no anti-aliasing).
-         *                    This parameter affects only texture targets. Note that at the time
-         *                    of this writing, AIR supports anti-aliasing only on Desktop.
-         */
-        public void SetRenderTarget(Texture target, bool enableDepthAndStencil = true,
-                                    int antiAlias = 0)
+        
+        /// <summary>
+        /// Changes the the current render target.
+        /// </summary>
+        /// <param name="target">Either a texture or <code>null</code> to render into the back buffer.</param>
+        /// <param name="enableDepthAndStencil">Indicates if depth and stencil testing will be available.
+        ///                                     This parameter affects only texture targets.</param>
+        /// <param name="antiAlias">The anti-aliasing quality (<code>0</code> meaning: no anti-aliasing).
+        ///                         This parameter affects only texture targets.</param>
+        public void SetRenderTarget(Texture target, bool enableDepthAndStencil = true, int antiAlias = 0)
         {
             uint currentTarget = _renderTarget != null ? _renderTarget.Base : 0;
             uint newTarget = target != null ? target.Base : 0;
@@ -218,9 +220,11 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** The texture that is currently being rendered into, or <code>null</code>
-         *  to render into the back buffer. On assignment, calls <code>setRenderTarget</code>
-         *  with its default parameters. */
+        /// <summary>
+        /// The texture that is currently being rendered into, or <code>null</code>
+        /// to render into the back buffer. On assignment, calls <code>setRenderTarget</code>
+        /// with its default parameters.
+        /// </summary>
         public Texture RenderTarget
         {
             get { return _renderTarget; }
@@ -263,10 +267,7 @@ namespace Sparrow.Rendering
         /// The anti-alias setting used when setting the current render target
         /// via <code>SetRenderTarget</code>.
         /// </summary>
-        public uint RenderTargetAntiAlias
-        {
-            get { return _renderTargetOptions >> 4; }
-        }
+        public uint RenderTargetAntiAlias => _renderTargetOptions >> 4; // TODO use this
     }
 }
 

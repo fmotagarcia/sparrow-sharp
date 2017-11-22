@@ -14,56 +14,34 @@ namespace Sparrow.Textures
         //public static readonly TextureFormat CompressedRgbaPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbaPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat CompressedRgbPvrtc4Bppv1Img = new TextureFormat(PixelInternalFormat.CompressedRgbPvrtc4Bppv1Img, 4, true, PixelType.UnsignedByte);
         //public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 16, false, PixelType.UnsignedShort565);
-        public static readonly TextureFormat RGB565 = new TextureFormat(PixelFormat.Rgb, InternalFormat.Rgba8, 16, false, PixelType.UnsignedShort565);
+        public static readonly TextureFormat Rgb565 = new TextureFormat(PixelFormat.Rgb, InternalFormat.Rgba8, 16, false, PixelType.UnsignedShort565);
         //public static readonly TextureFormat Rgb888 = new TextureFormat(PixelFormat.Rgb, SizedInternalFormat.Rgb8, 24, false, PixelType.UnsignedByte);
         public static readonly TextureFormat Rgba5551 = new TextureFormat(PixelFormat.Rgba, InternalFormat.Rgba8, 16, false, PixelType.UnsignedShort5551);
         public static readonly TextureFormat Rgba4444 = new TextureFormat(PixelFormat.Rgba, InternalFormat.Rgba8, 16, false, PixelType.UnsignedShort4444);
         //public static readonly TextureFormat AI88 = new TextureFormat(PixelFormat.LuminanceAlpha, SizedInternalFormat.LuminanceAlpha16fExt, 16, false, PixelType.UnsignedByte);
         //public static readonly TextureFormat I8 = new TextureFormat(PixelFormat.Luminance, SizedInternalFormat.Luminance8Ext, 8, false, PixelType.UnsignedByte);
 
-        private readonly InternalFormat _internalformat;
-        private readonly PixelFormat _format;
 
-        public InternalFormat InternalFormat
-        {
-            get { return _internalformat; }
-        }
+        public readonly InternalFormat InternalFormat;
 
-        public PixelFormat PixelFormat
-        {
-            get { return _format; }
-        }
+        public readonly PixelFormat PixelFormat;
 
-
-        private readonly int _bitsPerPixel;
         /// <summary>
         /// Needed for compressed image upload
         /// </summary>
-        public int BitsPerPixel
-        {
-            get { return _bitsPerPixel; }
-        }
+        public readonly int BitsPerPixel;
 
-        private readonly bool _compressed;
-        public bool Compressed
-        {
-            get { return _compressed; }
-        }
+        public readonly bool Compressed;
 
-        private readonly PixelType _texType;
-
-        public PixelType PixelType
-        {
-            get { return _texType; }
-        }
+        public readonly PixelType PixelType;
 
         public TextureFormat(PixelFormat format, InternalFormat internalFormat, int bitsPerPixel, bool compressed, PixelType texType)
         {
-            _format = format;
-            _internalformat = internalFormat;
-            _bitsPerPixel = bitsPerPixel;
-            _compressed = compressed;
-            _texType = texType;
+            PixelFormat = format;
+            InternalFormat = internalFormat;
+            BitsPerPixel = bitsPerPixel;
+            Compressed = compressed;
+            PixelType = texType;
         }
     }
 }

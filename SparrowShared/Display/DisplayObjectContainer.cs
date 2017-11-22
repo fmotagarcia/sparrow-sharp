@@ -283,7 +283,7 @@ namespace Sparrow.Display
         public override void Render(Painter painter)
         {
             int numChildren = _children.Count;
-            uint frameId = painter.FrameID;
+            uint frameId = painter.FrameId;
             bool cacheEnabled = frameId != 0;
             bool selfOrParentChanged = _lastParentOrSelfChangeFrameID == frameId;
 

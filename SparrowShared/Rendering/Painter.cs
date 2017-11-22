@@ -45,9 +45,7 @@ namespace Sparrow.Rendering
         private Dictionary<string, Program> _programs;
         private readonly Dictionary<uint, uint> _framebufferCache;
 
-        private int _drawCount;
         private uint _frameId;
-        private float _pixelSize;
         private readonly Stack<Rectangle> _clipRectStack;
         private readonly List<DisplayObject> _batchCacheExclusions;
 
@@ -68,11 +66,11 @@ namespace Sparrow.Rendering
         private int _stateStackLength;
 
         // helper objects
-        private static readonly Matrix2D sMatrix = Matrix2D.Create();
-        private static Rectangle sClipRect = Rectangle.Create();
-        private static readonly Rectangle sBufferRect = Rectangle.Create();
-        private static Rectangle sScissorRect = Rectangle.Create();
-        private static readonly MeshSubset sMeshSubset = new MeshSubset();
+        private static readonly Matrix2D SMatrix = Matrix2D.Create();
+        private static Rectangle _sClipRect = Rectangle.Create();
+        private static readonly Rectangle SBufferRect = Rectangle.Create();
+        private static Rectangle _sScissorRect = Rectangle.Create();
+        private static readonly MeshSubset SMeshSubset = new MeshSubset();
         
         /// <summary>
         /// Creates a new Painter object. Normally, it's not necessary to create any custom
@@ -85,7 +83,7 @@ namespace Sparrow.Rendering
 
             _backBufferWidth = width;
             _backBufferHeight = height;
-            _pixelSize = 1.0f;
+            PixelSize = 1.0f;
             _clipRectStack = new Stack<Rectangle>();
 
             _batchProcessorCurr = new BatchProcessor();
@@ -120,12 +118,11 @@ namespace Sparrow.Rendering
 
         // context handling
 
-        /** Sets the viewport dimensions and other attributes of the rendering buffer.
-         *  Sparrow will call this method internally, so most apps won't need to mess with this.
-         *
-         * @param viewPort                the position and size of the area that should be rendered
-         *                                into, in pixels.
-         */
+        /// <summary>
+        /// Sets the viewport dimensions and other attributes of the rendering buffer.
+        /// Sparrow will call this method internally, so most apps won't need to mess with this.
+        /// </summary>
+        /// <param name="viewPort">the position and size of the area that should be rendered into, in pixels.</param>
         public void ConfigureBackBuffer(Rectangle viewPort)
         {
             _backBufferWidth  = viewPort.Width;
@@ -198,14 +195,14 @@ namespace Sparrow.Rendering
 
             _stateStack[_stateStackPos].CopyFrom(_state);
         }
-
-        /** Modifies the current state with a transformation matrix, alpha factor, and blend mode.
-         *
-         *  @param transformationMatrix Used to transform the current <code>modelviewMatrix</code>.
-         *  @param alphaFactor          Multiplied with the current alpha value.
-         *  @param blendMode            Replaces the current blend mode; except for "auto", which
-         *                              means the current value remains unchanged.
-         */
+        
+        /// <summary>
+        /// Modifies the current state with a transformation matrix, alpha factor, and blend mode.
+        /// </summary>
+        /// <param name="transformationMatrix">Used to transform the current <code>modelviewMatrix</code>.</param>
+        /// <param name="alphaFactor">Multiplied with the current alpha value.</param>
+        /// <param name="blendMode">Replaces the current blend mode; except for "auto", which
+        ///                         means the current value remains unchanged.</param>
         public void SetStateTo(Matrix2D transformationMatrix, float alphaFactor = 1.0f,
                                string blendMode = BlendMode.AUTO)
         {
@@ -240,31 +237,32 @@ namespace Sparrow.Rendering
 
         // masks
 
-        /** Draws a display object into the stencil buffer, incrementing the buffer on each
-        *  used pixel. The stencil reference value is incremented as well; thus, any subsequent
-        *  stencil tests outside of this area will fail.
-        *
-        *  <p>If 'mask' is part of the display list, it will be drawn at its conventional stage
-        *  coordinates. Otherwise, it will be drawn with the current modelview matrix.</p>
-        *
-        *  <p>As an optimization, this method might update the clipping rectangle of the render
-        *  state instead of utilizing the stencil buffer. This is possible when the mask object
-        *  is of type <code>Sparrow.Display.Quad</code> and is aligned parallel to the stage
-        *  axes.</p>
-        *
-        *  <p>Note that masking breaks the render cache; the masked object must be redrawn anew
-        *  in the next frame. If you pass <code>maskee</code>, the method will automatically
-        *  call <code>ExcludeFromCache(maskee)</code> for you.</p>
-        */
+        /// <summary>
+        /// Draws a display object into the stencil buffer, incrementing the buffer on each
+        /// used pixel. The stencil reference value is incremented as well; thus, any subsequent
+        /// stencil tests outside of this area will fail.
+        ///
+        /// <p>If 'mask' is part of the display list, it will be drawn at its conventional stage
+        /// coordinates. Otherwise, it will be drawn with the current modelview matrix.</p>
+        ///
+        /// <p>As an optimization, this method might update the clipping rectangle of the render
+        /// state instead of utilizing the stencil buffer. This is possible when the mask object
+        /// is of type <code>Sparrow.Display.Quad</code> and is aligned parallel to the stage
+        /// axes.</p>
+        ///
+        /// <p>Note that masking breaks the render cache; the masked object must be redrawn anew
+        /// in the next frame. If you pass <code>maskee</code>, the method will automatically
+        /// call <code>ExcludeFromCache(maskee)</code> for you.</p>
+        /// </summary>
         public void DrawMask(DisplayObject mask, DisplayObject maskee = null)
         {
             FinishMeshBatch();
 
-            if (IsRectangularMask(mask, sMatrix))
+            if (IsRectangularMask(mask, SMatrix))
             {
-                sClipRect = mask.GetBounds(mask);
-                sClipRect = sClipRect.GetBounds(sMatrix);
-                PushClipRect(sClipRect);
+                _sClipRect = mask.GetBounds(mask);
+                _sClipRect = _sClipRect.GetBounds(SMatrix);
+                PushClipRect(_sClipRect);
             }
             else
             {
@@ -274,20 +272,21 @@ namespace Sparrow.Rendering
             ExcludeFromCache(maskee);
         }
 
-        /** Draws a display object into the stencil buffer, decrementing the
-         *  buffer on each used pixel. This effectively erases the object from the stencil buffer,
-         *  restoring the previous state. The stencil reference value will be decremented.
-         *
-         *  <p>Note: if the mask object meets the requirements of using the clipping rectangle,
-         *  it will be assumed that this erase operation undoes the clipping rectangle change
-         *  caused by the corresponding <code>drawMask()</code> call.</p>
-         */
+        /// <summary>
+        /// Draws a display object into the stencil buffer, decrementing the
+        /// buffer on each used pixel. This effectively erases the object from the stencil buffer,
+        /// restoring the previous state. The stencil reference value will be decremented.
+        ///
+        /// <para>Note: if the mask object meets the requirements of using the clipping rectangle,
+        /// it will be assumed that this erase operation undoes the clipping rectangle change
+        /// caused by the corresponding <code>DrawMask()</code> call.</para>
+        /// </summary>
         public void EraseMask(DisplayObject mask, DisplayObject maskee = null)
         {
            
             FinishMeshBatch();
 
-            if (IsRectangularMask(mask, sMatrix))
+            if (IsRectangularMask(mask, SMatrix))
             {
                 PopClipRect();
             }
@@ -332,9 +331,7 @@ namespace Sparrow.Rendering
         /// </summary>
         private bool IsRectangularMask(DisplayObject mask, Matrix2D outMatrix)
         {
-            Quad quad = mask as Quad;
-
-            if (quad != null && quad.Texture == null)
+            if (mask is Quad quad && quad.Texture == null)
             {
                 if (mask.Stage != null) outMatrix = mask.GetTransformationMatrix(null);
                 else
@@ -349,27 +346,31 @@ namespace Sparrow.Rendering
         }
 
         // mesh rendering
-
-        /** Adds a mesh to the current batch of unrendered meshes. If the current batch is not
-         *  compatible with the mesh, all previous meshes are rendered at once and the batch
-         *  is cleared.
-         *
-         *  @param mesh    The mesh to batch.
-         *  @param subset  The range of vertices to be batched. If <code>null</code>, the complete
-         *                 mesh will be used.
-         */
+        
+        /// <summary>
+        /// Adds a mesh to the current batch of unrendered meshes. If the current batch is not
+        /// compatible with the mesh, all previous meshes are rendered at once and the batch
+        /// is cleared.
+        /// </summary>
+        /// <param name="mesh"> The mesh to batch.</param>
+        /// <param name="subset">The range of vertices to be batched. If <code>null</code>, the complete
+        /// mesh will be used.</param>
         public void BatchMesh(Mesh mesh, MeshSubset subset= null)
         {
             _batchProcessor.AddMesh(mesh, _state, subset);
         }
 
-        /** Finishes the current mesh batch and prepares the next one. */
+        /// <summary>
+        /// Finishes the current mesh batch and prepares the next one.
+        /// </summary>
         public void FinishMeshBatch()
         {
             _batchProcessor.FinishBatch();
         }
 
-        /** Completes all unfinished batches, cleanup procedures. */
+        /// <summary>
+        /// Completes all unfinished batches, cleanup procedures.
+        /// </summary>
         public void FinishFrame()
         {
             if (_frameId % 99 == 0) _batchProcessorCurr.Trim(); // odd number -> alternating processors
@@ -389,8 +390,10 @@ namespace Sparrow.Rendering
         }
 
 
-        /** Resets the current state, state stack, batch processor, stencil reference value,
-         *  clipping rectangle, and draw count. Furthermore, depth testing is disabled. */
+        /// <summary>
+        /// Resets the current state, state stack, batch processor, stencil reference value,
+        /// clipping rectangle, and draw count. Furthermore, depth testing is disabled.
+        /// </summary>
         public void NextFrame()
         {
             // update batch processors
@@ -404,7 +407,7 @@ namespace Sparrow.Rendering
 
             // reset everything else
             _clipRectStack.Clear();
-            _drawCount = 0;
+            DrawCount = 0;
             _stateStackPos = -1;
             _state.Reset();
         }
@@ -415,12 +418,15 @@ namespace Sparrow.Rendering
             _batchProcessorPrev = _batchProcessorCurr;
             return _batchProcessorCurr = tmp;
         }
-        /** Draws all meshes from the render cache between <code>startToken</code> and
-         *  (but not including) <code>endToken</code>. The render cache contains all meshes
-         *  rendered in the previous frame. */
+        
+        /// <summary>
+        /// Draws all meshes from the render cache between <code>startToken</code> and
+        /// (but not including) <code>endToken</code>. The render cache contains all meshes
+        /// rendered in the previous frame.
+        /// </summary>
         public void DrawFromCache(BatchToken startToken, BatchToken endToken)
         {
-            MeshSubset subset = sMeshSubset;
+            MeshSubset subset = SMeshSubset;
 
             if (!startToken.Equals(endToken))
             {
@@ -500,9 +506,11 @@ namespace Sparrow.Rendering
             ApplyClipRect();
         }
 
-        /** Clears the render context with a certain color and alpha value. Since this also
-        *  clears the stencil buffer, the stencil reference value is also reset to '0'. */
-        public void Clear(uint rgb = 0, float alpha= 0.0f)
+        /// <summary>
+        /// Clears the render context with a certain color and alpha value. Since this also
+        /// clears the stencil buffer, the stencil reference value is also reset to '0'.
+        /// </summary>
+        public void Clear(uint rgb = 0, float alpha = 0.0f)
         {
             ApplyRenderTarget();
 
@@ -612,32 +620,32 @@ namespace Sparrow.Rendering
                 // convert to pixel coordinates (matrix transformation ends up in range [-1, 1])
                 float[] sPoint3D = projMatrix.TransformCoords3D(clipRect.X, clipRect.Y, 0.0f);
                 MathUtil.ProjectVector3D(ref sPoint3D); // eliminate w-coordinate
-                sClipRect.X = (sPoint3D[0] * 0.5f + 0.5f) * width;
-                sClipRect.Y = (0.5f - sPoint3D[1] * 0.5f) * height;
+                _sClipRect.X = (sPoint3D[0] * 0.5f + 0.5f) * width;
+                _sClipRect.Y = (0.5f - sPoint3D[1] * 0.5f) * height;
 
                 sPoint3D = projMatrix.TransformCoords3D(clipRect.Right, clipRect.Bottom, 0.0f);
                 MathUtil.ProjectVector3D(ref sPoint3D); // eliminate w-coordinate
-                sClipRect.Right = (sPoint3D[0] * 0.5f + 0.5f) * width;
-                sClipRect.Bottom = (0.5f - sPoint3D[1] * 0.5f) * height;
+                _sClipRect.Right = (sPoint3D[0] * 0.5f + 0.5f) * width;
+                _sClipRect.Bottom = (0.5f - sPoint3D[1] * 0.5f) * height;
 
                 if (renderTarget == null)
                 { 
                     // OpenGL positions the scissor rectangle from the bottom of the screen :(
                     // flip it, if we're rendering to the backbuffer
-                    sClipRect.Y = (int)(_backBufferHeight - sClipRect.Height - sClipRect.Y);
+                    _sClipRect.Y = (int)(_backBufferHeight - _sClipRect.Height - _sClipRect.Y);
                 }
-                sBufferRect.SetTo(0, 0, width, height);
-                sScissorRect = sClipRect.Intersection(sBufferRect);
+                SBufferRect.SetTo(0, 0, width, height);
+                _sScissorRect = _sClipRect.Intersection(SBufferRect);
 
                 // an empty rectangle is not allowed, so we set it to the smallest possible size
-                if (sScissorRect.Width < 1f || sScissorRect.Height < 1f)
+                if (_sScissorRect.Width < 1f || _sScissorRect.Height < 1f)
                 {
-                    sScissorRect.SetTo(0, 0, 1, 1);
+                    _sScissorRect.SetTo(0, 0, 1, 1);
                     Debug.WriteLine("WARNING: Clip rectangle has zero size, setting it to 1x1");
                 }
                 Gl.Enable(EnableCap.ScissorTest);
                 Gl.Clear(ClearBufferMask.StencilBufferBit);
-                Gl.Scissor((int)sScissorRect.X, (int)sScissorRect.Y, (int)sScissorRect.Width, (int)sScissorRect.Height);
+                Gl.Scissor((int)_sScissorRect.X, (int)_sScissorRect.Y, (int)_sScissorRect.Width, (int)_sScissorRect.Height);
             }
             else
             {       
@@ -650,22 +658,19 @@ namespace Sparrow.Rendering
 
         // properties
 
-        /** Indicates the number of stage3D draw calls. */
-        public int DrawCount
-        {
-            set { _drawCount = value; }
-            get { return _drawCount; }
-        }
+        /// <summary>
+        /// Indicates the number of GL draw calls.
+        /// </summary>
+        public int DrawCount;
 
-        /** Indicates if the render cache is enabled. Normally, this should be left at the default;
-         *  however, some custom rendering logic might require to change this property temporarily.
-         *  Also note that the cache is automatically reactivated each frame, right before the
-         *  render process.
-         *
-         *  @default true
-         */
+        /// <summary>
+        /// Indicates if the render cache is enabled. Normally, this should be left at the default;
+        /// however, some custom rendering logic might require to change this property temporarily.
+        /// Also note that the cache is automatically reactivated each frame, right before the
+        /// render process. Default true.
+        /// </summary>
         public bool CacheEnabled {
-            get { return _batchProcessor == _batchProcessorCurr; }
+            get => _batchProcessor == _batchProcessorCurr;
             set
             {
                 if (value != CacheEnabled)
@@ -677,45 +682,52 @@ namespace Sparrow.Rendering
                 }
             }
         }
- 
-        /** The current render state, containing some of the context settings, projection- and
-         *  modelview-matrix, etc. Always returns the same instance, even after calls to "pushState"
-         *  and "popState".
-         *
-         *  <p>When you change the current RenderState, and this change is not compatible with
-         *  the current render batch, the batch will be concluded right away. Thus, watch out
-         *  for changes of blend mode, clipping rectangle, render target or culling.</p>
-         */
-        public RenderState State { get { return _state; } }
+        
+        /// <summary>
+        /// The current render state, containing some of the context settings, projection- and
+        /// modelview-matrix, etc. Always returns the same instance, even after calls to "PushState"
+        /// and "PopState".
+        /// 
+        /// <para>When you change the current RenderState, and this change is not compatible with
+        /// the current render batch, the batch will be concluded right away. Thus, watch out
+        /// for changes of blend mode, clipping rectangle, render target or culling.</para>
+        /// </summary>
+        public RenderState State => _state;
 
-        /** Returns the index of the current frame <strong>if</strong> the render cache is enabled;
-         *  otherwise, returns zero. To get the frameID regardless of the render cache, call
-         *  <code>Sparrow.frameID</code> instead. */
-        public uint FrameID {
-            get { return _batchProcessor == _batchProcessorCurr ? _frameId : 0; }
-            set { _frameId = value;  }
+        /// <summary>
+        /// Returns the index of the current frame if the render cache is enabled;
+        /// otherwise, returns zero. To get the frameID regardless of the render cache, call
+        /// <code>Sparrow.FrameID</code> instead.
+        /// </summary>
+        public uint FrameId {
+            get => _batchProcessor == _batchProcessorCurr ? _frameId : 0;
+            set => _frameId = value;
         }
 
-        /** The size (in points) that represents one pixel in the back buffer. */
-        public float PixelSize
-        {
-            get { return _pixelSize; }
-            set { _pixelSize = value; }
-        }
+        /// <summary>
+        /// The size (in points) that represents one pixel in the back buffer.
+        /// </summary>
+        public float PixelSize;
 
-        /** Returns the current width of the back buffer. In most cases, this value is in pixels;
-         *  however, if the app is running on an HiDPI display with an activated
-         *  'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
-         *  for the actual pixel count. Alternatively, use the Context3D-property with the
-         *  same name: it will return the exact pixel values. */
-        public float BackBufferWidth { get { return _backBufferWidth; } }
+        /// <summary>
+        /// Returns the current width of the back buffer. 
+        /// In most cases, this value is in pixels;
+        /// however, if the app is running on an HiDPI display with an activated
+        /// 'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
+        /// for the actual pixel count. Alternatively, use the Context3D-property with the
+        /// same name: it will return the exact pixel values.
+        /// </summary>
+        public float BackBufferWidth => _backBufferWidth;
 
-        /** Returns the current height of the back buffer. In most cases, this value is in pixels;
-         *  however, if the app is running on an HiDPI display with an activated
-         *  'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
-         *  for the actual pixel count. Alternatively, use the Context3D-property with the
-         *  same name: it will return the exact pixel values. */
-        public float BackBufferHeight { get { return _backBufferHeight; } }
+        /// <summary>
+        /// Returns the current height of the back buffer. 
+        /// In most cases, this value is in pixels;
+        /// however, if the app is running on an HiDPI display with an activated
+        /// 'supportHighResolutions' setting, you have to multiply with 'backBufferPixelsPerPoint'
+        /// for the actual pixel count. Alternatively, use the Context3D-property with the
+        /// same name: it will return the exact pixel values.
+        /// </summary>
+        public float BackBufferHeight => _backBufferHeight;
 
         private Dictionary<string, Program> Programs {
             get

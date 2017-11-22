@@ -81,8 +81,7 @@ namespace Sparrow.Textures
         ///                       the object will be drawn in the orientation depicted by the matrix.</param>
         /// <param name="alpha">The object's alpha value will be multiplied with this value.</param>
         /// <param name="antiAliasing">Values range from 0 (no antialiasing) to 4 (best quality).</param>
-        public void Draw(DisplayObject obj, Matrix2D matrix = null, float alpha = 1.0f,
-                         int antiAliasing = 0)
+        public void Draw(DisplayObject obj, Matrix2D matrix = null, float alpha = 1.0f, int antiAliasing = 0)
         {
             if (obj == null) return;
 
@@ -95,15 +94,15 @@ namespace Sparrow.Textures
                 RenderBundled(Render, obj, matrix, alpha, antiAliasing);
             }
         }
-
-        /** Bundles several calls to <code>draw</code> together in a block. This avoids buffer 
-         *  switches and allows you to draw multiple objects into a non-persistent texture.
-         *  Note that the 'antiAliasing' setting provided here overrides those provided in
-         *  individual 'draw' calls.
-         *  
-         *  @param drawingBlock  a callback 
-         *  @param antiAliasing  Values range from 0 (no antialiasing) to 4 (best quality).
-         */
+        
+        /// <summary>
+        /// Bundles several calls to <code>draw</code> together in a block. This avoids buffer 
+        /// switches and allows you to draw multiple objects into a non-persistent texture.
+        /// Note that the 'antiAliasing' setting provided here overrides those provided in
+        /// individual 'draw' calls.
+        /// </summary>
+        /// <param name="drawingBlock"></param>
+        /// <param name="antiAliasing"></param>
         public void DrawBundled(Action drawingBlock, int antiAliasing = 0)
         {
             RenderBundled((x,y,z) => { drawingBlock(); }, null, null, 1.0f, antiAliasing);
@@ -191,15 +190,14 @@ namespace Sparrow.Textures
         /// <summary>
         /// Indicates if the texture is persistent over multiple draw calls.
         /// </summary>
-        public bool IsPersistent { get { return _isPersistent; } }
+        public bool IsPersistent => _isPersistent;
 
-        
+
         /// <inheritdoc cref="SubTexture.Base"/>
-        public override uint Base { get { return _activeTexture.Base; } }
-        
-        /// <inheritdoc cref="SubTexture.Root"/>
-        public override ConcreteTexture Root { get { return _activeTexture.Root; } }
+        public override uint Base => _activeTexture.Base;
 
-}
+        /// <inheritdoc cref="SubTexture.Root"/>
+        public override ConcreteTexture Root => _activeTexture.Root;
+    }
 }
 

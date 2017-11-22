@@ -26,7 +26,7 @@ namespace Sparrow.Text
         // helper objects
         private static Matrix2D _sMatrix = Matrix2D.Create();
         private static ITextCompositor _sDefaultCompositor;
-        private static TextureFormat _sDefaultTextureFormat = TextureFormat.RGB565;
+        private static TextureFormat _sDefaultTextureFormat = TextureFormat.Rgb565;
         private readonly TextFormat _helperFormat = new TextFormat();
 
         public TextField(float width, float height, string text = "", TextFormat format = null)

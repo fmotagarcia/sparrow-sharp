@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="C:\CODE\sparrow-game\SparrowGame.Shared" t="Include">
-      <e p="benchmark_object.png" t="Include" />
-      <e p="bigstar.png" t="Include" />
       <e p="ComputeShaderTest.cs" t="Include" />
       <e p="CustomMesh" t="Include">
         <e p="CustomEffect.cs" t="Include" />
@@ -14,12 +12,26 @@
       <e p="GameMain.cs" t="Include" />
       <e p="lightComputeShader.glsl" t="Include" />
       <e p="lightComputeShaderOneLight.glsl" t="Include" />
+      <e p="pics" t="Include">
+        <e p="benchmark_object.png" t="Include" />
+        <e p="bigstar.png" t="Include" />
+        <e p="testbg.png" t="Include" />
+        <e p="testbg_google.png" t="Include" />
+        <e p="testbg_google_16.png" t="Include" />
+        <e p="testbg_transparency.png" t="Include" />
+        <e p="testbg_white.png" t="Include" />
+      </e>
       <e p="SampleMovingStuff.cs" t="Include" />
-      <e p="testbg.png" t="Include" />
-      <e p="testbg_google.png" t="Include" />
-      <e p="testbg_google_16.png" t="Include" />
-      <e p="testbg_transparency.png" t="Include" />
-      <e p="testbg_white.png" t="Include" />
+      <e p="sims\bigExplosion.sde" t="Include" />
+      <e p="sims\blazingFire.sde" t="Include" />
+      <e p="sims\coinShower.sde" t="Include" />
+      <e p="sims\dryIce.sde" t="Include" />
+      <e p="sims\fireworks.sde" t="Include" />
+      <e p="sims\glitterBurst.sde" t="Include" />
+      <e p="sims\rocket.sde" t="Include" />
+      <e p="sims\smoke.sde" t="Include" />
+      <e p="sims\snowfall.sde" t="Include" />
+      <e p="sims\stardustDefault.sde" t="Include" />
     </e>
     <e p="C:\CODE\sparrow-sharp" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
@@ -142,6 +154,7 @@
         <e p="CustomMesh" t="Include" />
         <e p="obj" t="ExcludeRecursive" />
         <e p="packages.config" t="Include" />
+        <e p="pics" t="Include" />
         <e p="Properties" t="Include">
           <e p="AssemblyInfo.cs" t="Include" />
         </e>
@@ -155,6 +168,7 @@
             <e p="Strings.xml" t="Include" />
           </e>
         </e>
+        <e p="sims" t="Include" />
         <e p="SparrowSharp.Droid.csproj" t="IncludeRecursive" />
       </e>
       <e p="SparrowSharp.Core\SparrowSharp.Core.iOS.csproj" t="IncludeRecursive" />
@@ -162,8 +176,6 @@
         <e p="app.config" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Core" t="Include">
-          <e p="CustomGlControl.cs" t="Include" />
-          <e p="CustomGlControl.Designer.cs" t="Include" />
           <e p="DesktopViewController.cs" t="Include" />
         </e>
         <e p="obj" t="ExcludeRecursive" />

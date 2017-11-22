@@ -3,7 +3,7 @@ using OpenGL;
 
 namespace Sparrow.Utils
 {
-    public class RenderUtil
+    public static class RenderUtil
     {
 
         public static void SetSamplerStateAt(uint name, bool hasMipMaps,

@@ -29,7 +29,7 @@ namespace Sparrow.Core
 
         public static Stage Stage { get; private set; }
 
-        public static uint FrameID { get { return _frameId; } }
+        public static uint FrameID => _frameId;
 
         public static readonly Dictionary<string, Program> Programs = new Dictionary<string, Program>();
 
@@ -76,10 +76,11 @@ namespace Sparrow.Core
             }
             Gl.Disable(EnableCap.CullFace);
             Gl.Disable(EnableCap.Dither);
-
-            Gl.Enable(EnableCap.Blend);
+            
             Gl.Enable(EnableCap.DepthTest);
             Gl.DepthFunc(DepthFunction.Always);
+            
+            BlendMode.Get(BlendMode.NORMAL).Activate();
 
             FramebufferStatus status = Gl.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (status != FramebufferStatus.FramebufferComplete)
@@ -154,7 +155,7 @@ namespace Sparrow.Core
 
                 Stage.Render(_painter);
                 _painter.FinishFrame();
-                _painter.FrameID = ++_frameId;
+                _painter.FrameId = ++_frameId;
                 
                 _painter.Present();
             }

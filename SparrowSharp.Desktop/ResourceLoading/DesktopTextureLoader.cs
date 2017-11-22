@@ -12,9 +12,9 @@ namespace Sparrow.ResourceLoading
         protected bool _isLoaded;
         protected Texture _glTexture;
 
-        public bool IsLoaded { get { return _isLoaded; } }
+        public bool IsLoaded => _isLoaded;
 
-        public Texture Texture { get { return _glTexture; } }
+        public Texture Texture => _glTexture;
 
         public event EventHandler<Texture> ResourceLoaded;
 

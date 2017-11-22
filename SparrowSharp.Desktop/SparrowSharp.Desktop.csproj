@@ -35,11 +35,11 @@
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenGL.Net, Version=0.6.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\sparrow-game\packages\OpenGL.Net.0.6.1\lib\net461\OpenGL.Net.dll</HintPath>
+    <Reference Include="OpenGL.Net, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\OpenGL.Net.0.7.0\lib\net461\OpenGL.Net.dll</HintPath>
     </Reference>
-    <Reference Include="OpenGL.Net.WinForms, Version=0.6.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\sparrow-game\packages\OpenGL.Net.WinForms.0.6.1\lib\net461\OpenGL.Net.WinForms.dll</HintPath>
+    <Reference Include="OpenGL.Net.WinForms, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\OpenGL.Net.WinForms.0.7.0\lib\net461\OpenGL.Net.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -62,10 +62,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\CustomGlControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Core\CustomGlControl.Designer.cs" />
     <Compile Include="Core\DesktopViewController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceLoading\DesktopTextureLoader.cs" />

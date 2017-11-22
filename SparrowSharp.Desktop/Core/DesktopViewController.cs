@@ -15,9 +15,10 @@ namespace Sparrow.Core
         private readonly Type _rootClass;
         private readonly TouchProcessor _touchProcessor;
         private const int PointerId = 1;
-        private readonly CustomGlControl _control;
+        private readonly GlControl _control;
         private float _scale = 1;
         private bool _contextCreated;
+
         /// <summary>
         /// Initializes the game and the native window where your app will run.
         /// </summary>
@@ -40,14 +41,14 @@ namespace Sparrow.Core
             grid.Children.Add(host);
 
             Gl.Initialize();
-            _control = new CustomGlControl();
+            _control = new GlControl();
             host.Child = _control;
-            //control.DepthBits = 8;
-            //control.StencilBits = 8;
-            _control.ContextProfile = CustomGlControl.ProfileType.Core;
-            _control.DebugContext = CustomGlControl.AttributePermission.Enabled;
+            //_control.DepthBits = 8;
+            //_control.StencilBits = 8;
+            _control.ContextProfile = GlControl.ProfileType.Core;
+            _control.DebugContext = GlControl.AttributePermission.Enabled;
             _control.Animation = true;
-            _control.AnimationTime = 14;
+            _control.AnimationTime = 15;
             _control.ContextCreated += OnContextCreated;
             _control.ContextDestroying += ContextDestroying;
             

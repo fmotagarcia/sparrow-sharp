@@ -32,8 +32,8 @@ namespace Sparrow.Display
         public const string MASK = "mask";
 
         private string _name;
-        private BlendingFactor _sourceFactor;
-        private BlendingFactor _destinationFactor;
+        private readonly BlendingFactor _sourceFactor;
+        private readonly BlendingFactor _destinationFactor;
         private static Dictionary<string, BlendMode> _sBlendModes;
 
         /// <summary>
@@ -52,8 +52,14 @@ namespace Sparrow.Display
         /// <exception cref="ArgumentException">The mode does not exist.</exception>
         public static BlendMode Get(string modeName)
         {
-            if (_sBlendModes == null) RegisterDefaults();
-            if (_sBlendModes.ContainsKey(modeName)) return _sBlendModes[modeName];
+            if (_sBlendModes == null)
+            {
+                RegisterDefaults();
+            }
+            if (_sBlendModes.ContainsKey(modeName))
+            {
+                return _sBlendModes[modeName];
+            }
             throw new ArgumentException("Blend mode not found: " + modeName);
         }
 
@@ -62,7 +68,10 @@ namespace Sparrow.Display
         /// </summary>
         public static BlendMode Register(string name, BlendingFactor srcFactor, BlendingFactor dstFactor)
         {
-            if (_sBlendModes == null) RegisterDefaults();
+            if (_sBlendModes == null)
+            {
+                RegisterDefaults();
+            }
             BlendMode blendMode = new BlendMode(name, srcFactor, dstFactor);
             _sBlendModes[name] = blendMode;
             return blendMode;
@@ -70,7 +79,10 @@ namespace Sparrow.Display
 
         private static void RegisterDefaults()
         {
-            if (_sBlendModes != null) return;
+            if (_sBlendModes != null)
+            {
+                return;
+            }
 
             _sBlendModes = new Dictionary<string, BlendMode>();
             Register(NONE, BlendingFactor.One, BlendingFactor.Zero);

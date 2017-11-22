@@ -41,8 +41,8 @@
   <ItemGroup>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenGL.Net, Version=0.6.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\sparrow-game\packages\OpenGL.Net.0.6.1\lib\monoandroid\OpenGL.Net.dll</HintPath>
+    <Reference Include="OpenGL.Net, Version=0.7.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\OpenGL.Net.0.7.0\lib\monoandroid\OpenGL.Net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

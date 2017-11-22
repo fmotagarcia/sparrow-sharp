@@ -34,7 +34,7 @@ namespace Sparrow.Text
             AutoScale = autoScale;
             AutoSize = TextFieldAutoSize.NONE;
             TextureScale = SparrowSharp.ContentScaleFactor;
-            TextureFormat = TextureFormat.RGB565; // likely wrong
+            TextureFormat = TextureFormat.Rgb565; // likely wrong
         }
 
         /** Copies all properties from another TextOptions instance. */
