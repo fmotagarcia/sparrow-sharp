@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sparrow.Text
+﻿namespace Sparrow.Text
 {
     internal class MiniBitmapFont
     {

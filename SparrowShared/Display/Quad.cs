@@ -37,8 +37,7 @@ namespace Sparrow.Display
         private Rectangle _bounds;
 
         /// <summary>
-        /// Initializes a quad with a certain size and color. The 'premultipliedAlpha' parameter indicates how the colors
-        /// of the object are stored.
+        /// Initializes a quad with a certain size and color.
         /// </summary>
         public Quad(float width = 32, float height = 32, uint color = 0xffffff) 
             : base(new VertexData(4), new IndexData())
@@ -97,11 +96,11 @@ namespace Sparrow.Display
         {
             Rectangle outRect = Rectangle.Create();
 
-            if (targetSpace == this)// optimization
+            if (targetSpace == this) // Optimization
             {
                 outRect.CopyFrom(_bounds);
             }
-            else if (targetSpace == Parent && !IsRotated)// optimization
+            else if (targetSpace == Parent && !IsRotated) // Optimization
             {
                 float scaleX = ScaleX;
                 float scaleY = ScaleY;
@@ -181,7 +180,7 @@ namespace Sparrow.Display
         /// </para>
         /// </summary>
         public override Texture Texture {
-            get { return base.Texture; }
+            get => base.Texture;
             set
             {
                 if (value != Texture)

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using Sparrow.Textures;
 using System.IO;
-using Sparrow.Core;
 using System.Runtime.InteropServices;
 
 namespace Sparrow.ResourceLoading

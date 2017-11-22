@@ -1,6 +1,4 @@
-﻿
-using System.Text;
-using Sparrow.Rendering;
+﻿using Sparrow.Rendering;
 using OpenGL;
 using Sparrow.Geom;
 

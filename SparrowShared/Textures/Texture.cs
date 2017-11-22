@@ -3,7 +3,6 @@ using System;
 using Sparrow.Geom;
 using Sparrow.Rendering;
 using Sparrow.Core;
-using Sparrow.Text;
 
 namespace Sparrow.Textures
 {
@@ -12,7 +11,7 @@ namespace Sparrow.Textures
 
         /// <summary>
         /// Uploads a texture to the GPU.
-        /// Currently only 24 bit RBGA images are supported
+        /// Currently only 24 bit RBGA images are supported.
         /// </summary>
         /// <param name="imgData">The image data, either an byte[] or IntPtr</param>
         /// <param name="properties"></param>
