@@ -30,7 +30,7 @@ namespace Sparrow.ResourceLoading
         {
             return new TextureLoader().LoadAndroidResource(AndroidResourceId);
         }
-        #endif
+#endif
     }
 }
 

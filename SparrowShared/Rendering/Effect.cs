@@ -452,9 +452,11 @@ namespace Sparrow.Rendering
             }
         }
 
-        /** The function that you provide here will be called after a context loss.
-         *  Call both "Upload..." methods from within the callback to restore any vertex or
-         *  index buffers. */
+        /// <summary>
+        /// The function that you provide here will be called after a context loss.
+        /// Call both "Upload..." methods from within the callback to restore any vertex or
+        /// index buffers.
+        /// </summary>
         public Action OnRestore;
 
         public Matrix3D MvpMatrix3D

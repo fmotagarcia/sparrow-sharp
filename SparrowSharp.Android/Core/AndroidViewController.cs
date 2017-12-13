@@ -76,7 +76,6 @@ namespace Sparrow.Core
             _Holder.AddCallback(this);
 
             AndroidContext = context;
-            TextureLoader._context = context;
             RequestFocus();
             FocusableInTouchMode = true;
         }

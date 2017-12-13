@@ -53,6 +53,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Rendering\VertexData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\EmbeddedResourceLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\SimpleTextureLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ResourceLoading\TextureLoader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\MeshStyle.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Textures\ConcreteTexture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Textures\RenderTexture.cs" />

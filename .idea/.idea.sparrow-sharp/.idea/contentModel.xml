@@ -96,6 +96,7 @@
         <e p="ResourceLoading" t="Include">
           <e p="EmbeddedResourceLoader.cs" t="Include" />
           <e p="SimpleTextureLoader.cs" t="Include" />
+          <e p="TextureLoader.cs" t="Include" />
         </e>
         <e p="SparrowShared.projitems" t="Include" />
         <e p="SparrowShared.shproj" t="IncludeRecursive" />
@@ -182,9 +183,6 @@
         <e p="packages.config" t="Include" />
         <e p="Properties" t="Include">
           <e p="AssemblyInfo.cs" t="Include" />
-        </e>
-        <e p="ResourceLoading" t="Include">
-          <e p="DesktopTextureLoader.cs" t="Include" />
         </e>
         <e p="SparrowSharp.Desktop.csproj" t="IncludeRecursive" />
       </e>

@@ -7,6 +7,7 @@ using Sparrow.Core;
 
 namespace Sparrow.ResourceLoading
 {
+    /*
     public class TextureLoader
     {
         protected bool _isLoaded = false;
@@ -128,5 +129,6 @@ namespace Sparrow.ResourceLoading
             }
         }
     }
+    */
 }
 

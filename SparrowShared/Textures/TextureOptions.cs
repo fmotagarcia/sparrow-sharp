@@ -8,9 +8,7 @@ namespace Sparrow.Textures
 
         private float _scale;
 
-        /** The <code>Context3DTextureFormat</code> of the underlying texture data. Only used
-         *  for textures that are created from Bitmaps; the format of ATF files is set when they
-         *  are created. @default BGRA */
+        /** The <code>TextureFormat</code> of the underlying texture data. */
         public TextureFormat Format;
 
         /** Indicates if the texture contains mip maps. @default false */
@@ -20,12 +18,12 @@ namespace Sparrow.Textures
         public bool OptimizeForRenderToTexture;
 
         /** Indicates if the alpha values are premultiplied into the RGB values. This is typically
-         *  true for textures created from BitmapData and false for textures created from ATF data.
-         *  This property will only be read by the <code>Texture.fromTextureBase</code> factory
-         *  method. @default true */
+         *  true for textures created from Images. @default true */
         public bool PremultipliedAlpha;
 
-        /** Creates a new instance with the given options. */
+        /// <summary>
+        /// Creates a new instance with the given options.
+        /// </summary>
         public TextureOptions(TextureFormat format, 
                               float scale = 1.0f,
                               int numMipMaps = 0,
@@ -37,7 +35,9 @@ namespace Sparrow.Textures
             PremultipliedAlpha = premultipliedAlpha;
         }
 
-        /** Creates a clone of the TextureOptions object with the exact same properties. */
+        /// <summary>
+        /// Creates a clone of the TextureOptions object with the exact same properties.
+        /// </summary>
         public TextureOptions Clone()
         {
             TextureOptions clone = new TextureOptions(Format, _scale, NumMipMaps, PremultipliedAlpha);
