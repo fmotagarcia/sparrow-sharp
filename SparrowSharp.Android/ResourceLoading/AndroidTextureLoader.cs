@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Android.Graphics;
 using Sparrow.Textures;
 using System.IO;

@@ -72,12 +72,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SparrowSharp.Desktop\SparrowSharp.Desktop.csproj">
-      <Project>{40765b80-9be8-4a35-80b5-7d5abe4d6657}</Project>
-      <Name>SparrowSharp.Desktop</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>

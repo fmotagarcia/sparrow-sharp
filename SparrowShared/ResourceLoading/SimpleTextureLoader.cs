@@ -24,13 +24,6 @@ namespace Sparrow.ResourceLoading
         {
             return new TextureLoader().LoadFromStream(stream);
         }
-
-#if __ANDROID__
-        public static Texture LoadAndroidResource(int AndroidResourceId)
-        {
-            return new TextureLoader().LoadAndroidResource(AndroidResourceId);
-        }
-#endif
     }
 }
 

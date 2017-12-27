@@ -166,9 +166,9 @@ namespace Sparrow.Filters
 
             int uColorMatrix = Program.Uniforms["uColorMatrix"];
             var sm = _shaderMatrix.RawData;
-            Gl.UniformMatrix4(uColorMatrix, 1, false, sm);
+            Gl.UniformMatrix4(uColorMatrix, false, sm);
             int uColorOffset = Program.Uniforms["uColorOffset"];
-            Gl.Uniform4(uColorOffset, 1, _shaderOffset);
+            Gl.Uniform4(uColorOffset, _shaderOffset);
         }
         
         /// <summary>

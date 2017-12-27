@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
 using Sparrow.Textures;
 
 namespace Sparrow.ResourceLoading
 {
     public class TextureLoader
     {
-        protected bool _isLoaded;
-        protected Texture _glTexture;
+        private bool _isLoaded;
+        private Texture _glTexture;
 
         public bool IsLoaded => _isLoaded;
 
@@ -30,7 +29,7 @@ namespace Sparrow.ResourceLoading
             _isLoaded = false;
             using (Image<Rgba32> image = Image.Load(pathToFile))
             {
-                GenerateTexture(image);
+                GenerateTexture(image.SavePixelData(), image.Width, image.Height);
             }
             return _glTexture;
         }
@@ -49,7 +48,7 @@ namespace Sparrow.ResourceLoading
             _isLoaded = false;
             using (Image<Rgba32> image = Image.Load(stream))
             {
-                GenerateTexture(image);
+                GenerateTexture(image.SavePixelData(), image.Width, image.Height);
             }
             return _glTexture;
         }
@@ -59,13 +58,12 @@ namespace Sparrow.ResourceLoading
             throw new NotImplementedException();
         }
 
-        private void GenerateTexture(Image<Rgba32> image)
+        private void GenerateTexture(IList<byte> data, int width, int height)
         {
             _isLoaded = false;
             
             TextureOptions opts = new TextureOptions(TextureFormat.Rgba8888);
-            byte[] data = image.SavePixelData();
-            int len = image.Width * image.Height * 4;
+            int len = width * height * 4;
             
             // Premultiply alpha
             for (int i = 0; i < len; i += 4)
@@ -80,7 +78,7 @@ namespace Sparrow.ResourceLoading
                 data[i + 3] = (byte)(alpha * 255);
             }
             
-            _glTexture = Texture.FromData(data, opts, image.Width, image.Height);
+            _glTexture = Texture.FromData(data, opts, width, height);
 
             _isLoaded = true;
             // Make a temporary copy of the event to avoid possibility of 
@@ -89,5 +87,6 @@ namespace Sparrow.ResourceLoading
             EventHandler<Texture> handler = ResourceLoaded;
             handler?.Invoke(this, _glTexture);
         }
+      
     }
 }

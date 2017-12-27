@@ -283,7 +283,7 @@ namespace Sparrow.Rendering
             Gl.VertexAttribPointer(attribPosition, 2, VertexAttribType.Float, false, Vertex.Size, (IntPtr)Vertex.PositionOffset);
             
             int uMvpMatrix = Program.Uniforms["uMvpMatrix"];
-            Gl.UniformMatrix4(uMvpMatrix, 1, false, MvpMatrix3D.RawData); // 1 is the number of matrices
+            Gl.UniformMatrix4(uMvpMatrix, false, MvpMatrix3D.RawData); // 1 is the number of matrices
             
             if (Texture != null)
             {
@@ -363,17 +363,15 @@ namespace Sparrow.Rendering
         /// </summary>
         public static string AddShaderInitCode()
         {
-            string ret;
-#if __WINDOWS__
-            ret = 
-                "#version 430\n" + 
+            if (SparrowSharp.IsRunningOpenGLES)
+            {
+                return @"#version 300 es\n";
+            }
+            return
+                "#version 430\n" +
                 "#define highp\n" +
                 "#define mediump\n" +
                 "#define lowp\n";
-#else
-            ret = @"#version 300 es\n";
-#endif
-            return ret;
         }
 
         /// <summary>

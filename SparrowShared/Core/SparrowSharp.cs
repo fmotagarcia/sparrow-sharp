@@ -57,6 +57,11 @@ namespace Sparrow.Core
         private static StatsDisplay _statsDisplay;
 
         /// <summary>
+        /// Returns whether is running in an OpenGL ES context. If its false its running in Desktop OpenGL.
+        /// </summary>
+        public static bool IsRunningOpenGLES { get; private set; }
+
+        /// <summary>
         /// Start your game.
         /// </summary>
         /// <param name="width">Stage width</param>
@@ -74,6 +79,24 @@ namespace Sparrow.Core
             {
                 throw new ArgumentException($"Invalid dimensions: {width}x{height}");
             }
+
+            var ver = Gl.CurrentVersion;
+            if (ver.Api == "gl")
+            {
+                if (ver.Major < 4)
+                {
+                    throw new NotSupportedException("You need at least OpenGL 4.0 to run Sparrow!");
+                }
+            }
+            else
+            {
+                if (ver.Major < 3)
+                {
+                    throw new NotSupportedException("You need at least OpenGL ES 3.0 to run Sparrow!");
+                }
+                IsRunningOpenGLES = true;
+            }
+
             Gl.Disable(EnableCap.CullFace);
             Gl.Disable(EnableCap.Dither);
             

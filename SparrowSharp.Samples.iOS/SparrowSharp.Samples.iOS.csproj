@@ -112,13 +112,7 @@
     <LangVersion>7</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
     <Reference Include="System.Diagnostics.Debug" />
-    <Reference Include="System.Diagnostics.Debug" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
-    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -139,12 +133,6 @@
     <Compile Include="Benchmark.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\SparrowSharp.Core\SparrowSharp.Core.iOS.csproj">
-      <Project>{ECECB8BC-394C-4646-B165-135718EFBFF1}</Project>
-      <Name>SparrowSharp.Core.iOS</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="OpenGLViewController.xib" />
   </ItemGroup>

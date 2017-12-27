@@ -14,21 +14,6 @@ namespace Sparrow.Rendering
             int[] workGrpCnt = new int[3];
             int[] workGrpSize = new int[3];
             int maxComputeWorkGroupInvocations;
-
-            int version;
-      
-            Gl.Get(Gl.MAJOR_VERSION, out version);
-
-            int minVersion;
-#if __WINDOWS__
-            minVersion = 4;
-#elif __ANDROID__
-            minVersion = 3; // GL ES 3
-#endif
-            if (version < minVersion)
-            {
-                throw new NotSupportedException("You need at least OpenGL " + minVersion + " to run Sparrow!");
-            }
             
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 0, out workGrpCnt[0]);
             Gl.Get(Gl.MAX_COMPUTE_WORK_GROUP_COUNT, 1, out workGrpCnt[1]);
