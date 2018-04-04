@@ -131,9 +131,16 @@ namespace Sparrow.Display
         /// </summary>
         public virtual void Dispose()
         {
+            Added = null;
+            AddedToStage = null;
+            Removed = null;
+            RemovedFromStage = null;
+            EnterFrame = null;
+            Touch = null;
+            KeyUp = null;
+            KeyDown = null;
             _filter?.Dispose();
             _mask?.Dispose();
-            //TODO RemoveEventListeners();
             Mask = null; // clear 'mask._maskee', just to be sure.
         }
 

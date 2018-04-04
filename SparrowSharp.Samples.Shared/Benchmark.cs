@@ -6,7 +6,9 @@ using Sparrow.Core;
 using Sparrow.Text;
 using Sparrow.Utils;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Sparrow.Filters;
+using Sparrow.Geom;
 using Sparrow.Samples.CustomStyle;
 
 namespace Sparrow.Samples
@@ -28,7 +30,9 @@ namespace Sparrow.Samples
             
             EmbeddedResourceLoader loader = new EmbeddedResourceLoader("SparrowSamples");
             textures = new[] { SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("bigstar.png")),
-                               SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")) };
+                               SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("benchmark_object.png")),
+                               SimpleTextureLoader.LoadImageFromStream(loader.GetEmbeddedResourceStream("scaleGridTest.png"))
+            };
             
             // the container will hold all test objects
             _container = new Sprite();
@@ -42,6 +46,7 @@ namespace Sparrow.Samples
 
         private void AddedToStageHandler(DisplayObject target, DisplayObject currentTarget)
         {
+            Stage.Touch += touch => Debug.WriteLine("touch " + touch);
             //Stage.StageWidth = 480;
             //Stage.StageHeight = 320;
             _started = true;
@@ -50,6 +55,8 @@ namespace Sparrow.Samples
             SparrowSharp.ShowStats(HAlign.Right, VAlign.Bottom, 2f);
             
             AddTestObjects(16);
+            
+            TestScale9Grid();
             
             TestRenderTexture();
             
@@ -68,8 +75,21 @@ namespace Sparrow.Samples
             TestCustomStyle();
 
             TestBorders();
-
+            
             Stage.Touch += Benchmark_Touch;
+        }
+
+        private void TestScale9Grid()
+        {
+            var img = new Image(textures[2]);
+            //                                x   y   width          height
+            img.Scale9Grid = Rectangle.Create(20, 20, 100 - 20 - 20, 75 - 20 - 20);
+            img.X = 300;
+            img.Y = 400;
+            img.Width = 300;
+            img.Height = 200;
+            AddChild(img);
+            
         }
 
         private void Benchmark_Touch(Touches.TouchEvent touch)
@@ -240,7 +260,7 @@ namespace Sparrow.Samples
             Button btn = new Button(Texture.FromColor(100, 40, 0x23F502), "Test button");
             btn.X = 750;
             btn.Y = 500;
-            btn.Triggered += button => Console.WriteLine("Button press");
+            btn.Triggered += (button, touchEvent) => Debug.WriteLine("button pressed " + touchEvent);
             AddChild(btn);
         }
 

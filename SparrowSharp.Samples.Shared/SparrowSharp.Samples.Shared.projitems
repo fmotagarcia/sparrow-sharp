@@ -18,5 +18,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)benchmark_object.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)bigstar.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)scaleGridTest.png" />
+  </ItemGroup>
 </Project>

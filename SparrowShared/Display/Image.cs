@@ -45,31 +45,34 @@ namespace Sparrow.Display
             Texture = texture;
             ReadjustSize();
         }
-
-        /** The current scaling grid that is in effect. If set to null, the image is scaled just
-         *  like any other display object; assigning a rectangle will divide the image into a grid
-         *  of nine regions, based on the center rectangle. The four corners of this grid will
-         *  always maintain their original aspect ratio; the other regions will stretch accordingly
-         *  (horizontally, vertically, or both) to fill the complete area.
-         *
-         *  <p>Notes:</p>
-         *
-         *  <ul>
-         *  <li>Assigning a Scale9 rectangle will change the number of vertices to a maximum of 16
-         *  (less if possible) and all vertices will be colored like vertex 0 (the top left vertex).
-         *  </li>
-         *  <li>An image can have either a <code>scale9Grid</code> or a <code>tileGrid</code>, but
-         *  not both. Assigning one will delete the other.</li>
-         *  <li>Changes will only be applied on assignment. To force an update, simply call
-         *  <code>image.scale9Grid = image.scale9Grid</code>.</li>
-         *  <li>Assignment causes an implicit call to <code>readjustSize()</code>,
-         *  and the same will happen when the texture is changed afterwards.</li>
-         *  </ul>
-         *
-         *  @default null
-         */
+        
+        /// <summary>
+        /// <para>The current scaling grid that is in effect. If set to null, the image is scaled just
+        /// like any other display object; assigning a rectangle will divide the image into a grid
+        /// of nine regions, based on the center rectangle. The four corners of this grid will
+        /// always maintain their original aspect ratio; the other regions will stretch accordingly
+        /// (horizontally, vertically, or both) to fill the complete area.</para>
+        ///
+        /// Notes:
+        /// <list type="bullet">
+        ///   <item><description>Assigning a Scale9 rectangle will change the number of vertices to a maximum of 16
+        ///   (less if possible) and all vertices will be colored like vertex 0 (the top left vertex).</description>  
+        ///   </item>
+        ///   <item><description>An image can have either a <code>Scale9Grid</code> or a <code>TileGrid</code>, but
+        ///   not both. Assigning one will delete the other.</description>  
+        ///   </item>
+        ///   <item><description>Changes will only be applied on assignment. To force an update, simply call
+        ///   <code>image.Scale9Grid = image.Scale9Grid</code></description>  
+        ///   </item>
+        ///   <item><description>Assignment causes an implicit call to <code>ReadjustSize()</code>,
+        ///   and the same will happen when the texture is changed afterwards.</description>  
+        ///   </item> 
+        /// </list>
+        ///
+        /// Default value is <code>null</code>
+        /// </summary>
         public Rectangle Scale9Grid {
-            get { return _scale9Grid; }
+            get => _scale9Grid;
             set {
                 if (value != null)
                 {
@@ -84,35 +87,38 @@ namespace Sparrow.Display
                 SetupVertices();
             }
         }
-
-        /** The current tiling grid that (repeat) is in effect. If set to null, the image is scaled 
-          *  just like any other display object; assigning a rectangle will divide the image into a grid
-          *  displaying the current texture in each and every cell. The assigned rectangle points
-          *  to the bounds of one cell; all other elements will be calculated accordingly. A zero
-          *  or negative value for the rectangle's width or height will be replaced with the actual
-          *  texture size. Thus, you can make a 2x2 grid simply like this:
-          *
-          *  <listing>
-          *  var image:Image = new Image(texture);
-          *  image.tileGrid = new Rectangle();
-          *  image.scale = 2;</listing>
-          *
-          *  <p>Notes:</p>
-          *
-          *  <ul>
-          *  <li>Assigning a tile rectangle will change the number of vertices to whatever is
-          *  required by the grid. New vertices will be colored just like vertex 0 (the top left
-          *  vertex).</li>
-          *  <li>An image can have either a <code>scale9Grid</code> or a <code>tileGrid</code>, but
-          *  not both. Assigning one will delete the other.</li>
-          *  <li>Changes will only be applied on assignment. To force an update, simply call
-          *  <code>image.tileGrid = image.tileGrid</code>.</li>
-          *  </ul>
-          *
-          *  @default null
-          */
+        
+        /// <summary>
+        /// The current tiling grid that (repeat) is in effect. If set to null, the image is scaled 
+        /// just like any other display object; assigning a rectangle will divide the image into a grid
+        /// displaying the current texture in each and every cell. The assigned rectangle points
+        /// to the bounds of one cell; all other elements will be calculated accordingly. A zero
+        /// or negative value for the rectangle's width or height will be replaced with the actual
+        /// texture size. Thus, you can make a 2x2 grid simply like this:
+        /// 
+        /// <code>
+        /// var image = new Image(texture);
+        /// image.TileGrid = Rectangle.Create(5, 5, 10, 10);
+        /// image.Scale = 2;
+        /// </code>
+        /// Notes:
+        /// <list type="bullet">
+        ///   <item><description>Assigning a tile rectangle will change the number of vertices to whatever is
+        ///   required by the grid. New vertices will be colored just like vertex 0 (the top left
+        ///   vertex).</description>  
+        ///   </item>
+        ///   <item><description>An image can have either a <code>Scale9Grid</code> or a <code>TileGrid</code>, but
+        ///   not both. Assigning one will delete the other.</description>  
+        ///   </item>
+        ///   <item><description>Changes will only be applied on assignment. To force an update, simply call
+        ///   <code>image.TileGrid = image.TileGrid</code></description>  
+        ///   </item>
+        /// </list>
+        /// 
+        /// Default value is <code>null</code>
+        /// </summary>
         public Rectangle TileGrid { 
-            get { return _tileGrid; }
+            get => _tileGrid;
             set
             {
                 if (value != null)
@@ -173,7 +179,7 @@ namespace Sparrow.Display
 
         // vertex setup
 
-        private void SetupScale9Grid() // TODO rewrite this
+        private void SetupScale9Grid()
         {
             Texture texture = Texture;
             Rectangle frame = texture.Frame;
@@ -184,25 +190,28 @@ namespace Sparrow.Display
             // a scale3 grid. In that case, we want the 'caps' to maintain their aspect ratio.
 
             if (MathUtil.IsEquivalent(_scale9Grid.Width, texture.FrameWidth))
+            {
                 absScaleY /= absScaleX;
+            }
             else if (MathUtil.IsEquivalent(_scale9Grid.Height, texture.FrameHeight))
+            {
                 absScaleX /= absScaleY;
-
-
+            }
+            
             float invScaleX = 1.0f / absScaleX;
             float invScaleY = 1.0f / absScaleY;
             VertexData vertexData = VertexData;
             IndexData indexData = IndexData;
             int prevNumVertices = vertexData.NumVertices;
             float correction;
-
+            
             // The following rectangles are used to figure everything out.
             // The meaning of each is depicted in this sketch: http://i.imgur.com/KUcv71O.jpg
-
+            
             Rectangle gridCenter = Rectangle.Create();
             Rectangle textureBounds = Rectangle.Create();
             Rectangle pixelBounds = Rectangle.Create();
-
+            
             gridCenter.CopyFrom(_scale9Grid);
             textureBounds.SetTo(0, 0, texture.FrameWidth, texture.FrameHeight);
 
@@ -216,8 +225,6 @@ namespace Sparrow.Display
 
             float[] sBasCols = new float[3];
             float[] sBasRows = new float[3];
-            sBasCols[0] = sBasCols[2] = 0;
-            sBasRows[0] = sBasRows[2] = 0;
             sBasCols[1] = intersection.Width;
             sBasRows[1] = intersection.Height;
 
@@ -268,7 +275,7 @@ namespace Sparrow.Display
             // if the total width / height becomes smaller than the outer columns / rows,
             // we hide the center column / row and scale the rest normally.
 
-            if (sPosCols[1] < 0f)
+            if (sPosCols[1] <= 0f)
             {
                 correction = textureBounds.Width / (textureBounds.Width - gridCenter.Width) * absScaleX;
                 sPadding.Left *= correction;
@@ -277,7 +284,7 @@ namespace Sparrow.Display
                 sPosCols[2] *= correction;
             }
 
-            if (sPosRows[1] < 0f)
+            if (sPosRows[1] <= 0f)
             {
                 correction = textureBounds.Height / (textureBounds.Height - gridCenter.Height) * absScaleY;
                 sPadding.Top *= correction;
@@ -328,9 +335,6 @@ namespace Sparrow.Display
                                               float[] texCols,
                                               float[] texRows)
         {
-            int row, col;
-            float colWidthPos, rowHeightPos;
-            float colWidthTex, rowHeightTex;
             VertexData vertexData = VertexData;
             Texture texture = Texture;
             float currentX = startX;
@@ -339,17 +343,17 @@ namespace Sparrow.Display
             float currentV = 0f;
             int vertexId = 0;
 
-            for (row = 0; row < 3; ++row)
+            for (int row = 0; row < 3; ++row)
             {
-                rowHeightPos = posRows[row];
-                rowHeightTex = texRows[row];
+                var rowHeightPos = posRows[row];
+                var rowHeightTex = texRows[row];
 
                 if (rowHeightPos > 0)
                 {
-                    for (col = 0; col < 3; ++col)
+                    for (int col = 0; col < 3; ++col)
                     {
-                        colWidthPos = posCols[col];
-                        colWidthTex = texCols[col];
+                        var colWidthPos = posCols[col];
+                        var colWidthTex = texCols[col];
 
                         if (colWidthPos > 0)
                         {

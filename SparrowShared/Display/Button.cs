@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Sparrow.Core;
 using Sparrow.Styles;
 using Sparrow.Text;
@@ -26,7 +27,7 @@ namespace Sparrow.Display
     public class Button : DisplayObjectContainer
     {
         
-        public delegate void TriggeredHandler(Button btn);
+        public delegate void TriggeredHandler(Button btn, TouchEvent touchEvent);
         public event TriggeredHandler Triggered;
 
         private const int MaxDragDist = 50;
@@ -88,6 +89,7 @@ namespace Sparrow.Display
         {
             // text field might be disconnected from parent, so we have to dispose it manually
             _textField?.Dispose();
+            Triggered = null;
             base.Dispose();
         }
         
@@ -173,7 +175,7 @@ namespace Sparrow.Display
             else if (touch.Phase == TouchPhase.Ended && _state == ButtonState.Down)
             {
                 State = ButtonState.Up;
-                Triggered?.Invoke(this);
+                Triggered?.Invoke(this, evt);
             }
         }
         
@@ -223,9 +225,11 @@ namespace Sparrow.Display
             _body.Texture = texture != null ? texture : _upState;
         }
         
-        /** The scale factor of the button on touch. Per default, a button without a down state
-        *  texture will be made slightly smaller, while a button with a down state texture
-        *  remains unscaled. */
+        /// <summary>
+        /// The scale factor of the button on touch. Per default, a button without a down state
+        /// texture will be made slightly smaller, while a button with a down state texture
+        /// remains unscaled.
+        /// </summary>
         public float ScaleWhenDown { get; set; }
 
         /** The scale factor of the button while the mouse cursor hovers over it. @default 1.0 */

@@ -15,7 +15,7 @@ namespace Sparrow.Core
         private long lastRenderTime;
 
         public DesktopViewController(Type rootClass, uint windowWidth, uint windowHeight)
-        {
+        {   
             _width = windowWidth;
             _height = windowHeight;
             _rootClass = rootClass;
@@ -43,6 +43,7 @@ namespace Sparrow.Core
             _nativeWindow.MouseDown += OnMouseButtonDown;
             _nativeWindow.MouseUp += OnMouseButtonUp;
             _nativeWindow.MouseMove += OnMouseMove;
+            
             
             _nativeWindow.Render += Control_Render;
             _nativeWindow.Resize += OnResize;
@@ -89,6 +90,7 @@ namespace Sparrow.Core
 
         private void OnMouseButtonUp(object sender, NativeWindowMouseEventArgs e)
         {
+            // does not fire if the mouse goes out of the window area and is released
             _touchProcessor.OnPointerUp(1);
         }
 

@@ -159,6 +159,11 @@ namespace Sparrow.Touches
             get;
             internal set;
         }
+
+        public override string ToString()
+        {
+            return "x:" + GlobalX + " y:" + GlobalY;
+        }
     }
 }
 
